@@ -1,0 +1,20 @@
+/* video interview main header -> vimh */
+.vimh {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100px;
+    width: 100%;
+    background-color: #212b36;
+    padding: 0 20px;
+    box-sizing: border-box;
+    position: fixed;
+    z-index: 999;
+}
+
+.vimh-logo {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    width: 150px;
+}

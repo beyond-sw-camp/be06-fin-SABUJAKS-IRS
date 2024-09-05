@@ -1,0 +1,86 @@
+/* video-interview-estimator -> vie*/
+.vie-wrapper {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto;
+}
+
+.vie-video{
+    margin-top: 100px;
+    position: relative;
+    top: 0;
+    flex-direction: column;
+    width: 40%;
+    align-items: center;
+    justify-content: center;
+    float: left;
+    box-sizing: border-box;
+    padding: 18px;
+    display: flex;
+    justify-content: center;
+}
+
+.vie-img{
+    width: fit-content;
+    height: fit-content;
+    border: 1px solid black;
+}
+
+.vie-evaluate {
+    margin-top: 100px;
+    position: relative;
+    top: 0;
+    right: 0;
+    /* -ms-overflow-style: none; */
+    /* scrollbar-width: none;  */
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+    float: left;
+    box-sizing: border-box;
+    background: black;
+    color: black;
+    overflow-y: scroll;
+    background: white;
+    padding: 18px;
+}
+
+.vie-menu{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 5px;
+}
+
+.vie-menubtn{
+    width: 100%;
+    height: fit-content;
+    background-color: #f1f1f1;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #000;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.vie-menubtn:hover{
+    background-color: #ddd;
+}
+
+.vie-content{
+    display: flex;
+    flex-direction: column;
+}
+
+.vie-evaluate::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera*/
+}
+
+
