@@ -142,7 +142,7 @@
 </template>
 
 <script setup>
-import "./AnnounceDetailPage.css"
+
 </script>
 
 <style>

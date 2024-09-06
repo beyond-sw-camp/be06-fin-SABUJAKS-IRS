@@ -150,10 +150,11 @@
   </body>
 </template>
 <script setup>
-import "./AnnounceReadAllPage.css";
+
 </script>
 
 <style>
+
 </style>
 // 필터 아이템을 클릭했을 때 드롭다운을 토글하는 함수
 document.querySelectorAll(".filter-item").forEach((item) => {
