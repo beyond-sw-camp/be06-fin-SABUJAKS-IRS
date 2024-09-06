@@ -104,4 +104,574 @@
 <script setup>
 </script>
 
-<style></style>
+<style scoped>
+html {
+    overflow-y: scroll
+}
+
+body,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+form,
+fieldset,
+input,
+textarea,
+button,
+p,
+table,
+th,
+td {
+    padding: 0;
+    margin: 0
+}
+
+li {
+    list-style: none
+}
+
+form,
+fieldset,
+button {
+    border: 0 none
+}
+
+label {
+    cursor: pointer;
+    vertical-align: middle
+}
+
+input[type=text] {
+    outline: none
+}
+
+input[type=text]:-ms-clear {
+    display: none
+}
+
+button {
+    overflow: visible;
+    background: rgba(0, 0, 0, 0);
+    cursor: pointer
+}
+
+.skip,
+.blind {
+    position: absolute;
+    overflow: hidden;
+    width: 1px;
+    height: 1px;
+    clip: rect(0 0 0 0);
+    margin: -1px
+}
+
+a {
+    color: #494949;
+    text-decoration: none;
+    cursor: pointer
+}
+
+a:link {
+    color: #494949;
+    text-decoration: none;
+    cursor: pointer
+}
+
+a:visited {
+    color: #494949;
+    text-decoration: none;
+    cursor: pointer
+}
+
+a:focus,
+a:focus-visible,
+input:focus,
+input:focus-visible {
+    outline: none
+}
+
+.skip,
+.blind {
+    clip: unset;
+    margin: unset
+}
+
+.skip,
+.blind,
+legend {
+    position: absolute;
+    top: -5000em;
+    width: 0px;
+    height: 0px;
+    overflow: hidden;
+    line-height: 0;
+    font-size: 0px;
+    letter-spacing: 0px
+}
+
+a {
+    color: #6a6a6a
+}
+
+a:link,
+a:visited {
+    color: #6a6a6a
+}
+
+a:hover,
+a:active,
+a:focus {
+    color: #06c
+}
+
+#login.bg-gray {
+    background-color: #f8f8f8
+}
+
+#login #wrap {
+    width: 100%
+}
+
+#login #wrap #footer {
+    width: 868px;
+    text-align: center;
+    padding: 18px 0;
+    border: unset !important;
+    margin-top: unset !important;
+    background: #f8f8f8 !important
+}
+
+#login #wrap #footer #copyright {
+    font-size: 13px;
+    letter-spacing: 0px;
+    line-height: 24px;
+    font-weight: 400;
+    color: #9e9e9e
+}
+
+#login #container {
+    background: #f8f8f8
+}
+
+#login .logtop {
+    position: relative;
+    width: 1030px;
+    margin: 0 auto 20px;
+    padding-top: 30px
+}
+
+#login .logtop .lnb {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -moz-box-align: center;
+    align-items: center;
+    gap: 20px;
+    color: #6a6a6a;
+    font-size: 14px;
+    letter-spacing: 0px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    -webkit-box-pack: end;
+    -webkit-justify-content: end;
+    -moz-box-pack: end;
+    justify-content: end
+}
+
+#login .logtop .lnb a {
+    font-size: 14px;
+    letter-spacing: 0px
+}
+
+#login .logtop .lnb .txtBar {
+    color: #ccc;
+    padding: 0 5px
+}
+
+#login .secLogin {
+    width: 1030px;
+    margin: 0 auto;
+    padding: 0 120px;
+    background: #fff;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box
+}
+
+#login .secLogin:after {
+    content: "";
+    display: flex;
+    height: 0;
+    clear: both
+}
+
+#login .secLogin .hd {
+    color: #000;
+    text-align: center;
+    font-size: 16px;
+    letter-spacing: 0px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -moz-box-orient: vertical;
+    -moz-box-direction: normal;
+    flex-direction: column;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -moz-box-align: center;
+    align-items: center
+}
+
+#login .secLogin .hd .logo {
+    display: inline-block;
+    width: 300px;
+    height: 300px;
+    background: url(/src/assets/img/irs_black.png) no-repeat;
+    background-size: contain
+}
+
+#login .secLogin .logWrap {
+    margin: 0 auto;
+    width: 400px;
+    border-right: 1px solid #f4f4f4
+}
+
+.login-form {
+    min-height: 270px
+}
+
+.login-form input {
+    -webkit-appearance: none
+}
+
+.login-form input::-webkit-input-placeholder {
+    font-weight: 400;
+    color: #9e9e9e
+}
+
+.login-form .login-input {
+    position: relative;
+    text-align: left
+}
+
+.login-form .login-input .inpTxt {
+    width: -webkit-calc(100% - 114px - 12px);
+    width: -moz-calc(100% - 114px - 12px);
+    width: calc(100% - 114px - 12px);
+    color: #333;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: flex;
+    height: 48px;
+    padding: 0px 16px 0px 48px;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -moz-box-align: center;
+    align-items: center;
+    border-radius: 8px;
+    border: 1px solid #d2d2d2;
+    background: #fff;
+    font-size: 14px;
+    letter-spacing: 0px;
+    font-weight: 400;
+    line-height: 22px
+}
+
+.login-form .login-input .inpTxt:focus {
+    border-color: #222
+}
+
+.login-form .login-input .input-id {
+    margin-bottom: 12px
+}
+
+.login-form .login-input .input-id.corp {
+    margin-bottom: 12px
+}
+
+.login-form .login-input .input-password {
+    margin-bottom: 12px
+}
+
+.login-form .login-input .label-form {
+    display: block;
+    width: 48px;
+    height: 48px;
+    position: absolute;
+    text-indent: -9999px;
+    overflow: hidden
+}
+
+.login-form .login-input .label-id {
+    background: url(../../../assets/svg/system_my.svg) no-repeat 16px 12px
+}
+
+.login-form .login-input .label-password {
+    background: url(../../../assets/svg/system_lock_closed.svg) no-repeat 16px 12px
+}
+
+.login-form .login-input .login-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 114px;
+    height: 108px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: flex;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -moz-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -moz-box-align: center;
+    align-items: center;
+    border-radius: 8px;
+    background: #212b36;
+    color: #fff;
+    text-align: center;
+    font-size: 16px;
+    letter-spacing: 0px;
+    font-weight: 500;
+    line-height: 22px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box
+}
+
+.login-form .login-input .text-error {
+    display: none
+}
+
+.login-form .login-input.error input {
+    border-color: red
+}
+
+.login-form .login-input.error .input-password {
+    margin-bottom: unset
+}
+
+.login-form .login-input.error .text-error {
+    display: block;
+    color: red;
+    font-size: 12px;
+    letter-spacing: 0px;
+    font-weight: 400;
+    line-height: 18px;
+    margin: 8px 0
+}
+
+.login-form .login-input .login-capslock {
+    display: none;
+    position: absolute;
+    left: 0px;
+    top: 107px;
+    font-size: 12px;
+    letter-spacing: 0px;
+    color: #666;
+    padding: 5px 5px 6px 5px;
+    border: 1px solid #9ea7bc;
+    background: #fff;
+    white-space: nowrap;
+    z-index: 1
+}
+
+.login-form .login-input .login-capslock.on {
+    display: block
+}
+
+.login-form .login-input .login-capslock em {
+    font-weight: normal;
+    color: #39f
+}
+
+/* .login-form .login-input .login-capslock .mainIcn {
+    display: inline-block;
+    background: url("/content/images/main/main_sp_icn.png?2018041814") no-repeat;
+    line-height: normal;
+    vertical-align: middle
+} */
+
+.login-form .login-input .login-capslock .mainIcnArrUp {
+    position: absolute;
+    left: 22px;
+    top: -5px;
+    width: 7px;
+    height: 5px;
+    background-position: -30px 0
+}
+
+.login-form .login-convenience {
+    position: relative;
+    text-align: left;
+    color: #222;
+    font-size: 14px;
+    letter-spacing: 0px;
+    font-weight: 400;
+    line-height: 22px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -moz-box-pack: justify;
+    justify-content: space-between;
+    padding-bottom: 12px;
+    -webkit-box-shadow: 0 1px #f4f4f4;
+    box-shadow: 0 1px #f4f4f4;
+    margin-top: 12px
+}
+
+.login-form .login-convenience .login-convenience-keep {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -moz-box-align: center;
+    align-items: center;
+    gap: 8px
+}
+
+.login-form .login-convenience .login-convenience-keep .keep-id {
+    cursor: pointer
+}
+
+.login-form .login-convenience .login-convenience-keep .keep-id label {
+    position: relative;
+    color: #222;
+    font-size: 14px;
+    letter-spacing: 0px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    padding-left: 32px
+}
+
+.login-form .login-convenience .login-convenience-keep .keep-id input[type=checkbox] {
+    border: none
+}
+
+.login-form .login-convenience .login-convenience-keep .keep-id input[type=checkbox]:checked+label::before {
+    background-image: url("../../../assets/svg/checkedbox_circle.svg")
+}
+
+.login-form .login-convenience .login-convenience-keep .keep-id label::before {
+    content: "";
+    cursor: pointer;
+    display: inline-block;
+    position: absolute;
+    top: -4px;
+    left: 0px;
+    width: 24px;
+    height: 24px;
+    border: none;
+    background-image: url("../../../assets/svg/checkBox_circle.svg");
+    background-size: cover
+}
+
+
+.login-form .login-social {
+    display: table;
+    width: auto;
+    margin: 0 auto 0;
+    padding-top: 20px
+}
+
+.login-form .login-social ul:after {
+    content: "";
+    display: block;
+    clear: both
+}
+
+.login-form .login-social li {
+    float: left
+}
+
+.login-form .login-social li:nth-child(n+2) {
+    margin-left: 20px
+}
+
+.login-form .login-social li a {
+    display: block;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: no-repeat center;
+    background-size: 100%;
+    font-size: 0px;
+    letter-spacing: 0px;
+    text-indent: -9999px
+}
+
+.login-form .login-social li a.naver {
+    background-image: url("../../../assets/svg/sns_naver_large.svg");
+    background-repeat: no-repeat
+}
+
+.login-form .login-social li a.kakao {
+    background-image: url("../../../assets/svg/sns_kakao_large.svg");
+    background-repeat: no-repeat
+}
+
+
+
+.login-form .login-social li a.google {
+    background-image: url("../../../assets/svg/sns_google_large.svg");
+    background-repeat: no-repeat
+}
+
+
+.login-form .login-join {
+    position: relative;
+    padding-top: 20px;
+    text-align: center;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: flex;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -moz-box-pack: center;
+    justify-content: center;
+    gap: 16px
+}
+
+.login-form .login-join a {
+    font-size: 14px;
+    letter-spacing: 0px
+}
+
+.login-form .login-join a:last-child {
+    color: #0057ff
+}
+</style>
