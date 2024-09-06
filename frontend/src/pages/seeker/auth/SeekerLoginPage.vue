@@ -102,7 +102,6 @@
 </template>
 
 <script setup>
-import "./SeekerLoginPage.css"
 </script>
 
 <style></style>
