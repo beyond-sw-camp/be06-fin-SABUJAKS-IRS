@@ -1,27 +1,42 @@
 package com.sabujaks.irs.domain.auth.controller;
 
 import com.sabujaks.irs.domain.auth.model.request.RecruiterSignupReq;
-import com.sabujaks.irs.domain.auth.model.response.RecruiterSignupRes;
+import com.sabujaks.irs.domain.auth.model.response.AuthSignupRes;
 import com.sabujaks.irs.domain.auth.service.AuthService;
+import com.sabujaks.irs.domain.auth.service.EmailVerifyService;
 import com.sabujaks.irs.global.common.exception.BaseException;
 import com.sabujaks.irs.global.common.responses.BaseResponse;
 import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
-    @PostMapping("/recruiter/signup")
-    public ResponseEntity<BaseResponse<RecruiterSignupRes>> signup (
+    private final EmailVerifyService emailVerifyService;
+
+    @PostMapping("/signup")
+    public ResponseEntity<BaseResponse<AuthSignupRes>> signup (
         @RequestBody RecruiterSignupReq dto) throws BaseException {
-        RecruiterSignupRes response = authService.signup(dto);
+        AuthSignupRes response = authService.signup(dto);
+        String uuid = emailVerifyService.sendMail(response);
+        emailVerifyService.save(dto.getEmail(), uuid);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.MEMBER_REGISTER_SUCCESS, response));
     }
+
+    @GetMapping("/email-verify")
+    public ResponseEntity<BaseResponse> verify(
+            String email, String role, String uuid) throws Exception, BaseException {
+        if(emailVerifyService.isExist(email, uuid)){
+            authService.activeMember(email, role);
+            return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.EMAIL_VERIFY_SUCCESS));
+        } else {
+            return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.EMAIL_VERIFY_FAIL));
+        }
+    }
+
+
 }

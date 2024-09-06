@@ -7,6 +7,11 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RecruiterSignupRes {
+public class AuthSignupRes {
     private Long idx;
+    private String email;
+    private Boolean inactive;
+    private Boolean enabled;
+    private String role;
+
 }
