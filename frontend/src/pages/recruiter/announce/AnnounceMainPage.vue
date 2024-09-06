@@ -1,22 +1,7 @@
 <template>
-<!-- 공고 관리 -->
-<body>
-    <header class="header">
-    <div class="logo"><img src="../../../assets/img/irs_white.png" style="width: 150px;"></div>
-    <div class="user-info">
-        <div class="user-name">John Doe</div>
-        <button class="logout-button">Logout</button>
-    </div>
-</header>
-<div class="container">
-    <div class="sidebar">
-        <ul>
-            <li>공고</li>
-            <li>지원서</li>
-            <li>면접</li>
-            <li>마이페이지</li>
-        </ul>
-    </div>
+  <MainHeaderComponent></MainHeaderComponent>
+  <div class="container">
+    <MainSideBarComponent></MainSideBarComponent>
     <div id="content">
         <h1>공고 관리</h1>
         <table>
@@ -42,10 +27,11 @@
         </div>
     </div>
 </div>
-</body>
 </template>
 
 <script setup>
+import MainHeaderComponent from "@/components/recruiter/MainHeaderComponent.vue";
+import MainSideBarComponent from "@/components/recruiter/MainSideBarComponent.vue";
 </script>
 
 <style>
