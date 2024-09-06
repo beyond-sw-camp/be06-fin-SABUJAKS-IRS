@@ -4,7 +4,6 @@ import AnnounceMainPage from '@/pages/recruiter/announce/AnnounceMainPage.vue';
 import RecruiterLoginPage from '@/pages/recruiter/auth/RecruiterLoginPage.vue';
 import InterviewScheduleMainPage from '@/pages/recruiter/interview-schedule/InterviewScheduleMainPage.vue';
 import ResumeMainPage from '@/pages/recruiter/resume/ResumeMainPage.vue';
-import ResumeFormPreviewPage from '@/pages/recruiter/resume/ResumeFormPreviewPage.vue';
 import VideoInterviewEstimatorPage from '@/pages/recruiter/video-interview/VideoInterviewEstimatorPage.vue';
 import VideoInterviewMainPage from '@/pages/recruiter/video-interview/VideoInterviewMainPage.vue';
 import VideoInterviewParticipantPage from '@/pages/recruiter/video-interview/VideoInterviewParticipantPage.vue';
@@ -18,6 +17,7 @@ import MypageMainPage from '@/pages/seeker/mypage/MypageMainPage.vue';
 import MypageAnnouceResumePage from '@/pages/seeker/mypage/MypageAnnouceResumePage.vue';
 import MypageSchedulePage from '@/pages/seeker/mypage/MypageSchedulePage.vue';
 import MypageIntegrationeResumePage from '@/pages/seeker/mypage/MypageIntegrationeResumePage.vue';
+import MypageNotificationPage from '@/pages/seeker/mypage/MypageNotificationPage.vue';
 import SeekerSignupPage from '@/pages/seeker/auth/SeekerSignupPage.vue';
 
 const router = createRouter({
@@ -32,7 +32,6 @@ const router = createRouter({
         { path: '/recruiter/video-interview/estimator', component: VideoInterviewEstimatorPage },
         { path: '/recruiter/interview-schedule', component: InterviewScheduleMainPage },
         { path: '/recruiter/resume', component: ResumeMainPage },
-        { path: '/recruiter/resume/preview', component: ResumeFormPreviewPage },
         { path: '/recruiter/resume/list', component: ResumeListPage },
         { path: '/recruiter/resume/detail', component: ResumeDetailPage },
 
@@ -44,6 +43,7 @@ const router = createRouter({
         { path: '/seeker/mypage/schedule', component: MypageSchedulePage },
         { path: '/seeker/mypage/annouce-resume', component: MypageAnnouceResumePage },
         { path: '/seeker/mypage/integration-resume', component: MypageIntegrationeResumePage },
+        { path: '/seeker/mypage/notification', component: MypageNotificationPage },
     ]
 })
 
