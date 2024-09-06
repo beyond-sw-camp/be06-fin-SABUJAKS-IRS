@@ -62,7 +62,6 @@
 <script setup>
 import VideoInterviewMainHeaderComponent from '../../../components/video-interview/VideoInterviewMainHeaderComponent.vue';
 import VideoInterviewMainSideBarComponent from '../../../components/video-interview/VideoInterviewMainSideBarComponent.vue';
-import './VideoInterviewMainPage.css';
 </script>
 
 <style>

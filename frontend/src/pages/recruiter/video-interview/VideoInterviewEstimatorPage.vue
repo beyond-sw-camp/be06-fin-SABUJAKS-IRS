@@ -43,7 +43,6 @@
 </template>
 
 <script setup>
-import "./VideoInterviewEstimatorPage.css"
 import VideoInterviewRoomHeaderComponent from '@/components/video-interview/VideoInterviewRoomHeaderComponent.vue';
 </script>
 

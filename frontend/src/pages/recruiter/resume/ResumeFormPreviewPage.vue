@@ -407,7 +407,6 @@
 </template>
 
 <script setup>
-import "./ResumeFormPreviewPage.css"
 </script>
 
 <style></style>
