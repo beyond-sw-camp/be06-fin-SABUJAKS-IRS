@@ -5,7 +5,6 @@
 </template>
 
 <script setup>
-import "./VideoInterviewMainHeaderComponent.css"
 </script>
 
 <style>
