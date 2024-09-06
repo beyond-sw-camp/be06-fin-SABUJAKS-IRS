@@ -28,6 +28,9 @@ dependencies {
 
 	implementation 'com.google.code.gson:gson'
 
+	// mail
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
 	compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.30'
 	annotationProcessor('org.projectlombok:lombok')
 
