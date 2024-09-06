@@ -8,5 +8,4 @@
 <script setup>
 </script>
 
-<style>
-</style>
+<style lang="css" scoped src="./VideoInterviewRoomHeaderComponent.css"></style>

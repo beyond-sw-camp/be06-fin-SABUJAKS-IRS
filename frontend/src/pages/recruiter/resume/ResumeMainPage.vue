@@ -1,21 +1,7 @@
 <template>
-  <body>
-    <header class="header">
-        <div class="logo"><img src="../../../assets/img/irs_white.png" style="width: 150px;"></div>
-        <div class="user-info">
-            <div class="user-name">John Doe</div>
-            <button class="logout-button">Logout</button>
-        </div>
-    </header>
+  <MainHeaderComponent></MainHeaderComponent>
     <div class="container">
-        <div class="sidebar">
-            <ul>
-                <li>공고</li>
-                <li>지원서</li>
-                <li>면접</li>
-                <li>마이페이지</li>
-            </ul>
-        </div>
+      <MainSideBarComponent></MainSideBarComponent>
         <div id="content">
             <h1>지원서 관리</h1>
             <table class="">
@@ -44,13 +30,95 @@
             </div>
         </div>
     </div>
-
-</body>
 </template>
 
 <script setup>
+import MainHeaderComponent from "@/components/recruiter/MainHeaderComponent.vue";
+import MainSideBarComponent from "@/components/recruiter/MainSideBarComponent.vue";
 </script>
 
 <style>
+.container {
+  width: 80%;
+  margin: 0 auto;
+}
+
+#content {
+  flex: 1;
+  margin-left: 200px; /* 사이드바 너비만큼 왼쪽 여백 추가 */
+  padding: 150px 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+#content table {
+  width: 100%; /* 테이블이 남은 공간을 여유롭게 차지하도록 */
+  border-collapse: collapse;
+}
+
+#content h1 {
+  font-size: 24px;
+  margin: 50px 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 40px;
+}
+
+table, th, td {
+  border: 1px solid #ddd;
+}
+
+th, td {
+  padding: 25px;
+  text-align: left;
+}
+
+th {
+  background-color: #f1f1f1;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 40px;
+}
+
+.register-button {
+  width: 100px;
+  background-color: #f1f1f1;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: #000;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.register-button:hover {
+  background-color: #e0e6ed;
+}
+
+#size-buttons {
+  display: flex;
+  justify-content: center;
+}
+
+#size-buttons button {
+  margin-right: 10px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#size-buttons button:hover {
+  background-color: #ddd;
+}
 
 </style>
