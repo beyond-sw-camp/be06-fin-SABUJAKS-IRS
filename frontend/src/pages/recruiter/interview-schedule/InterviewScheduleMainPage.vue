@@ -1,21 +1,7 @@
 <template>
-  <body>
-    <header class="header">
-        <div class="logo"><img src="../../../assets/img/irs_white.png" style="width: 150px;"></div>
-        <div class="user-info">
-            <div class="user-name">John Doe</div>
-            <button class="logout-button">Logout</button>
-        </div>
-    </header>
+    <MainHeaderComponent></MainHeaderComponent>
     <div class="container">
-        <div class="sidebar">
-            <ul>
-                <li>공고</li>
-                <li>지원서</li>
-                <li>면접</li>
-                <li>마이페이지</li>
-            </ul>
-        </div>
+        <MainSideBarComponent></MainSideBarComponent>
         <div id="content">
             <h1>면접 관리</h1>
             <table class="review-table">
@@ -62,7 +48,6 @@
                         </div>
                         <div id="selected-emails-list"></div>
                         <div class="form-group">
-                            <!-- <label for="interview-date">면접일정<span class="required"></span></label> -->
                             <div class="col-12">
                                 <!-- calender -->
                                 <div class="form-group">
@@ -166,10 +151,12 @@
             </div>
         </div>
     </div>
-</body>
 </template>
 
 <script setup>
+import MainHeaderComponent from '../../../components/recruiter/MainHeaderComponent.vue';
+import MainSideBarComponent from '../../../components/recruiter/MainSideBarComponent.vue';
+import '@/assets/css/grid.css';
 
 // // 모달 관련 스크립트
 // var modal = document.getElementById("myModal");
@@ -309,6 +296,233 @@
 // }
 </script>
 
-<style>
+<style scoped>
+.container {
+  width: 80%;
+  margin: 0 auto;
+}
+#content {
+  margin-left: 200px;
+  padding: 20px;
+}
 
+#content h1 {
+  font-size: 24px;
+  margin: 50px 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 40px;
+}
+
+table, th, td {
+  border: 1px solid #ddd;
+}
+
+th, td {
+  padding: 25px;
+  text-align: left;
+}
+
+th {
+  background-color: #f1f1f1;
+}
+
+#size-buttons button {
+  margin-right: 10px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#size-buttons button:hover {
+  background-color: #ddd;
+}
+
+#user-profile span {
+  margin-right: 10px;
+}
+
+#user-profile a {
+  color: #ffffff;
+  text-decoration: none;
+  border: 1px solid #ffffff;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+#content {
+  flex: 1;
+  margin-left: 200px; /* 사이드바 너비만큼 왼쪽 여백 추가 */
+  padding: 150px 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+#content table {
+  width: 100%; /* 테이블이 남은 공간을 여유롭게 차지하도록 */
+  border-collapse: collapse;
+}
+
+.review-table th:nth-child(1) { /* 첫 번째 열 (번호) */
+  width: 20%; /* 비율 조정 */
+}
+
+.review-table th:nth-child(2) { /* 두 번째 열 (신입/경력) */
+  width: 80%; /* 비율 조정 */
+}
+/* 공통 모달
+
+*/
+/******** 면접 일정 모달창 CSS *********/
+.modal {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  height: 80%;
+}
+
+.modal-section {
+  height: 90%;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+h2 {
+  margin: 0 0 20px;
+}
+
+.form-group {
+  margin-bottom: 25px;
+}
+
+label {
+  display: block;
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+label .subtitle {
+  font-weight: 400 !important;
+}
+
+input[type="text"] {
+  width: calc(100% - 40px);
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.add-button, .add-email {
+  padding: 10px;
+  background-color: #232b16;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.required {
+  color: red;
+}
+
+.calendar {
+  margin-top: 20px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.calendar-grid div {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.submit-button {
+  width: 100%;
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #232b16;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.add-button-section {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: end;
+}
+
+#interview-date, .interview-calender {
+  width: 100%;
+  height: 30px;
+  text-align: center;
+  font-size: 1rem;
+}
+
+#interviewer {
+  display: none;
+  overflow: auto;
+  height: 100%;
+}
+
+#interviewers-list {
+  max-height: 40%;
+  overflow-y: auto;
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+#selected-filters-list, #selected-emails-list {
+  margin-bottom: 20px;
+}
+
+#selected-filters-list span, #selected-emails-list span{
+  background-color: #e0e0e0;
+  padding: 5px 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  border-radius: 20px;
+  display: inline-block;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+}
 </style>
