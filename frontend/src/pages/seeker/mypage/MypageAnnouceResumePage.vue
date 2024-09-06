@@ -103,7 +103,7 @@
 </template>
 
 <script setup>
-import "./MypageAnnouceResumePage.css"
+
 </script>
 
 <style>

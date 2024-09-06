@@ -1,5 +1,5 @@
 <template>
-  <body>
+  <body class="bbodyy">
     <header>
         <div class="header-container">
             <h1>IRS</h1>
@@ -47,7 +47,6 @@
             <div class="sidebar">
                 <div class="profile">
                     <img src="profile_photo_ex.png" alt="프로필 사진" class="profile-img">
-                    <!-- <button class="btn">정보 수정</button> -->
                 </div>
                 <nav>
                     <ul>
@@ -120,24 +119,6 @@
                         </div>
                     </div>
 
-                    <!-- 연락처 정보 -->
-                    <!--
-                    <div class="info-section">
-                        <h2>연락처 정보</h2>
-                        <div class="info-row">
-                            <span class="label">이메일</span>
-                            <span class="value">rnswn1231@daum.net</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="label">마케팅 수신 동의</span>
-                            <span class="value">E-mail</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="label">전화번호</span>
-                            <span class="value">전화번호를 입력해주세요</span>
-                        </div>
-                    </div>
-                    -->
                 </div>
             </div>
         </div>
@@ -146,7 +127,7 @@
 </template>
 
 <script setup>
-import "./MypageMainPage.css"
+
 </script>
 
 <style>

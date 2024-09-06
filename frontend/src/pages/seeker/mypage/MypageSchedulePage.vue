@@ -93,7 +93,7 @@
 </template>
 
 <script setup>
-import "./MypageSchedulePage.css"
+
 </script>
 
 <style>

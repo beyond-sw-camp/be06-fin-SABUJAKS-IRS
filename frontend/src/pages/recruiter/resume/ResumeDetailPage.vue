@@ -438,8 +438,6 @@
 </template>
 
 <script setup>
-import "./ResumeDetailPage.css"
-import "../../../assets/css/style.css"
         // // 모달 관련 스크립트
         // var modal = document.getElementById("myModal");
         // var pdfPreview = document.getElementById("pdfPreview");

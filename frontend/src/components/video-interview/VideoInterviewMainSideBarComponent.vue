@@ -3,7 +3,6 @@
 </template>
 
 <script setup>
-import "./VideoInterviewMainSideBarComponent.css"
 </script>
 
 <style>

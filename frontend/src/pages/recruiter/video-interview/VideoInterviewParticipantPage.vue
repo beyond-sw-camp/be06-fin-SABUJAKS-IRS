@@ -18,7 +18,6 @@
 </template>
 
 <script setup>
-import "./VideoInterviewParticipantPage.css"
 import VideoInterviewRoomHeaderComponent from "@/components/video-interview/VideoInterviewRoomHeaderComponent.vue";
 </script>
 
