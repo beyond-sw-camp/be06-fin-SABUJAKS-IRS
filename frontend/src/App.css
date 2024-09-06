@@ -1,4 +1,4 @@
-#app {
+/* #app {
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -10,53 +10,53 @@ body {
     background-color: #f8f9fa;
 }
 
-div {
-    display: block;
-    unicode-bidi: isolate;
-}
+/*div {*/
+/*    display: block;*/
+/*    unicode-bidi: isolate;*/
+/*}*/
 
-table {
-    border-collapse: collapse;
-    margin-bottom: 40px;
-    display: table;
-    box-sizing: border-box;
-    text-indent: initial;
-    unicode-bidi: isolate;
-    border-spacing: 2px;
-}
+/*table {*/
+/*    border-collapse: collapse;*/
+/*    margin-bottom: 40px;*/
+/*    display: table;*/
+/*    box-sizing: border-box;*/
+/*    text-indent: initial;*/
+/*    unicode-bidi: isolate;*/
+/*    border-spacing: 2px;*/
+/*}*/
 
-tbody {
-    display: table-row-group;
-    vertical-align: middle;
-    unicode-bidi: isolate;
-    border-color: inherit;
-}
-tr {
-    display: table-row;
-    vertical-align: inherit;
-    unicode-bidi: isolate;
-    border-color: inherit;
-}
-.vim-table th:nth-child(1) {
-    width: 20%;
-}
+/*tbody {*/
+/*    display: table-row-group;*/
+/*    vertical-align: middle;*/
+/*    unicode-bidi: isolate;*/
+/*    border-color: inherit;*/
+/*}*/
+/*tr {*/
+/*    display: table-row;*/
+/*    vertical-align: inherit;*/
+/*    unicode-bidi: isolate;*/
+/*    border-color: inherit;*/
+/*}*/
+/*.vim-table th:nth-child(1) {*/
+/*    width: 20%;*/
+/*}*/
 
-th {
-    background-color: #f1f1f1;
-}
-th, td {
-    padding: 25px;
-    text-align: left;
-}
+/*th {*/
+/*    background-color: #f1f1f1;*/
+/*}*/
+/*th, td {*/
+/*    padding: 25px;*/
+/*    text-align: left;*/
+/*}*/
 
-table, th, td {
-    border: 1px solid #ddd;
-}
+/*table, th, td {*/
+/*    border: 1px solid #ddd;*/
+/*}*/
 
-th {
-    display: table-cell;
-    vertical-align: inherit;
-    font-weight: bold;
-    text-align: -internal-center;
-    unicode-bidi: isolate;
-}
+/*th {*/
+/*    display: table-cell;*/
+/*    vertical-align: inherit;*/
+/*    font-weight: bold;*/
+/*    text-align: -internal-center;*/
+/*    unicode-bidi: isolate;*/
+/*}*/
