@@ -1,9 +1,12 @@
 <template>
 <div>
-    <VideoInterviewRoomHeaderComponent></VideoInterviewRoomHeaderComponent>
+    <header class="virh">
+        <img class="virh-logo" src="../../../assets/img/irs_white.png">
+        <button class="virh-exitbtn">면접 나가기</button>
+    </header>
     <div class="vie-wrapper">
         <div class="vie-video">
-            <img class="vie-img" src="../../../assets/img/irs_white.png" alt="">
+            <img class="vie-img" src="../../../assets/img/irs_black.png" alt="">
         </div>
         <div class="vie-evaluate">
             <div class="vie-menu">
@@ -43,9 +46,8 @@
 </template>
 
 <script setup>
-import "./VideoInterviewEstimatorPage.css"
-import VideoInterviewRoomHeaderComponent from '@/components/video-interview/VideoInterviewRoomHeaderComponent.vue';
 </script>
 
+<style lang="css" scoped src="./VideoInterviewEstimatorPage.css"></style>
 <style >
 </style>

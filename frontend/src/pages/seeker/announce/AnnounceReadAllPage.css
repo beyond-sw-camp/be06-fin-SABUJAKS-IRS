@@ -4,7 +4,7 @@
     box-sizing: border-box;
 }
 
-body {
+.body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
     background-color: #f4f4f4;
@@ -12,7 +12,7 @@ body {
     align-items: center; 
 }
 
-header {
+.header {
     background-color: #ffffff;
     border-bottom: 1px solid #ddd;
     padding: 10px 0;

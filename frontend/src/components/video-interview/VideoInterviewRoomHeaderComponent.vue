@@ -6,8 +6,6 @@
 </template>
 
 <script setup>
-import "./VideoInterviewRoomHeaderComponent.css"
 </script>
 
-<style>
-</style>
+<style lang="css" scoped src="./VideoInterviewRoomHeaderComponent.css"></style>
