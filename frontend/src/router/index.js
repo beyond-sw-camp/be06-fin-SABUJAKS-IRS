@@ -18,6 +18,7 @@ import MypageMainPage from '@/pages/seeker/mypage/MypageMainPage.vue';
 import MypageAnnouceResumePage from '@/pages/seeker/mypage/MypageAnnouceResumePage.vue';
 import MypageSchedulePage from '@/pages/seeker/mypage/MypageSchedulePage.vue';
 import MypageIntegrationeResumePage from '@/pages/seeker/mypage/MypageIntegrationeResumePage.vue';
+import MypageNotificationPage from '@/pages/seeker/mypage/MypageNotificationPage.vue';
 import SeekerSignupPage from '@/pages/seeker/auth/SeekerSignupPage.vue';
 
 const router = createRouter({
@@ -44,6 +45,7 @@ const router = createRouter({
         { path: '/seeker/mypage/schedule', component: MypageSchedulePage },
         { path: '/seeker/mypage/annouce-resume', component: MypageAnnouceResumePage },
         { path: '/seeker/mypage/integration-resume', component: MypageIntegrationeResumePage },
+        { path: '/seeker/mypage/notification', component: MypageNotificationPage },
     ]
 })
 
