@@ -4,11 +4,11 @@ about: issue template
 title: ''
 labels: ''
 assignees: ''
-
 ---
 
+
+### ✅ 이슈 제목 : [작업코드] 개발 기능
 <!--
-✅ 이슈 제목 : [작업코드] 개발 기능
 ex) [RECRUITER_001] 채용담당자 회원가입 개발
 -->
 
