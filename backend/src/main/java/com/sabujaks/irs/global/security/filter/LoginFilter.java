@@ -2,6 +2,7 @@ package com.sabujaks.irs.global.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sabujaks.irs.domain.auth.model.request.AuthLoginReq;
+import com.sabujaks.irs.global.security.CustomUserDetails;
 import com.sabujaks.irs.global.utils.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

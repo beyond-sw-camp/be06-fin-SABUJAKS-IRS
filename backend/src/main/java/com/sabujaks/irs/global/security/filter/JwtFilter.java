@@ -1,5 +1,6 @@
 package com.sabujaks.irs.global.security.filter;
 
+import com.sabujaks.irs.global.security.CustomUserDetails;
 import com.sabujaks.irs.global.utils.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

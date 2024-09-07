@@ -26,7 +26,8 @@ public class Recruiter {
     private String password; // 비밀번호
     private String name; // 가입자명
     private String phoneNumber; // 사업자 등록 번호
-    private Boolean enabled; // 이메일 인증
+    private Boolean emailAuth; // 이메일 인증
+    private Boolean companyAuth; // 기업 인증
     private Boolean inactive; // 계정 비활성화 상태
     private String role; // 역할
 

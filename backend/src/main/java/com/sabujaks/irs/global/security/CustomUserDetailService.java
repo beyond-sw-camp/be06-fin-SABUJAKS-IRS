@@ -2,7 +2,6 @@ package com.sabujaks.irs.global.security;
 
 import com.sabujaks.irs.domain.auth.model.entity.Recruiter;
 import com.sabujaks.irs.domain.auth.repository.RecruiterRepository;
-import com.sabujaks.irs.global.security.filter.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -26,7 +25,7 @@ public class CustomUserDetailService implements UserDetailsService {
                     .email(recruiter.getEmail())
                     .password(recruiter.getPassword())
                     .role(recruiter.getRole())
-                    .enabled(recruiter.getEnabled())
+                    .emailAuth(recruiter.getEmailAuth())
                     .build();
         } else {
             return null;
