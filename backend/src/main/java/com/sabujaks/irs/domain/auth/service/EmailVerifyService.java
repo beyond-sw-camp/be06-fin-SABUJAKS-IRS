@@ -44,7 +44,7 @@ public class EmailVerifyService {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(response.getEmail());
         if(Objects.equals(response.getRole(),"ROLE_RECRUITER")){
-            if(!response.getEnabled() && !response.getInactive()){
+            if(!response.getEmail_auth() && !response.getInactive()){
                 message.setSubject("IRS - 채용 담당자로 가입하신걸 환영합니다.");
             } else {
                 message.setSubject("IRS - 채용 담당자 계정 복구 이메일");

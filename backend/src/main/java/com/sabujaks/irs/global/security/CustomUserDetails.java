@@ -1,4 +1,4 @@
-package com.sabujaks.irs.global.security.filter;
+package com.sabujaks.irs.global.security;
 
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,7 +18,7 @@ public class CustomUserDetails implements UserDetails {
     private final String name;
     private final String password;
     private final String role;
-    private final Boolean enabled;
+    private final Boolean emailAuth;
 
     public CustomUserDetails(Long idx, String email, String role) {
         this.idx = idx;
@@ -26,7 +26,7 @@ public class CustomUserDetails implements UserDetails {
         this.role = role;
         this.name = null;
         this.password = null;
-        this.enabled = null;
+        this.emailAuth = null;
     }
 
     @Override
@@ -69,6 +69,6 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return enabled;
+        return emailAuth;
     }
 }

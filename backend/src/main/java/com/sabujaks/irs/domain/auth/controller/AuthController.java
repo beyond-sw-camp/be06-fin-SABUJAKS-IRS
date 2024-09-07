@@ -1,8 +1,12 @@
 package com.sabujaks.irs.domain.auth.controller;
 
+import com.sabujaks.irs.domain.auth.model.request.CompanyVerifyReq;
 import com.sabujaks.irs.domain.auth.model.request.RecruiterSignupReq;
 import com.sabujaks.irs.domain.auth.model.response.AuthSignupRes;
+import com.sabujaks.irs.domain.auth.model.response.CompanyVerifyRes;
+import com.sabujaks.irs.domain.auth.model.response.CrnApiRes;
 import com.sabujaks.irs.domain.auth.service.AuthService;
+import com.sabujaks.irs.domain.auth.service.CompanyVerifyService;
 import com.sabujaks.irs.domain.auth.service.EmailVerifyService;
 import com.sabujaks.irs.global.common.exception.BaseException;
 import com.sabujaks.irs.global.common.responses.BaseResponse;
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     private final AuthService authService;
     private final EmailVerifyService emailVerifyService;
+    private final CompanyVerifyService crnVerifyService;
 
     @PostMapping("/signup")
     public ResponseEntity<BaseResponse<AuthSignupRes>> signup (
@@ -28,8 +33,8 @@ public class AuthController {
     }
 
     @GetMapping("/email-verify")
-    public ResponseEntity<BaseResponse> verify(
-            String email, String role, String uuid) throws Exception, BaseException {
+    public ResponseEntity<BaseResponse> emailVerify(
+        String email, String role, String uuid) throws Exception, BaseException {
         if(emailVerifyService.isExist(email, uuid)){
             authService.activeMember(email, role);
             return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.EMAIL_VERIFY_SUCCESS));
@@ -38,5 +43,10 @@ public class AuthController {
         }
     }
 
-
+    @PostMapping("/company-verify")
+    public ResponseEntity<BaseResponse<CrnApiRes>> companyVerify(
+        @RequestBody CompanyVerifyReq dto) throws BaseException {
+        CompanyVerifyRes response = crnVerifyService.companyVerify(dto);
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.COMPANY_VERIFY_SUCCESS, response));
+    }
 }

@@ -1,3 +1,5 @@
+api-keys:
+  company-registration-key: ${COMPANY_REGISTRATION_KEY}
 spring:
   jwt:
     secret: ${JWT_SECRET}

@@ -11,7 +11,6 @@ public class AuthSignupRes {
     private Long idx;
     private String email;
     private Boolean inactive;
-    private Boolean enabled;
+    private Boolean email_auth;
     private String role;
-
 }
