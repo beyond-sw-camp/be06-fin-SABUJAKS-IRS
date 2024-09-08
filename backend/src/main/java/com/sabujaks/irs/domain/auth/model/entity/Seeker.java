@@ -22,7 +22,6 @@ public class Seeker {
     private Long idx;
     @Column(nullable = false, length = 100, unique = true)
     private String email; // 이메일
-    @Column(nullable = false, length = 100, unique = true)
     private String password; // 비밀번호
     private String name; // 지원자명
     private String nickname; // 닉네임
