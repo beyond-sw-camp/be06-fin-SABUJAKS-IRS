@@ -2,15 +2,22 @@ package com.sabujaks.irs.global.common.exception;
 
 import com.sabujaks.irs.global.common.responses.BaseResponse;
 import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.rememberme.InvalidCookieException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 
+@Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(MailException.class)
@@ -35,4 +42,24 @@ public class GlobalExceptionHandler {
     public ResponseEntity<BaseResponse<String>> handleBaseException(BaseException e){
         return ResponseEntity.badRequest().body(new BaseResponse(BaseResponseMessage.findByCode(e.getCode())));
     }
+
+    @ExceptionHandler
+    public ResponseEntity<BaseResponse<String>> handleAuthenticationException(AuthenticationException e) {
+        if (e instanceof BadCredentialsException) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new BaseResponse(BaseResponseMessage.BAD_CREDENTIAL, e.getMessage()));
+        } else if (e instanceof InternalAuthenticationServiceException) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new BaseResponse(BaseResponseMessage.USER_NOT_FOUND, e.getMessage()));
+        } else if (e instanceof InvalidCookieException) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new BaseResponse(BaseResponseMessage.INVALID_TOKEN, e.getMessage()));
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new BaseResponse(BaseResponseMessage.INVALID_TOKEN, e.getMessage()));
+        }
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<BaseResponse<String>> handleAccessDeniedException(AccessDeniedException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new BaseResponse(BaseResponseMessage.ACCESS_DENIED));
+    }
+
 }

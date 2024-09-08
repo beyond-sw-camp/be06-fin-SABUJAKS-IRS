@@ -38,10 +38,6 @@ public class JwtFilter extends OncePerRequestFilter {
                 return;
             }
             String token = authorization;
-            if(jwtUtil.isExpired(token)){
-                filterChain.doFilter(request, response);
-                return;
-            }
             Long idx = jwtUtil.getIdx(token);
             String email = jwtUtil.getUsername(token);
             String role = jwtUtil.getRole(token);
@@ -49,9 +45,11 @@ public class JwtFilter extends OncePerRequestFilter {
             CustomUserDetails customUserDetails = new CustomUserDetails(idx, email, role);
             Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authToken);
+
+        }catch (Exception e){
+            request.setAttribute("exception", e);
+        } finally {
             filterChain.doFilter(request, response);
-        }catch (ServletException e){
-            throw new ServletException(e);
         }
     }
 }

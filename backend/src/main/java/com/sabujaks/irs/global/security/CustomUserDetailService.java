@@ -2,7 +2,10 @@ package com.sabujaks.irs.global.security;
 
 import com.sabujaks.irs.domain.auth.model.entity.Recruiter;
 import com.sabujaks.irs.domain.auth.repository.RecruiterRepository;
+import com.sabujaks.irs.global.common.exception.BaseException;
+import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,8 +30,7 @@ public class CustomUserDetailService implements UserDetailsService {
                     .role(recruiter.getRole())
                     .emailAuth(recruiter.getEmailAuth())
                     .build();
-        } else {
-            return null;
         }
+        return null;
     }
 }
