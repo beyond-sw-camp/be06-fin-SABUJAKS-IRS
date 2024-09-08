@@ -5,6 +5,9 @@ import com.sabujaks.irs.global.security.exception.CustomAuthenticationEntryPoint
 import com.sabujaks.irs.global.security.exception.CustomLoginFailureHandler;
 import com.sabujaks.irs.global.security.filter.JwtFilter;
 import com.sabujaks.irs.global.security.filter.LoginFilter;
+import com.sabujaks.irs.global.security.oauth2.CustomOAuth2UserDetails;
+import com.sabujaks.irs.global.security.oauth2.CustomOAuth2UserService;
+import com.sabujaks.irs.global.security.oauth2.OAuth2AuthenticationSuccessHandler;
 import com.sabujaks.irs.global.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -28,6 +31,8 @@ public class SecurityConfig {
     private final CustomLoginFailureHandler customLoginFailureHandler;
     private final CustomAuthenticationEntryPoint authenticationEntryPoint;
     private final CustomAccessDeniedHandler accessDeniedHandler;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     public CorsFilter corsFilter() {
@@ -47,10 +52,15 @@ public class SecurityConfig {
         http.sessionManagement((auth) -> auth.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.authorizeHttpRequests((auth) ->
                         auth
-                                .requestMatchers("/api/test/ex01").hasAuthority("ROLE_RECRUITER")
+                                .requestMatchers("/api/test/ex01").hasAuthority("ROLE_SEEKER")
                                 .requestMatchers("/api/auth/**").permitAll()
                                 .anyRequest().permitAll()
         );
+        http.addFilter(corsFilter());
+        http.oauth2Login((config) -> {
+            config.successHandler(oAuth2AuthenticationSuccessHandler);
+            config.userInfoEndpoint((endpoint) -> endpoint.userService(customOAuth2UserService));
+        });
 
         http.addFilter(corsFilter());
         http.exceptionHandling(e ->e.authenticationEntryPoint(authenticationEntryPoint).accessDeniedHandler(accessDeniedHandler));
