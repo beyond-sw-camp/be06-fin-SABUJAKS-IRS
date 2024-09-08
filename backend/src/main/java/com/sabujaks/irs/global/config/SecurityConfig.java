@@ -9,6 +9,7 @@ import com.sabujaks.irs.global.security.oauth2.CustomOAuth2UserDetails;
 import com.sabujaks.irs.global.security.oauth2.CustomOAuth2UserService;
 import com.sabujaks.irs.global.security.oauth2.OAuth2AuthenticationSuccessHandler;
 import com.sabujaks.irs.global.utils.JwtUtil;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -61,7 +62,17 @@ public class SecurityConfig {
             config.successHandler(oAuth2AuthenticationSuccessHandler);
             config.userInfoEndpoint((endpoint) -> endpoint.userService(customOAuth2UserService));
         });
-
+        http.logout((auth) ->
+                auth
+                        .logoutUrl("/api/auth/logout")
+                        .deleteCookies("ATOKEN")
+                        .logoutSuccessHandler(((request, response, authentication) -> {
+                            response.setStatus(HttpServletResponse.SC_OK);
+                            response.setContentType("application/json;charset=UTF-8");
+                            response.getWriter().write("{\"success\": true, \"message\": \"로그아웃 성공\"}");
+                            response.getWriter().flush();
+                        }))
+        );
         http.addFilter(corsFilter());
         http.exceptionHandling(e ->e.authenticationEntryPoint(authenticationEntryPoint).accessDeniedHandler(accessDeniedHandler));
         http.addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class);
