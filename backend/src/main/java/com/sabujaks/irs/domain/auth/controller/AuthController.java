@@ -1,7 +1,7 @@
 package com.sabujaks.irs.domain.auth.controller;
 
+import com.sabujaks.irs.domain.auth.model.request.AuthSignupReq;
 import com.sabujaks.irs.domain.auth.model.request.CompanyVerifyReq;
-import com.sabujaks.irs.domain.auth.model.request.RecruiterSignupReq;
 import com.sabujaks.irs.domain.auth.model.response.AuthSignupRes;
 import com.sabujaks.irs.domain.auth.model.response.CompanyVerifyRes;
 import com.sabujaks.irs.domain.auth.model.response.CrnApiRes;
@@ -11,9 +11,11 @@ import com.sabujaks.irs.domain.auth.service.EmailVerifyService;
 import com.sabujaks.irs.global.common.exception.BaseException;
 import com.sabujaks.irs.global.common.responses.BaseResponse;
 import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
+import com.sabujaks.irs.global.utils.CloudFileUpload;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -22,11 +24,13 @@ public class AuthController {
     private final AuthService authService;
     private final EmailVerifyService emailVerifyService;
     private final CompanyVerifyService crnVerifyService;
-
+    private final CloudFileUpload cloudFileUpload;
     @PostMapping("/signup")
     public ResponseEntity<BaseResponse<AuthSignupRes>> signup (
-        @RequestBody RecruiterSignupReq dto) throws BaseException {
-        AuthSignupRes response = authService.signup(dto);
+        @RequestPart(value = "file", required = false) MultipartFile file,
+        @RequestPart("dto") AuthSignupReq dto) throws BaseException {
+        String fileUrl = cloudFileUpload.upload(file);
+        AuthSignupRes response = authService.signup(dto, fileUrl);
         String uuid = emailVerifyService.sendMail(response);
         emailVerifyService.save(dto.getEmail(), uuid);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.MEMBER_REGISTER_SUCCESS, response));
