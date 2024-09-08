@@ -1,7 +1,6 @@
 package com.sabujaks.irs.domain.auth.service;
 
 import com.sabujaks.irs.domain.auth.model.entity.EmailVerify;
-import com.sabujaks.irs.domain.auth.model.request.RecruiterSignupReq;
 import com.sabujaks.irs.domain.auth.model.response.AuthSignupRes;
 import com.sabujaks.irs.domain.auth.repository.EmailVerifyRepository;
 import com.sabujaks.irs.global.common.exception.BaseException;
@@ -13,7 +12,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -50,7 +48,11 @@ public class EmailVerifyService {
                 message.setSubject("IRS - 채용 담당자 계정 복구 이메일");
             }
         } else if (Objects.equals(response.getRole(), "ROLE_SEEKER")) {
-
+            if(!response.getEmail_auth() && !response.getInactive()){
+                message.setSubject("IRS - 지원자로 가입하신걸 환영합니다.");
+            } else {
+                message.setSubject("IRS - 지원자 계정 복구 이메일");
+            }
         } else {
             throw new BaseException(BaseResponseMessage.EMAIL_VERIFY_FAIL_INVALID_ROLE);
         }
