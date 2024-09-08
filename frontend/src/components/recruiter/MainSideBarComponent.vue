@@ -24,6 +24,7 @@
   position: fixed; /* 사이드바를 고정하여 화면 왼쪽 끝까지 차지하도록 */
   top: 100px; /* header 높이만큼 아래에 위치하도록 */
   left: 0;
+  border-radius: 0;
 }
 
 .sidebar img {
