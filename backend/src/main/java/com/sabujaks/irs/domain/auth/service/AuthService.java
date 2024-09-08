@@ -96,7 +96,11 @@ public class AuthService {
             recruiter.setInactive(false);
             recruiterRepository.save(recruiter);
         } else if(Objects.equals(role, "ROLE_SEEKER")) {
-            return null;
+            Seeker seeker = seekerRepository.findBySeekerEmail(email)
+                    .orElseThrow( () -> new BaseException(BaseResponseMessage.EMAIL_VERIFY_FAIL_NOT_FOUND));
+            seeker.setEmailAuth(true);
+            seeker.setInactive(false);
+            seekerRepository.save(seeker);
         } else {
             throw new BaseException(BaseResponseMessage.EMAIL_VERIFY_FAIL_INVALID_ROLE);
         }
