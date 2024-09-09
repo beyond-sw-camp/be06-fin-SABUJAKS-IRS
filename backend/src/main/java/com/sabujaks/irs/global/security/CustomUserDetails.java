@@ -1,7 +1,8 @@
-package com.sabujaks.irs.global.security.filter;
+package com.sabujaks.irs.global.security;
 
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class CustomUserDetails implements UserDetails {
     private final String name;
     private final String password;
     private final String role;
-    private final Boolean enabled;
+    private final Boolean emailAuth;
 
     public CustomUserDetails(Long idx, String email, String role) {
         this.idx = idx;
@@ -26,19 +27,14 @@ public class CustomUserDetails implements UserDetails {
         this.role = role;
         this.name = null;
         this.password = null;
-        this.enabled = null;
+        this.emailAuth = null;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<GrantedAuthority> collection = new ArrayList<>();
-        collection.add(new GrantedAuthority(){
-            @Override
-            public String getAuthority() {
-                return role;
-            }
-        });
-        return collection;
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(role));
+        return authorities;
     }
     public String getName(){ return name; }
 
@@ -69,6 +65,6 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return enabled;
+        return emailAuth;
     }
 }

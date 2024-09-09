@@ -1,8 +1,15 @@
 package com.sabujaks.irs.global.config;
 
+import com.sabujaks.irs.global.security.exception.CustomAccessDeniedHandler;
+import com.sabujaks.irs.global.security.exception.CustomAuthenticationEntryPoint;
+import com.sabujaks.irs.global.security.exception.CustomLoginFailureHandler;
 import com.sabujaks.irs.global.security.filter.JwtFilter;
 import com.sabujaks.irs.global.security.filter.LoginFilter;
+import com.sabujaks.irs.global.security.oauth2.CustomOAuth2UserDetails;
+import com.sabujaks.irs.global.security.oauth2.CustomOAuth2UserService;
+import com.sabujaks.irs.global.security.oauth2.OAuth2AuthenticationSuccessHandler;
 import com.sabujaks.irs.global.utils.JwtUtil;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +29,11 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityConfig {
     private final JwtUtil jwtUtil;
     private final AuthenticationConfiguration authenticationConfiguration;
+    private final CustomLoginFailureHandler customLoginFailureHandler;
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
+    private final CustomAccessDeniedHandler accessDeniedHandler;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     public CorsFilter corsFilter() {
@@ -41,12 +53,32 @@ public class SecurityConfig {
         http.sessionManagement((auth) -> auth.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.authorizeHttpRequests((auth) ->
                         auth
+                                .requestMatchers("/api/test/ex01").hasAuthority("ROLE_SEEKER")
+                                .requestMatchers("/api/auth/**").permitAll()
                                 .anyRequest().permitAll()
         );
         http.addFilter(corsFilter());
+        http.oauth2Login((config) -> {
+            config.successHandler(oAuth2AuthenticationSuccessHandler);
+            config.userInfoEndpoint((endpoint) -> endpoint.userService(customOAuth2UserService));
+        });
+        http.logout((auth) ->
+                auth
+                        .logoutUrl("/api/auth/logout")
+                        .deleteCookies("ATOKEN")
+                        .logoutSuccessHandler(((request, response, authentication) -> {
+                            response.setStatus(HttpServletResponse.SC_OK);
+                            response.setContentType("application/json;charset=UTF-8");
+                            response.getWriter().write("{\"success\": true, \"message\": \"로그아웃 성공\"}");
+                            response.getWriter().flush();
+                        }))
+        );
+        http.addFilter(corsFilter());
+        http.exceptionHandling(e ->e.authenticationEntryPoint(authenticationEntryPoint).accessDeniedHandler(accessDeniedHandler));
         http.addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class);
         LoginFilter loginFilter = new LoginFilter(jwtUtil, authenticationManager(authenticationConfiguration));
-        loginFilter.setFilterProcessesUrl("/api/v1/member/login");
+        loginFilter.setFilterProcessesUrl("/api/auth/login");
+        loginFilter.setAuthenticationFailureHandler(customLoginFailureHandler);
         http.addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
