@@ -39,7 +39,12 @@ public enum BaseResponseMessage {
     // RESUME 2000~2999
     RESUME_REGISTER_SUCCESS(true, 2000, "지원서 등록에 성공했습니다."),
     RESUME_REGISTER_FAIL_NOT_FOUND(false, 2001, "해당 유저를 찾을 수 없습니다."),
-    RESUME_REGISTER_FAIL(false, 2002, "지원서 등록에 실패하였습니다." );
+    RESUME_REGISTER_FAIL(false, 2002, "지원서 등록에 실패하였습니다." ),
+
+    // ANNOUNCEMENT 3000~3999
+    ANNOUNCEMENT_REGISTER_STEP_TWO_SUCCESS(true, 2000, "지원서 폼 조립에 성공했습니다."),
+    ANNOUNCEMENT_REGISTER_STEP_TWO_FAIL_NOT_FOUND(false, 2001, "공고가 저장되지 않아 찾을 수 없습니다."),
+    ANNOUNCEMENT_REGISTER_STEP_TWO_FAIL(false, 2002, "지원서 폼 조립에 실패하였습니다." );
 
     private Boolean success;
     private Integer code;
