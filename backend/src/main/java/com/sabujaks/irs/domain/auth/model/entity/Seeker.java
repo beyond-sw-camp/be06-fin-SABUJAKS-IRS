@@ -1,5 +1,6 @@
 package com.sabujaks.irs.domain.auth.model.entity;
 
+import com.sabujaks.irs.domain.resume.model.entity.ResumeInfo;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -7,6 +8,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 // 지원자 엔티티
 @Entity
@@ -40,4 +42,7 @@ public class Seeker {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
+    // 회원정보 테이블과 1:n
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "seeker")
+    private List<ResumeInfo> resumeInfoList;
 }

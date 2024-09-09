@@ -19,7 +19,9 @@ import MypageSchedulePage from '@/pages/seeker/mypage/MypageSchedulePage.vue';
 import MypageIntegrationeResumePage from '@/pages/seeker/mypage/MypageIntegrationeResumePage.vue';
 import MypageNotificationPage from '@/pages/seeker/mypage/MypageNotificationPage.vue';
 import SeekerSignupPage from '@/pages/seeker/auth/SeekerSignupPage.vue';
+import AnnounceRegisterStep2Page from '@/pages/recruiter/announce/AnnounceRegisterStep2Page.vue';
 import AnnounceRegisterStep1Page from "@/pages/recruiter/announce/AnnounceRegisterStep1Page.vue";
+
 
 const router = createRouter({
     history: createWebHistory(),
@@ -28,6 +30,7 @@ const router = createRouter({
         { path: '/recruiter/login', component: RecruiterLoginPage},
         { path: '/recruiter/signup', component: RecruiterSignupPage},
         { path: '/recruiter/announce', component: AnnounceMainPage },
+        { path: '/recruiter/announce/register-step2', component: AnnounceRegisterStep2Page},
         { path: '/recruiter/announce/register-step1', component: AnnounceRegisterStep1Page},
         { path: '/recruiter/video-interview', component: VideoInterviewMainPage },
         { path: '/recruiter/video-interview/participant', component: VideoInterviewParticipantPage },
@@ -49,6 +52,7 @@ const router = createRouter({
     ]
 })
 
+
 router.beforeEach((to, from, next) => {
     let link;
 
@@ -63,6 +67,22 @@ router.beforeEach((to, from, next) => {
     } else {
         // 다른 페이지로 이동하면 해당 CSS 파일 제거
         const existingLink = document.querySelector('link[href="/css/AnnounceRegisterStep1Page.css"]');
+        if (existingLink) {
+            document.head.removeChild(existingLink);
+        }
+    }
+  
+    // /recruiter/announce/register-step2 페이지에만 CSS 추가
+    if (to.path === '/recruiter/announce/register-step2') {
+        if (!document.querySelector('link[href="/css/AnnounceRegisterStep2Page.css"]')) {
+            link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = '/css/step2.css'; // 절대 경로로 변경
+            document.head.appendChild(link);
+        }
+    } else {
+        // 다른 페이지로 이동하면 해당 CSS 파일 제거
+        const existingLink = document.querySelector('link[href="/css/AnnounceRegisterStep2Page.css"]');
         if (existingLink) {
             document.head.removeChild(existingLink);
         }

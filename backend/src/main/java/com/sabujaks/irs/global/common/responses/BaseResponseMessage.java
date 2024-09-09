@@ -12,6 +12,7 @@ public enum BaseResponseMessage {
     BAD_CREDENTIAL(false, 307, "아이디 또는 비밀번호가 맞지 않습니다. 다시 확인해 주세요"),
     USER_NOT_FOUND(false, 308, "계정이 존재하지 않습니다. 회원가입 진행 후 로그인 해주세요."),
     FILE_UPLOAD_FAIL(false, 309,"이미지 업로드에 실패했습니다."),
+    AUTH_FAIL(false, 310, "사용자 인증에 실패하였습니다."),
 
 
     INTERNAL_SERVER_ERROR(false, 500, "내부 서버 오류가 발생해서 처리할 수 없습니다."),
@@ -38,6 +39,11 @@ public enum BaseResponseMessage {
     // INTERVIEW_SCHEDULE 면접 일정 1300
     INTERVIEW_SCHEDULE_CREATE_SUCCESS(true, 1300, "면접 일정 등록에 성공했습니다.");
 
+
+    // RESUME 2000~2999
+    RESUME_REGISTER_SUCCESS(true, 2000, "지원서 등록에 성공했습니다."),
+    RESUME_REGISTER_FAIL_NOT_FOUND(false, 2001, "해당 유저를 찾을 수 없습니다."),
+    RESUME_REGISTER_FAIL(false, 2002, "지원서 등록에 실패하였습니다." );
 
     private Boolean success;
     private Integer code;

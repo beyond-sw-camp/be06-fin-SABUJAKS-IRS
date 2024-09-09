@@ -51,7 +51,7 @@ header nav a:hover {
   padding: 0 20px;
   box-sizing: border-box;
   position: fixed;
-  z-index: 999;
+  z-index: 2;
 }
 
 .logo {
