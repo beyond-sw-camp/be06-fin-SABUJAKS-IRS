@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/interview-schedule")
+@RequestMapping("/api/interview-schedule")
 @RequiredArgsConstructor
 public class InterviewScheduleController {
 
