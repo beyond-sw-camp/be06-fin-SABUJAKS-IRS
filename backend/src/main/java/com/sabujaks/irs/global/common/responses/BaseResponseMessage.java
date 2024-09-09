@@ -33,8 +33,10 @@ public enum BaseResponseMessage {
     // COMPANY_VERIFY 기업 인증 1200
     COMPANY_VERIFY_SUCCESS(true, 1200, "기업 인증을 완료했습니다."),
     COMPANY_VERIFY_FAIL(false, 1201, "기업 인증에 실패했습니다."),
-    COMPANY_VERIFY_FAIL_INVALID_REQUEST(false, 1202, "유효하지 않은 요청입니다.");
+    COMPANY_VERIFY_FAIL_INVALID_REQUEST(false, 1202, "유효하지 않은 요청입니다."),
 
+    // INTERVIEW_SCHEDULE 면접 일정 1300
+    INTERVIEW_SCHEDULE_CREATE_SUCCESS(true, 1300, "면접 일정 등록에 성공했습니다.");
 
 
     private Boolean success;
