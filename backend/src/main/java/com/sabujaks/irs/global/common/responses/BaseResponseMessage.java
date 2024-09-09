@@ -24,7 +24,6 @@ public enum BaseResponseMessage {
     MEMBER_REGISTER_FAIL_NOT_COMPANY_AUTH(false, 1003, "기업 인증을 하지 않은 사용자는 가입할 수 없습니다."),
 
     // EMAIL_VERIFY 이메일 검증 1100
-
     EMAIL_VERIFY_SUCCESS(true, 1100, "이메일 검증을 완료했습니다."),
     EMAIL_VERIFY_FAIL(false, 1101, "이메일 검증을 실패했습니다."),
     EMAIL_VERIFY_FAIL_NOT_FOUND(false, 1102, "해당 유저를 찾을 수 없습니다."),
@@ -37,8 +36,7 @@ public enum BaseResponseMessage {
     COMPANY_VERIFY_FAIL_INVALID_REQUEST(false, 1202, "유효하지 않은 요청입니다."),
 
     // INTERVIEW_SCHEDULE 면접 일정 1300
-    INTERVIEW_SCHEDULE_CREATE_SUCCESS(true, 1300, "면접 일정 등록에 성공했습니다.");
-
+    INTERVIEW_SCHEDULE_CREATE_SUCCESS(true, 1300, "면접 일정 등록에 성공했습니다."),
 
     // RESUME 2000~2999
     RESUME_REGISTER_SUCCESS(true, 2000, "지원서 등록에 성공했습니다."),
@@ -46,9 +44,9 @@ public enum BaseResponseMessage {
     RESUME_REGISTER_FAIL(false, 2002, "지원서 등록에 실패하였습니다." ),
 
     // ANNOUNCEMENT 3000~3999
-    ANNOUNCEMENT_REGISTER_STEP_TWO_SUCCESS(true, 2000, "지원서 폼 조립에 성공했습니다."),
-    ANNOUNCEMENT_REGISTER_STEP_TWO_FAIL_NOT_FOUND(false, 2001, "공고가 저장되지 않아 찾을 수 없습니다."),
-    ANNOUNCEMENT_REGISTER_STEP_TWO_FAIL(false, 2002, "지원서 폼 조립에 실패하였습니다." );
+    ANNOUNCEMENT_REGISTER_STEP_TWO_SUCCESS(true, 3000, "지원서 폼 조립에 성공했습니다."),
+    ANNOUNCEMENT_REGISTER_STEP_TWO_FAIL_NOT_FOUND(false, 3001, "공고가 저장되지 않아 찾을 수 없습니다."),
+    ANNOUNCEMENT_REGISTER_STEP_TWO_FAIL(false, 3002, "지원서 폼 조립에 실패하였습니다." );
 
     private Boolean success;
     private Integer code;
