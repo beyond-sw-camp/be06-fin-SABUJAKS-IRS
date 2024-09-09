@@ -51,7 +51,7 @@
 </template>
 
 <script setup>
-import './RecruiterLoginPage.css'
+// import './RecruiterLoginPage.css'
 </script>
 
 <style>
