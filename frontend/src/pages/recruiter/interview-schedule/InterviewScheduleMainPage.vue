@@ -36,9 +36,9 @@
               </div>
             </div>
             <div id="selected-filters-list">
-                            <span v-for="filter in selectedFilters" :key="filter" @click="removeFilter(filter)">
-                                {{ filter }} ✕
-                            </span>
+              <span v-for="filter in selectedFilters" :key="filter" @click="removeFilter(filter)">
+                  {{ filter }} ✕
+              </span>
             </div>
             <div class="form-group col-12 row">
               <div class="col-11">
@@ -50,15 +50,29 @@
               </div>
             </div>
             <div id="selected-emails-list">
-                            <span v-for="email in selectedEmails" :key="email" @click="removeEmail(email)">
-                                {{ email }} ✕
-                            </span>
+              <span v-for="email in selectedEmails" :key="email" @click="removeEmail(email)">
+                  {{ email }} ✕
+              </span>
             </div>
             <div class="form-group">
               <div class="col-12">
-                <div class="form-group">
-                  <label for="interview-date" class="subtitle">날짜 <span class="required">*</span></label>
-                  <input type="date" id="interview-date" v-model="interviewDate">
+                <div class="form-group col-12 row">
+                  <div class="form-group col-5">
+                    <label for="interview-date" class="subtitle">날짜 <span class="required">*</span></label>
+                    <input type="date" id="interview-date" v-model="interviewDate">
+                  </div>
+                  <div class="form-group col-5 ml-auto">
+                    <label for="interview-type" class="subtitle">방식 <span class="required">*</span></label>
+                    <div class="row">
+                      <label class="checkbox-label">
+                        <input type="checkbox" name="choice" value="대면" v-model="interviewType"> 대면
+                      </label>
+
+                      <label class="checkbox-label ml-auto">
+                        <input type="checkbox" name="choice" value="온라인" v-model="interviewType"> 온라인
+                      </label>
+                    </div>
+                  </div>
                 </div>
                 <div class="form-group">
                   <label for="start-time" class="subtitle">시작시간 <span class="required">*</span></label>
@@ -120,6 +134,9 @@ import { ref } from 'vue';
 import MainHeaderComponent from '../../../components/recruiter/MainHeaderComponent.vue';
 import MainSideBarComponent from '../../../components/recruiter/MainSideBarComponent.vue';
 import '@/assets/css/grid.css';
+import { UseInterviewScheduleStore } from '@/stores/UseInterviewScheduleStore';
+
+const interviewScheduleStore = UseInterviewScheduleStore(); // Store 인스턴스
 
 const isModalOpen = ref(false);
 const modalTitle = ref('');
@@ -134,6 +151,7 @@ const endTime = ref('');
 const timeOptions = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
 const showCalendar = ref(true); // 캘린더 기본으로 표시
 const showInterviewerList = ref(false); // 후보자 목록은 기본적으로 숨김
+const interviewType = ref([]); // 대면, 비대면 값 저장
 
 const openModal = (type) => {
   modalTitle.value = type;
@@ -193,7 +211,40 @@ const removeFilter = (filter) => {
 };
 
 const submitForm = () => {
-  // 폼 제출 로직 추가 필요
+  const selectedSpanValues = selectedFilters.value;
+  const participantEmails = selectedEmails.value// 참가자 이메일
+  const selectedDate = interviewDate.value;
+  const selectedStartTime = startTime.value;
+  const selectedEndTime = endTime.value;
+  const selectedType = interviewType.value.join(', ');
+
+  alert(`
+    선택된 필터: ${selectedSpanValues}
+    면접관 이메일: ${participantEmails}
+    날짜: ${selectedDate}
+    방식: ${selectedType}
+    시작 시간: ${selectedStartTime}
+    종료 시간: ${selectedEndTime}
+  `);
+
+  // 데이터 객체 생성
+  const interviewData = {
+    seekerList: selectedSpanValues,
+    interviewerList: participantEmails,
+    isOnline: selectedType,
+    interviewDate: selectedDate,
+    interviewStart: selectedStartTime,
+    interviewEnd: selectedEndTime,
+  };
+
+  // Store의 createInterviewSchedule 함수 호출
+  interviewScheduleStore.createInterviewSchedule(interviewData)
+    .then(() => {
+      alert('면접 일정이 성공적으로 등록되었습니다.');
+    })
+    .catch((error) => {
+      console.error('면접 일정 등록 중 오류 발생:', error);
+    });
 };
 
 
@@ -297,6 +348,7 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9;
 }
 
 .modal-content {
