@@ -36,6 +36,10 @@ public enum BaseResponseMessage {
     COMPANY_VERIFY_FAIL(false, 1201, "기업 인증에 실패했습니다."),
     COMPANY_VERIFY_FAIL_INVALID_REQUEST(false, 1202, "유효하지 않은 요청입니다."),
 
+    // INTERVIEW_SCHEDULE 면접 일정 1300
+    INTERVIEW_SCHEDULE_CREATE_SUCCESS(true, 1300, "면접 일정 등록에 성공했습니다.");
+
+
     // RESUME 2000~2999
     RESUME_REGISTER_SUCCESS(true, 2000, "지원서 등록에 성공했습니다."),
     RESUME_REGISTER_FAIL_NOT_FOUND(false, 2001, "해당 유저를 찾을 수 없습니다."),

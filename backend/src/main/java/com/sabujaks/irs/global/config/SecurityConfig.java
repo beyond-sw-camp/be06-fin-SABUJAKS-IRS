@@ -55,6 +55,7 @@ public class SecurityConfig {
                         auth
                                 .requestMatchers("/api/test/ex01").hasAuthority("ROLE_SEEKER")
                                 .requestMatchers("/api/auth/**").permitAll()
+                                .requestMatchers("/interview-schedule/**").permitAll()
                                 .anyRequest().permitAll()
         );
         http.addFilter(corsFilter());
