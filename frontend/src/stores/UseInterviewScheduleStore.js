@@ -24,7 +24,7 @@ export const UseInterviewScheduleStore = defineStore('reservation', {
             try{
                 const response = await axios.post(
                     // `api/interview-schedule/create`,
-                    `http://localhost:8080/interview-schedule/create`,
+                    `/api/api/interview-schedule/create`,
                     interviewData,
                     // 쿠키 포함
                     // { withCredentials: true }
