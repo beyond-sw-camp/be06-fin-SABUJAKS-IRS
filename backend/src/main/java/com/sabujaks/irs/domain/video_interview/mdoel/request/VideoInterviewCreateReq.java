@@ -9,7 +9,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class VideoInterviewRoomCreateReq {
+public class VideoInterviewCreateReq {
     private String announceUUID;
     private Map<String, Object> params;
     // params => {customSessionId: 세션 이름}
