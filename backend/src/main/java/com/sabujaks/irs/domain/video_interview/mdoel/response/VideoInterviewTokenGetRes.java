@@ -7,8 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class VideoInterviewSearchRes {
-    private Long idx;
-    private String announceUUID;
-    private String videoInterviewRoomUUID;
+public class VideoInterviewTokenGetRes {
+    private String token;
+
 }

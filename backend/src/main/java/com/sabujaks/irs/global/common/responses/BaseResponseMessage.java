@@ -36,10 +36,12 @@ public enum BaseResponseMessage {
     COMPANY_VERIFY_FAIL_INVALID_REQUEST(false, 1202, "유효하지 않은 요청입니다."),
 
     // INTERVIEW_SCHEDULE 면접 일정 1300
-    INTERVIEW_SCHEDULE_CREATE_SUCCESS(true, 1300, "면접 일정 등록에 성공했습니다."),
-    // VIDEO_INTERVIEW 화상 면접 1400
+    INTERVIEW_SCHEDULE_CREATE_SUCCESS(true, 1300, "면접 일정 등록에 성공했습니다."), // VIDEO_INTERVIEW 화상 면접 1400
     VIDEO_INTERVIEW_CREATE_SUCCESS(true, 1400, "화상 면접 방 생성에 성공했습니다."),
-    VIDEO_INTERVIEW_SEARCH_FAIL_NOT_FOUND(false, 1401, "화상 면접방 목록 조회에 실패했습니다."),
+    VIDEO_INTERVIEW_SEARCH_ALL_SUCCESS(true, 1401, "화상 면접방 목록 조회에 성공했습니다."),
+    VIDEO_INTERVIEW_SEARCH_ALL_FAIL_NOT_FOUND(false, 1402, "화상 면접방 목록 조회에 실패했습니다."),
+    VIDEO_INTERVIEW_JOIN_SUCCESS(true, 1403, "화상 면접방에 참가했습니다."),
+    VIDEO_INTERVIEW_JOIN_FAIL(false, 1404, "화상 면접방 참가에 실패했습니다."),
     // RESUME 2000~2999
     RESUME_REGISTER_SUCCESS(true, 2000, "지원서 등록에 성공했습니다."),
     RESUME_REGISTER_FAIL_NOT_FOUND(false, 2001, "해당 유저를 찾을 수 없습니다."),
