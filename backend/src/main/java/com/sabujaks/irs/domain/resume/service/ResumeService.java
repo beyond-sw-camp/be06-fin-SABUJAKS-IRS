@@ -52,7 +52,7 @@ public class ResumeService {
                     .phone(dto.getPersonalInfo().getPhone())
                     .tel(dto.getPersonalInfo().getTel())
                     .address(dto.getPersonalInfo().getAddress())
-                    .profileImg(fileUrl)
+                    .profile_img(fileUrl)
                     .build();
             personalInfoRepository.save(personalInfo);
             // 취업우대&병역에 저장 (조건 필요)
@@ -62,13 +62,13 @@ public class ResumeService {
                     .protection(dto.getPreferentialEmp().getProtection())
                     .subsidy(dto.getPreferentialEmp().getSubsidy())
                     .disability(dto.getPreferentialEmp().getDisability())
-                    .disabilityDegree(dto.getPreferentialEmp().getDisability_degree())
+                    .disability_degree(dto.getPreferentialEmp().getDisability_degree())
                     .military(dto.getPreferentialEmp().getMilitary())
-                    .militaryClass(dto.getPreferentialEmp().getMilitary_class())
-                    .militaryStart(dto.getPreferentialEmp().getMilitary_start())
-                    .militaryEnd(dto.getPreferentialEmp().getMilitary_end())
-                    .militaryType(dto.getPreferentialEmp().getMilitary_type())
-                    .militaryRank(dto.getPreferentialEmp().getMilitary_rank())
+                    .military_class(dto.getPreferentialEmp().getMilitary_class())
+                    .military_start(dto.getPreferentialEmp().getMilitary_start())
+                    .military_end(dto.getPreferentialEmp().getMilitary_end())
+                    .military_type(dto.getPreferentialEmp().getMilitary_type())
+                    .military_rank(dto.getPreferentialEmp().getMilitary_rank())
                     .build();
             preferentialEmpRepository.save(preferentialEmp);
 
