@@ -1,5 +1,7 @@
 package com.sabujaks.irs.domain.auth.model.entity;
 
+import com.sabujaks.irs.domain.announce.model.entity.Announcement;
+import com.sabujaks.irs.domain.announce.model.entity.CustomForm;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -7,6 +9,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 // 채용담당자 엔티티
 @Entity
@@ -35,5 +39,8 @@ public class Recruiter {
     private LocalDateTime createdAt;
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "recruiter" ,fetch = FetchType.LAZY)
+    private List<Announcement> AnnouncementList = new ArrayList<>(); // 공고 테이블과 관계
 
 }
