@@ -1,32 +1,50 @@
 package com.sabujaks.irs.domain.video_interview.service;
 
-import com.sabujaks.irs.domain.video_interview.mdoel.entity.VideoInterviewRoom;
-import com.sabujaks.irs.domain.video_interview.mdoel.request.VideoInterviewRoomCreateReq;
-import com.sabujaks.irs.domain.video_interview.mdoel.response.VideoInterviewRoomCreateRes;
+import com.sabujaks.irs.domain.video_interview.mdoel.entity.VideoInterview;
+import com.sabujaks.irs.domain.video_interview.mdoel.request.VideoInterviewCreateReq;
+import com.sabujaks.irs.domain.video_interview.mdoel.response.VideoInterviewCreateRes;
+import com.sabujaks.irs.domain.video_interview.mdoel.response.VideoInterviewSearchRes;
 import com.sabujaks.irs.domain.video_interview.repository.VideoInterviewRepository;
 import com.sabujaks.irs.global.common.exception.BaseException;
+import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
 import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class VideoInterviewService {
     private final OpenVidu openVidu;
     private final VideoInterviewRepository videoInterviewRepository;
-    public VideoInterviewRoomCreateRes createRoom(VideoInterviewRoomCreateReq dto) throws OpenViduJavaClientException, OpenViduHttpException, BaseException {
+    public VideoInterviewCreateRes create(VideoInterviewCreateReq dto) throws OpenViduJavaClientException, OpenViduHttpException {
         SessionProperties properties = SessionProperties.fromJson(dto.getParams()).build();
         Session session = openVidu.createSession(properties);
-        System.out.println("################################" + dto.getAnnounceUUID());
-        System.out.println("################################" + dto.getParams());
-        System.out.println(session.getSessionId());
-        VideoInterviewRoom videoInterviewRoom = VideoInterviewRoom.builder()
+        VideoInterview videoInterviewRoom = VideoInterview.builder()
                 .announceUUID(dto.getAnnounceUUID())
-                .videoInterviewRoomUUID(session.getSessionId())
+                .interviewScheduleUUID(session.getSessionId())
                 .build();
         videoInterviewRepository.save(videoInterviewRoom);
-        return VideoInterviewRoomCreateRes.builder()
+        return VideoInterviewCreateRes.builder()
                 .idx(videoInterviewRoom.getIdx())
                 .build();
+    }
+
+    public List<VideoInterviewSearchRes> searchAll(String announceUUID) throws BaseException{
+        List<VideoInterview> result =  videoInterviewRepository.findAllByAnnounceUUID(announceUUID)
+        .orElseThrow( () -> new BaseException(BaseResponseMessage.VIDEO_INTERVIEW_SEARCH_FAIL_NOT_FOUND));
+        List<VideoInterviewSearchRes> videoInterviewSearchResList = new ArrayList<>();
+        for (VideoInterview videoInterview : result) {
+            VideoInterviewSearchRes videoInterviewSearchRes = VideoInterviewSearchRes.builder()
+                    .idx(videoInterview.getIdx())
+                    .announceUUID(videoInterview.getAnnounceUUID())
+                    .interviewScheduleUUID(videoInterview.getInterviewScheduleUUID())
+                    .build();
+            videoInterviewSearchResList.add(videoInterviewSearchRes);
+        }
+        return videoInterviewSearchResList;
     }
 }

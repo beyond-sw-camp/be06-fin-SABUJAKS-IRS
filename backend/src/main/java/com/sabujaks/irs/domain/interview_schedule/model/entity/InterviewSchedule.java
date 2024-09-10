@@ -1,6 +1,6 @@
 package com.sabujaks.irs.domain.interview_schedule.model.entity;
 
-import com.sabujaks.irs.domain.video_interview.mdoel.entity.VideoInterviewRoom;
+import com.sabujaks.irs.domain.video_interview.mdoel.entity.VideoInterview;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,5 +35,5 @@ public class InterviewSchedule {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="videoInterview_idx")
-    private VideoInterviewRoom videoInterviewRoom;
+    private VideoInterview videoInterviewRoom;
 }
