@@ -39,6 +39,7 @@ public class PersonalHistory {
 
     private Integer salary;
 
+    @Column(columnDefinition = "TEXT")
     private String work;
 
     // 지원정보 테이블과 n:1
