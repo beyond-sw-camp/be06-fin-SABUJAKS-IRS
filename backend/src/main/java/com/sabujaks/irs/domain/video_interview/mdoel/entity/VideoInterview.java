@@ -15,7 +15,7 @@ public class VideoInterview {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
     private String announceUUID;
-    private String interviewScheduleUUID;
+    private String videoInterviewRoomUUID;
     // 위 엔티티의 UUID들은 다른테이블에서 연관관계로 매핑할 예정
 //    @OneToMany(mappedBy = "videoInterviewRoom")
 //    @JsonManagedReference
