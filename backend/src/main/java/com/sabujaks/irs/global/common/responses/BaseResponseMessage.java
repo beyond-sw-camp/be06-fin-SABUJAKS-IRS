@@ -37,7 +37,8 @@ public enum BaseResponseMessage {
 
     // INTERVIEW_SCHEDULE 면접 일정 1300
     INTERVIEW_SCHEDULE_CREATE_SUCCESS(true, 1300, "면접 일정 등록에 성공했습니다."),
-
+    // VIDEO_INTERVIEW 화상 면접 1400
+    VIDEO_INTERVIEW_ROOM_CREATE_SUCCESS(true, 1400, "화상 면접 방 생성에 성공했습니다."),
     // RESUME 2000~2999
     RESUME_REGISTER_SUCCESS(true, 2000, "지원서 등록에 성공했습니다."),
     RESUME_REGISTER_FAIL_NOT_FOUND(false, 2001, "해당 유저를 찾을 수 없습니다."),
