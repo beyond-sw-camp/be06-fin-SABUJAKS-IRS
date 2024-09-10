@@ -1,5 +1,6 @@
 package com.sabujaks.irs.domain.interview_schedule.model.entity;
 
+import com.sabujaks.irs.domain.video_interview.mdoel.entity.VideoInterviewRoom;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,4 +32,8 @@ public class InterviewSchedule {
 
     @Column(nullable = false)
     private String uuid;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="videoInterview_idx")
+    private VideoInterviewRoom videoInterviewRoom;
 }

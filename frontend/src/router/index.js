@@ -21,6 +21,8 @@ import MypageNotificationPage from '@/pages/seeker/mypage/MypageNotificationPage
 import SeekerSignupPage from '@/pages/seeker/auth/SeekerSignupPage.vue';
 import AnnounceRegisterStep2Page from '@/pages/recruiter/announce/AnnounceRegisterStep2Page.vue';
 import AnnounceRegisterStep1Page from "@/pages/recruiter/announce/AnnounceRegisterStep1Page.vue";
+import VideoInterViewTestPage from '@/pages/recruiter/video-interview/VideoInterViewTest1Page.vue';
+import VideoInterViewRoomCreatePage from '@/pages/recruiter/video-interview/VideoInterViewTest2Page.vue';
 
 
 const router = createRouter({
@@ -35,6 +37,8 @@ const router = createRouter({
         { path: '/recruiter/video-interview', component: VideoInterviewMainPage },
         { path: '/recruiter/video-interview/participant', component: VideoInterviewParticipantPage },
         { path: '/recruiter/video-interview/estimator', component: VideoInterviewEstimatorPage },
+        { path: '/recruiter/video-interview/test1', component: VideoInterViewTestPage},
+        { path: '/recruiter/video-interview/test2', component: VideoInterViewRoomCreatePage},
         { path: '/recruiter/interview-schedule', component: InterviewScheduleMainPage },
         { path: '/recruiter/resume', component: ResumeMainPage },
         { path: '/recruiter/resume/list', component: ResumeListPage },

@@ -23,7 +23,6 @@ public class InterviewScheduleController {
     public ResponseEntity<BaseResponse<InterviewScheduleReq>> create (
             @RequestBody InterviewScheduleReq dto) throws BaseException {
 
-
         for(String email : dto.getInterviewerList()) {
             System.out.println(email);
         }
