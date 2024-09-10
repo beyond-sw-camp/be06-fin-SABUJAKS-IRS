@@ -2,7 +2,6 @@
 import AnnounceDetailPage from '@/pages/seeker/announce/AnnounceDetailPage.vue';
 import AnnounceMainPage from '@/pages/recruiter/announce/AnnounceMainPage.vue';
 import RecruiterLoginPage from '@/pages/recruiter/auth/RecruiterLoginPage.vue';
-import InterviewScheduleMainPage from '@/pages/recruiter/interview-schedule/InterviewScheduleMainPage.vue';
 import ResumeMainPage from '@/pages/recruiter/resume/ResumeMainPage.vue';
 import VideoInterviewEstimatorPage from '@/pages/recruiter/video-interview/VideoInterviewEstimatorPage.vue';
 import VideoInterviewMainPage from '@/pages/recruiter/video-interview/VideoInterviewMainPage.vue';
@@ -21,6 +20,8 @@ import MypageNotificationPage from '@/pages/seeker/mypage/MypageNotificationPage
 import SeekerSignupPage from '@/pages/seeker/auth/SeekerSignupPage.vue';
 import AnnounceRegisterStep2Page from '@/pages/recruiter/announce/AnnounceRegisterStep2Page.vue';
 import AnnounceRegisterStep1Page from "@/pages/recruiter/announce/AnnounceRegisterStep1Page.vue";
+import InterviewScheduleMainNew from "@/pages/recruiter/interview-schedule/InterviewScheduleMainNew.vue";
+import InterviewScheduleMainExp from "@/pages/recruiter/interview-schedule/InterviewScheduleMainExp.vue";
 import VideoInterViewTestPage from '@/pages/recruiter/video-interview/VideoInterViewTest1Page.vue';
 import VideoInterViewRoomCreatePage from '@/pages/recruiter/video-interview/VideoInterViewTest2Page.vue';
 
@@ -37,6 +38,8 @@ const router = createRouter({
         { path: '/recruiter/video-interview', component: VideoInterviewMainPage },
         { path: '/recruiter/video-interview/participant', component: VideoInterviewParticipantPage },
         { path: '/recruiter/video-interview/estimator', component: VideoInterviewEstimatorPage },
+        { path: '/recruiter/interview-schedule/new', component: InterviewScheduleMainNew },
+        { path: '/recruiter/interview-schedule/exp', component: InterviewScheduleMainExp },
         { path: '/recruiter/video-interview/test1', component: VideoInterViewTestPage},
         { path: '/recruiter/video-interview/test2', component: VideoInterViewRoomCreatePage},
         { path: '/recruiter/interview-schedule', component: InterviewScheduleMainPage },

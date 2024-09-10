@@ -1,143 +1,16 @@
-<template>
-  <MainHeaderComponent />
-  <div class="container">
-    <MainSideBarComponent />
-    <div id="content">
-      <h1>면접 관리</h1>
-      <table class="review-table">
-        <tr>
-          <th>번호</th>
-          <th>신입/경력</th>
-        </tr>
-        <tr data-type="신입" @click="openModal('신입')">
-          <td>1</td>
-          <td>신입</td>
-        </tr>
-        <tr data-type="경력" @click="openModal('경력')">
-          <td>2</td>
-          <td>경력</td>
-        </tr>
-      </table>
-    </div>
-
-    <div v-if="isModalOpen" id="myModal" class="modal">
-      <div class="modal-content" id="draggableModal">
-        <span class="close" @click="closeModal">&times;</span>
-        <h2>{{ modalTitle }}</h2>
-        <div class="col-12 row mt-50 modal-section">
-          <div class="modal-left col-5 margin-auto">
-            <div class="form-group col-12 row">
-              <div class="col-11">
-                <label for="applicant">후보자 <span class="required">*</span></label>
-                <input type="text" id="applicant" placeholder="후보자를 추가해주세요." disabled>
-              </div>
-              <div class="col-1 add-button-section">
-                <button class="add-button" @click="addEmail">+</button>
-              </div>
-            </div>
-            <div id="selected-filters-list">
-              <span v-for="filter in selectedFilters" :key="filter" @click="removeFilter(filter)">
-                  {{ filter }} ✕
-              </span>
-            </div>
-            <div class="form-group col-12 row">
-              <div class="col-11">
-                <label for="participants">면접 참가자</label>
-                <input type="text" id="participants" placeholder="이메일을 입력해 주세요." v-model="participantEmail">
-              </div>
-              <div class="col-1 add-button-section">
-                <button class="add-email" @click="addParticipantEmail">+</button>
-              </div>
-            </div>
-            <div id="selected-emails-list">
-              <span v-for="email in selectedEmails" :key="email" @click="removeEmail(email)">
-                  {{ email }} ✕
-              </span>
-            </div>
-            <div class="form-group">
-              <div class="col-12">
-                <div class="form-group col-12 row">
-                  <div class="form-group col-5">
-                    <label for="interview-date" class="subtitle">날짜 <span class="required">*</span></label>
-                    <input type="date" id="interview-date" v-model="interviewDate">
-                  </div>
-                  <div class="form-group col-5 ml-auto">
-                    <label for="interview-type" class="subtitle">방식 <span class="required">*</span></label>
-                    <div class="row">
-                      <label class="checkbox-label">
-                        <input type="checkbox" name="choice" value="대면" v-model="interviewType"> 대면
-                      </label>
-
-                      <label class="checkbox-label ml-auto">
-                        <input type="checkbox" name="choice" value="온라인" v-model="interviewType"> 온라인
-                      </label>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="start-time" class="subtitle">시작시간 <span class="required">*</span></label>
-                  <select class="time-select interview-calender" v-model="startTime">
-                    <option value="">시간을 선택하세요</option>
-                    <option v-for="time in timeOptions" :key="time" :value="time">{{ time }}</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="end-time" class="subtitle">종료시간 <span class="required">*</span></label>
-                  <select class="time-select interview-calender" v-model="endTime">
-                    <option value="">시간을 선택하세요</option>
-                    <option v-for="time in timeOptions" :key="time" :value="time">{{ time }}</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div class="col-12">
-              <button class="submit-button" @click="submitForm">등록</button>
-            </div>
-          </div>
-          <div class="modal-right col-5 margin-auto">
-            <div class='demo-app calendar' v-if="showCalendar">
-              <div class='demo-app-main'>
-                <FullCalendar
-                    class='demo-app-calendar'
-                    :options='calendarOptions'
-                >
-                  <template v-slot:eventContent='arg'>
-                    <b>{{ arg.timeText }}</b>
-                    <i>{{ arg.event.title }}</i>
-                  </template>
-                </FullCalendar>
-              </div>
-            </div>
-            <!-- 후보자 목록 -->
-            <div v-if="showInterviewerList" id="interviewer">
-              <div id="interviewers-list">
-                <h3>면접자 목록</h3>
-                <form id="nameForm">
-                  <label v-for="name in interviewers" :key="name">
-                    <input type="checkbox" :value="name" v-model="selectedInterviewers"> {{ name }}
-                  </label><br>
-                </form>
-              </div>
-              <div class="add-button-section">
-                <button class="submit-button" @click="selectInterviewers">선택</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup>
 import { ref } from 'vue';
 import MainHeaderComponent from '../../../components/recruiter/MainHeaderComponent.vue';
 import MainSideBarComponent from '../../../components/recruiter/MainSideBarComponent.vue';
 import '@/assets/css/grid.css';
 import { UseInterviewScheduleStore } from '@/stores/UseInterviewScheduleStore';
+import InterviewScheduleMain from "../../../components/recruiter/InterviewScheduleMain.vue";
+import InterviewScheduleList from "@/components/recruiter/InterviewScheduleList.vue";
+
+const isInterviewScheduleMain = ref(true);
+const isInterviewScheduleList = ref(false);
 
 const interviewScheduleStore = UseInterviewScheduleStore(); // Store 인스턴스
-
 const isModalOpen = ref(false);
 const modalTitle = ref('');
 const participantEmail = ref('');
@@ -153,9 +26,16 @@ const showCalendar = ref(true); // 캘린더 기본으로 표시
 const showInterviewerList = ref(false); // 후보자 목록은 기본적으로 숨김
 const interviewType = ref([]); // 대면, 비대면 값 저장
 
-const openModal = (type) => {
-  modalTitle.value = type;
-  isModalOpen.value = true;
+const interviewScheduleLists = (announceIdx) => {
+  isInterviewScheduleList.value = true;
+  isInterviewScheduleMain.value = false;
+}
+// 모달 열기 함수에서 무한 호출 방지
+const openModal = (title) => {
+  if (!isModalOpen.value) {  // 모달이 열려있지 않을 때만 실행
+    modalTitle.value = title;
+    isModalOpen.value = true;
+  }
 };
 
 const closeModal = () => {
@@ -239,16 +119,137 @@ const submitForm = () => {
 
   // Store의 createInterviewSchedule 함수 호출
   interviewScheduleStore.createInterviewSchedule(interviewData)
-    .then(() => {
-      alert('면접 일정이 성공적으로 등록되었습니다.');
-    })
-    .catch((error) => {
-      console.error('면접 일정 등록 중 오류 발생:', error);
-    });
+      .then(() => {
+        alert('면접 일정이 성공적으로 등록되었습니다.');
+      })
+      .catch((error) => {
+        console.error('면접 일정 등록 중 오류 발생:', error);
+      });
 };
-
-
 </script>
+
+
+<template>
+  <MainHeaderComponent />
+  <div class="container">
+    <MainSideBarComponent />
+    <!-- InterviewScheduleMainNew에서 이벤트를 받아 모달을 제어 -->
+    <InterviewScheduleMain
+        v-if="isInterviewScheduleMain"
+        @interviewScheduleList="interviewScheduleLists"
+        :title="'경력'">
+    </InterviewScheduleMain>
+    <InterviewScheduleList
+        v-if="isInterviewScheduleList"
+        @openModal="openModal"
+        :title="'면접일정'">
+    </InterviewScheduleList>
+
+
+    <div v-if="isModalOpen" id="myModal" class="modal">
+      <div class="modal-content" id="draggableModal">
+        <span class="close" @click="closeModal">&times;</span>
+        <h2>{{ modalTitle }}</h2>
+        <div class="col-12 row mt-50 modal-section">
+          <div class="modal-left col-5 margin-auto">
+            <div class="form-group col-12 row">
+              <div class="col-11">
+                <label for="applicant">후보자 <span class="required">*</span></label>
+                <input type="text" id="applicant" placeholder="후보자를 추가해주세요." disabled>
+              </div>
+              <div class="col-1 add-button-section">
+                <button class="add-button" @click="addEmail">+</button>
+              </div>
+            </div>
+            <div id="selected-filters-list">
+              <span v-for="filter in selectedFilters" :key="filter" @click="removeFilter(filter)">
+                  {{ filter }} ✕
+              </span>
+            </div>
+            <div class="form-group col-12 row">
+              <div class="col-11">
+                <label for="participants">면접 참가자</label>
+                <input type="text" id="participants" placeholder="이메일을 입력해 주세요." v-model="participantEmail">
+              </div>
+              <div class="col-1 add-button-section">
+                <button class="add-email" @click="addParticipantEmail">+</button>
+              </div>
+            </div>
+            <div id="selected-emails-list">
+              <span v-for="email in selectedEmails" :key="email" @click="removeEmail(email)">
+                  {{ email }} ✕
+              </span>
+            </div>
+            <div class="form-group">
+              <div class="col-12">
+                <div class="form-group col-12 row">
+                  <div class="form-group col-5">
+                    <label for="interview-date" class="subtitle">날짜 <span class="required">*</span></label>
+                    <input type="date" id="interview-date" v-model="interviewDate">
+                  </div>
+                  <div class="form-group col-5 ml-auto">
+                    <label for="interview-type" class="subtitle">방식 <span class="required">*</span></label>
+                    <div class="row">
+                      <label class="checkbox-label">
+                        <input type="checkbox" name="choice" value="대면" v-model="interviewType"> 대면
+                      </label>
+
+                      <label class="checkbox-label ml-auto">
+                        <input type="checkbox" name="choice" value="온라인" v-model="interviewType"> 온라인
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="start-time" class="subtitle">시작시간 <span class="required">*</span></label>
+                  <select class="time-select interview-calender" v-model="startTime">
+                    <option value="">시간을 선택하세요</option>
+                    <option v-for="time in timeOptions" :key="time" :value="time">{{ time }}</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="end-time" class="subtitle">종료시간 <span class="required">*</span></label>
+                  <select class="time-select interview-calender" v-model="endTime">
+                    <option value="">시간을 선택하세요</option>
+                    <option v-for="time in timeOptions" :key="time" :value="time">{{ time }}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <button class="submit-button" @click="submitForm">등록</button>
+            </div>
+          </div>
+          <div class="modal-right col-5 margin-auto">
+            <div class='demo-app calendar' v-if="showCalendar">
+              <div class='demo-app-main'>
+                <FullCalendar
+                    class='demo-app-calendar'
+                    :options='calendarOptions'
+                >
+                </FullCalendar>
+              </div>
+            </div>
+            <!-- 후보자 목록 -->
+            <div v-if="showInterviewerList" id="interviewer">
+              <div id="interviewers-list">
+                <h3>면접자 목록</h3>
+                <form id="nameForm">
+                  <label v-for="name in interviewers" :key="name">
+                    <input type="checkbox" :value="name" v-model="selectedInterviewers"> {{ name }}
+                  </label><br>
+                </form>
+              </div>
+              <div class="add-button-section">
+                <button class="submit-button" @click="selectInterviewers">선택</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
 
 <script>
 import { defineComponent } from 'vue'
@@ -257,7 +258,6 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import { INITIAL_EVENTS, createEventId } from './event-utils'
-
 
 export default defineComponent({
   components: {
@@ -271,11 +271,16 @@ export default defineComponent({
           timeGridPlugin,
           interactionPlugin // needed for dateClick
         ],
+        locale: 'ko',
         headerToolbar: {
           left: 'prev,next today',
           center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay'
+          right: 'dayGridMonth,dayGridWeek,dayGridDay'
         },
+        events: [
+          { title: 'event 1', date: '2024-09-27' },
+          { title: 'event 2', date: '2024-09-30' }
+        ],
         initialView: 'dayGridMonth',
         initialEvents: INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
         editable: true,
@@ -300,7 +305,7 @@ export default defineComponent({
       this.calendarOptions.weekends = !this.calendarOptions.weekends // update a property
     },
     handleDateSelect(selectInfo) {
-      let title = prompt('Please enter a new title for your event')
+      let title = prompt('새로운 일정을 등록해주세요.')
       let calendarApi = selectInfo.view.calendar
 
       calendarApi.unselect() // clear date selection
@@ -316,7 +321,7 @@ export default defineComponent({
       }
     },
     handleEventClick(clickInfo) {
-      if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
+      if (confirm(`일정을 삭제하시겠습니까? '${clickInfo.event.title}'`)) {
         clickInfo.event.remove()
       }
     },
@@ -330,13 +335,6 @@ export default defineComponent({
 
 
 <style scoped>
-.review-table th:nth-child(1) { /* 첫 번째 열 (번호) */
-  width: 20%; /* 비율 조정 */
-}
-
-.review-table th:nth-child(2) { /* 두 번째 열 (신입/경력) */
-  width: 80%; /* 비율 조정 */
-}
 
 .modal {
   display: flex;
@@ -493,19 +491,7 @@ input[type="text"] {
   font-size: 14px;
 }
 
-.demo-app-sidebar {
-  width: 300px;
-  line-height: 1.5;
-  background: #eaf9ff;
-  border-right: 1px solid #d3e2e8;
-}
-
-.demo-app-sidebar-section {
-  padding: 2em;
-}
-
 .demo-app-main {
   flex-grow: 1;
-  padding: 3em;
 }
 </style>
