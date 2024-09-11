@@ -1,6 +1,5 @@
 <template>
 <div>
-    <VideoInterviewRoomHeaderComponent></VideoInterviewRoomHeaderComponent>
     <div class="vip-wrapper">
         <div class="vip-video">
             <img class="vip-img" src="../../../assets/img/irs_black.png" alt="">
@@ -18,9 +17,29 @@
 </template>
 
 <script setup>
-import VideoInterviewRoomHeaderComponent from "@/components/video-interview/VideoInterviewRoomHeaderComponent.vue";
 </script>
 
-<style>
+<style scoped>
+.vip-wrapper {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+}
 
+.vip-video {
+    width: 100%;
+    margin-top: 110px;
+    display: flex;
+    justify-content: center;
+}
+
+.vip-img {
+    width: fit-content;
+    height: 300px;
+    border: 1px solid black;
+}
 </style>

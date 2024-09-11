@@ -1,9 +1,5 @@
 <template>
 <div>
-    <header class="virh">
-        <img class="virh-logo" src="../../../assets/img/irs_white.png">
-        <button class="virh-exitbtn">면접 나가기</button>
-    </header>
     <div class="vie-wrapper">
         <div class="vie-video">
             <img class="vie-img" src="../../../assets/img/irs_black.png" alt="">
