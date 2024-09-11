@@ -3,9 +3,7 @@ package com.sabujaks.irs.domain.resume.service;
 import com.sabujaks.irs.domain.auth.model.entity.Seeker;
 import com.sabujaks.irs.domain.auth.repository.SeekerRepository;
 import com.sabujaks.irs.domain.resume.model.entity.*;
-import com.sabujaks.irs.domain.resume.model.request.EducationCreateReq;
-import com.sabujaks.irs.domain.resume.model.request.PersonalHistoryCreateReq;
-import com.sabujaks.irs.domain.resume.model.request.ResumeCreateReq;
+import com.sabujaks.irs.domain.resume.model.request.*;
 import com.sabujaks.irs.domain.resume.model.response.ResumeCreateRes;
 import com.sabujaks.irs.domain.resume.repository.*;
 import com.sabujaks.irs.global.common.exception.BaseException;
@@ -25,6 +23,9 @@ public class ResumeService {
     private final PreferentialEmpRepository preferentialEmpRepository;
     private final EducationRepository educationRepository;
     private final PersonalHistoryRepository personalHistoryRepository;
+    private final InternActivitiesRepository internActivitiesRepository;
+    private final StudyingAboardRepository studyingAboardRepository;
+    private final LanguageRepository languageRepository;
 
 
     @Transactional
@@ -75,6 +76,7 @@ public class ResumeService {
             // 학력 테이블에 저장 (조건 필요)
             for(EducationCreateReq edu : dto.getEducations()) {
                 Education education = Education.builder()
+                        .resumeInfo(resumeInfo)
                         .high_less(edu.getHigh_less())
                         .school_div(edu.getSchool_div())
                         .school_name(edu.getSchool_name())
@@ -99,6 +101,7 @@ public class ResumeService {
             // 경력 테이블에 저장 (조건 필요)
             for(PersonalHistoryCreateReq ph : dto.getPersonalHistories()) {
                 PersonalHistory personalHistory = PersonalHistory.builder()
+                        .resumeInfo(resumeInfo)
                         .company_name(ph.getCompany_name())
                         .dept_name(ph.getDept_name())
                         .entered_at(ph.getEntered_at())
@@ -112,6 +115,44 @@ public class ResumeService {
                 personalHistoryRepository.save(personalHistory);
             }
 
+            // 인턴·대외활동 테이블에 저장 (조건 필요)
+            for(InternsActivityCreateReq ia : dto.getInternsActivities()) {
+                InternsActivity internsActivity = InternsActivity.builder()
+                        .resumeInfo(resumeInfo)
+                        .activityDiv(ia.getActivityDiv())
+                        .organization(ia.getOrganization())
+                        .startAt(ia.getStartAt())
+                        .endAt(ia.getEndAt())
+                        .contents(ia.getContents())
+                        .build();
+                internActivitiesRepository.save(internsActivity);
+            }
+
+            // 해외경험 테이블에 저장 (조건 필요)
+            for(StudyingAbroadCreateReq sa : dto.getStudyingAbroads()) {
+                StudyingAbroad studyingAbroad = StudyingAbroad.builder()
+                        .resumeInfo(resumeInfo)
+                        .countryName(sa.getCountryName())
+                        .startAt(sa.getStartAt())
+                        .endAt(sa.getEndAt())
+                        .contents(sa.getContents())
+                        .build();
+                studyingAboardRepository.save(studyingAbroad);
+            }
+
+            // 어학 테이블에 저장 (조건 필요)
+            for(LanguageCreateReq l : dto.getLanguages()) {
+                Language language = Language.builder()
+                        .resumeInfo(resumeInfo)
+                        .testDiv(l.getTestDiv())
+                        .languageName(l.getLanguageName())
+                        .conversationLevel(l.getConversationLevel())
+                        .officialTest(l.getOfficialTest())
+                        .score(l.getScore())
+                        .takingAt(l.getTakingAt())
+                        .build();
+                languageRepository.save(language);
+            }
 
             return ResumeCreateRes.builder()
                     .resume_info_idx(resumeInfo.getIdx())
