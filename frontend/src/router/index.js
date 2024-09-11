@@ -24,6 +24,7 @@ import InterviewScheduleMainNew from "@/pages/recruiter/interview-schedule/Inter
 import InterviewScheduleMainExp from "@/pages/recruiter/interview-schedule/InterviewScheduleMainExp.vue";
 import VideoInterViewTestPage from '@/pages/recruiter/video-interview/VideoInterViewTest1Page.vue';
 import VideoInterViewRoomCreatePage from '@/pages/recruiter/video-interview/VideoInterViewTest2Page.vue';
+import InterviewScheduleMain from '@/components/recruiter/InterviewScheduleMain.vue';
 
 
 const router = createRouter({
@@ -35,14 +36,18 @@ const router = createRouter({
         { path: '/recruiter/announce', component: AnnounceMainPage },
         { path: '/recruiter/announce/register-step2', component: AnnounceRegisterStep2Page},
         { path: '/recruiter/announce/register-step1', component: AnnounceRegisterStep1Page},
-        { path: '/recruiter/video-interview', component: VideoInterviewMainPage },
+        { path: '/video-interview/:announceUUID', component: VideoInterviewMainPage, 
+            children: {
+
+            } 
+        },
         { path: '/recruiter/video-interview/participant', component: VideoInterviewParticipantPage },
         { path: '/recruiter/video-interview/estimator', component: VideoInterviewEstimatorPage },
         { path: '/recruiter/interview-schedule/new', component: InterviewScheduleMainNew },
         { path: '/recruiter/interview-schedule/exp', component: InterviewScheduleMainExp },
         { path: '/recruiter/video-interview/test1', component: VideoInterViewTestPage},
         { path: '/recruiter/video-interview/test2', component: VideoInterViewRoomCreatePage},
-        { path: '/recruiter/interview-schedule', component: InterviewScheduleMainPage },
+        { path: '/recruiter/interview-schedule', component: InterviewScheduleMain },
         { path: '/recruiter/resume', component: ResumeMainPage },
         { path: '/recruiter/resume/list', component: ResumeListPage },
         { path: '/recruiter/resume/detail', component: ResumeDetailPage },
