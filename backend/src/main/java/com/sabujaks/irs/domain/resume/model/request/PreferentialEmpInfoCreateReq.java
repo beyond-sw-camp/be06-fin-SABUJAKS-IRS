@@ -14,11 +14,11 @@ public class PreferentialEmpInfoCreateReq {
     private Boolean protection;
     private Boolean subsidy;
     private Boolean disability;
-    private String disability_degree;
+    private String disabilityDegree;
     private Boolean military;
-    private String military_class;
-    private LocalDate military_start;
-    private LocalDate military_end;
-    private String military_type;
-    private String military_rank;
+    private String militaryClass;
+    private LocalDate militaryStart;
+    private LocalDate militaryEnd;
+    private String militaryType;
+    private String militaryRank;
 }
