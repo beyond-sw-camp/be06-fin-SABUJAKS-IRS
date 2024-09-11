@@ -19,4 +19,7 @@ public class ResumeCreateReq {
     private ArrayList<InternsActivityCreateReq> internsActivities; // 인턴·대외활동 n개
     private ArrayList<StudyingAbroadCreateReq> studyingAbroads; // 해외경험 n개
     private ArrayList<LanguageCreateReq> languages; // 어학 n개
+    private ArrayList<CertificationCreateReq> certifications; // 자격증 n개
+    private ArrayList<TrainingCreateReq> trainings; // 교육이수 n개
+    private ArrayList<AwardCreateReq> awards; // 수상 n개
 }

@@ -43,4 +43,16 @@ public class ResumeInfo {
     // 어학 테이블과 1:n
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "resumeInfo")
     private List<Language> languageList;
+
+    // 자격증 테이블과 1:n
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "resumeInfo")
+    private List<Certification> certificationList;
+
+    // 교육이수 테이블과 1:n
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "resumeInfo")
+    private List<Training> trainingList;
+
+    // 수상 테이블과 1:n
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "resumeInfo")
+    private List<Award> awardList;
 }
