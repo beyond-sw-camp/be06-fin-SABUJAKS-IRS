@@ -12,7 +12,7 @@ public class DataInit {
     private final BaseInfoRepository baseInfoRepository;
 
     // 어노테이션 주석 해제하면 init 됨
-    // yml create로 바꾸고 주석해제(한번 넣기) 프로젝트 실행, 그 후 주석처리 안하고 프로젝트 돌리면 중복으로 들어가니까 다시 주석처리하기!
+    // yml create로 바꾸고 주석해제 후 프로젝트 실행(한번 넣기), 그 후 주석처리 안하고 프로젝트 돌리면 중복으로 들어가니까 다시 주석처리!
 //    @PostConstruct
     public void dataInsert() {
 
