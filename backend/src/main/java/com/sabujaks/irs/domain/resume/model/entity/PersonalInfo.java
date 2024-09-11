@@ -40,7 +40,7 @@ public class PersonalInfo {
     private String address;
 
     @Column(nullable = false)
-    private String profile_img;
+    private String profileImg;
 
     // 지원정보 테이블과 1:1
     @OneToOne(fetch = FetchType.LAZY)
