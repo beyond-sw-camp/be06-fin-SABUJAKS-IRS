@@ -45,7 +45,8 @@ public enum BaseResponseMessage {
     // RESUME 2000~2999
     RESUME_REGISTER_SUCCESS(true, 2000, "지원서 등록에 성공했습니다."),
     RESUME_REGISTER_FAIL_NOT_FOUND(false, 2001, "해당 유저를 찾을 수 없습니다."),
-    RESUME_REGISTER_FAIL(false, 2002, "지원서 등록에 실패하였습니다." ),
+    RESUME_REGISTER_FAIL_NOT_FOUND_FILE(false, 2002, "파일을 찾을 수 없습니다."),
+    RESUME_REGISTER_FAIL(false, 2003, "지원서 등록에 실패하였습니다." ),
 
     // ANNOUNCEMENT 3000~3999
     ANNOUNCEMENT_REGISTER_STEP_ONE_SUCCESS(true, 3000, "공고 등록에 성공했습니다."),

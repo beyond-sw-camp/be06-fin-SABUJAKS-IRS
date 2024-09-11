@@ -32,6 +32,10 @@ public class ResumeController {
         if (customUserDetails == null) throw new BaseException(BaseResponseMessage.AUTH_FAIL);
         Long seekerIdx = customUserDetails.getIdx();
 
+        if(file.isEmpty()) {
+            throw new BaseException(BaseResponseMessage.RESUME_REGISTER_FAIL_NOT_FOUND_FILE);
+        }
+
         String fileUrl = cloudFileUpload.upload(file);
         ResumeCreateRes response = resumeService.create(seekerIdx, dto, fileUrl);
 

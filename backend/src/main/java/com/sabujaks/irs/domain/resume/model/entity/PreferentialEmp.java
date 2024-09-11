@@ -32,24 +32,24 @@ public class PreferentialEmp {
     private Boolean disability;
     // 장애 등급
     @Column(length = 20)
-    private String disability_degree;
+    private String disabilityDegree;
 
     // 병역 여부
     @Column(nullable = false)
     private Boolean military;
     // 병역
     @Column(length = 20)
-    private String military_class;
+    private String militaryClass;
     // 입대일
-    private LocalDate military_start;
+    private LocalDate militaryStart;
     // 제대일
-    private LocalDate military_end;
+    private LocalDate militaryEnd;
     // 군별
     @Column(length = 20)
-    private String military_type;
+    private String militaryType;
     // 제대 계급
     @Column(length = 20)
-    private String military_rank;
+    private String militaryRank;
 
     // 지원정보 테이블과 1:1
     @OneToOne(fetch = FetchType.LAZY)

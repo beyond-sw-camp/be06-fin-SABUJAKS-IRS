@@ -11,20 +11,20 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class EducationCreateReq {
-    private Boolean high_less;
-    private String school_div;
-    private String school_name;
-    private String entered_at;
-    private String graduated_at;
-    private String graduation_status;
-    private String major_name;
+    private Boolean highLess;
+    private String schoolDiv;
+    private String schoolName;
+    private String enteredAt;
+    private String graduatedAt;
+    private String graduationStatus;
+    private String majorName;
     private Double grade;
-    private Double total_grade;
+    private Double totalGrade;
     private Boolean transfer;
-    private String major_type;
-    private String other_major;
-    private String graduation_work;
+    private String majorType;
+    private String otherMajor;
+    private String graduationWork;
     private String degree;
-    private Boolean qualification_exam;
-    private String passed_at;
+    private Boolean qualificationExam;
+    private String passedAt;
 }

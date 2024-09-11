@@ -6,41 +6,28 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
 @Entity
 @Builder
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PersonalHistory {
+// 해외경험
+public class StudyingAbroad {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
-    @Column(nullable = false, length = 50)
-    private String companyName;
+    @Column(nullable = false, length = 30)
+    private String countryName;
 
-    @Column(length = 20)
-    private String deptName;
+    @Column(length = 10)
+    private String startAt;
 
-    @Column(nullable = false)
-    private String enteredAt;
-
-    private String quitAt;
-
-    private Boolean empStatus;
-
-    @Column(length = 20)
-    private String position;
-
-    @Column(nullable = false, length = 20)
-    private String job;
-
-    private Integer salary;
+    @Column(length = 10)
+    private String endAt;
 
     @Column(columnDefinition = "TEXT")
-    private String work;
+    private String contents;
 
     // 지원정보 테이블과 n:1
     @ManyToOne(fetch = FetchType.LAZY)

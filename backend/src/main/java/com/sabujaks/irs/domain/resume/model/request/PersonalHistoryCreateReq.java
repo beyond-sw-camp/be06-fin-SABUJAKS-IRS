@@ -11,11 +11,11 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class PersonalHistoryCreateReq {
-    private String company_name;
-    private String dept_name;
-    private String entered_at;
-    private String quit_at;
-    private Boolean emp_status;
+    private String companyName;
+    private String deptName;
+    private String enteredAt;
+    private String quitAt;
+    private Boolean empStatus;
     private String position;
     private String job;
     private Integer salary;
