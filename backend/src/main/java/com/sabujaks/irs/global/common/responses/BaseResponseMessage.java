@@ -49,9 +49,12 @@ public enum BaseResponseMessage {
     RESUME_REGISTER_FAIL(false, 2003, "지원서 등록에 실패하였습니다." ),
 
     // ANNOUNCEMENT 3000~3999
-    ANNOUNCEMENT_REGISTER_STEP_TWO_SUCCESS(true, 3000, "지원서 폼 조립에 성공했습니다."),
-    ANNOUNCEMENT_REGISTER_STEP_TWO_FAIL_NOT_FOUND(false, 3001, "공고가 저장되지 않아 찾을 수 없습니다."),
-    ANNOUNCEMENT_REGISTER_STEP_TWO_FAIL(false, 3002, "지원서 폼 조립에 실패하였습니다." );
+    ANNOUNCEMENT_REGISTER_STEP_ONE_SUCCESS(true, 3000, "공고 등록에 성공했습니다."),
+    ANNOUNCEMENT_REGISTER_STEP_ONE_FAIL_NOT_RECRUITER(true, 3001, "채용담당자 유저가 아닙니다."),
+    ANNOUNCEMENT_REGISTER_STEP_ONE_FAIL(true, 3002, "공고 등록에 실패했습니다."),
+    ANNOUNCEMENT_REGISTER_STEP_TWO_SUCCESS(true, 3100, "지원서 폼 조립에 성공했습니다."),
+    ANNOUNCEMENT_REGISTER_STEP_TWO_FAIL_NOT_FOUND(false, 3101, "공고가 저장되지 않아 찾을 수 없습니다."),
+    ANNOUNCEMENT_REGISTER_STEP_TWO_FAIL(false, 3102, "지원서 폼 조립에 실패하였습니다." );
 
     private Boolean success;
     private Integer code;
