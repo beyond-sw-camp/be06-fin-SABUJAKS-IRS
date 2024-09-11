@@ -26,6 +26,9 @@ public class ResumeService {
     private final InternActivitiesRepository internActivitiesRepository;
     private final StudyingAboardRepository studyingAboardRepository;
     private final LanguageRepository languageRepository;
+    private final CertificationRepository certificationRepository;
+    private final TrainingRepository trainingRepository;
+    private final AwardRepository awardRepository;
 
 
     @Transactional
@@ -97,7 +100,6 @@ public class ResumeService {
                 educationRepository.save(education);
             }
 
-
             // 경력 테이블에 저장 (조건 필요)
             for(PersonalHistoryCreateReq ph : dto.getPersonalHistories()) {
                 PersonalHistory personalHistory = PersonalHistory.builder()
@@ -152,6 +154,42 @@ public class ResumeService {
                         .takingAt(l.getTakingAt())
                         .build();
                 languageRepository.save(language);
+            }
+
+            // 자격증 테이블에 저장 (조건 필요)
+            for(CertificationCreateReq c : dto.getCertifications()) {
+                Certification certification = Certification.builder()
+                        .resumeInfo(resumeInfo)
+                        .certName(c.getCertName())
+                        .organization(c.getOrganization())
+                        .takingAt(c.getTakingAt())
+                        .build();
+                certificationRepository.save(certification);
+            }
+
+            // 교육이수 테이블에 저장 (조건 필요)
+            for(TrainingCreateReq t : dto.getTrainings()) {
+                Training training = Training.builder()
+                        .resumeInfo(resumeInfo)
+                        .trainingName(t.getTrainingName())
+                        .organization(t.getOrganization())
+                        .startAt(t.getStartAt())
+                        .endAt(t.getEndAt())
+                        .contents(t.getContents())
+                        .build();
+                trainingRepository.save(training);
+            }
+
+            // 수상 테이블에 저장 (조건 필요)
+            for(AwardCreateReq a : dto.getAwards()) {
+                Award award = Award.builder()
+                        .resumeInfo(resumeInfo)
+                        .awardName(a.getAwardName())
+                        .contents(a.getContents())
+                        .organization(a.getOrganization())
+                        .year(a.getYear())
+                        .build();
+                awardRepository.save(award);
             }
 
             return ResumeCreateRes.builder()
