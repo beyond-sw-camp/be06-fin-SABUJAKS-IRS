@@ -24,7 +24,8 @@ public class ResumeController {
     private final ResumeService resumeService;
     private final CloudFileUpload cloudFileUpload;
 
-    @PostMapping("/create")
+    // 마이페이지 -> 지원서 등록
+    @PostMapping("/create-mypage")
     public ResponseEntity<BaseResponse<ResumeCreateReq>> create(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestPart ResumeCreateReq dto,
@@ -32,9 +33,16 @@ public class ResumeController {
         if (customUserDetails == null) throw new BaseException(BaseResponseMessage.AUTH_FAIL);
         Long seekerIdx = customUserDetails.getIdx();
 
+        if(file.isEmpty()) {
+            throw new BaseException(BaseResponseMessage.RESUME_REGISTER_FAIL_NOT_FOUND_FILE);
+        }
+
         String fileUrl = cloudFileUpload.upload(file);
         ResumeCreateRes response = resumeService.create(seekerIdx, dto, fileUrl);
 
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.RESUME_REGISTER_SUCCESS, response));
     }
+    
+    // 공고 -> 지원서 등록
+
 }

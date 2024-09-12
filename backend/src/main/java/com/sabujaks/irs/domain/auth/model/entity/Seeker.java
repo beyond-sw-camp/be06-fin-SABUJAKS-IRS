@@ -1,5 +1,6 @@
 package com.sabujaks.irs.domain.auth.model.entity;
 
+import com.sabujaks.irs.domain.resume.model.entity.Resume;
 import com.sabujaks.irs.domain.resume.model.entity.ResumeInfo;
 import jakarta.persistence.*;
 import lombok.*;
@@ -45,4 +46,8 @@ public class Seeker {
     // 회원정보 테이블과 1:n
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "seeker")
     private List<ResumeInfo> resumeInfoList;
+
+    // 공고지원서 테이블과 1:n
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "seeker")
+    private List<Resume> resumeList;
 }

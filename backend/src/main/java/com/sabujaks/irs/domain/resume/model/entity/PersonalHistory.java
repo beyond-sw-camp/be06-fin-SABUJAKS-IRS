@@ -19,17 +19,17 @@ public class PersonalHistory {
     private Long idx;
 
     @Column(nullable = false, length = 50)
-    private String company_name;
+    private String companyName;
 
     @Column(length = 20)
-    private String dept_name;
+    private String deptName;
 
     @Column(nullable = false)
-    private String entered_at;
+    private String enteredAt;
 
-    private String quit_at;
+    private String quitAt;
 
-    private Boolean emp_status;
+    private Boolean empStatus;
 
     @Column(length = 20)
     private String position;

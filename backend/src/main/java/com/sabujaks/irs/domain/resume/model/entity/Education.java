@@ -20,46 +20,46 @@ public class Education {
 
     @Column(nullable = false)
     @Builder.Default
-    private Boolean high_less = false;
+    private Boolean highLess = false;
 
     @Column(nullable = false, length = 10)
-    private String school_div;
+    private String schoolDiv;
 
     @Column(nullable = false, length = 20)
-    private String school_name;
+    private String schoolName;
 
-    private String entered_at;
+    private String enteredAt;
 
-    private String graduated_at;
+    private String graduatedAt;
 
-    private String graduation_status;
+    private String graduationStatus;
 
     @Column(length = 30)
-    private String major_name;
+    private String majorName;
 
     private Double grade;
 
-    private Double total_grade;
+    private Double totalGrade;
 
     private Boolean transfer;
 
     @Column(length = 20)
-    private String major_type;
+    private String majorType;
 
     @Column(length = 30)
-    private String other_major;
+    private String otherMajor;
 
     @Column(columnDefinition = "TEXT")
-    private String graduation_work;
+    private String graduationWork;
 
     @Column(length = 10)
     private String degree;
 
     @Column(nullable = false)
     @Builder.Default
-    private Boolean qualification_exam = false;
+    private Boolean qualificationExam = false;
 
-    private String passed_at;
+    private String passedAt;
 
     // 지원정보 테이블과 n:1
     @ManyToOne(fetch = FetchType.LAZY)

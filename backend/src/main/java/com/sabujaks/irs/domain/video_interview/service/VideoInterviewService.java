@@ -2,8 +2,10 @@ package com.sabujaks.irs.domain.video_interview.service;
 
 import com.sabujaks.irs.domain.video_interview.mdoel.entity.VideoInterview;
 import com.sabujaks.irs.domain.video_interview.mdoel.request.VideoInterviewCreateReq;
+import com.sabujaks.irs.domain.video_interview.mdoel.request.VideoInterviewTokenGetReq;
 import com.sabujaks.irs.domain.video_interview.mdoel.response.VideoInterviewCreateRes;
 import com.sabujaks.irs.domain.video_interview.mdoel.response.VideoInterviewSearchRes;
+import com.sabujaks.irs.domain.video_interview.mdoel.response.VideoInterviewTokenGetRes;
 import com.sabujaks.irs.domain.video_interview.repository.VideoInterviewRepository;
 import com.sabujaks.irs.global.common.exception.BaseException;
 import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
@@ -13,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +26,7 @@ public class VideoInterviewService {
         Session session = openVidu.createSession(properties);
         VideoInterview videoInterviewRoom = VideoInterview.builder()
                 .announceUUID(dto.getAnnounceUUID())
-                .interviewScheduleUUID(session.getSessionId())
+                .videoInterviewRoomUUID(session.getSessionId())
                 .build();
         videoInterviewRepository.save(videoInterviewRoom);
         return VideoInterviewCreateRes.builder()
@@ -35,16 +36,26 @@ public class VideoInterviewService {
 
     public List<VideoInterviewSearchRes> searchAll(String announceUUID) throws BaseException{
         List<VideoInterview> result =  videoInterviewRepository.findAllByAnnounceUUID(announceUUID)
-        .orElseThrow( () -> new BaseException(BaseResponseMessage.VIDEO_INTERVIEW_SEARCH_FAIL_NOT_FOUND));
+        .orElseThrow( () -> new BaseException(BaseResponseMessage.VIDEO_INTERVIEW_SEARCH_ALL_FAIL_NOT_FOUND));
         List<VideoInterviewSearchRes> videoInterviewSearchResList = new ArrayList<>();
         for (VideoInterview videoInterview : result) {
             VideoInterviewSearchRes videoInterviewSearchRes = VideoInterviewSearchRes.builder()
                     .idx(videoInterview.getIdx())
                     .announceUUID(videoInterview.getAnnounceUUID())
-                    .interviewScheduleUUID(videoInterview.getInterviewScheduleUUID())
+                    .videoInterviewRoomUUID(videoInterview.getVideoInterviewRoomUUID())
                     .build();
             videoInterviewSearchResList.add(videoInterviewSearchRes);
         }
         return videoInterviewSearchResList;
+    }
+
+    public VideoInterviewTokenGetRes getToken(VideoInterviewTokenGetReq dto) throws BaseException, OpenViduJavaClientException, OpenViduHttpException {
+        Session session = openVidu.getActiveSession(dto.getVideoInterviewRoomUUID());
+        if (session == null) { throw new BaseException(BaseResponseMessage.VIDEO_INTERVIEW_JOIN_FAIL);}
+        ConnectionProperties properties = ConnectionProperties.fromJson(dto.getParams()).build();
+        Connection connection = session.createConnection(properties);
+        return VideoInterviewTokenGetRes.builder()
+                .token(connection.getToken())
+                .build();
     }
 }

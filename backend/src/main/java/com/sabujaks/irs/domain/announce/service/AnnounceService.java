@@ -3,15 +3,17 @@ package com.sabujaks.irs.domain.announce.service;
 import com.sabujaks.irs.domain.announce.model.entity.Announcement;
 import com.sabujaks.irs.domain.announce.model.entity.CustomForm;
 import com.sabujaks.irs.domain.announce.model.entity.CustomLetterForm;
+import com.sabujaks.irs.domain.announce.model.request.AnnounceRegisterReq;
 import com.sabujaks.irs.domain.announce.model.request.CustomFormReq;
+import com.sabujaks.irs.domain.announce.model.response.AnnounceRegisterRes;
 import com.sabujaks.irs.domain.announce.model.response.CustomFormRes;
 import com.sabujaks.irs.domain.announce.repository.AnnounceRepository;
 import com.sabujaks.irs.domain.announce.repository.CustomFormRepository;
 import com.sabujaks.irs.domain.announce.repository.CustomLetterFormRepository;
-import com.sabujaks.irs.domain.auth.model.entity.Seeker;
+import com.sabujaks.irs.domain.auth.model.entity.Recruiter;
+import com.sabujaks.irs.domain.auth.repository.RecruiterRepository;
 import com.sabujaks.irs.domain.data_init.entity.BaseInfo;
 import com.sabujaks.irs.domain.data_init.repository.BaseInfoRepository;
-import com.sabujaks.irs.domain.resume.model.response.ResumeCreateRes;
 import com.sabujaks.irs.global.common.exception.BaseException;
 import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
 import lombok.RequiredArgsConstructor;
@@ -25,10 +27,70 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class AnnounceService {
+    private final RecruiterRepository recruiterRepository;
     private final AnnounceRepository announceRepository;
     private final CustomFormRepository customFormRepository;
     private final CustomLetterFormRepository letterFormRepository;
     private final BaseInfoRepository baseInfoRepository;
+
+    /*******채용담당자 공고 등록 (step1)***********/
+    public AnnounceRegisterRes registerAnnounce(
+            Long recruiterIdx,
+            String fileUrl,
+            AnnounceRegisterReq dto) throws BaseException {
+
+        //채용담당자 확인
+        Optional<Recruiter> result = recruiterRepository.findByRecruiterIdx(recruiterIdx);
+        if(result.isPresent()) {
+            // 셀렉트 폼이 트루면 = 파일url이 있으면 파일만 공고 엔티티에 저장
+            if(dto.getSelectForm()) {
+                Announcement announcement = Announcement.builder()
+                        .recruiter(result.get())
+                        .selectForm(dto.getSelectForm())
+                        .title(dto.getTitle())
+                        .imgUrl(fileUrl)
+                        .build();
+                announceRepository.save(announcement);
+
+                //응답
+                return AnnounceRegisterRes.builder()
+                        .announceIdx(announcement.getIdx())
+                        .build();
+
+            } else { // 셀렉트 폼이 폴스면 = 파일url이 없으면 들어온 dto만 저장
+                Announcement announcement = Announcement.builder()
+                        .recruiter(result.get())
+                        .selectForm(dto.getSelectForm())
+                        .title(dto.getTitle())
+                        .jobCategory(dto.getJobCategoryList().toString())
+                        .jobTitle(dto.getJobTitle())
+                        .recruitedNum(dto.getRecruitedNum())
+                        .careerBase(dto.getCareerBase())
+                        .intro(dto.getIntro())
+                        .positionQuali(dto.getPositionQuali())
+                        .jobType(dto.getJobType())
+                        .salary(dto.getSalary())
+                        .conditions(dto.getConditions())
+                        .region(dto.getRegion())
+                        .benefits(dto.getBenefits())
+                        .process(dto.getProcess())
+                        .announcementStart(dto.getAnnouncementStart())
+                        .announcementEnd(dto.getAnnouncementEnd())
+                        .interviewNum(dto.getInterviewNum())
+                        .note(dto.getNote())
+                        .build();
+                announceRepository.save(announcement);
+
+                //응답
+                return AnnounceRegisterRes.builder()
+                        .announceIdx(announcement.getIdx())
+                        .build();
+            }
+        } else {
+            //채용담당자 유저에서 찾을 수 없을 때
+            throw new BaseException(BaseResponseMessage.ANNOUNCEMENT_REGISTER_STEP_ONE_FAIL_NOT_RECRUITER);
+        }
+    }
 
 
     /*******채용담당자 지원서 폼 조립 + 자기소개서 문항 등록 (step2)***********/
