@@ -42,7 +42,6 @@ const router = createRouter({
         { path: '/recruiter/interview-schedule/exp', component: InterviewScheduleMainExp },
         { path: '/recruiter/video-interview/test1', component: VideoInterViewTestPage},
         { path: '/recruiter/video-interview/test2', component: VideoInterViewRoomCreatePage},
-        { path: '/recruiter/interview-schedule', component: InterviewScheduleMainPage },
         { path: '/recruiter/resume', component: ResumeMainPage },
         { path: '/recruiter/resume/list', component: ResumeListPage },
         { path: '/recruiter/resume/detail', component: ResumeDetailPage },
