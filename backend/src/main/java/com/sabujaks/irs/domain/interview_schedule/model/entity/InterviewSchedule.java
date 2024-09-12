@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Builder
@@ -30,10 +32,19 @@ public class InterviewSchedule {
     @Column(nullable = false)
     private String interviewEnd;
 
-    @Column(nullable = false)
     private String uuid;
+
+    @Column(nullable = false)
+    private String careerBase;
+
+    @OneToMany(mappedBy = "interviewSchedule")
+    private List<InterviewScheduleLists> interviewScheduleLists;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="videoInterview_idx")
     private VideoInterview videoInterviewRoom;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="team_idx")
+    private Team team;
 }
