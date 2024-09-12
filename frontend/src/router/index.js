@@ -1,4 +1,3 @@
-
 import AnnounceDetailPage from '@/pages/seeker/announce/AnnounceDetailPage.vue';
 import AnnounceMainPage from '@/pages/recruiter/announce/AnnounceMainPage.vue';
 import RecruiterLoginPage from '@/pages/recruiter/auth/RecruiterLoginPage.vue';

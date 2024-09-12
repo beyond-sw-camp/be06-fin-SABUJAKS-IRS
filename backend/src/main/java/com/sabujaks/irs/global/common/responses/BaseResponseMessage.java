@@ -43,6 +43,12 @@ public enum BaseResponseMessage {
     VIDEO_INTERVIEW_JOIN_SUCCESS(true, 1403, "화상 면접방에 참가했습니다."),
     VIDEO_INTERVIEW_JOIN_FAIL(false, 1404, "화상 면접방 참가에 실패했습니다."),
 
+    // MEMBER 1500
+    MEMBER_NOT_FOUND(false, 1500, "회원을 찾을 수 없습니다."),
+
+    // TEAM 1600
+    TEAM_NOT_FOUND(false, 1600, "팀을 찾을 수 없습니다."),
+
     // RESUME 2000~2999
     RESUME_REGISTER_SUCCESS(true, 2000, "지원서 등록에 성공했습니다."),
     RESUME_REGISTER_FAIL_NOT_FOUND(false, 2001, "해당 유저를 찾을 수 없습니다."),

@@ -22,4 +22,6 @@ public class ResumeCreateReq {
     private ArrayList<CertificationCreateReq> certifications; // 자격증 n개
     private ArrayList<TrainingCreateReq> trainings; // 교육이수 n개
     private ArrayList<AwardCreateReq> awards; // 수상 n개
+    private ArrayList<CustomLetterCreateReq> customLetters; // 자기소개서 n개
+    private ArrayList<PortfolioCreateReq> portfolios; // 포트폴리오 n개
 }

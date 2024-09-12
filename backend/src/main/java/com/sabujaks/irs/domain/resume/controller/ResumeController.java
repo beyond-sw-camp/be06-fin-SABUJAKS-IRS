@@ -24,7 +24,8 @@ public class ResumeController {
     private final ResumeService resumeService;
     private final CloudFileUpload cloudFileUpload;
 
-    @PostMapping("/create")
+    // 마이페이지 -> 지원서 등록
+    @PostMapping("/create-mypage")
     public ResponseEntity<BaseResponse<ResumeCreateReq>> create(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestPart ResumeCreateReq dto,
@@ -41,4 +42,7 @@ public class ResumeController {
 
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.RESUME_REGISTER_SUCCESS, response));
     }
+    
+    // 공고 -> 지원서 등록
+
 }
