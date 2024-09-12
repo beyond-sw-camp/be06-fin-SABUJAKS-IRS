@@ -1,6 +1,7 @@
 package com.sabujaks.irs.domain.interview_schedule.controller;
 
 import com.sabujaks.irs.domain.interview_schedule.model.request.InterviewScheduleReq;
+import com.sabujaks.irs.domain.interview_schedule.model.response.InterviewScheduleListsRes;
 import com.sabujaks.irs.domain.interview_schedule.model.response.InterviewScheduleRes;
 import com.sabujaks.irs.domain.interview_schedule.service.InterviewScheduleService;
 import com.sabujaks.irs.global.common.exception.BaseException;
@@ -23,14 +24,20 @@ public class InterviewScheduleController {
     public ResponseEntity<BaseResponse<InterviewScheduleReq>> create (
             @RequestBody InterviewScheduleReq dto) throws BaseException {
 
-        for(String email : dto.getInterviewerList()) {
-            System.out.println(email);
-        }
+        InterviewScheduleListsRes response = interviewScheduleService.create(dto);
+        emailSender.sendEmail(response, dto.getInterviewerList());
 
-        String uuid = emailSender.sendEmail(dto.getInterviewerList());
-        InterviewScheduleRes response = interviewScheduleService.create(dto, uuid);
 
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_SCHEDULE_CREATE_SUCCESS, response));
     }
+
+    @GetMapping("/read-all/exp")
+    public ResponseEntity<BaseResponse<?>> readAllExp () throws BaseException {
+//        InterviewScheduleRes response = interviewScheduleService.readAllExp();
+
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_SCHEDULE_CREATE_SUCCESS));
+    }
+
+
 
 }
