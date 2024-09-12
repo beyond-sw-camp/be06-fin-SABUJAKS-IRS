@@ -19,6 +19,9 @@ public class ResumeInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
+    @Column(nullable = false)
+    private Boolean integration;
+
     // 회원 테이블과 n:1
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seeker_idx")
