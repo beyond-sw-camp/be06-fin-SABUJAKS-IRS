@@ -9,10 +9,16 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['openModal', 'interviewScheduleMain']);
+const emit = defineEmits([
+    'openModal',
+    'createVideoInterview']);
 
 const handleRowClick = (type) => {
   emit('openModal', type);
+}
+
+const createVideoInterview = (uuid) => {
+  emit('createVideoInterview', uuid)
 }
 
 </script>
@@ -37,7 +43,7 @@ const handleRowClick = (type) => {
         <td>1</td>
         <td>2024.09.24 - 2024.10.24</td>
         <td>백엔드 엔지니어 신입공채</td>
-        <td><button>방 생성</button></td>
+        <td><button @click="createVideoInterview(uuid)">방 생성</button></td>
       </tr>
     </table>
   </div>

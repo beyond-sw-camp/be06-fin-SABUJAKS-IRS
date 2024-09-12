@@ -2,6 +2,8 @@ package com.sabujaks.irs.domain.data_init;
 
 import com.sabujaks.irs.domain.data_init.entity.BaseInfo;
 import com.sabujaks.irs.domain.data_init.repository.BaseInfoRepository;
+import com.sabujaks.irs.domain.interview_schedule.model.entity.Team;
+import com.sabujaks.irs.domain.interview_schedule.repository.TeamRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class DataInit {
     private final BaseInfoRepository baseInfoRepository;
+    private final TeamRepository teamRepository;
 
     // 어노테이션 주석 해제하면 init 됨
     // 테이블 없으면 yml create로 바꾸고 주석해제 후 프로젝트 실행(한번 넣기)
@@ -152,5 +155,15 @@ public class DataInit {
             baseInfoRepository.save(baseInfo);
         }
 
+        // 팀 정보 추가
+        String[] teams = {
+                "1팀", "2팀", "3팀", "4팀", "5팀"
+        };
+
+        for(String team : teams) {
+            teamRepository.save(Team.builder()
+                    .teamName(team)
+                    .build());
+        }
     }
 }

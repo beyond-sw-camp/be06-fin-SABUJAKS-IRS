@@ -9,10 +9,12 @@ import java.util.List;
 @Getter
 public class InterviewScheduleReq {
 
-    private List<String> seekerList;
+    private List<Long> seekerList;
     private List<String> interviewerList;
     private String isOnline;
     private String interviewDate;
     private String interviewStart;
     private String interviewEnd;
+    private String careerBase;
+    private Long teamIdx;
 }
