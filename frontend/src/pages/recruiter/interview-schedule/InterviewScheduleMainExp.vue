@@ -21,15 +21,38 @@ const selectedInterviewers = ref([]);
 const interviewDate = ref('');
 const startTime = ref('');
 const endTime = ref('');
+const teamList = [
+  { name: '1팀', idx: 1 },
+  { name: '2팀', idx: 2 },
+  { name: '3팀', idx: 3 },
+  { name: '4팀', idx: 4 },
+  { name: '5팀', idx: 5 }
+];
+const team = ref(''); // 선택된 팀의 Idx 값을 저장
 const timeOptions = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
 const showCalendar = ref(true); // 캘린더 기본으로 표시
 const showInterviewerList = ref(false); // 후보자 목록은 기본적으로 숨김
-const interviewType = ref([]); // 대면, 비대면 값 저장
+
+const interviewType = ref(''); // 선택된 면접 유형 (대면 또는 온라인)
+
+const handleCheckboxChange = (type) => {
+  if (interviewType.value === type) {
+    interviewType.value = ''; // 이미 선택된 타입을 클릭했을 경우 해제
+  } else {
+    interviewType.value = type; // 새 타입을 선택
+  }
+};
+
 
 const interviewScheduleLists = (announceIdx) => {
   isInterviewScheduleList.value = true;
   isInterviewScheduleMain.value = false;
 }
+
+const createVideoInterview = () => {
+
+}
+
 // 모달 열기 함수에서 무한 호출 방지
 const openModal = (title) => {
   if (!isModalOpen.value) {  // 모달이 열려있지 않을 때만 실행
@@ -50,6 +73,7 @@ const resetModal = () => {
   interviewDate.value = '';
   startTime.value = '';
   endTime.value = '';
+  team.value = '';
   selectedInterviewers.value = [];
   showCalendar.value = true; // 모달을 닫을 때 캘린더가 다시 보이게 설정
   showInterviewerList.value = false; // 모달을 닫을 때 후보자 목록은 숨김
@@ -91,12 +115,14 @@ const removeFilter = (filter) => {
 };
 
 const submitForm = () => {
-  const selectedSpanValues = selectedFilters.value;
+  // const selectedSpanValues = selectedFilters.value;
+  const selectedSpanValues = [1, 2];
   const participantEmails = selectedEmails.value// 참가자 이메일
   const selectedDate = interviewDate.value;
   const selectedStartTime = startTime.value;
   const selectedEndTime = endTime.value;
-  const selectedType = interviewType.value.join(', ');
+  const selectedType = interviewType.value;
+  const selectedTeamIdx = team.value;
 
   alert(`
     선택된 필터: ${selectedSpanValues}
@@ -105,6 +131,7 @@ const submitForm = () => {
     방식: ${selectedType}
     시작 시간: ${selectedStartTime}
     종료 시간: ${selectedEndTime}
+    팀 배정: ${selectedTeamIdx}
   `);
 
   // 데이터 객체 생성
@@ -115,7 +142,11 @@ const submitForm = () => {
     interviewDate: selectedDate,
     interviewStart: selectedStartTime,
     interviewEnd: selectedEndTime,
+    careerBase: "경력",
+    teamIdx: selectedTeamIdx,
   };
+
+  console.log("Selected Team: ", selectedTeamIdx);
 
   // Store의 createInterviewSchedule 함수 호출
   interviewScheduleStore.createInterviewSchedule(interviewData)
@@ -142,6 +173,7 @@ const submitForm = () => {
     <InterviewScheduleList
         v-if="isInterviewScheduleList"
         @openModal="openModal"
+        @createVideoInterview="createVideoInterview"
         :title="'면접일정'">
     </InterviewScheduleList>
 
@@ -183,36 +215,49 @@ const submitForm = () => {
             <div class="form-group">
               <div class="col-12">
                 <div class="form-group col-12 row">
+                  <div class="form-group col-5 ml-auto mb-0">
+                    <label for="interview-type" class="subtitle">방식 <span class="required">*</span></label>
+                    <div class="row">
+                      <label class="checkbox-label">
+                        <input type="checkbox" value="대면" :checked="interviewType === '대면'" @change="handleCheckboxChange('대면')"> 대면
+                      </label>
+
+                      <label class="checkbox-label ml-auto">
+                        <input type="checkbox" value="온라인" :checked="interviewType === '온라인'" @change="handleCheckboxChange('온라인')"> 온라인
+                      </label>
+                    </div>
+                  </div>
                   <div class="form-group col-5">
                     <label for="interview-date" class="subtitle">날짜 <span class="required">*</span></label>
                     <input type="date" id="interview-date" v-model="interviewDate">
                   </div>
+                </div>
+                <div class="col-12 row">
+                  <div class="form-group col-5">
+                    <label for="start-time" class="subtitle">시작시간 <span class="required">*</span></label>
+                    <select class="time-select interview-calender" v-model="startTime">
+                      <option value="">시간을 선택하세요</option>
+                      <option v-for="time in timeOptions" :key="time" :value="time">{{ time }}</option>
+                    </select>
+                  </div>
                   <div class="form-group col-5 ml-auto">
-                    <label for="interview-type" class="subtitle">방식 <span class="required">*</span></label>
-                    <div class="row">
-                      <label class="checkbox-label">
-                        <input type="checkbox" name="choice" value="대면" v-model="interviewType"> 대면
-                      </label>
-
-                      <label class="checkbox-label ml-auto">
-                        <input type="checkbox" name="choice" value="온라인" v-model="interviewType"> 온라인
-                      </label>
-                    </div>
+                    <label for="end-time" class="subtitle">종료시간 <span class="required">*</span></label>
+                    <select class="time-select interview-calender" v-model="endTime">
+                      <option value="">시간을 선택하세요</option>
+                      <option v-for="time in timeOptions" :key="time" :value="time">{{ time }}</option>
+                    </select>
                   </div>
                 </div>
-                <div class="form-group">
-                  <label for="start-time" class="subtitle">시작시간 <span class="required">*</span></label>
-                  <select class="time-select interview-calender" v-model="startTime">
-                    <option value="">시간을 선택하세요</option>
-                    <option v-for="time in timeOptions" :key="time" :value="time">{{ time }}</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="end-time" class="subtitle">종료시간 <span class="required">*</span></label>
-                  <select class="time-select interview-calender" v-model="endTime">
-                    <option value="">시간을 선택하세요</option>
-                    <option v-for="time in timeOptions" :key="time" :value="time">{{ time }}</option>
-                  </select>
+                <div class="form-group col-12">
+                  <div class="form-group">
+                    <label for="end-time" class="subtitle">팀 <span class="required">*</span></label>
+                    <select class="time-select interview-calender" v-model="team">
+                      <option value="">팀을 선택하세요</option>
+                      <option v-for="selectTeam in teamList" :key="selectTeam.idx" :value="selectTeam.idx">
+                        {{ selectTeam.name }}
+                      </option>
+                    </select>
+                  </div>
                 </div>
               </div>
             </div>
@@ -494,4 +539,5 @@ input[type="text"] {
 .demo-app-main {
   flex-grow: 1;
 }
+
 </style>
