@@ -55,4 +55,20 @@ public class ResumeInfo {
     // 수상 테이블과 1:n
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "resumeInfo")
     private List<Award> awardList;
+
+    // 자기소개서 테이블과 1:n
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "resumeInfo")
+    private List<CustomLetter> customLetterList;
+
+    // 포트폴리오 테이블과 1:n
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "resumeInfo")
+    private List<Portfolio> portfolioList;
+
+    // 공고지원서 테이블과 1:n
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "resumeInfo")
+    private List<Resume> resumeList;
+
+    // 맞춤 지원정보 테이블과 1:n
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "resumeInfo")
+    private List<CustomResumeInfo> customResumeInfoList;
 }
