@@ -2,7 +2,6 @@ import AnnounceDetailPage from '@/pages/seeker/announce/AnnounceDetailPage.vue';
 import AnnounceMainPage from '@/pages/recruiter/announce/AnnounceMainPage.vue';
 import RecruiterLoginPage from '@/pages/recruiter/auth/RecruiterLoginPage.vue';
 import ResumeMainPage from '@/pages/recruiter/resume/ResumeMainPage.vue';
-import VideoInterviewEstimatorPage from '@/pages/recruiter/video-interview/VideoInterviewEstimatorPage.vue';
 import VideoInterviewMainPage from '@/pages/recruiter/video-interview/VideoInterviewMainPage.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import ResumeListPage from '@/pages/recruiter/resume/ResumeListPage.vue';
@@ -23,6 +22,7 @@ import InterviewScheduleMainExp from "@/pages/recruiter/interview-schedule/Inter
 import VideoInterViewTestPage from '@/pages/recruiter/video-interview/VideoInterViewTest1Page.vue';
 import VideoInterViewRoomCreatePage from '@/pages/recruiter/video-interview/VideoInterViewTest2Page.vue';
 import InterviewScheduleMain from '@/components/recruiter/InterviewScheduleMain.vue';
+import VideoInterviewRedirectPage from '@/pages/recruiter/video-interview/VideoInterviewRedirectPage.vue';
 
 
 const router = createRouter({
@@ -42,6 +42,7 @@ const router = createRouter({
         { path: '/recruiter/interview-schedule/exp', component: InterviewScheduleMainExp },
         { path: '/recruiter/video-interview/test1', component: VideoInterViewTestPage},
         { path: '/recruiter/video-interview/test2', component: VideoInterViewRoomCreatePage},
+        {path: '/recruiter/video-interview/redirect-login', component: VideoInterviewRedirectPage },
         { path: '/recruiter/interview-schedule', component: InterviewScheduleMain },
         { path: '/recruiter/resume', component: ResumeMainPage },
         { path: '/recruiter/resume/list', component: ResumeListPage },

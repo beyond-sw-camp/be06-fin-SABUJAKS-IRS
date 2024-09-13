@@ -22,7 +22,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class VideoInterviewService {
-    private final JwtUtil jwtUtil;
     private final OpenVidu openVidu;
     private final VideoInterviewRepository videoInterviewRepository;
     public VideoInterviewCreateRes create(VideoInterviewCreateReq dto) throws OpenViduJavaClientException, OpenViduHttpException {
@@ -63,13 +62,4 @@ public class VideoInterviewService {
                 .build();
     }
 
-    public Cookie createVideoInterviewToken(String announceUUID, String videoInterviewUUID, String userType ,String email, String startDate, String duration) {
-        String videoInterviewTokenString = announceUUID+'|'+videoInterviewUUID+'|'+userType+'|'+email+'|'+startDate+'|'+duration;
-        Cookie viToken = new Cookie("VITOKEN", videoInterviewTokenString);
-        viToken.setHttpOnly(true);
-        viToken.setSecure(true);
-        viToken.setPath("/");
-        viToken.setMaxAge(60 * 60 * 1);
-        return viToken;
-    }
 }

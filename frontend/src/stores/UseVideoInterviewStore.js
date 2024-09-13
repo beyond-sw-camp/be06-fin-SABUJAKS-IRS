@@ -27,7 +27,7 @@ export const UseVideoInterviewStore = defineStore('VideoInterview', {
                     { headers: { 'Content-Type': 'application/json', },});
                 return response.data
             } catch (error) {
-                console.error("화상 면접 방 목록조회에 실패했습니다.")
+                return error.response.data
             }
         },
         async getVideoInterviewToken(videoInterviewJoinReq) {
@@ -42,5 +42,16 @@ export const UseVideoInterviewStore = defineStore('VideoInterview', {
                 console.error("화상 면접 방 참여에 실패했습니다.")
             }
         },
+        // async verifyAnnounceUUID(){
+        //     try {
+        //         const response = await axios.get(
+        //             `${backend}/video-interview/verify`,
+        //             {headers: { 'Content-Type': 'application/json', },
+        //         });
+        //         return response.data
+        //     } catch (error) {
+        //         console.error("유저 검증 실패")
+        //     }
+        // }
     },
 });
