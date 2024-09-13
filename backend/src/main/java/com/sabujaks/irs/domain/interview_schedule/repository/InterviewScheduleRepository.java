@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface InterviewScheduleRepository extends JpaRepository<InterviewSchedule, Long> {
     List<InterviewSchedule> findByInterviewDate(String interviewDate);
+
+    List<InterviewSchedule> findByCareerBase(String careerBase);
 }
