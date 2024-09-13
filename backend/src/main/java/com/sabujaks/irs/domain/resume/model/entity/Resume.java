@@ -7,6 +7,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Builder
@@ -18,6 +22,13 @@ public class Resume {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
+
+    @Column(nullable = false, length = 100)
+    private String resumeTitle;
+
+    @Column(nullable = false)
+    @CreationTimestamp
+    private LocalDateTime resumedAt;
 
     // 지원정보 테이블과 n:1
     @ManyToOne(fetch = FetchType.LAZY)
