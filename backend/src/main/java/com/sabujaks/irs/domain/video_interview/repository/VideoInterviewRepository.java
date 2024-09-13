@@ -10,5 +10,4 @@ import java.util.Optional;
 public interface VideoInterviewRepository extends JpaRepository<VideoInterview, Long> {
     @Query("SELECT vi FROM VideoInterview vi WHERE vi.announceUUID = :announceUUID")
     Optional<List<VideoInterview>> findAllByAnnounceUUID(String announceUUID);
-
 }

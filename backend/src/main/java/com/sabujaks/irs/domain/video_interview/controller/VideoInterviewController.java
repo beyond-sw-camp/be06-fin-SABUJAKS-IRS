@@ -43,20 +43,6 @@ public class VideoInterviewController {
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.VIDEO_INTERVIEW_SEARCH_ALL_SUCCESS, response));
     }
 
-    @GetMapping("/video-interview-token")
-    public ResponseEntity createVideoInterviewToken(
-        @RequestParam String announceUUID,
-        @RequestParam String videoInterviewUUID,
-        @RequestParam String userType,
-        @RequestParam String email,
-        @RequestParam String duration,
-        @RequestParam String startDate,
-        HttpServletResponse response) throws BaseException {
-        Cookie cookie = videoInterviewService.createVideoInterviewToken(announceUUID,videoInterviewUUID, userType, email, startDate, duration );
-        response.addCookie(cookie);
-        return ResponseEntity.ok("화상 면접방 접근 토큰을 생성했습니다.!");
-    }
-
     @PostMapping("/access-token")
     public ResponseEntity<BaseResponse> getSessionToken(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,

@@ -82,11 +82,12 @@ public class CustomUserDetails implements UserDetails {
         if (Objects.equals(this.role, "ROLE_SEEKER")) {
             if (seeker != null && seeker.getInterviewParticipateList() != null) {
                 for (InterviewParticipate participate : seeker.getInterviewParticipateList()) {
-                    String authority = "ROLE_SEEKER_" + participate.getInterviewSchedule().getAnnouncement().getUuid()
-                            + "_" + participate.getInterviewSchedule().getUuid()
-                            + "_" + participate.getInterviewSchedule().getInterviewDate()
-                            + "_" + participate.getInterviewSchedule().getInterviewStart()
-                            + "_" + participate.getInterviewSchedule().getInterviewEnd();
+                    String authority =
+                            "ROLE_SEEKER|" + participate.getInterviewSchedule().getAnnouncement().getUuid()
+                            + "|" + participate.getInterviewSchedule().getUuid()
+                            + "|" + participate.getInterviewSchedule().getInterviewDate()
+                            + "|" + participate.getInterviewSchedule().getInterviewStart()
+                            + "|" + participate.getInterviewSchedule().getInterviewEnd();
                     authorities.add(new SimpleGrantedAuthority(authority));
                 }
             }
@@ -95,8 +96,9 @@ public class CustomUserDetails implements UserDetails {
         if (Objects.equals(this.role, "ROLE_ESTIMATOR")) {
             if (estimator != null && estimator.getInterviewParticipateList() != null) {
                 for (InterviewParticipate participate : estimator.getInterviewParticipateList()) {
-                    String authority = "ROLE_ESTIMATOR_" + participate.getInterviewSchedule().getAnnouncement().getUuid()
-                            + "_" + participate.getInterviewSchedule().getUuid();
+                    String authority =
+                            "ROLE_ESTIMATOR|" + participate.getInterviewSchedule().getAnnouncement().getUuid()
+                            + "|" + participate.getInterviewSchedule().getUuid();
                     authorities.add(new SimpleGrantedAuthority(authority));
                 }
             }
@@ -105,7 +107,7 @@ public class CustomUserDetails implements UserDetails {
         if (Objects.equals(this.role, "ROLE_RECRUITER")) {
             if (recruiter != null && recruiter.getAnnouncementList() != null) {
                 for (Announcement announcement : recruiter.getAnnouncementList()) {
-                    String authority = "ROLE_RECRUITER_" + announcement.getUuid();
+                    String authority = "ROLE_RECRUITER|" + announcement.getUuid();
                     authorities.add(new SimpleGrantedAuthority(authority));
                 }
             }
