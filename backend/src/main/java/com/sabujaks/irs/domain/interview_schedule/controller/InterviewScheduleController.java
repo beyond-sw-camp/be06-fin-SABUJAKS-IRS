@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/interview-schedule")
 @RequiredArgsConstructor
@@ -26,16 +28,16 @@ public class InterviewScheduleController {
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @RequestBody InterviewScheduleReq dto) throws BaseException {
         InterviewScheduleRes response = interviewScheduleService.create(customUserDetails, dto);
-//        emailSender.sendEmail(response, dto.getEstimatorList());
+        emailSender.sendEmail(response, dto.getEstimatorList());
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_SCHEDULE_CREATE_SUCCESS, response));
     }
 
 
     @GetMapping("/read-all/exp")
     public ResponseEntity<BaseResponse<?>> readAllExp () throws BaseException {
-//        InterviewScheduleRes response = interviewScheduleService.readAllExp();
+        List<InterviewScheduleRes> response = interviewScheduleService.readAllExp();
 
-        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_SCHEDULE_CREATE_SUCCESS));
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_SCHEDULE_CREATE_SUCCESS, response));
     }
 
 
