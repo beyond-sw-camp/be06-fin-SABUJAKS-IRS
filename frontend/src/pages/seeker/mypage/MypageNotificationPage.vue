@@ -1,105 +1,198 @@
 <template>
-    <div class="body-n">
-        <SeekerHeaderComponent></SeekerHeaderComponent>
-        <div class="main_div">
-            <div class="container-n">
-                <!-- 사이드 바 -->
-                <SeekerSideBarComponent></SeekerSideBarComponent>
+  <div class="body-n">
+    <SeekerHeaderComponent></SeekerHeaderComponent>
+    <div class="main_div">
+      <div class="container-n">
+        <!-- 사이드 바 -->
+        <SeekerSideBarComponent></SeekerSideBarComponent>
 
-                <!-- 메인 컨텐츠 -->
-                <div class="main-content">
-                    <div class="header">
-                        <h1>알림 관리</h1>
-                    </div>
+        <!-- 메인 컨텐츠 -->
+        <div class="main-content">
+          <div class="header">
+            <h1>알림 관리</h1>
+          </div>
 
-                    <div class="content">
-                        <div class="timeline">
-                            <div class="timeline-item">
-                                <div class="timeline-date">2024.09.03</div>
-                                <div class="timeline-content">
-                                    한화 시스템 서류절차 통과되어 면접 일정 조회 이메일이 발송되었습니다.
-                                    <button class="delete-btn">삭제</button>
-                                    <button class="schedule-btn">면접 일정 조율</button> <!-- 날짜 선택 버튼 추가 -->
-                                </div>
-                            </div>
-
-                            <div class="timeline-item">
-                                <div class="timeline-date">2024.09.02</div>
-                                <div class="timeline-content">
-                                    엔코아 인턴 지원 완료되었습니다.
-                                    <button class="delete-btn">삭제</button>
-                                    <button class="schedule-btn">면접 일정 조율</button> <!-- 날짜 선택 버튼 추가 -->
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 모달창 HTML -->
-                        <div id="schedule-modal" class="modal">
-                            <div class="modal-content">
-                                <span class="close-btn">&times;</span>
-                                <h2>면접 날짜 선택</h2>
-                                <p>면접 날짜를 선택하세요:</p>
-                                <input type="date" id="interview-date">
-                                <button class="submit-btn">확인</button>
-                            </div>
-                        </div>
-                    </div>
+          <div class="content">
+            <div class="timeline">
+              <!-- 알림 리스트 반복 출력 -->
+              <div v-for="(alarm, index) in alarms" :key="alarm.idx" class="timeline-item">
+                <div class="timeline-date">{{ formatDate(alarm.createdAt) }}</div>
+                <div
+                    class="timeline-content row"
+                    :class="{ read: alarm.status === true }"
+                @click="toggleDetail(index, alarm.idx)"
+                >
+                  <div class="margin-v-auto">
+                    {{ alarm.message }}
+                  </div>
+                  <div class="ml-auto">
+                    <button class="schedule-btn" @click.stop="openScheduleModal(alarm)">면접 일정 조율</button>
+                  </div>
                 </div>
+
+                <!-- 상세 내용 (숨겨진 상태에서 애니메이션으로 열림) -->
+                <transition name="fade">
+                  <div :style="{ maxHeight: isDetailOpen(index) ? '600px' : '0px', padding: isDetailOpen(index) ? '50px 0' : '0px' }" class="timeline-detail">
+                    <p>상세 내역: {{ alarm.details }}</p>
+                    <!-- 이메일 스타일 적용된 상세 내역 -->
+                    <table align="center" cellpadding="0" cellspacing="0" width="600" style="border-collapse: collapse; background-color: #ffffff; margin-top: 50px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                      <!-- 테이블 내용 그대로 유지 -->
+                      <tr>
+                        <td align="center" style="text-align:center; padding: 40px 0; background-color: #212b36;">
+                          <h2 style="color: #ffffff; margin: 0;">면접 일정 안내</h2>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 30px 30px; color: #333333;">
+                          <p style="margin: 0 0 20px 0; font-size: 16px;">안녕하세요,</p>
+                          <p style="margin: 0 0 20px 0; font-size: 16px;">
+                            지원자님께서 지원하신 직무에 대한 면접 일정이 아래와 같이 확정되었습니다. 면접 일정을 확인해주시기 바랍니다.
+                          </p>
+                        </td>
+                      </tr>
+                      <!-- 면접 정보 -->
+                      <tr>
+                        <td style="padding: 20px;">
+                          <table cellpadding="0" cellspacing="0" width="100%" style="border: 1px solid #dddddd;">
+                            <tr>
+                              <td style="padding: 10px; background-color: #f4f4f4; font-weight: bold;">면접 일자</td>
+                              <td style="padding: 10px; text-align: left;">2024년 9월 20일</td>
+                            </tr>
+                            <tr>
+                              <td style="padding: 10px; background-color: #f4f4f4; font-weight: bold;">면접 시간</td>
+                              <td style="padding: 10px; text-align: left;">오후 2시</td>
+                            </tr>
+                            <tr>
+                              <td style="padding: 10px; background-color: #f4f4f4; font-weight: bold;">면접 장소</td>
+                              <td style="padding: 10px; text-align: left;">서울시 강남구 테헤란로 123 ABC빌딩 5층</td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </transition>
+
+              </div>
             </div>
+
+            <!-- 모달창 HTML -->
+            <div v-if="isModalOpen" id="myModal" class="modal">
+              <div class="modal-content" id="draggableModal">
+                <span class="close" @click="closeModal">&times;</span>
+                <h2>일정 조율</h2>
+                <div class="col-12 modal-section">
+                    <div class="form-group">
+                      <div class="col-12">
+                        <label for="interview-date" class="subtitle mb-30">가능한 날짜 범위 선택<span class="required">*</span></label>
+                        <div class="col-12 row">
+                          <input type="date" id="interview-date" v-model="interviewDate">
+                          <p class="margin-auto"> ~ </p>
+                          <input type="date" id="interview-date" v-model="interviewDate">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              <div class="col-12">
+                <button class="submit-button" @click="submitSchedule">등록</button>
+              </div>
+              </div>
+            </div>
+          </div>
+
+          </div>
         </div>
+      </div>
     </div>
 </template>
 
 <script setup>
+import {ref, onMounted} from 'vue';
 import SeekerHeaderComponent from "@/components/seeker/SeekerHeaderComponent.vue";
 import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.vue";
+import {UseMypageNotificationStore} from "@/stores/UseMypageNotificationStore";
 
-// // 모달창 가져오기
-// var modal = document.getElementById("schedule-modal");
-// var scheduleBtns = document.querySelectorAll(".schedule-btn");
-// var closeBtn = document.querySelector(".close-btn");
+const mypageNotificationStore = UseMypageNotificationStore();
+const alarms = ref([]);
+const isModalOpen = ref(false);
+const selectedDate = ref(null);
+const selectedAlarm = ref(null);
 
-// // '면접 일정 조율' 버튼 클릭 시 모달 열기
-// scheduleBtns.forEach(function (btn) {
-//     btn.addEventListener('click', function () {
-//         // modal.style.display = "block";
-//         modal.style.display = "flex"; // 모달창 보이기
-//     });
-// });
+// 알림 리스트 불러오기
+onMounted(async () => {
+  alarms.value = await mypageNotificationStore.readAllAlarm();
+});
 
-// // 'x' 버튼 클릭 시 모달 닫기
-// closeBtn.onclick = function () {
-//     modal.style.display = "none";
-// }
+// 모달 열기
+const openScheduleModal = (alarm) => {
+  selectedAlarm.value = alarm;
+  isModalOpen.value = true;
+};
 
-// // 모달 외부 클릭 시 모달 닫기
-// window.onclick = function (event) {
-//     if (event.target === modal) {
-//         modal.style.display = "none";
-//     }
-// }
+// 모달 닫기
+const closeModal = () => {
+  isModalOpen.value = false;
+  selectedAlarm.value = null;
+};
+
+// 면접 일정 제출
+const submitSchedule = () => {
+  console.log("면접 날짜:", selectedDate.value, "선택된 알람:", selectedAlarm.value);
+  closeModal();
+};
+
+// 날짜 포맷팅 함수
+const formatDate = (dateString) => {
+  const [datePart, timePart] = dateString.split('T');
+  const [year, month, day] = datePart.split('-');
+  const [hours, minutes] = timePart.split(':');
+
+  return `${year}-${month}-${day} ${hours}:${minutes}`;
+};
+
+const detailOpen = ref([]);
+
+const toggleDetail = async (index, alarmIdx) => {
+  detailOpen.value[index] = !detailOpen.value[index];
+
+  // 상태를 서버에 업데이트
+  const isUpdated = await mypageNotificationStore.updateStatus(alarmIdx);
+
+  if (isUpdated) {
+    // 상태가 업데이트되면, 로컬 상태를 업데이트
+    alarms.value = alarms.value.map(alarm =>
+        alarm.idx === alarmIdx ? {...alarm, status: true} : alarm
+    );
+  }
+};
+
+const isDetailOpen = (index) => {
+  return detailOpen.value[index];
+};
+
+
 </script>
 
 <style scoped>
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .body-n {
-    font-family: 'Arial', sans-serif;
-    background-color: #f4f4f4;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f4;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 .main_div {
-    width: 100%;
-    background-color: rgba(255, 255, 255, 0);
-    display: flex;
-    justify-content: center;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0);
+  display: flex;
+  justify-content: center;
     align-items: center;
     padding: 20px 0;
     /* 수직 간격을 추가 */
@@ -122,6 +215,10 @@ import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.v
 .timeline {
     position: relative;
     padding: 20px 0;
+}
+
+.timeline-item :hover {
+  cursor: pointer;
 }
 
 .timeline-item {
@@ -190,32 +287,84 @@ import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.v
 
 /* 모달창 기본 스타일 */
 .modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9;
 }
-
 
 .modal-content {
-    background-color: white;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    width: 300px;
-    text-align: center;
+  background-color: white;
+  padding: 40px;
+  border-radius: 8px;
+  width: 30%;
+  //height: 50%;
 }
 
-.close-btn {
-    float: right;
-    font-size: 20px;
-    cursor: pointer;
+.modal-section {
+  flex: 1; /* 이 부분이 모달의 컨텐츠를 채우도록 설정 */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+h2 {
+  margin: 0 0 20px;
+}
+
+.form-group {
+  margin-bottom: 25px;
+}
+
+label {
+  display: block;
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+label .subtitle {
+  font-weight: 400 !important;
+}
+
+input[type="text"] {
+  width: calc(100% - 40px);
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.add-button, .add-email {
+  padding: 10px;
+  background-color: #232b16;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.required {
+  color: red;
 }
 
 .schedule-btn {
@@ -230,4 +379,35 @@ import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.v
 .schedule-btn:hover {
     background-color: #f2f2f2;
 }
+
+.timeline-detail {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease, padding 0.5s ease;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: max-height 0.5s ease, padding 0.5s ease;
+}
+
+.fade-enter-from, .fade-leave-to {
+  max-height: 500px; /* 최대 높이를 조정 */
+  padding: 10px 0; /* 여백 추가 */
+}
+
+.read {
+  color: gray;  /* 읽은 알림은 글자색이 회색으로 */
+}
+
+.submit-button {
+  width: 100%;
+  margin-top: auto;
+  padding: 10px;
+  background-color: #232b16;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
 </style>
