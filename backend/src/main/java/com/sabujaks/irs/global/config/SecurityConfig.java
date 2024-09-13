@@ -14,15 +14,21 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+
+import java.util.function.Supplier;
 
 @Configuration
 @RequiredArgsConstructor
@@ -54,6 +60,8 @@ public class SecurityConfig {
         http.authorizeHttpRequests((auth) ->
                         auth
                                 .requestMatchers("/api/test/ex01").hasAuthority("ROLE_SEEKER")
+                                .requestMatchers("/api/video-interview/create").hasAuthority("ROLE_RECRUITER")
+                                .requestMatchers("/api/video-interview/room/**").access(this::hasAuthoritiesAboutVideoInterview)
                                 .requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/interview-schedule/**").permitAll()
                                 .anyRequest().permitAll()
@@ -83,6 +91,26 @@ public class SecurityConfig {
         http.addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    private AuthorizationDecision hasAuthoritiesAboutVideoInterview(Supplier<Authentication> authentication, RequestAuthorizationContext object) {
+        System.out.println(authentication.get().getAuthorities());
+        System.out.println(object.getRequest().getRequestURI());
+        String seekerAuthority =
+                "ROLE_SEEKER" + object.getRequest().getParameter("announceUUID")
+                + '_' + object.getRequest().getParameter("interviewScheduleUUID");
+        String recruiterAuthority =
+                "ROLE_RECRUITER_" + object.getRequest().getParameter("announceUUID");
+        String estimatorAuthority =
+                "ROLE_ESTIMATOR" + object.getRequest().getParameter("announceUUID")
+                + '_' + object.getRequest().getParameter("interviewScheduleUUID");
+        if( authentication.get().getAuthorities().contains(new SimpleGrantedAuthority(seekerAuthority))
+            || authentication.get().getAuthorities().contains(new SimpleGrantedAuthority(recruiterAuthority))
+            || authentication.get().getAuthorities().contains(new SimpleGrantedAuthority(estimatorAuthority))) {
+            return new AuthorizationDecision(true);
+        } else {
+            return new AuthorizationDecision(false);
+        }
     }
 
     @Bean

@@ -1,4 +1,4 @@
-package com.sabujaks.irs.domain.video_interview.mdoel.response;
+package com.sabujaks.irs.domain.video_interview.model.response;
 
 import lombok.*;
 

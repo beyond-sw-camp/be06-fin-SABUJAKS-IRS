@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,9 +19,8 @@ public class Team {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
-
     private String teamName;
 
     @OneToMany(mappedBy = "team")
-    private List<InterviewSchedule> interviewSchedule;
+    private List<InterviewParticipate> interviewParticipateList = new ArrayList<>();
 }

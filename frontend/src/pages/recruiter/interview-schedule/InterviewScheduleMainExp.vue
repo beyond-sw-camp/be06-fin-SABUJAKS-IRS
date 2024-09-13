@@ -44,7 +44,7 @@ const handleCheckboxChange = (type) => {
 };
 
 
-const interviewScheduleLists = (announceIdx) => {
+const interviewParticipate = (announceIdx) => {
   isInterviewScheduleList.value = true;
   isInterviewScheduleMain.value = false;
 }
@@ -167,7 +167,7 @@ const submitForm = () => {
     <!-- InterviewScheduleMainNew에서 이벤트를 받아 모달을 제어 -->
     <InterviewScheduleMain
         v-if="isInterviewScheduleMain"
-        @interviewScheduleList="interviewScheduleLists"
+        @interviewScheduleList="interviewParticipate"
         :title="'경력'">
     </InterviewScheduleMain>
     <InterviewScheduleList

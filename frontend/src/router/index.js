@@ -4,7 +4,6 @@ import RecruiterLoginPage from '@/pages/recruiter/auth/RecruiterLoginPage.vue';
 import ResumeMainPage from '@/pages/recruiter/resume/ResumeMainPage.vue';
 import VideoInterviewEstimatorPage from '@/pages/recruiter/video-interview/VideoInterviewEstimatorPage.vue';
 import VideoInterviewMainPage from '@/pages/recruiter/video-interview/VideoInterviewMainPage.vue';
-import VideoInterviewParticipantPage from '@/pages/recruiter/video-interview/VideoInterviewParticipantPage.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import ResumeListPage from '@/pages/recruiter/resume/ResumeListPage.vue';
 import ResumeDetailPage from '@/pages/recruiter/resume/ResumeDetailPage.vue';
@@ -35,13 +34,10 @@ const router = createRouter({
         { path: '/recruiter/announce', component: AnnounceMainPage },
         { path: '/recruiter/announce/register-step2', component: AnnounceRegisterStep2Page},
         { path: '/recruiter/announce/register-step1', component: AnnounceRegisterStep1Page},
-        { path: '/video-interview/:announceUUID', component: VideoInterviewMainPage, 
-            children: {
-
-            } 
-        },
-        { path: '/recruiter/video-interview/participant', component: VideoInterviewParticipantPage },
-        { path: '/recruiter/video-interview/estimator', component: VideoInterviewEstimatorPage },
+        { path: '/video-interview/:announceUUID', component: VideoInterviewMainPage,},
+        // { path: '/video-interview/:announceUUID/:videoInterviewUUID', component: VideoInterviewRoomPage },
+        // { path: '/recruiter/video-interview/participant', component: VideoInterviewParticipantPage },
+        // { path: '/recruiter/video-interview/estimator', component: VideoInterviewEstimatorPage },
         { path: '/recruiter/interview-schedule/new', component: InterviewScheduleMainNew },
         { path: '/recruiter/interview-schedule/exp', component: InterviewScheduleMainExp },
         { path: '/recruiter/video-interview/test1', component: VideoInterViewTestPage},
@@ -50,7 +46,6 @@ const router = createRouter({
         { path: '/recruiter/resume', component: ResumeMainPage },
         { path: '/recruiter/resume/list', component: ResumeListPage },
         { path: '/recruiter/resume/detail', component: ResumeDetailPage },
-
         { path: '/seeker/login', component: SeekerLoginPage },
         { path: '/seeker/signup', component: SeekerSignupPage },
         { path: '/seeker/announce', component: AnnounceReadAllPage},

@@ -1,5 +1,7 @@
 package com.sabujaks.irs.domain.auth.model.entity;
 
+import com.sabujaks.irs.domain.interview_schedule.model.entity.InterviewParticipate;
+import com.sabujaks.irs.domain.interview_schedule.model.entity.InterviewSchedule;
 import com.sabujaks.irs.domain.resume.model.entity.Resume;
 import com.sabujaks.irs.domain.resume.model.entity.ResumeInfo;
 import jakarta.persistence.*;
@@ -9,6 +11,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 // 지원자 엔티티
@@ -46,6 +49,10 @@ public class Seeker {
     // 회원정보 테이블과 1:n
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "seeker")
     private List<ResumeInfo> resumeInfoList;
+
+    // 면접 일정 테이블과 n:1
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "seeker")
+    private List<InterviewParticipate> interviewParticipateList = new ArrayList<>();
 
     // 공고지원서 테이블과 1:n
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "seeker")

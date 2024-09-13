@@ -1,15 +1,19 @@
 package com.sabujaks.irs.global.security.oauth2;
 
 import com.sabujaks.irs.domain.auth.model.entity.Seeker;
+import com.sabujaks.irs.domain.interview_schedule.model.entity.InterviewSchedule;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Getter
 @RequiredArgsConstructor
@@ -52,6 +56,7 @@ public class CustomOAuth2UserDetails implements UserDetails, OAuth2User {
         });
         return collection;
     }
+
 
     @Override
     public String getPassword() {

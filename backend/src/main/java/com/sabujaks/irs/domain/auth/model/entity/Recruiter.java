@@ -40,7 +40,7 @@ public class Recruiter {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "recruiter" ,fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "recruiter")
     private List<Announcement> AnnouncementList = new ArrayList<>(); // 공고 테이블과 관계
 
 }
