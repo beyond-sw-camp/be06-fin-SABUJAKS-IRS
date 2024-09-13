@@ -44,8 +44,6 @@ const handleCheckboxChange = (type) => {
   }
 };
 
-
-
 const interviewScheduleLists = (announceIdx) => {
   isInterviewScheduleList.value = true;
   isInterviewScheduleMain.value = false;

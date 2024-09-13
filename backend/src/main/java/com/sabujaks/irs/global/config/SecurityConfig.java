@@ -9,20 +9,28 @@ import com.sabujaks.irs.global.security.oauth2.CustomOAuth2UserDetails;
 import com.sabujaks.irs.global.security.oauth2.CustomOAuth2UserService;
 import com.sabujaks.irs.global.security.oauth2.OAuth2AuthenticationSuccessHandler;
 import com.sabujaks.irs.global.utils.JwtUtil;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+
+import java.util.function.Supplier;
 
 @Configuration
 @RequiredArgsConstructor
@@ -54,6 +62,8 @@ public class SecurityConfig {
         http.authorizeHttpRequests((auth) ->
                         auth
                                 .requestMatchers("/api/test/ex01").hasAuthority("ROLE_SEEKER")
+                                .requestMatchers("/api/video-interview/create").hasAuthority("ROLE_RECRUITER")
+                                .requestMatchers("/api/video-interview/**").access(this::hasVideoInterviewAuthorities)
                                 .requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/interview-schedule/**").permitAll()
                                 .anyRequest().permitAll()
@@ -67,6 +77,20 @@ public class SecurityConfig {
                 auth
                         .logoutUrl("/api/auth/logout")
                         .deleteCookies("ATOKEN")
+                        .addLogoutHandler((request, response, authentication) -> {
+                            // 요청에서 쿠키 배열을 가져옴
+                            Cookie[] cookies = request.getCookies();
+                            if (cookies != null) {
+                                for (Cookie cookie : cookies) {
+                                    if (cookie.getName().startsWith("VITOKEN")) {
+                                        cookie.setValue(null);
+                                        cookie.setPath("/");
+                                        cookie.setMaxAge(0);
+                                        response.addCookie(cookie);
+                                    }
+                                }
+                            }
+                        })
                         .logoutSuccessHandler(((request, response, authentication) -> {
                             response.setStatus(HttpServletResponse.SC_OK);
                             response.setContentType("application/json;charset=UTF-8");
@@ -83,6 +107,36 @@ public class SecurityConfig {
         http.addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    private AuthorizationDecision hasVideoInterviewAuthorities(Supplier<Authentication> authentication, RequestAuthorizationContext object) {
+        System.out.println(authentication.get().getAuthorities());
+        System.out.println(object.getRequest().getRequestURI());
+        String seekerAuthority =
+                "ROLE_SEEKER|" + object.getRequest().getParameter("announceUUID")
+                + '_' + object.getRequest().getParameter("interviewScheduleUUID");
+        String recruiterAuthority =
+                "ROLE_RECRUITER|" + object.getRequest().getParameter("announceUUID");
+        String estimatorAuthority =
+                "ROLE_ESTIMATOR|" + object.getRequest().getParameter("announceUUID")
+                + '_' + object.getRequest().getParameter("interviewScheduleUUID");
+
+        boolean hasAnnounceUUID = authentication.get().getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .filter(authority -> !authority.equals("ROLE_SEEKER"))
+                .filter(authority -> !authority.equals("ROLE_RECRUITER"))
+                .filter(authority -> !authority.equals("ROLE_ESTIMATOR"))
+                .filter(authority -> !authority.equals("ROLE_ANONYMOUS"))
+                .anyMatch(authority -> authority.split("\\|")[1].equals(object.getRequest().getParameter("announceUUID")));
+
+        if( authentication.get().getAuthorities().contains(new SimpleGrantedAuthority(seekerAuthority))
+            || authentication.get().getAuthorities().contains(new SimpleGrantedAuthority(recruiterAuthority))
+            || authentication.get().getAuthorities().contains(new SimpleGrantedAuthority(estimatorAuthority))
+            || hasAnnounceUUID) {
+            return new AuthorizationDecision(true);
+        } else {
+            return new AuthorizationDecision(false);
+        }
     }
 
     @Bean

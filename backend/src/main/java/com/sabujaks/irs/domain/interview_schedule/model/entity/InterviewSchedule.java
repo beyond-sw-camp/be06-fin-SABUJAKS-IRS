@@ -1,6 +1,7 @@
 package com.sabujaks.irs.domain.interview_schedule.model.entity;
 
-import com.sabujaks.irs.domain.video_interview.mdoel.entity.VideoInterview;
+import com.sabujaks.irs.domain.announce.model.entity.Announcement;
+import com.sabujaks.irs.domain.auth.model.entity.Recruiter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,19 +33,20 @@ public class InterviewSchedule {
     @Column(nullable = false)
     private String interviewEnd;
 
+    @Column(nullable = false)
     private String uuid;
 
     @Column(nullable = false)
     private String careerBase;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "recruiter_idx")
+    private Recruiter recruiter;
+
+    @ManyToOne
+    @JoinColumn(name = "announcement_idx")
+    private Announcement announcement;
+
     @OneToMany(mappedBy = "interviewSchedule")
-    private List<InterviewScheduleLists> interviewScheduleLists;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="videoInterview_idx")
-    private VideoInterview videoInterviewRoom;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="team_idx")
-    private Team team;
+    private List<InterviewParticipate> interviewParticipateList;
 }

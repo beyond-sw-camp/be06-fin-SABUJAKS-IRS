@@ -8,13 +8,13 @@ import java.util.List;
 @Builder
 @Getter
 public class InterviewScheduleReq {
-
     private List<Long> seekerList;
-    private List<String> interviewerList;
-    private String isOnline;
+    private List<String> estimatorList;
+    private Boolean isOnline;
     private String interviewDate;
     private String interviewStart;
     private String interviewEnd;
     private String careerBase;
+    private Long announcementIdx;
     private Long teamIdx;
 }

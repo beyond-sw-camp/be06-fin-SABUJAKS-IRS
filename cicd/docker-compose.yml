@@ -50,10 +50,11 @@ services:
       - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
     volumes:
       - ../cicd/mariadb:/var/lib/mysql
+
   openvidu:
     image: openvidu/openvidu-dev:2.30.0
     ports:
-      - "4443:4443"
+      - 4443:4443
     environment:
       - OPENVIDU_SECRET=${OPENVIDU_SECRET}
 

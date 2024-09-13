@@ -46,7 +46,9 @@
                         <td> 1팀 </td>
                         <td> 2024/09/11 </td>
                         <td>
-                            <button  class="joinbtn" @click="joinSession(videoInterview.videoInterviewRoomUUID)">면접 참여</button>
+                            <a class="joinbtn" :href='`/video-interview/${annoucneUUID}/${videoInterview.videoInterviewRoomUUID}`'>
+                                면접 참여
+                            </a>
                         </td>
                     </tr>
                 </tbody>
@@ -65,6 +67,7 @@ import VideoInterviewMainSideBarComponent from '@/components/video-interview/Vid
 const searchAllVideoInterviewResult = ref([]);
 const videoInterviewStore = UseVideoInterviewStore();
 const route = useRoute()
+
 const searchAllVideoInterview = async (announceUUID) => {
   try {
     const response = await videoInterviewStore.searchAllVideoInterview(announceUUID);
@@ -75,8 +78,17 @@ const searchAllVideoInterview = async (announceUUID) => {
   }
 };
 
+// const verifyAccessVideoInterviewHome = async() => {
+//     try {
+//         const response = await videoInterviewStore.verifyAnnounceUUID();
+//         console.log(response);
+//     } catch (error) {
+//         console.error(error)
+//     }
+// }
+
 onMounted(() => { 
-    
+    // verifyAccessVideoInterviewHome();
     searchAllVideoInterview(route.params.announceUUID);
 })
 
@@ -107,11 +119,11 @@ onMounted(() => {
 
 
 .joinbtn {
-    width: 100%;
+    width: fit-content;
     background-color: #2A3845;
     border: 1px solid #ddd;
     border-radius: 10px;
-    padding: 10px 20px;
+    padding: 10px;
     font-size: 0.8rem;
     font-weight: bold;
     color: white;
@@ -119,6 +131,8 @@ onMounted(() => {
     height: 100%;
     transition: background-color 0.3s;
     display: inline-block;
+    text-decoration: none;
+    
 }
 
 .joinbtn:hover {
@@ -146,9 +160,11 @@ tbody {
 }
 
 table th:nth-child(1) {
-    width: 15%;
+    width: 10%;
 }
-
+table th:nth-child(6) {
+    width: 10%;
+}
 tr {
     display: table-row;
     vertical-align: inherit;

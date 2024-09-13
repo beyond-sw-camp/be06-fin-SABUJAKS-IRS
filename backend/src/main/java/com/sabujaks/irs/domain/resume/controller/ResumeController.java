@@ -1,6 +1,7 @@
 package com.sabujaks.irs.domain.resume.controller;
 
 import com.sabujaks.irs.domain.resume.model.request.ResumeCreateReq;
+import com.sabujaks.irs.domain.resume.model.request.ResumeSubmitReq;
 import com.sabujaks.irs.domain.resume.model.response.ResumeCreateRes;
 import com.sabujaks.irs.domain.resume.service.ResumeService;
 import com.sabujaks.irs.global.common.exception.BaseException;
@@ -25,7 +26,7 @@ public class ResumeController {
     private final CloudFileUpload cloudFileUpload;
 
     // 마이페이지 -> 지원서 등록
-    @PostMapping("/create-mypage")
+    @PostMapping("/create")
     public ResponseEntity<BaseResponse<ResumeCreateReq>> create(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestPart ResumeCreateReq dto,
@@ -44,5 +45,21 @@ public class ResumeController {
     }
     
     // 공고 -> 지원서 등록
+    @PostMapping("/submit")
+    public ResponseEntity<BaseResponse<ResumeCreateReq>> submit(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestPart ResumeSubmitReq dto,
+            @RequestPart MultipartFile file) throws BaseException {
+        if (customUserDetails == null) throw new BaseException(BaseResponseMessage.AUTH_FAIL);
+        Long seekerIdx = customUserDetails.getIdx();
 
+        if(file.isEmpty()) {
+            throw new BaseException(BaseResponseMessage.RESUME_REGISTER_FAIL_NOT_FOUND_FILE);
+        }
+
+        String fileUrl = cloudFileUpload.upload(file);
+        ResumeCreateRes response = resumeService.submit(seekerIdx, dto, fileUrl);
+
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.RESUME_REGISTER_SUCCESS, response));
+    }
 }
