@@ -1,4 +1,4 @@
-package com.sabujaks.irs.domain.video_interview.mdoel.entity;
+package com.sabujaks.irs.domain.video_interview.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

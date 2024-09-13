@@ -12,17 +12,26 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class InterviewScheduleLists {
+public class InterviewParticipate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name="interviewSchedule_idx")
     private InterviewSchedule interviewSchedule;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne
     @JoinColumn(name="seeker_idx")
     private Seeker seeker;
+
+    @ManyToOne
+    @JoinColumn(name = "estimator_idx")
+    private Estimator estimator;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="team_idx")
+    private Team team;
 
 }

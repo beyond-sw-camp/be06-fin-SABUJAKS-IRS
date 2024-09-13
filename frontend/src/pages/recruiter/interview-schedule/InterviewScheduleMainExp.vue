@@ -26,7 +26,7 @@ const showCalendar = ref(true); // 캘린더 기본으로 표시
 const showInterviewerList = ref(false); // 후보자 목록은 기본적으로 숨김
 const interviewType = ref([]); // 대면, 비대면 값 저장
 
-const interviewScheduleLists = (announceIdx) => {
+const interviewParticipate = (announceIdx) => {
   isInterviewScheduleList.value = true;
   isInterviewScheduleMain.value = false;
 }
@@ -136,7 +136,7 @@ const submitForm = () => {
     <!-- InterviewScheduleMainNew에서 이벤트를 받아 모달을 제어 -->
     <InterviewScheduleMain
         v-if="isInterviewScheduleMain"
-        @interviewScheduleList="interviewScheduleLists"
+        @interviewScheduleList="interviewParticipate"
         :title="'경력'">
     </InterviewScheduleMain>
     <InterviewScheduleList

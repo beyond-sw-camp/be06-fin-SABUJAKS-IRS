@@ -1,7 +1,6 @@
 package com.sabujaks.irs.domain.announce.model.entity;
 
 import com.sabujaks.irs.domain.auth.model.entity.Recruiter;
-import com.sabujaks.irs.domain.resume.model.entity.Resume;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -91,8 +90,4 @@ public class Announcement { //공고
     private List<CustomForm> CustomFormList = new ArrayList<>(); // 지원서 맞춤양식 테이블과 관계
     @OneToMany(mappedBy = "announcement" ,fetch = FetchType.LAZY)
     private List<CustomLetterForm> CustomLetterFormList = new ArrayList<>(); // 자기소개서 맞춤양식 테이블과 관계
-
-    // 공고지원서 테이블과 1:n
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "announcement")
-    private List<Resume> resumeList;
 }

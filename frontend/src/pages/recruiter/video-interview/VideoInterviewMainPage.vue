@@ -46,7 +46,9 @@
                         <td> 1팀 </td>
                         <td> 2024/09/11 </td>
                         <td>
-                            <button  class="joinbtn" @click="joinSession(videoInterview.videoInterviewRoomUUID)">면접 참여</button>
+                            <a class="joinbtn" :href='`/video-interview/${annoucneUUID}/${videoInterview.videoInterviewRoomUUID}`'>
+                                면접 참여
+                            </a>
                         </td>
                     </tr>
                 </tbody>
@@ -76,7 +78,6 @@ const searchAllVideoInterview = async (announceUUID) => {
 };
 
 onMounted(() => { 
-    
     searchAllVideoInterview(route.params.announceUUID);
 })
 
