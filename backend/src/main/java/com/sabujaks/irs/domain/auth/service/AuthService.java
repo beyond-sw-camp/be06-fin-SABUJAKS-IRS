@@ -115,7 +115,7 @@ public class AuthService {
     public UserInfoGetRes userInfo(CustomUserDetails customUserDetails) throws BaseException {
         if(Objects.equals(customUserDetails.getRole(), "ROLE_SEEKER")){
             Seeker seeker = seekerRepository.findBySeekerEmail(customUserDetails.getEmail())
-            .orElseThrow(() -> new BaseException(BaseResponseMessage.MEMBER_NOT_FOUND));
+            .orElseThrow(() -> new BaseException(BaseResponseMessage.MEMBER_SEARCH_USER_INFO_FAIL));
             return UserInfoGetRes.builder()
                     .name(seeker.getName())
                     .email(seeker.getEmail())
@@ -123,7 +123,7 @@ public class AuthService {
                     .build();
         } else if (Objects.equals(customUserDetails.getRole(), "ROLE_ESTIMATOR")) {
             Estimator estimator = estimatorRepository.findByEstimatorEmail(customUserDetails.getEmail())
-            .orElseThrow(() -> new BaseException(BaseResponseMessage.MEMBER_NOT_FOUND));
+            .orElseThrow(() -> new BaseException(BaseResponseMessage.MEMBER_SEARCH_USER_INFO_FAIL));
             return UserInfoGetRes.builder()
                     .name(estimator.getName())
                     .email(estimator.getEmail())
@@ -131,14 +131,14 @@ public class AuthService {
                     .build();
         } else if(Objects.equals(customUserDetails.getRole(), "ROLE_RECRUITER")){
             Seeker seeker = seekerRepository.findBySeekerIdx(customUserDetails.getIdx())
-            .orElseThrow(() -> new BaseException(BaseResponseMessage.MEMBER_NOT_FOUND));
+            .orElseThrow(() -> new BaseException(BaseResponseMessage.MEMBER_SEARCH_USER_INFO_FAIL));
             return UserInfoGetRes.builder()
                     .name(seeker.getName())
                     .email(seeker.getEmail())
                     .role(seeker.getRole())
                     .build();
         } else {
-            throw  new BaseException(BaseResponseMessage.MEMBER_NOT_FOUND);
+            throw  new BaseException(BaseResponseMessage.MEMBER_SEARCH_USER_INFO_FAIL);
         }
     }
 }

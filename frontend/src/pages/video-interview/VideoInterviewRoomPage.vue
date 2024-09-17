@@ -3,13 +3,11 @@
     <!-- 지원자 화면 -->
     <header class="header">
       <img class="header-logo" src="../../assets/img/irs_white.png" />
-      <button 
-        class="exitbtn" type="button" id="buttonLeaveSession" 
-        @click="leaveSession" value="Leave session" >
+      <button @click="leaveSession" class="exitbtn" type="button" id="buttonLeaveSession" value="Leave session" >
         면접 나가기
       </button>
     </header>
-    <div v-if="(session != null) & (userType == 'ROLE_SEEKER')" class="seeker-wrapper" >
+    <div v-if="(session != null) && (userType == 'ROLE_SEEKER')" class="seeker-wrapper" >
       <div class="vip-video">
         <div id="video-container" class="col-md-6">
           <UserVideo :stream-manager="publisher" @click="updateMainVideoStreamManager(publisher)" />
@@ -25,7 +23,7 @@
         </div>
       </div>
     </div>
-    <div v-if="(session != null) & (userType == 'ROLE_ESTIMATOR')" class="vie-wrapper"
+    <div v-if="(session != null) && (userType == 'ROLE_ESTIMATOR')" class="vie-wrapper"
     >
       <div class="vie-video">
         <img class="vie-img" src="../../assets/img/irs_black.png" alt="" />
@@ -65,6 +63,7 @@
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { UseVideoInterviewStore } from "@/stores/UseVideoInterviewStore";
+import { UseAuthStore } from "@/stores/UseAuthStore";
 import { OpenVidu } from "openvidu-browser";
 import UserVideo from "@/components/video-interview/UserVideo.vue";
 import { useToast } from "vue-toastification";
@@ -74,7 +73,7 @@ const session = ref(null);
 let mainStreamManager = ref(null);
 const publisher = ref(null);
 const subscribers = ref([]);
-
+const authStore = UseAuthStore();
 const videoInterviewStore = UseVideoInterviewStore();
 const route = useRoute();
 // const router = useRouter()
@@ -86,29 +85,19 @@ const userName = ref("");
 const userType = ref("");
 
 onMounted(async() => {
-  joinSession(route.params.announceUUID, route.params.videoInterviewUUID);
+  await joinSession(route.params.announceUUID, route.params.videoInterviewUUID);
 });
 
-const getCookie = async(tokenName) => {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${tokenName}=`);
-  if (parts.length === 2) { return parts.pop().split(";").shift(); }
-};
-
-const setUserInfoFromToken = async() => {
-  const utoken = await getCookie("UTOKEN");
-  if (utoken) {
-    userType.value = utoken.split("|")[1];
-    userName.value = utoken.split("|")[0];
-  }
-};
 
 const handleSessionToken = async (announceUUID, videoInterviewUUID) => {
   try {
+    userName.value = authStore.name
+    userType.value = authStore.role
+    console.log(announceUUID, videoInterviewUUID, userName.value, userType.value)
     const requestBody = {
       announceUUID: announceUUID,
       videoInterviewUUID: videoInterviewUUID,
-      params: { customSessionId: userName.value },
+      params: { customSessionId: videoInterviewUUID },
     };
     const response = await videoInterviewStore.getSessionToken(requestBody);
     toast.success(response.data);
@@ -142,8 +131,6 @@ const joinSession = async (announceUUID, videoInterviewUUID) => {
       if (index >= 0) { subscribers.value.splice(index, 1); } });
       session.value.on("exception", ({ exception }) => { console.warn(exception); 
     });
-   await setUserInfoFromToken();
-   console.log(userName.value)
     const token = await handleSessionToken(announceUUID, videoInterviewUUID);
     if (!token || typeof token !== "string") { throw new Error("유효하지 않은 세션 토큰입니다."); }
 
@@ -175,9 +162,7 @@ const joinSession = async (announceUUID, videoInterviewUUID) => {
 };
 
 const leaveSession = () => {
-  if (session.value) {
-    session.value.disconnect();
-  }
+  if (session.value) session.value.disconnect();
   session.value = undefined;
   mainStreamManager.value = undefined;
   publisher.value = undefined;

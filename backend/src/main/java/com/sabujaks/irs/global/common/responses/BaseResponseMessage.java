@@ -13,16 +13,17 @@ public enum BaseResponseMessage {
     USER_NOT_FOUND(false, 308, "계정이 존재하지 않습니다. 회원가입 진행 후 로그인 해주세요."),
     FILE_UPLOAD_FAIL(false, 309,"이미지 업로드에 실패했습니다."),
     AUTH_FAIL(false, 310, "사용자 인증에 실패하였습니다."),
-
-
     INTERNAL_SERVER_ERROR(false, 500, "내부 서버 오류가 발생해서 처리할 수 없습니다."),
+
     // AUTH 1000~1999
     // MEMBER 회원가입 1000
     MEMBER_REGISTER_SUCCESS(true, 1000, "회원가입에 성공했습니다. 이메일 인증 후 로그인 해주세요"),
     MEMBER_REGISTER_FAIL_MEMBER_ALREADY_EXITS(false, 1001, "이미 다른 계정이 존재합니다." ),
     MEMBER_REGISTER_FAIL_INVALID_ROLE(false, 1002, "유효하지 않은 회원가입입니다. "),
     MEMBER_REGISTER_FAIL_NOT_COMPANY_AUTH(false, 1003, "기업 인증을 하지 않은 사용자는 가입할 수 없습니다."),
-
+    // 회원 정보 조회
+    MEMBER_SEARCH_USER_INFO_SUCCESS(true, 1004, "회원 정보 조회에 성공했습니다."),
+    MEMBER_SEARCH_USER_INFO_FAIL(false, 1005, "회원 정보 조회에 실패했습니다."),
     // EMAIL_VERIFY 이메일 검증 1100
     EMAIL_VERIFY_SUCCESS(true, 1100, "이메일 검증을 완료했습니다."),
     EMAIL_VERIFY_FAIL(false, 1101, "이메일 검증을 실패했습니다."),

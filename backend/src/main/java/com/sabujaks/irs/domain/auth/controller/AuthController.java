@@ -62,6 +62,6 @@ public class AuthController {
     public ResponseEntity<BaseResponse<UserInfoGetRes>> userInfo(
         @AuthenticationPrincipal CustomUserDetails customUserDetails) throws BaseException {
         UserInfoGetRes response = authService.userInfo(customUserDetails);
-        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.COMPANY_VERIFY_SUCCESS, response));
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.MEMBER_SEARCH_USER_INFO_SUCCESS, response));
     }
 }

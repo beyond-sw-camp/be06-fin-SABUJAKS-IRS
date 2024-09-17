@@ -4,7 +4,11 @@ import { backend } from '@/const';
 
 
 export const UseAuthStore = defineStore('auth', {
-    state: () => ({ }),
+    state: () => ({
+        email: '',
+        name: '',
+        role: '',
+     }),
     persist: { storage: sessionStorage, },
     actions: {
         async login(loginReq) {
@@ -12,7 +16,8 @@ export const UseAuthStore = defineStore('auth', {
                 const response = await axios.post(
                     `${backend}/auth/login`, 
                     loginReq ,
-                    { headers: { 'Content-Type': 'application/json', },});
+                    { headers: { 'Content-Type': 'application/json', },}
+                );
                 return response.data
             } catch (error) {
                 console.error("로그인에 실패했습니다.")
@@ -21,9 +26,12 @@ export const UseAuthStore = defineStore('auth', {
         async logout(){
             try {
                 const response = await axios.get(
-                `${backend}/auth/logout`,
-                {withCredentials:true},
-                { headers: { 'Content-Type': 'application/json', },});
+                    `${backend}/auth/logout`,
+                    { 
+                        headers: { 'Content-Type': 'application/json', },
+                        withCredentials: true
+                    }
+                );
                 return response.data
             } catch (error) {
                 console.error("권한을 불러오는데 실패했습니다.")
@@ -32,13 +40,33 @@ export const UseAuthStore = defineStore('auth', {
         async getAuthorities(){
             try {
                 const response = await axios.get(
-                `${backend}/test/ex02`,
-                {withCredentials:true},
-                { headers: { 'Content-Type': 'application/json', },});
+                    `${backend}/test/ex02`,
+                    { 
+                        headers: { 'Content-Type': 'application/json', },
+                        withCredentials: true
+                    }
+                );
                 return response.data
             } catch (error) {
                 console.error("권한을 불러오는데 실패했습니다.")
             }
-        }
+        },
+        async getUserInfo() {
+            try {
+                const response = await axios.get(
+                    `${backend}/auth/user-info`,
+                    { 
+                        headers: { 'Content-Type': 'application/json', },
+                        withCredentials: true
+                    }
+                );
+                this.email = response.data.result.email
+                this.name = response.data.result.name
+                this.role = response.data.result.role
+                return response.data
+            } catch (error) {
+                console.error("유저 정보를 불러오는데 실패했습니다.")
+            }
+        },
     },
 });
