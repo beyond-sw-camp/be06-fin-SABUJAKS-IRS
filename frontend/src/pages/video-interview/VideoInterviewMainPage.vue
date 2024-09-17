@@ -75,18 +75,11 @@ const toast = useToast()
 const handleSearchAll = async (announceUUID) => {
   try {
     const response = await videoInterviewStore.searchAll(announceUUID);
-    console.log(response)
     if (response && response.success){
         searchAllResult.value = response.result;
-        toast.success(
-            "면접방에 오신 걸 환영합니다.\n" +
-            "지원자는 정해진 시간에 정해진 면접방과 일정에 맞춰 참여 바랍니다."
-        );
-    }else{
-        toast.error(
-            "로그인이 필요한 접근입니다.\n"+
-            "상세: "+response.message
-        );
+        toast.success("면접방에 오신 걸 환영합니다.\n지원자는 정해진 시간에 정해진 면접방과 일정에 맞춰 참여 바랍니다.");
+    } else{
+        toast.error("로그인이 필요한 접근입니다");
         router.push("/")
     }
   } catch (error) {
@@ -94,9 +87,7 @@ const handleSearchAll = async (announceUUID) => {
   }
 };
 
-onMounted(() => { 
-    handleSearchAll(route.params.announceUUID);
-})
+onMounted(() => { handleSearchAll(route.params.announceUUID); })
 </script>
 
 <style scoped>
@@ -121,7 +112,6 @@ onMounted(() => {
     margin: 25px 0;
 }
 
-
 .joinbtn {
     width: fit-content;
     background-color: #2A3845;
@@ -136,7 +126,6 @@ onMounted(() => {
     transition: background-color 0.3s;
     display: inline-block;
     text-decoration: none;
-    
 }
 
 .joinbtn:hover {
@@ -166,9 +155,11 @@ tbody {
 table th:nth-child(1) {
     width: 10%;
 }
+
 table th:nth-child(6) {
     width: 10%;
 }
+
 tr {
     display: table-row;
     vertical-align: inherit;
