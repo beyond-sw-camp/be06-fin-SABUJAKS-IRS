@@ -11,11 +11,13 @@ import java.util.List;
 @Repository
 public interface InterviewScheduleRepository extends JpaRepository<InterviewSchedule, Long> {
     List<InterviewSchedule> findByInterviewDate(String interviewDate);
+    List<InterviewSchedule> findByCareerBase(String careerBase);
 
     @Query("SELECT DISTINCT is FROM InterviewSchedule is " +
             "JOIN FETCH is.announcement a " +
             "WHERE a.uuid = :uuid")
     List<InterviewSchedule> findByAnnounceUUID(@Param("uuid") String announceUUID);
+
 
     @Query("SELECT DISTINCT is FROM InterviewSchedule is " +
             "JOIN FETCH is.announcement a " +
@@ -29,4 +31,6 @@ public interface InterviewScheduleRepository extends JpaRepository<InterviewSche
             "JOIN FETCH is.interviewParticipateList ip " +
             "WHERE a.uuid = :uuid AND ip.seeker.idx = :seekerIdx")
     List<InterviewSchedule> findByUuidAndSeekerIdx(@Param("uuid") String announceUUID, @Param("seekerIdx") Long seekerIdx);
+
+
 }

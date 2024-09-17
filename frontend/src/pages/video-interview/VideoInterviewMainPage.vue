@@ -11,10 +11,12 @@
                 <tbody>
                     <tr>
                         <th>참여자 이름</th>
+                        <th>참여자 이메일</th>
                         <th>참여자 구분</th>
                     </tr>
                     <tr>
                         <td>{{ userName }}</td>
+                        <td>{{ userEmail }}</td>
                         <td v-if="userType=='ROLE_SEEKER'">지원자</td>
                         <td v-if="userType=='ROLE_ESTIMATOR'">면접관</td>
                     </tr>
@@ -60,6 +62,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { UseVideoInterviewStore } from '@/stores/UseVideoInterviewStore'; 
+import { UseAuthStore } from '@/stores/UseAuthStore';
 import { useRoute, useRouter } from 'vue-router';
 import VideoInterviewMainHeaderComponent from '@/components/video-interview/VideoInterviewHeaderComponent.vue';
 import VideoInterviewMainSideBarComponent from '@/components/video-interview/VideoInterviewSideBarComponent.vue';
@@ -67,30 +70,31 @@ import { useToast } from "vue-toastification";
 
 const searchAllResult = ref([]);
 const videoInterviewStore = UseVideoInterviewStore();
+const authStore = UseAuthStore();
 const route = useRoute()
 const router = useRouter()
 const toast = useToast()
 const userName = ref("");
+const userEmail = ref("");
 const userType = ref("");
 
 onMounted( async() => { 
-    await setUserInfoFromToken()
+    await handleGetUserInfo();
     await handleSearchAll(route.params.announceUUID); 
 })
 
-const getCookie = async (tokenName) => {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${tokenName}=`);
-  if (parts.length === 2) { return parts.pop().split(";").shift(); }
-};
-
-const setUserInfoFromToken = async() => {
-  const utoken = await getCookie("UTOKEN");
-  if (utoken) {
-    userName.value = utoken.split("|")[0];
-    userType.value = utoken.split("|")[1];
-  }
-};
+const handleGetUserInfo = async() => {
+    try {
+        const response = await authStore.getUserInfo();
+        if(response && response.success){
+            userEmail.value = authStore.email
+            userType.value = authStore.role
+            userName.value = authStore.name
+        }
+    } catch (error) {
+        console.error(error); 
+    }
+}
 
 const handleSearchAll = async (announceUUID) => {
   try {

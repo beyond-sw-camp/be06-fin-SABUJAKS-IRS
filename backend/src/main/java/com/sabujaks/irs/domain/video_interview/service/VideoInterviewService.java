@@ -1,5 +1,6 @@
 package com.sabujaks.irs.domain.video_interview.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sabujaks.irs.domain.auth.repository.EstimatorRepository;
 import com.sabujaks.irs.domain.auth.repository.SeekerRepository;
 import com.sabujaks.irs.domain.interview_schedule.model.entity.InterviewSchedule;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Service
@@ -75,16 +77,40 @@ public class VideoInterviewService {
             throw new BaseException(BaseResponseMessage.VIDEO_INTERVIEW_SEARCH_ALL_FAIL);
         }
     }
+
     public VideoInterviewTokenGetRes sessionToken(VideoInterviewTokenGetReq dto, CustomUserDetails userDetails) throws BaseException, OpenViduJavaClientException, OpenViduHttpException {
         Session session = openVidu.getActiveSession(dto.getVideoInterviewUUID());
-        if (session == null) { throw new BaseException(BaseResponseMessage.VIDEO_INTERVIEW_JOIN_FAIL);}
-        ConnectionProperties properties = ConnectionProperties.fromJson(dto.getParams()).build();
-        Connection connection = session.createConnection(properties);
-        return VideoInterviewTokenGetRes.builder()
-                .sessionToken(connection.getToken())
-                .userEmail(userDetails.getEmail())
-                .userType(userDetails.getRole())
-                .build();
+        if (session == null) {
+            openVidu.createSession(SessionProperties.fromJson(dto.getParams()).build());
+            Session activeSession = openVidu.getActiveSession(dto.getVideoInterviewUUID());
+            ConnectionProperties reCreateProperties = ConnectionProperties.fromJson(dto.getParams()).build();
+            Connection connection = activeSession.createConnection(reCreateProperties);
+            return VideoInterviewTokenGetRes.builder()
+                    .sessionToken(connection.getToken())
+                    .userEmail(userDetails.getEmail())
+                    .userType(userDetails.getRole())
+                    .build();
+        }else {
+            ConnectionProperties properties = ConnectionProperties.fromJson(dto.getParams()).build();
+            try{
+                Connection connection = session.createConnection(properties);
+                return VideoInterviewTokenGetRes.builder()
+                        .sessionToken(connection.getToken())
+                        .userEmail(userDetails.getEmail())
+                        .userType(userDetails.getRole())
+                        .build();
+            } catch (Exception e){
+                openVidu.createSession(SessionProperties.fromJson(dto.getParams()).build());
+                Session activeSession = openVidu.getActiveSession(dto.getVideoInterviewUUID());
+                ConnectionProperties reCreateProperties = ConnectionProperties.fromJson(dto.getParams()).build();
+                Connection connection = activeSession.createConnection(reCreateProperties);
+                return VideoInterviewTokenGetRes.builder()
+                        .sessionToken(connection.getToken())
+                        .userEmail(userDetails.getEmail())
+                        .userType(userDetails.getRole())
+                        .build();
+            }
+        }
     }
 }
 
