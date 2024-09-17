@@ -6,44 +6,38 @@
         <div class="container">
             <h1 class="t1">공고 정보</h1>
             <p>(주) 한화 시스템,백엔드 엔지니어 신입공채</p>
-            <h1 class="t1">지원자 정보</h1>
+            <h1 class="t1">참여자 정보</h1>
             <table class="table">
                 <tbody>
                     <tr>
-                        <th>지원자이름</th>
-                        <th>지원번호</th>
-                        <th>면접방식별번호</th>
-                        <th>면접일정</th>
-                        <th>면접시간</th>
+                        <th>참여자 이름</th>
+                        <th>참여자 구분</th>
                     </tr>
                     <tr>
-                        <td>박박이</td>
-                        <td>123123123</td>
-                        <td>111222333</td>
-                        <td>2024/12/12</td>
-                        <td>09:00~10:00</td>
+                        <td>{{ userName }}</td>
+                        <td v-if="userType=='ROLE_SEEKER'">지원자</td>
+                        <td v-if="userType=='ROLE_ESTIMATOR'">면접관</td>
                     </tr>
                 </tbody>
             </table>
-            <h1 class="t1">화상 면접 주의 사항</h1>
-            <p>* 지원자는 정해진 시간에 정해진 면접방과 일정에 맞춰 참여 바람</p>
-            <h1 class="t1">화상면접방 목록</h1>
+            <h1 class="t1">화상 면접 목록</h1>
             <div v-if="searchAllResult != null">
                 <table>
                 <tbody>
-                    <tr><th>번호</th>
+                    <tr>
                         <th>공고ID</th>
                         <th>면접방ID</th>
-                        <th>면접팀(미정)</th>
-                        <th>시작일(미정)</th>
+                        <th>시작일</th>
+                        <th>시작시간</th>
+                        <th>종료시간</th>
                         <th>면접참여</th>
                     </tr>
                     <tr class="announce" v-for="videoInterview in searchAllResult" :key="videoInterview.idx">
-                        <td>{{ videoInterview.idx }}</td>
                         <td>{{ videoInterview.announceUUID }}</td>
-                        <td>{{ videoInterview.videoInterviewRoomUUID }}</td>
-                        <td> 1팀 </td>
-                        <td> 2024/09/11 </td>
+                        <td>{{ videoInterview.videoInterviewUUID }}</td>
+                        <td>{{ videoInterview.interviewDate }}</td>
+                        <td>{{ videoInterview.interviewStart }}</td>
+                        <td>{{ videoInterview.interviewEnd }}</td>
                         <td>
                             <a class="joinbtn" :href='`/video-interview/${videoInterview.announceUUID}/${videoInterview.videoInterviewRoomUUID}`'>
                                 면접 참여
@@ -53,6 +47,11 @@
                 </tbody>
             </table>
             </div>
+            <h1 class="t1">화상 면접 주의 사항</h1>
+            <p>* 지원자는 정해진 시간에 정해진 면접방과 일정에 맞춰 참여 바랍니다.</p>
+            <p>* 면접 중에는 방해받지 않도록 조용한 장소에서 면접을 진행하세요. 가능하면 방해 요소를 제거하고, 휴대전화는 무음으로 설정하세요.</p>
+            <p>* 면접 시작 전에 웹캠과 마이크를 테스트하여 잘 작동하는지 확인하세요. 조명은 얼굴을 잘 비출 수 있도록 조정하세요.</p>
+            <p>* 면접 중 문제가 발생하거나 질문이 있으면 즉시 면접관에게 연락해 문제를 설명하고 해결 방법을 요청하세요.</p>
         </div>
     </div>
 </div>
@@ -71,6 +70,27 @@ const videoInterviewStore = UseVideoInterviewStore();
 const route = useRoute()
 const router = useRouter()
 const toast = useToast()
+const userName = ref("");
+const userType = ref("");
+
+onMounted( async() => { 
+    await setUserInfoFromToken()
+    await handleSearchAll(route.params.announceUUID); 
+})
+
+const getCookie = async (tokenName) => {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${tokenName}=`);
+  if (parts.length === 2) { return parts.pop().split(";").shift(); }
+};
+
+const setUserInfoFromToken = async() => {
+  const utoken = await getCookie("UTOKEN");
+  if (utoken) {
+    userType.value = utoken.split("|")[1];
+    userName.value = utoken.split("|")[0];
+  }
+};
 
 const handleSearchAll = async (announceUUID) => {
   try {
@@ -87,7 +107,7 @@ const handleSearchAll = async (announceUUID) => {
   }
 };
 
-onMounted(() => { handleSearchAll(route.params.announceUUID); })
+
 </script>
 
 <style scoped>
@@ -109,7 +129,7 @@ onMounted(() => { handleSearchAll(route.params.announceUUID); })
 
 .t1 {
     font-size: 24px;
-    margin: 25px 0;
+    margin: 20px 0;
 }
 
 .joinbtn {
@@ -152,9 +172,6 @@ tbody {
     border-color: inherit;
 }
 
-table th:nth-child(1) {
-    width: 10%;
-}
 
 table th:nth-child(6) {
     width: 10%;

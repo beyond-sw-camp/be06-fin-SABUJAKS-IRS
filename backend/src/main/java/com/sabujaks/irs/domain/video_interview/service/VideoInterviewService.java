@@ -27,10 +27,8 @@ import java.util.Objects;
 public class VideoInterviewService {
     private final OpenVidu openVidu;
     private final VideoInterviewRepository videoInterviewRepository;
-    private final SeekerRepository seekerRepository;
-    private final EstimatorRepository estimatorRepository;
     private final InterviewScheduleRepository interviewScheduleRepository;
-    
+
     public VideoInterviewCreateRes create(VideoInterviewCreateReq dto) throws OpenViduJavaClientException, OpenViduHttpException {
         SessionProperties properties = SessionProperties.fromJson(dto.getParams()).build();
         Session session = openVidu.createSession(properties);
@@ -50,7 +48,6 @@ public class VideoInterviewService {
             List<VideoInterviewSearchRes> videoInterviewSearchResList = new ArrayList<>();
             for(InterviewSchedule interviewSchedule : interviewScheduleList){
                 VideoInterviewSearchRes videoInterviewSearchRes = VideoInterviewSearchRes.builder()
-                        .userName("면접관")
                         .announceUUID(announceUUID)
                         .videoInterviewUUID(interviewSchedule.getUuid())
                         .interviewDate(interviewSchedule.getInterviewDate())
@@ -65,7 +62,6 @@ public class VideoInterviewService {
             List<VideoInterviewSearchRes> videoInterviewSearchResList = new ArrayList<>();
             for(InterviewSchedule interviewSchedule : interviewScheduleList){
                 VideoInterviewSearchRes videoInterviewSearchRes = VideoInterviewSearchRes.builder()
-                        .userName("면접관")
                         .announceUUID(announceUUID)
                         .videoInterviewUUID(interviewSchedule.getUuid())
                         .interviewDate(interviewSchedule.getInterviewDate())
