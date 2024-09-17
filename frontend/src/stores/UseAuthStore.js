@@ -10,7 +10,7 @@ export const UseAuthStore = defineStore('auth', {
         async login(loginReq) {
             try {
                 const response = await axios.post(
-                    `${backend}/auth/login`,
+                    `${backend}/auth/login`, 
                     loginReq ,
                     { headers: { 'Content-Type': 'application/json', },});
                 return response.data

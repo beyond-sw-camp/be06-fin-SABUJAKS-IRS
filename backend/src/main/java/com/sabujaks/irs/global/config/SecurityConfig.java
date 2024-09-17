@@ -63,7 +63,7 @@ public class SecurityConfig {
                         auth
                                 .requestMatchers("/api/test/ex01").hasAuthority("ROLE_SEEKER")
                                 .requestMatchers("/api/video-interview/create").hasAuthority("ROLE_RECRUITER")
-                                .requestMatchers("/api/video-interview/**").access(this::hasVideoInterviewAuthorities)
+                                .requestMatchers("/api/video-interview/search-all").access(this::hasVideoInterviewAuthorities)
                                 .requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/interview-schedule/**").permitAll()
                                 .anyRequest().permitAll()
@@ -114,12 +114,12 @@ public class SecurityConfig {
         System.out.println(object.getRequest().getRequestURI());
         String seekerAuthority =
                 "ROLE_SEEKER|" + object.getRequest().getParameter("announceUUID")
-                + '_' + object.getRequest().getParameter("interviewScheduleUUID");
+                + '_' + object.getRequest().getParameter("videoInterviewUUID");
         String recruiterAuthority =
                 "ROLE_RECRUITER|" + object.getRequest().getParameter("announceUUID");
         String estimatorAuthority =
                 "ROLE_ESTIMATOR|" + object.getRequest().getParameter("announceUUID")
-                + '_' + object.getRequest().getParameter("interviewScheduleUUID");
+                + '_' + object.getRequest().getParameter("videoInterviewUUID");
 
         boolean hasAnnounceUUID = authentication.get().getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)

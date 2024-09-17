@@ -43,11 +43,11 @@ public class VideoInterviewController {
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.VIDEO_INTERVIEW_SEARCH_ALL_SUCCESS, response));
     }
 
-    @PostMapping("/access-token")
-    public ResponseEntity<BaseResponse> getSessionToken(
+    @PostMapping("/get-session-token")
+    public ResponseEntity<BaseResponse> sessionToken(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @RequestBody VideoInterviewTokenGetReq dto) throws OpenViduJavaClientException, OpenViduHttpException, BaseException {
-        VideoInterviewTokenGetRes response = videoInterviewService.getSessionToken(dto, customUserDetails);
-        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.VIDEO_INTERVIEW_JOIN_SUCCESS, response.getSessionToken()));
+        VideoInterviewTokenGetRes response = videoInterviewService.sessionToken(dto, customUserDetails);
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.VIDEO_INTERVIEW_JOIN_SUCCESS, response));
     }
 }

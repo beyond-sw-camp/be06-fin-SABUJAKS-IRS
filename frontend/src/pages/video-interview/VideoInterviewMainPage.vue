@@ -27,32 +27,32 @@
             </table>
             <h1 class="t1">화상 면접 주의 사항</h1>
             <p>* 지원자는 정해진 시간에 정해진 면접방과 일정에 맞춰 참여 바람</p>
-            <p>* 참여시, 이메일에 첨부된 비밀번호를 통해 접속</p>
             <h1 class="t1">화상면접방 목록</h1>
-            <table v-if="searchAllVideoInterviewResult.length">
+            <div v-if="searchAllResult != null">
+                <table>
                 <tbody>
-                    <tr>
-                        <th>번호</th>
+                    <tr><th>번호</th>
                         <th>공고ID</th>
                         <th>면접방ID</th>
                         <th>면접팀(미정)</th>
                         <th>시작일(미정)</th>
                         <th>면접참여</th>
                     </tr>
-                    <tr class="announce" v-for="videoInterview in searchAllVideoInterviewResult" :key="videoInterview.idx">
+                    <tr class="announce" v-for="videoInterview in searchAllResult" :key="videoInterview.idx">
                         <td>{{ videoInterview.idx }}</td>
                         <td>{{ videoInterview.announceUUID }}</td>
                         <td>{{ videoInterview.videoInterviewRoomUUID }}</td>
                         <td> 1팀 </td>
                         <td> 2024/09/11 </td>
                         <td>
-                            <a class="joinbtn" :href='`/video-interview/${annoucneUUID}/${videoInterview.videoInterviewRoomUUID}`'>
+                            <a class="joinbtn" :href='`/video-interview/${videoInterview.announceUUID}/${videoInterview.videoInterviewRoomUUID}`'>
                                 면접 참여
                             </a>
                         </td>
                     </tr>
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
 </div>
@@ -61,38 +61,42 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { UseVideoInterviewStore } from '@/stores/UseVideoInterviewStore'; 
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import VideoInterviewMainHeaderComponent from '@/components/video-interview/VideoInterviewHeaderComponent.vue';
 import VideoInterviewMainSideBarComponent from '@/components/video-interview/VideoInterviewSideBarComponent.vue';
-const searchAllVideoInterviewResult = ref([]);
+import { useToast } from "vue-toastification";
+
+const searchAllResult = ref([]);
 const videoInterviewStore = UseVideoInterviewStore();
 const route = useRoute()
+const router = useRouter()
+const toast = useToast()
 
-const searchAllVideoInterview = async (announceUUID) => {
+const handleSearchAll = async (announceUUID) => {
   try {
-    const response = await videoInterviewStore.searchAllVideoInterview(announceUUID);
-    console.log(response);
-    searchAllVideoInterviewResult.value = response.result;
+    const response = await videoInterviewStore.searchAll(announceUUID);
+    console.log(response)
+    if (response && response.success){
+        searchAllResult.value = response.result;
+        toast.success(
+            "면접방에 오신 걸 환영합니다.\n" +
+            "지원자는 정해진 시간에 정해진 면접방과 일정에 맞춰 참여 바랍니다."
+        );
+    }else{
+        toast.error(
+            "로그인이 필요한 접근입니다.\n"+
+            "상세: "+response.message
+        );
+        router.push("/")
+    }
   } catch (error) {
     console.error(error);
   }
 };
 
-// const verifyAccessVideoInterviewHome = async() => {
-//     try {
-//         const response = await videoInterviewStore.verifyAnnounceUUID();
-//         console.log(response);
-//     } catch (error) {
-//         console.error(error)
-//     }
-// }
-
 onMounted(() => { 
-    // verifyAccessVideoInterviewHome();
-    searchAllVideoInterview(route.params.announceUUID);
+    handleSearchAll(route.params.announceUUID);
 })
-
-
 </script>
 
 <style scoped>
