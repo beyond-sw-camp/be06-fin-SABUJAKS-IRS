@@ -1,5 +1,6 @@
 package com.sabujaks.irs.domain.auth.model.entity;
 
+import com.sabujaks.irs.domain.alarm.model.entity.Alarm;
 import com.sabujaks.irs.domain.interview_schedule.model.entity.InterviewParticipate;
 import com.sabujaks.irs.domain.interview_schedule.model.entity.InterviewSchedule;
 import com.sabujaks.irs.domain.resume.model.entity.Resume;
@@ -57,4 +58,8 @@ public class Seeker {
     // 공고지원서 테이블과 1:n
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "seeker")
     private List<Resume> resumeList;
+
+    // 알람 테이블과 1:n
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "seeker")
+    private List<Alarm> alarmList;
 }
