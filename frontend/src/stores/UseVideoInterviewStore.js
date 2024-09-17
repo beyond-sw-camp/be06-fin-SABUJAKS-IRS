@@ -35,7 +35,6 @@ export const UseVideoInterviewStore = defineStore('VideoInterview', {
                     headers: { 'Content-Type': 'application/json', },
                     withCredentials: true
                 });
-                console.log(response)
                 return response.data
             } catch (error) {
                 return error.response.data

@@ -1,6 +1,5 @@
 package com.sabujaks.irs.domain.interview_schedule.model.response;
 
-import com.sabujaks.irs.domain.interview_schedule.model.entity.Estimator;
 import lombok.Builder;
 import lombok.Getter;
 

@@ -42,8 +42,7 @@ public enum BaseResponseMessage {
     VIDEO_INTERVIEW_SEARCH_ALL_FAIL(false, 1402, "화상 면접방 목록 조회에 실패했습니다."),
     VIDEO_INTERVIEW_JOIN_SUCCESS(true, 1403, "화상 면접방에 참가했습니다."),
     VIDEO_INTERVIEW_JOIN_FAIL(false, 1404, "화상 면접방 참가에 실패했습니다."),
-    VIDEO_INTERVIEW_SEARCH_USER_INFO_SUCCESS(true, 1405, "화상 면접방 참가자 조회에 성공햇습니다."),
-    VIDEO_INTERVIEW_SEARCH_USER_INFO_FAIL(false, 1406, "화상 면접방 참가자 조회에 실패했습니다."),
+
     // MEMBER 1500
     MEMBER_NOT_FOUND(false, 1500, "회원을 찾을 수 없습니다."),
 
