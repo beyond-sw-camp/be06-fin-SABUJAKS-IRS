@@ -65,7 +65,7 @@ public class CustomUserDetails implements UserDetails {
         this.estimator = estimator;
         this.idx = estimator.getIdx();
         this.email = estimator.getEmail();
-        this.role = null;
+        this.role = estimator.getRole();
         this.name = null;
         this.password = estimator.getPassword();
         this.emailAuth = estimator.getEmailAuth();

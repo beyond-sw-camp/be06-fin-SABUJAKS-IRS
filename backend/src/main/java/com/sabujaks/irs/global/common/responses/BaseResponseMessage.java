@@ -39,10 +39,11 @@ public enum BaseResponseMessage {
     INTERVIEW_SCHEDULE_CREATE_SUCCESS(true, 1300, "면접 일정 등록에 성공했습니다."), // VIDEO_INTERVIEW 화상 면접 1400
     VIDEO_INTERVIEW_CREATE_SUCCESS(true, 1400, "화상 면접 방 생성에 성공했습니다."),
     VIDEO_INTERVIEW_SEARCH_ALL_SUCCESS(true, 1401, "화상 면접방 목록 조회에 성공했습니다."),
-    VIDEO_INTERVIEW_SEARCH_ALL_FAIL_NOT_FOUND(false, 1402, "화상 면접방 목록 조회에 실패했습니다."),
+    VIDEO_INTERVIEW_SEARCH_ALL_FAIL(false, 1402, "화상 면접방 목록 조회에 실패했습니다."),
     VIDEO_INTERVIEW_JOIN_SUCCESS(true, 1403, "화상 면접방에 참가했습니다."),
     VIDEO_INTERVIEW_JOIN_FAIL(false, 1404, "화상 면접방 참가에 실패했습니다."),
-
+    VIDEO_INTERVIEW_SEARCH_USER_INFO_SUCCESS(true, 1405, "화상 면접방 참가자 조회에 성공햇습니다."),
+    VIDEO_INTERVIEW_SEARCH_USER_INFO_FAIL(false, 1406, "화상 면접방 참가자 조회에 실패했습니다."),
     // MEMBER 1500
     MEMBER_NOT_FOUND(false, 1500, "회원을 찾을 수 없습니다."),
 

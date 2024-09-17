@@ -11,8 +11,6 @@ import com.sabujaks.irs.global.common.responses.BaseResponse;
 import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
 import com.sabujaks.irs.global.security.CustomUserDetails;
 import io.openvidu.java.client.*;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -38,8 +36,9 @@ public class VideoInterviewController {
 
     @GetMapping("/search-all")
     public ResponseEntity<BaseResponse<VideoInterviewSearchRes>> searchAll(
+        @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @RequestParam String announceUUID) throws BaseException {
-        List<VideoInterviewSearchRes> response = videoInterviewService.searchAll(announceUUID);
+        List<VideoInterviewSearchRes> response = videoInterviewService.searchAll(announceUUID, customUserDetails);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.VIDEO_INTERVIEW_SEARCH_ALL_SUCCESS, response));
     }
 
@@ -50,4 +49,5 @@ public class VideoInterviewController {
         VideoInterviewTokenGetRes response = videoInterviewService.sessionToken(dto, customUserDetails);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.VIDEO_INTERVIEW_JOIN_SUCCESS, response));
     }
+
 }
