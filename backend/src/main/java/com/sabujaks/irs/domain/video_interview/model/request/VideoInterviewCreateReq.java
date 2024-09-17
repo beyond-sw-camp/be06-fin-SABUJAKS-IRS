@@ -12,5 +12,4 @@ import java.util.Map;
 public class VideoInterviewCreateReq {
     private String announceUUID;
     private Map<String, Object> params;
-    // params => {customSessionId: 세션 이름}
 }

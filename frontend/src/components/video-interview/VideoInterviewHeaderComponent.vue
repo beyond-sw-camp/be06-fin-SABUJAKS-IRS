@@ -1,6 +1,8 @@
 <template>
 <div class="header">
-    <a href="/"><img class="header-logo" src="../../assets/img/irs_white.png"></a>
+    <a href="/">
+      <img class="header-logo" src="../../assets/img/irs_white.png">
+    </a>
 </div>
 </template>
 
@@ -8,7 +10,6 @@
 </script>
 
 <style scoped>
-/* video interview main header -> vimh */
 .header {
   background-color: #f8f9fa; /* 배경색 */
   color: #333; /* 글자색 */

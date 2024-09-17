@@ -55,6 +55,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         CustomUserDetails member = (CustomUserDetails)authResult.getPrincipal();
         Long idx = member.getIdx();
+        String name = member.getName();
         String email = member.getEmail();
         String role = member.getRole();
         Collection<? extends GrantedAuthority> authorities = authResult.getAuthorities();
@@ -82,5 +83,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         aToken.setPath("/");
         aToken.setMaxAge(60 * 60 * 1);
         response.addCookie(aToken);
+        String combinedValue = name + "|" + role;
+        Cookie uToken = new Cookie("UTOKEN", combinedValue);
+        uToken.setHttpOnly(false);
+        uToken.setSecure(false);
+        uToken.setPath("/");
+        uToken.setMaxAge(60 * 60 * 1); // 여기도 1시간으로 설정
+        response.addCookie(uToken);
     }
 }

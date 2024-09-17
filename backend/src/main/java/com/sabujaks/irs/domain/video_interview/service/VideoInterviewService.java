@@ -14,16 +14,22 @@ import com.sabujaks.irs.global.utils.JwtUtil;
 import io.openvidu.java.client.*;
 import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class VideoInterviewService {
     private final OpenVidu openVidu;
     private final VideoInterviewRepository videoInterviewRepository;
+
     public VideoInterviewCreateRes create(VideoInterviewCreateReq dto) throws OpenViduJavaClientException, OpenViduHttpException {
         SessionProperties properties = SessionProperties.fromJson(dto.getParams()).build();
         Session session = openVidu.createSession(properties);
@@ -52,14 +58,16 @@ public class VideoInterviewService {
         return videoInterviewSearchResList;
     }
 
-    public VideoInterviewTokenGetRes getSessionToken(VideoInterviewTokenGetReq dto, CustomUserDetails customUserDetails) throws BaseException, OpenViduJavaClientException, OpenViduHttpException {
-        Session session = openVidu.getActiveSession(dto.getVideoInterviewRoomUUID());
+    public VideoInterviewTokenGetRes sessionToken(VideoInterviewTokenGetReq dto, CustomUserDetails userDetails) throws BaseException, OpenViduJavaClientException, OpenViduHttpException {
+        Session session = openVidu.getActiveSession(dto.getVideoInterviewUUID());
         if (session == null) { throw new BaseException(BaseResponseMessage.VIDEO_INTERVIEW_JOIN_FAIL);}
         ConnectionProperties properties = ConnectionProperties.fromJson(dto.getParams()).build();
         Connection connection = session.createConnection(properties);
         return VideoInterviewTokenGetRes.builder()
                 .sessionToken(connection.getToken())
+                .userEmail(userDetails.getEmail())
+                .userType(userDetails.getRole())
                 .build();
     }
-
 }
+
