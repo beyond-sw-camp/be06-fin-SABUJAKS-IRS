@@ -45,6 +45,7 @@ const handleCheckboxChange = (type) => {
 };
 
 
+
 const interviewScheduleLists = (announceIdx) => {
   isInterviewScheduleList.value = true;
   isInterviewScheduleMain.value = false;
@@ -306,13 +307,86 @@ const submitForm = () => {
   </div>
 </template>
 
+<!--<script>-->
+<!--import {defineComponent} from 'vue'-->
+<!--import FullCalendar from '@fullcalendar/vue3'-->
+<!--import dayGridPlugin from '@fullcalendar/daygrid'-->
+<!--import timeGridPlugin from '@fullcalendar/timegrid'-->
+<!--import interactionPlugin from '@fullcalendar/interaction'-->
+<!--import {createEventId} from './event-utils'-->
+
+<!--export default defineComponent({-->
+<!--  components: {-->
+<!--    FullCalendar,-->
+<!--  },-->
+<!--  data() {-->
+<!--    return {-->
+<!--      calendarOptions: {-->
+<!--        plugins: [-->
+<!--          dayGridPlugin,-->
+<!--          timeGridPlugin,-->
+<!--          interactionPlugin // needed for dateClick-->
+<!--        ],-->
+<!--        locale: 'ko',-->
+<!--        headerToolbar: {-->
+<!--          left: 'prev,next today',-->
+<!--          center: 'title',-->
+<!--          right: 'dayGridMonth,dayGridWeek,dayGridDay'-->
+<!--        },-->
+<!--        events: [],-->
+<!--        initialView: 'dayGridMonth',-->
+<!--        // initialEvents: INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed-->
+<!--        editable: true,-->
+<!--        selectable: true,-->
+<!--        selectMirror: true,-->
+<!--        dayMaxEvents: true,-->
+<!--        weekends: true,-->
+<!--        select: this.handleDateSelect,-->
+<!--        eventClick: this.handleEventClick,-->
+<!--        eventsSet: this.handleEvents-->
+<!--        /* you can update a remote database when these fire:-->
+<!--        eventAdd:-->
+<!--        eventChange:-->
+<!--        eventRemove:-->
+<!--        */-->
+<!--      },-->
+<!--      currentEvents: [],-->
+<!--    }-->
+<!--  },-->
+<!--  methods: {-->
+<!--    handleWeekendsToggle() {-->
+<!--      this.calendarOptions.weekends = !this.calendarOptions.weekends // update a property-->
+<!--    },-->
+<!--    handleDateSelect(selectInfo) {-->
+<!--      let title = prompt('새로운 일정을 등록해주세요.')-->
+<!--      let calendarApi = selectInfo.view.calendar-->
+
+<!--      calendarApi.unselect() // clear date selection-->
+
+<!--      if (title) {-->
+<!--        calendarApi.addEvent({-->
+<!--          id: createEventId(),-->
+<!--          title,-->
+<!--          start: selectInfo.startStr,-->
+<!--          end: selectInfo.endStr,-->
+<!--          allDay: selectInfo.allDay-->
+<!--        })-->
+<!--      }-->
+<!--    },-->
+
+<!--    handleEvents(events) {-->
+<!--      this.currentEvents = events-->
+<!--    },-->
+<!--  }-->
+<!--})-->
+<!--</script>-->
 <script>
-import {defineComponent} from 'vue'
+import { defineComponent } from 'vue'
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
-import {INITIAL_EVENTS, createEventId} from './event-utils'
+import { createEventId } from './event-utils'
 
 export default defineComponent({
   components: {
@@ -332,12 +406,8 @@ export default defineComponent({
           center: 'title',
           right: 'dayGridMonth,dayGridWeek,dayGridDay'
         },
-        events: [
-          {title: 'event 1', date: '2024-09-27'},
-          {title: 'event 2', date: '2024-09-30'}
-        ],
+        events: [],
         initialView: 'dayGridMonth',
-        initialEvents: INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
         editable: true,
         selectable: true,
         selectMirror: true,
@@ -346,24 +416,50 @@ export default defineComponent({
         select: this.handleDateSelect,
         eventClick: this.handleEventClick,
         eventsSet: this.handleEvents
-        /* you can update a remote database when these fire:
-        eventAdd:
-        eventChange:
-        eventRemove:
-        */
       },
       currentEvents: [],
     }
   },
+  mounted() {
+    this.fetchInterviewSchedules();
+  },
   methods: {
+    async fetchInterviewSchedules() {
+      const interviewScheduleStore = UseInterviewScheduleStore(); // 스토어 인스턴스 생성
+      try {
+        const schedules = await interviewScheduleStore.readAllExpInterviewSchedule();
+
+        if (!Array.isArray(schedules)) {
+          console.error('Received schedules is not an array:', schedules);
+          return;
+        }
+
+        this.currentEvents = [];
+
+        for (const schedule of schedules) {
+          this.currentEvents.push({
+            title: schedule.isOnline ? '온라인 면접' : '대면 면접',
+            start: schedule.interviewDate + "T" + schedule.interviewStart + ":00",
+            end: schedule.interviewDate + "T" + schedule.interviewEnd + ":00",
+            allDay: false
+          });
+        }
+
+        this.calendarOptions.events = this.currentEvents;
+
+      } catch (error) {
+        console.error('Error fetching interview schedules:', error);
+      }
+    },
+
     handleWeekendsToggle() {
-      this.calendarOptions.weekends = !this.calendarOptions.weekends // update a property
+      this.calendarOptions.weekends = !this.calendarOptions.weekends;
     },
     handleDateSelect(selectInfo) {
       let title = prompt('새로운 일정을 등록해주세요.')
       let calendarApi = selectInfo.view.calendar
 
-      calendarApi.unselect() // clear date selection
+      calendarApi.unselect()
 
       if (title) {
         calendarApi.addEvent({
@@ -375,18 +471,14 @@ export default defineComponent({
         })
       }
     },
-    handleEventClick(clickInfo) {
-      if (confirm(`일정을 삭제하시겠습니까? '${clickInfo.event.title}'`)) {
-        clickInfo.event.remove()
-      }
-    },
+
     handleEvents(events) {
       this.currentEvents = events
     },
   }
 })
-
 </script>
+
 
 
 <style scoped>

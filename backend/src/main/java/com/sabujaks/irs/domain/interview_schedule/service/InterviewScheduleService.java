@@ -98,6 +98,7 @@ public class InterviewScheduleService {
                 .interviewDate(interviewSchedule.getInterviewDate())
                 .interviewEnd(interviewSchedule.getInterviewEnd())
                 .interviewStart(interviewSchedule.getInterviewStart())
+                .uuid(interviewSchedule.getUuid())
                 .build();
     }
 //    public String uuidCheck(InterviewScheduleReq dto) {
@@ -123,4 +124,21 @@ public class InterviewScheduleService {
 //
 //        return uuid;
 //    }
+
+    public List<InterviewScheduleRes> readAllExp() {
+        List<InterviewSchedule> result = interviewScheduleRepository.findByCareerBase("경력");
+
+        List<InterviewScheduleRes> interviewScheduleList = new ArrayList<>();
+        for(InterviewSchedule interviewSchedule : result) {
+            interviewScheduleList.add(InterviewScheduleRes.builder()
+                    .idx(interviewSchedule.getIdx())
+                    .isOnline(interviewSchedule.getIsOnline())
+                    .interviewDate(interviewSchedule.getInterviewDate())
+                    .interviewStart(interviewSchedule.getInterviewStart())
+                    .interviewEnd(interviewSchedule.getInterviewEnd())
+                    .build());
+        }
+
+        return interviewScheduleList;
+    }
 }

@@ -67,10 +67,15 @@ public enum BaseResponseMessage {
     ANNOUNCEMENT_REGISTER_STEP_TWO_FAIL(false, 3102, "지원서 폼 조립에 실패하였습니다." ),
     ANNOUNCEMENT_SEARCH_FAIL(false, 3103, "공고 조회에 실패했습니다."),
 
-    // COMPANY 기업정보 관련 4000
+    // COMPANY 기업정보 관련 4000~4999
     COMPANY_INFO_SUCCESS(true, 4000, "기업 정보 등록에 성공했습니다."),
     COMPANY_INFO_FAIL_NOT_RECRUITER(false, 4001, "채용담당자 유저가 아닙니다."),
-    COMPANY_INFO_FAIL(false, 4002, "기업 정보 등록에 실패했습니다.");
+    COMPANY_INFO_FAIL(false, 4002, "기업 정보 등록에 실패했습니다."),
+
+    // ALARM 5000~5999
+    ALARM_REGISTER_SUCCESS(true, 5000, "알람 생성이 완료되었습니다."),
+    ALARM_SEARCH_SUCCESS(true, 5001, "알람 조회에 성공했습니다."),
+    ALARM_SEARCH_FAIL(false, 5002, "알람 조회에 실패했습니다.");
 
     private Boolean success;
     private Integer code;
