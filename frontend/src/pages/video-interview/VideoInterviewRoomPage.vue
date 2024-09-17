@@ -3,30 +3,17 @@
     <!-- 지원자 화면 -->
     <header class="header">
       <img class="header-logo" src="../../assets/img/irs_white.png" />
-      <button
-        class="virh-exitbtn"
-        type="button"
-        id="buttonLeaveSession"
-        @click="leaveSession"
-        value="Leave session"
-      >
+      <button 
+        class="exitbtn" type="button" id="buttonLeaveSession" 
+        @click="leaveSession" value="Leave session" >
         면접 나가기
       </button>
     </header>
-    <div
-      v-if="(session != null) & (userType == 'ROLE_SEEKER')"
-      class="seeker-wrapper"
-    >
+    <div v-if="(session != null) & (userType == 'ROLE_SEEKER')" class="seeker-wrapper" >
       <div class="vip-video">
         <div id="video-container" class="col-md-6">
-          <UserVideo
-            :stream-manager="publisher"
-            @click="updateMainVideoStreamManager(publisher)"
-          />
-          <UserVideo
-            v-for="sub in subscribers"
-            :key="sub.stream.connection.connectionId"
-            :stream-manager="sub"
+          <UserVideo :stream-manager="publisher" @click="updateMainVideoStreamManager(publisher)" />
+          <UserVideo v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" 
             @click="updateMainVideoStreamManager(sub)"
           />
         </div>
@@ -38,9 +25,7 @@
         </div>
       </div>
     </div>
-    <div
-      v-if="session != null && userType == 'ROLE_ESTIMATOR'"
-      class="vie-wrapper"
+    <div v-if="(session != null) & (userType == 'ROLE_ESTIMATOR')" class="vie-wrapper"
     >
       <div class="vie-video">
         <img class="vie-img" src="../../assets/img/irs_black.png" alt="" />
@@ -98,22 +83,20 @@ const toast = useToast();
 // const announceUUID = ref('');
 // const videoInterviewRoomUUID = ref('');
 const userName = ref("");
-const userEmail = ref("");
 const userType = ref("");
 
-onMounted(() => {
-  setUserInfoFromToken()
+onMounted(async() => {
   joinSession(route.params.announceUUID, route.params.videoInterviewUUID);
 });
 
-const getCookie = async (tokenName) => {
+const getCookie = async(tokenName) => {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${tokenName}=`);
   if (parts.length === 2) { return parts.pop().split(";").shift(); }
 };
 
-const setUserInfoFromToken = () => {
-  const utoken = getCookie("UTOKEN");
+const setUserInfoFromToken = async() => {
+  const utoken = await getCookie("UTOKEN");
   if (utoken) {
     userType.value = utoken.split("|")[1];
     userName.value = utoken.split("|")[0];
@@ -125,10 +108,9 @@ const handleSessionToken = async (announceUUID, videoInterviewUUID) => {
     const requestBody = {
       announceUUID: announceUUID,
       videoInterviewUUID: videoInterviewUUID,
-      params: { customSessionId: userName },
+      params: { customSessionId: userName.value },
     };
     const response = await videoInterviewStore.getSessionToken(requestBody);
-    userEmail.value = response.result.userEmail;
     toast.success(response.data);
     return response.result.sessionToken;
   } catch (error) {
@@ -157,21 +139,16 @@ const joinSession = async (announceUUID, videoInterviewUUID) => {
     });
     session.value.on("streamDestroyed", ({ stream }) => {
       const index = subscribers.value.indexOf(stream.streamManager, 0);
-      if (index >= 0) {
-        subscribers.value.splice(index, 1);
-      }
+      if (index >= 0) { subscribers.value.splice(index, 1); } });
+      session.value.on("exception", ({ exception }) => { console.warn(exception); 
     });
-    session.value.on("exception", ({ exception }) => {
-      console.warn(exception);
-    });
-
+   await setUserInfoFromToken();
+   console.log(userName.value)
     const token = await handleSessionToken(announceUUID, videoInterviewUUID);
-    if (!token || typeof token !== "string") {
-      console.log(token);
-      throw new Error("유효하지 않은 세션 토큰입니다.");
-    }
+    if (!token || typeof token !== "string") { throw new Error("유효하지 않은 세션 토큰입니다."); }
+
     console.log(`${videoInterviewUUID} Session에 접속중: ${token}`);
-    await session.value.connect(token, { clientData: userEmail.value });
+    await session.value.connect(token, { clientData: userName.value });
 
     // 퍼블리셔 초기화
     publisher.value = OV.value.initPublisher(undefined, {
@@ -183,21 +160,16 @@ const joinSession = async (announceUUID, videoInterviewUUID) => {
       frameRate: 30,
       insertMode: "APPEND",
       mirror: false,
-      data: userType,
     });
 
     // 스트림 퍼블리시
     mainStreamManager.value = publisher.value;
     await session.value.publish(publisher.value);
-    toast.success(
-      "면접방에 오신 걸 환영합니다.\n지원자는 마이크를 끄고 대기해주시길 바랍니다."
-    );
+    toast.success("면접방에 오신 걸 환영합니다.\n지원자는 마이크를 끄고 대기해주시길 바랍니다.");
   } catch (error) {
     // router.push(`/video-interview/${route.params.announceUUID}`)
     console.log(error);
-    toast.error(
-      "지원자는 정해진 시간에 정해진 면접방과 일정에 맞춰 참여 바랍니다."
-    );
+    toast.error("지원자는 정해진 시간에 정해진 면접방과 일정에 맞춰 참여 바랍니다.");
   }
   window.addEventListener("beforeunload", leaveSession);
 };
@@ -240,6 +212,21 @@ const leaveSession = () => {
   font-weight: bold;
   width: 150px;
 }
+
+.exitbtn {
+  background-color: white;
+  color: red;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.exitbtn:hover {
+  opacity: 70%;
+}
+
 .wrapper {
   background-color: #f1f1f1;
   width: 100%;
@@ -257,6 +244,16 @@ const leaveSession = () => {
   padding: 0;
   display: flex;
   flex-direction: column;
+  margin: 0 auto;
+}
+
+.estimator-wrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
   margin: 0 auto;
 }
 
@@ -286,15 +283,7 @@ const leaveSession = () => {
   border: 1px solid black;
 }
 /* video-interview-estimator -> vie*/
-.vie-wrapper {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  display: flex;
-  flex-direction: row;
-  margin: 0 auto;
-}
+
 
 .vie-video {
   margin-top: 100px;
@@ -370,38 +359,6 @@ const leaveSession = () => {
   display: none; /* Chrome, Safari, Opera*/
 }
 
-/* video interview room header -> virh */
-.virh {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 100px;
-  width: 100%;
-  background-color: #212b36;
-  padding: 0 20px;
-  box-sizing: border-box;
-  position: fixed;
-  z-index: 999;
-}
 
-.virh-logo {
-  color: white;
-  font-size: 24px;
-  font-weight: bold;
-  width: 150px;
-}
 
-.virh-exitbtn {
-  background-color: white;
-  color: red;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.virh-exitbtn:hover {
-  opacity: 70%;
-}
 </style>

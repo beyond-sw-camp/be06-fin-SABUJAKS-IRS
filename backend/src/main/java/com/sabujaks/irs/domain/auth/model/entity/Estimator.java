@@ -1,6 +1,7 @@
-package com.sabujaks.irs.domain.interview_schedule.model.entity;
+package com.sabujaks.irs.domain.auth.model.entity;
 
 
+import com.sabujaks.irs.domain.interview_schedule.model.entity.InterviewParticipate;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -21,6 +22,7 @@ public class Estimator {
     private Long idx;
     private String email; // 이메일
     private String password; // 비밀번호
+    private String name;
     private String role; // 접근 권한
     private Boolean emailAuth;
 

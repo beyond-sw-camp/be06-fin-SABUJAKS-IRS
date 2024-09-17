@@ -26,6 +26,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.firewall.DefaultHttpFirewall;
+import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -76,7 +78,7 @@ public class SecurityConfig {
         http.logout((auth) ->
                 auth
                         .logoutUrl("/api/auth/logout")
-                        .deleteCookies("ATOKEN")
+                        .deleteCookies("ATOKEN", "UTOKEN")
                         .addLogoutHandler((request, response, authentication) -> {
                             // 요청에서 쿠키 배열을 가져옴
                             Cookie[] cookies = request.getCookies();

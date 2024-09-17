@@ -3,7 +3,7 @@ package com.sabujaks.irs.domain.interview_schedule.service;
 import com.sabujaks.irs.domain.announce.model.entity.Announcement;
 import com.sabujaks.irs.domain.announce.repository.AnnounceRepository;
 import com.sabujaks.irs.domain.auth.model.entity.Seeker;
-import com.sabujaks.irs.domain.interview_schedule.model.entity.Estimator;
+import com.sabujaks.irs.domain.auth.model.entity.Estimator;
 import com.sabujaks.irs.domain.auth.model.entity.Recruiter;
 import com.sabujaks.irs.domain.auth.repository.EstimatorRepository;
 import com.sabujaks.irs.domain.auth.repository.RecruiterRepository;

@@ -39,7 +39,7 @@
                         <td>{{ videoInterview.interviewStart }}</td>
                         <td>{{ videoInterview.interviewEnd }}</td>
                         <td>
-                            <a class="joinbtn" :href='`/video-interview/${videoInterview.announceUUID}/${videoInterview.videoInterviewRoomUUID}`'>
+                            <a class="joinbtn" :href='`/video-interview/${videoInterview.announceUUID}/${videoInterview.videoInterviewUUID}`'>
                                 면접 참여
                             </a>
                         </td>
@@ -87,8 +87,8 @@ const getCookie = async (tokenName) => {
 const setUserInfoFromToken = async() => {
   const utoken = await getCookie("UTOKEN");
   if (utoken) {
-    userType.value = utoken.split("|")[1];
     userName.value = utoken.split("|")[0];
+    userType.value = utoken.split("|")[1];
   }
 };
 
