@@ -3,11 +3,13 @@ package com.sabujaks.irs.global.utils;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.Date;
 
 @Component
@@ -42,6 +44,12 @@ public class JwtUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("email", String.class);
     }
 
+    // 화상 면접 권한 조회
+    public String getGrantedAuthority(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("grantedAuthority", String.class);
+    }
+
+
     // 토큰 만료 시간 확인
     public Boolean isExpired(String token) {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
@@ -58,4 +66,15 @@ public class JwtUtil {
                 .signWith(secretKey)
                 .compact();
     }
+
+    // 화상 면접 토큰 생성
+    public String createToken(String grantedAuthority) {
+        return Jwts.builder()
+                .claim("grantedAuthority", grantedAuthority)
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 100000))
+                .signWith(secretKey)
+                .compact();
+    }
+
 }
