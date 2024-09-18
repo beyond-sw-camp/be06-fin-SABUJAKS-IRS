@@ -1,7 +1,7 @@
 package com.sabujaks.irs.global.security;
 
 import com.sabujaks.irs.domain.announce.model.entity.Announcement;
-import com.sabujaks.irs.domain.interview_schedule.model.entity.Estimator;
+import com.sabujaks.irs.domain.auth.model.entity.Estimator;
 import com.sabujaks.irs.domain.auth.model.entity.Recruiter;
 import com.sabujaks.irs.domain.auth.model.entity.Seeker;
 import com.sabujaks.irs.domain.interview_schedule.model.entity.InterviewParticipate;
@@ -11,7 +11,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Getter
 @Builder
@@ -65,7 +64,7 @@ public class CustomUserDetails implements UserDetails {
         this.estimator = estimator;
         this.idx = estimator.getIdx();
         this.email = estimator.getEmail();
-        this.role = null;
+        this.role = estimator.getRole();
         this.name = null;
         this.password = estimator.getPassword();
         this.emailAuth = estimator.getEmailAuth();

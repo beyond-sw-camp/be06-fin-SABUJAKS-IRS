@@ -1,6 +1,6 @@
 package com.sabujaks.irs.global.security;
 
-import com.sabujaks.irs.domain.interview_schedule.model.entity.Estimator;
+import com.sabujaks.irs.domain.auth.model.entity.Estimator;
 import com.sabujaks.irs.domain.auth.model.entity.Recruiter;
 import com.sabujaks.irs.domain.auth.model.entity.Seeker;
 import com.sabujaks.irs.domain.auth.repository.EstimatorRepository;

@@ -1,29 +1,29 @@
-import AnnounceDetailPage from '@/pages/seeker/announce/AnnounceDetailPage.vue';
+import InterviewScheduleMain from '@/components/recruiter/InterviewScheduleMain.vue';
 import AnnounceMainPage from '@/pages/recruiter/announce/AnnounceMainPage.vue';
+import AnnounceRegisterStep1Page from "@/pages/recruiter/announce/AnnounceRegisterStep1Page.vue";
+import AnnounceRegisterStep2Page from '@/pages/recruiter/announce/AnnounceRegisterStep2Page.vue';
 import RecruiterLoginPage from '@/pages/recruiter/auth/RecruiterLoginPage.vue';
-import ResumeMainPage from '@/pages/recruiter/resume/ResumeMainPage.vue';
-import VideoInterviewMainPage from '@/pages/recruiter/video-interview/VideoInterviewMainPage.vue';
-import { createRouter, createWebHistory } from 'vue-router';
-import ResumeListPage from '@/pages/recruiter/resume/ResumeListPage.vue';
-import ResumeDetailPage from '@/pages/recruiter/resume/ResumeDetailPage.vue';
 import RecruiterSignupPage from '@/pages/recruiter/auth/RecruiterSignupPage.vue';
+import InterviewScheduleMainExp from "@/pages/recruiter/interview-schedule/InterviewScheduleMainExp.vue";
+import InterviewScheduleMainNew from "@/pages/recruiter/interview-schedule/InterviewScheduleMainNew.vue";
+import ResumeDetailPage from '@/pages/recruiter/resume/ResumeDetailPage.vue';
+import ResumeListPage from '@/pages/recruiter/resume/ResumeListPage.vue';
+import ResumeMainPage from '@/pages/recruiter/resume/ResumeMainPage.vue';
+import VideoInterviewMainPage from '@/pages/video-interview/VideoInterviewMainPage.vue';
+import VideoInterviewRedirectPage from '@/pages/video-interview/VideoInterviewRedirectPage.vue';
+import VideoInterviewRoomPage from '@/pages/video-interview/VideoInterviewRoomPage.vue';
+import VideoInterViewTestPage from '@/pages/video-interview/VideoInterViewTest1Page.vue';
+import VideoInterViewTest2Page from '@/pages/video-interview/VideoInterViewTest2Page.vue';
+import AnnounceDetailPage from '@/pages/seeker/announce/AnnounceDetailPage.vue';
 import AnnounceReadAllPage from '@/pages/seeker/announce/AnnounceReadAllPage.vue';
 import SeekerLoginPage from '@/pages/seeker/auth/SeekerLoginPage.vue';
-import MypageMainPage from '@/pages/seeker/mypage/MypageMainPage.vue';
-import MypageAnnouceResumePage from '@/pages/seeker/mypage/MypageAnnouceResumePage.vue';
-import MypageSchedulePage from '@/pages/seeker/mypage/MypageSchedulePage.vue';
-import MypageIntegrationeResumePage from '@/pages/seeker/mypage/MypageIntegrationeResumePage.vue';
-import MypageNotificationPage from '@/pages/seeker/mypage/MypageNotificationPage.vue';
 import SeekerSignupPage from '@/pages/seeker/auth/SeekerSignupPage.vue';
-import AnnounceRegisterStep2Page from '@/pages/recruiter/announce/AnnounceRegisterStep2Page.vue';
-import AnnounceRegisterStep1Page from "@/pages/recruiter/announce/AnnounceRegisterStep1Page.vue";
-import InterviewScheduleMainNew from "@/pages/recruiter/interview-schedule/InterviewScheduleMainNew.vue";
-import InterviewScheduleMainExp from "@/pages/recruiter/interview-schedule/InterviewScheduleMainExp.vue";
-import VideoInterViewTestPage from '@/pages/recruiter/video-interview/VideoInterViewTest1Page.vue';
-import VideoInterViewRoomCreatePage from '@/pages/recruiter/video-interview/VideoInterViewTest2Page.vue';
-import InterviewScheduleMain from '@/components/recruiter/InterviewScheduleMain.vue';
-import VideoInterviewRedirectPage from '@/pages/recruiter/video-interview/VideoInterviewRedirectPage.vue';
-import ResumeCreatePage from '@/pages/seeker/resume/ResumeCreatePage.vue';
+import MypageAnnouceResumePage from '@/pages/seeker/mypage/MypageAnnouceResumePage.vue';
+import MypageIntegrationeResumePage from '@/pages/seeker/mypage/MypageIntegrationeResumePage.vue';
+import MypageMainPage from '@/pages/seeker/mypage/MypageMainPage.vue';
+import MypageNotificationPage from '@/pages/seeker/mypage/MypageNotificationPage.vue';
+import MypageSchedulePage from '@/pages/seeker/mypage/MypageSchedulePage.vue';
+import { createRouter, createWebHistory } from 'vue-router';
 
 
 const router = createRouter({
@@ -33,17 +33,18 @@ const router = createRouter({
         { path: '/recruiter/login', component: RecruiterLoginPage },
         { path: '/recruiter/signup', component: RecruiterSignupPage },
         { path: '/recruiter/announce', component: AnnounceMainPage },
-        { path: '/recruiter/announce/register-step2', component: AnnounceRegisterStep2Page },
-        { path: '/recruiter/announce/register-step1', component: AnnounceRegisterStep1Page },
-        { path: '/video-interview/:announceUUID', component: VideoInterviewMainPage, },
-        // { path: '/video-interview/:announceUUID/:videoInterviewUUID', component: VideoInterviewRoomPage },
-        // { path: '/recruiter/video-interview/participant', component: VideoInterviewParticipantPage },
-        // { path: '/recruiter/video-interview/estimator', component: VideoInterviewEstimatorPage },
+        { path: '/recruiter/announce/register-step2', component: AnnounceRegisterStep2Page},
+        { path: '/recruiter/announce/register-step1', component: AnnounceRegisterStep1Page},
+
         { path: '/recruiter/interview-schedule/new', component: InterviewScheduleMainNew },
         { path: '/recruiter/interview-schedule/exp', component: InterviewScheduleMainExp },
-        { path: '/recruiter/video-interview/test1', component: VideoInterViewTestPage },
-        { path: '/recruiter/video-interview/test2', component: VideoInterViewRoomCreatePage },
-        { path: '/recruiter/video-interview/redirect-login', component: VideoInterviewRedirectPage },
+
+        { path: '/video-interview/test1', component: VideoInterViewTestPage},
+        { path: '/video-interview/test2', component: VideoInterViewTest2Page},
+        { path: '/video-interview/login', component: VideoInterviewRedirectPage },
+        { path: '/video-interview/:announceUUID', component: VideoInterviewMainPage,},
+        { path: '/video-interview/:announceUUID/:videoInterviewUUID', component: VideoInterviewRoomPage },
+
         { path: '/recruiter/interview-schedule', component: InterviewScheduleMain },
         { path: '/recruiter/resume', component: ResumeMainPage },
         { path: '/recruiter/resume/list', component: ResumeListPage },

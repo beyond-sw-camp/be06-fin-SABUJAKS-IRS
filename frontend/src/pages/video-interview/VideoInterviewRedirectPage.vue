@@ -1,4 +1,5 @@
 <template >
+    <div>
     <form @submit.prevent="handleLogin">
       <label for="email">email </label>
       <input type="text" v-model="email" placeholder="Enter email" />
@@ -9,10 +10,15 @@
       <button type="submit">Submit</button>
     </form>
     <hr>
-    <button @click="handleAuthorities">권한불러오기</button><br>
-    <p>{{ authorities }}</p>
+
     <hr>
     <button @click="handleLogout">로그아웃</button><br>
+
+    <button @click="handleAuthorities">권한불러오기</button><br>
+    <div v-for="(data, index) in authorities" :key="index">
+    <p>{{ data.authority }}</p>
+</div>
+</div>
 </template>
 <script setup>
 import { ref } from 'vue';
@@ -24,10 +30,7 @@ const authorities = ref([]);
 
 const handleLogin = async() => {
     try {
-    const loginReq = {
-        email: email.value,
-        password: password.value
-    }
+    const loginReq = { email: email.value, password: password.value}
     const response = await authStore.login(loginReq);
     console.log(response);
   } catch (error) {
@@ -46,8 +49,7 @@ const handleLogout = async() => {
 const handleAuthorities = async() => {
     try {
         const response = await authStore.getAuthorities();
-        console.log(response)
-        authorities.value = response.result;
+        authorities.value = response;
     } catch (error) {
         console.error(error);
     }
@@ -55,5 +57,7 @@ const handleAuthorities = async() => {
 
 </script>
 <style scoped>
-    
+.test-1 {
+    display: flex;
+}
 </style>

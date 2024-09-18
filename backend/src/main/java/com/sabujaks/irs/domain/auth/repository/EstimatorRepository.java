@@ -1,6 +1,6 @@
 package com.sabujaks.irs.domain.auth.repository;
 
-import com.sabujaks.irs.domain.interview_schedule.model.entity.Estimator;
+import com.sabujaks.irs.domain.auth.model.entity.Estimator;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

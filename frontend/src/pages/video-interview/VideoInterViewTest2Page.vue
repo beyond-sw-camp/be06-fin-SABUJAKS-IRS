@@ -112,7 +112,7 @@ const submitCreateForm = async () => {
       announceUUID: announceUUID.value,
       params: { customSessionId: videoInterviewRoomUUID.value },
     };
-    const response = await videoInterviewStore.createVideoInterview(videoInterviewCreateRoomReq);
+    const response = await videoInterviewStore.create(videoInterviewCreateRoomReq);
     console.log(response);
     createResult.value = response.result;
   } catch (error) {
@@ -122,7 +122,7 @@ const submitCreateForm = async () => {
 
 const submitSearchAllForm = async () => {
   try {
-    const response = await videoInterviewStore.searchAllVideoInterview(announceUUID.value);
+    const response = await videoInterviewStore.searchAll(announceUUID.value);
     console.log(response);
     searchResult.value = response.result;
   } catch (error) {
@@ -137,7 +137,7 @@ const getVideoInterviewToken = async (videoInterviewRoomUUID) => {
       videoInterviewRoomUUID: videoInterviewRoomUUID,
       params: { customSessionId: videoInterviewRoomUUID },
     };
-    const response =  await videoInterviewStore.getVideoInterviewToken(videoInterviewJoinReq);
+    const response =  await videoInterviewStore.getToken(videoInterviewJoinReq);
     return response.result
   } catch (error) {
     console.error(error);

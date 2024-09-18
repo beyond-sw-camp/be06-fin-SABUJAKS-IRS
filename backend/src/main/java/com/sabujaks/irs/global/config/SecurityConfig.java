@@ -26,6 +26,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.firewall.DefaultHttpFirewall;
+import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -63,7 +65,7 @@ public class SecurityConfig {
                         auth
                                 .requestMatchers("/api/test/ex01").hasAuthority("ROLE_SEEKER")
                                 .requestMatchers("/api/video-interview/create").hasAuthority("ROLE_RECRUITER")
-                                .requestMatchers("/api/video-interview/**").access(this::hasVideoInterviewAuthorities)
+                                .requestMatchers("/api/video-interview/search-all").access(this::hasVideoInterviewAuthorities)
                                 .requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/interview-schedule/**").permitAll()
                                 .anyRequest().permitAll()
@@ -76,7 +78,7 @@ public class SecurityConfig {
         http.logout((auth) ->
                 auth
                         .logoutUrl("/api/auth/logout")
-                        .deleteCookies("ATOKEN")
+                        .deleteCookies("ATOKEN", "UTOKEN")
                         .addLogoutHandler((request, response, authentication) -> {
                             // 요청에서 쿠키 배열을 가져옴
                             Cookie[] cookies = request.getCookies();
@@ -114,12 +116,12 @@ public class SecurityConfig {
         System.out.println(object.getRequest().getRequestURI());
         String seekerAuthority =
                 "ROLE_SEEKER|" + object.getRequest().getParameter("announceUUID")
-                + '_' + object.getRequest().getParameter("interviewScheduleUUID");
+                + '_' + object.getRequest().getParameter("videoInterviewUUID");
         String recruiterAuthority =
                 "ROLE_RECRUITER|" + object.getRequest().getParameter("announceUUID");
         String estimatorAuthority =
                 "ROLE_ESTIMATOR|" + object.getRequest().getParameter("announceUUID")
-                + '_' + object.getRequest().getParameter("interviewScheduleUUID");
+                + '_' + object.getRequest().getParameter("videoInterviewUUID");
 
         boolean hasAnnounceUUID = authentication.get().getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
