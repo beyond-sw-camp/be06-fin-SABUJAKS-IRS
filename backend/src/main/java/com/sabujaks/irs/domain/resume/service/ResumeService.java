@@ -76,7 +76,6 @@ public class ResumeService {
                     for(EducationCreateReq edu : dto.getEducations()) {
                         Education education = Education.builder()
                                 .resumeInfo(resumeInfo)
-                                .highLess(edu.getHighLess())
                                 .schoolDiv(edu.getSchoolDiv())
                                 .schoolName(edu.getSchoolName())
                                 .enteredAt(edu.getEnteredAt())
@@ -194,6 +193,7 @@ public class ResumeService {
                         Portfolio portfolio = Portfolio.builder()
                                 .resumeInfo(resumeInfo)
                                 .portfolioDiv(p.getPortfolioDiv())
+                                .portfolioType(p.getPortfolioType())
                                 .portfolioUrl(p.getPortfolioUrl())
                                 .build();
                         portfolioRepository.save(portfolio);
@@ -221,7 +221,7 @@ public class ResumeService {
                         CustomLetter customLetter = CustomLetter.builder()
                                 .resumeInfo(resumeInfo)
                                 .title(cl.getTitle())
-                                .charLimit(cl.getCharLimit())
+                                .charNum(cl.getCharNum())
                                 .contents(cl.getContents())
                                 .build();
                         customLetterRepository.save(customLetter);
@@ -278,7 +278,6 @@ public class ResumeService {
                     for(EducationCreateReq edu : dto.getEducations()) {
                         Education education = Education.builder()
                                 .resumeInfo(resumeInfo)
-                                .highLess(edu.getHighLess())
                                 .schoolDiv(edu.getSchoolDiv())
                                 .schoolName(edu.getSchoolName())
                                 .enteredAt(edu.getEnteredAt())
@@ -423,7 +422,7 @@ public class ResumeService {
                         CustomLetter customLetter = CustomLetter.builder()
                                 .resumeInfo(resumeInfo)
                                 .title(cl.getTitle())
-                                .charLimit(cl.getCharLimit())
+                                .charNum(cl.getCharNum())
                                 .contents(cl.getContents())
                                 .build();
                         customLetterRepository.save(customLetter);

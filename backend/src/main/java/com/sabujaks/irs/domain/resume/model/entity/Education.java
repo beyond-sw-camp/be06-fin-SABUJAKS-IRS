@@ -18,10 +18,6 @@ public class Education {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
-    @Column(nullable = false)
-    @Builder.Default
-    private Boolean highLess = false;
-
     @Column(nullable = false, length = 10)
     private String schoolDiv;
 

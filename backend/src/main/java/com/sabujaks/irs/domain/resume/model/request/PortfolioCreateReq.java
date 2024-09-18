@@ -10,5 +10,6 @@ import lombok.*;
 @Builder
 public class PortfolioCreateReq {
     private String portfolioDiv;
+    private String portfolioType;
     private String portfolioUrl;
 }

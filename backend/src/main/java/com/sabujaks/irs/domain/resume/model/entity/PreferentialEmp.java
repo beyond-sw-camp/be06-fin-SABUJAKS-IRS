@@ -6,8 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
 @Entity
 @Builder
 @Getter
@@ -41,9 +39,9 @@ public class PreferentialEmp {
     @Column(length = 20)
     private String militaryClass;
     // 입대일
-    private LocalDate militaryStart;
+    private String militaryStart;
     // 제대일
-    private LocalDate militaryEnd;
+    private String militaryEnd;
     // 군별
     @Column(length = 20)
     private String militaryType;

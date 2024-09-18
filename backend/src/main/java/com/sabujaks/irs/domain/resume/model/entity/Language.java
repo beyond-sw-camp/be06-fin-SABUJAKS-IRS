@@ -29,7 +29,11 @@ public class Language {
     @Column(length = 30)
     private String officialTest;
 
-    private Double score;
+    @Column(length = 10)
+    private String score;
+
+    @Column(length = 10)
+    private String selectScore;
 
     @Column(length = 10)
     private String takingAt;
