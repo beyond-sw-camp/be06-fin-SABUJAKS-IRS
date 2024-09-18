@@ -28,10 +28,10 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 const router = createRouter({
     history: createWebHistory(),
-    routes : [
-        { path: '/', component: AnnounceReadAllPage},
-        { path: '/recruiter/login', component: RecruiterLoginPage},
-        { path: '/recruiter/signup', component: RecruiterSignupPage},
+    routes: [
+        { path: '/', component: AnnounceReadAllPage },
+        { path: '/recruiter/login', component: RecruiterLoginPage },
+        { path: '/recruiter/signup', component: RecruiterSignupPage },
         { path: '/recruiter/announce', component: AnnounceMainPage },
         { path: '/recruiter/announce/register-step2', component: AnnounceRegisterStep2Page},
         { path: '/recruiter/announce/register-step1', component: AnnounceRegisterStep1Page},
@@ -45,21 +45,20 @@ const router = createRouter({
         { path: '/video-interview/:announceUUID', component: VideoInterviewMainPage,},
         { path: '/video-interview/:announceUUID/:videoInterviewUUID', component: VideoInterviewRoomPage },
 
-
-
         { path: '/recruiter/interview-schedule', component: InterviewScheduleMain },
         { path: '/recruiter/resume', component: ResumeMainPage },
         { path: '/recruiter/resume/list', component: ResumeListPage },
         { path: '/recruiter/resume/detail', component: ResumeDetailPage },
         { path: '/seeker/login', component: SeekerLoginPage },
         { path: '/seeker/signup', component: SeekerSignupPage },
-        { path: '/seeker/announce', component: AnnounceReadAllPage},
+        { path: '/seeker/announce', component: AnnounceReadAllPage },
         { path: '/seeker/announce/detail', component: AnnounceDetailPage },
         { path: '/seeker/mypage', component: MypageMainPage },
         { path: '/seeker/mypage/schedule', component: MypageSchedulePage },
         { path: '/seeker/mypage/annouce-resume', component: MypageAnnouceResumePage },
         { path: '/seeker/mypage/integration-resume', component: MypageIntegrationeResumePage },
         { path: '/seeker/mypage/notification', component: MypageNotificationPage },
+        { path: '/seeker/resume/create', component: ResumeCreatePage },
     ]
 })
 
@@ -82,7 +81,7 @@ router.beforeEach((to, from, next) => {
             document.head.removeChild(existingLink);
         }
     }
-  
+
     // /recruiter/announce/register-step2 페이지에만 CSS 추가
     if (to.path === '/recruiter/announce/register-step2') {
         if (!document.querySelector('link[href="/css/AnnounceRegisterStep2Page.css"]')) {
