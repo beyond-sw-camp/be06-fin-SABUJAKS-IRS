@@ -23,6 +23,7 @@ import MypageIntegrationeResumePage from '@/pages/seeker/mypage/MypageIntegratio
 import MypageMainPage from '@/pages/seeker/mypage/MypageMainPage.vue';
 import MypageNotificationPage from '@/pages/seeker/mypage/MypageNotificationPage.vue';
 import MypageSchedulePage from '@/pages/seeker/mypage/MypageSchedulePage.vue';
+import ResumeCreatePage from '@/pages/seeker/resume/ResumeCreatePage.vue'
 import { createRouter, createWebHistory } from 'vue-router';
 
 
@@ -33,16 +34,16 @@ const router = createRouter({
         { path: '/recruiter/login', component: RecruiterLoginPage },
         { path: '/recruiter/signup', component: RecruiterSignupPage },
         { path: '/recruiter/announce', component: AnnounceMainPage },
-        { path: '/recruiter/announce/register-step2', component: AnnounceRegisterStep2Page},
-        { path: '/recruiter/announce/register-step1', component: AnnounceRegisterStep1Page},
+        { path: '/recruiter/announce/register-step2', component: AnnounceRegisterStep2Page },
+        { path: '/recruiter/announce/register-step1', component: AnnounceRegisterStep1Page },
 
         { path: '/recruiter/interview-schedule/new', component: InterviewScheduleMainNew },
         { path: '/recruiter/interview-schedule/exp', component: InterviewScheduleMainExp },
 
-        { path: '/video-interview/test1', component: VideoInterViewTestPage},
-        { path: '/video-interview/test2', component: VideoInterViewTest2Page},
+        { path: '/video-interview/test1', component: VideoInterViewTestPage },
+        { path: '/video-interview/test2', component: VideoInterViewTest2Page },
         { path: '/video-interview/login', component: VideoInterviewRedirectPage },
-        { path: '/video-interview/:announceUUID', component: VideoInterviewMainPage,},
+        { path: '/video-interview/:announceUUID', component: VideoInterviewMainPage, },
         { path: '/video-interview/:announceUUID/:videoInterviewUUID', component: VideoInterviewRoomPage },
 
         { path: '/recruiter/interview-schedule', component: InterviewScheduleMain },
