@@ -1,5 +1,5 @@
 <template>
-	<video autoplay/>
+	<video class="video" autoplay/>
 </template>
 
 <script>
@@ -9,3 +9,5 @@ export default {
 	mounted () {this.streamManager.addVideoElement(this.$el);},
 };
 </script>
+<style scoped>
+</style>

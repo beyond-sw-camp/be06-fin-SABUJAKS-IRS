@@ -80,37 +80,29 @@ public class VideoInterviewService {
 
     public VideoInterviewTokenGetRes sessionToken(VideoInterviewTokenGetReq dto, CustomUserDetails userDetails) throws BaseException, OpenViduJavaClientException, OpenViduHttpException {
         Session session = openVidu.getActiveSession(dto.getVideoInterviewUUID());
-        if (session == null) {
+        if (session == null) { throw new BaseException(BaseResponseMessage.VIDEO_INTERVIEW_JOIN_FAIL);}
+        ConnectionProperties properties = ConnectionProperties.fromJson(dto.getParams()).build();
+        try{
+            Connection connection = session.createConnection(properties);
+            return VideoInterviewTokenGetRes.builder()
+                    .sessionToken(connection.getToken())
+                    .userEmail(userDetails.getEmail())
+                    .userType(userDetails.getRole())
+                    .build();
+        } catch (Exception e){
+            System.out.println("Error creating connection: " + e.getMessage());
             openVidu.createSession(SessionProperties.fromJson(dto.getParams()).build());
             Session activeSession = openVidu.getActiveSession(dto.getVideoInterviewUUID());
             ConnectionProperties reCreateProperties = ConnectionProperties.fromJson(dto.getParams()).build();
+            activeSession.getConnection(dto.getVideoInterviewUUID());
             Connection connection = activeSession.createConnection(reCreateProperties);
             return VideoInterviewTokenGetRes.builder()
                     .sessionToken(connection.getToken())
                     .userEmail(userDetails.getEmail())
                     .userType(userDetails.getRole())
                     .build();
-        }else {
-            ConnectionProperties properties = ConnectionProperties.fromJson(dto.getParams()).build();
-            try{
-                Connection connection = session.createConnection(properties);
-                return VideoInterviewTokenGetRes.builder()
-                        .sessionToken(connection.getToken())
-                        .userEmail(userDetails.getEmail())
-                        .userType(userDetails.getRole())
-                        .build();
-            } catch (Exception e){
-                openVidu.createSession(SessionProperties.fromJson(dto.getParams()).build());
-                Session activeSession = openVidu.getActiveSession(dto.getVideoInterviewUUID());
-                ConnectionProperties reCreateProperties = ConnectionProperties.fromJson(dto.getParams()).build();
-                Connection connection = activeSession.createConnection(reCreateProperties);
-                return VideoInterviewTokenGetRes.builder()
-                        .sessionToken(connection.getToken())
-                        .userEmail(userDetails.getEmail())
-                        .userType(userDetails.getRole())
-                        .build();
-            }
         }
     }
+
 }
 

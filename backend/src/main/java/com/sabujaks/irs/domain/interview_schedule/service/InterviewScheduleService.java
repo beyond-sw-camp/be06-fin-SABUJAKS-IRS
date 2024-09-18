@@ -72,6 +72,7 @@ public class InterviewScheduleService {
                     estimator = Estimator.builder()
                             .role("ROLE_ESTIMATOR")
                             .email(estimatorEmail)
+                            .name("면접관")
                             // UUID로 저장하고, UUID를 이메일로 전송
                             .password(passwordEncoder.encode("qwer1234"))
                             .emailAuth(true)
