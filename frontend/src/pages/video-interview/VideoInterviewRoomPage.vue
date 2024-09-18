@@ -3,28 +3,39 @@
     <!-- 지원자 화면 -->
     <header class="header">
       <img class="header-logo" src="../../assets/img/irs_white.png" />
-      <button @click="leaveSession" class="exitbtn" type="button" id="buttonLeaveSession" value="Leave session" >
+      <div>
+        <button @click="leaveSession" class="exitBtn" type="button" id="buttonLeaveSession" value="Leave session" >
         면접 나가기
-      </button>
+        </button>
+        <button @click="handleTogglePubsAudio" class="soundBtn">
+          {{ audioMuted ? '음소거 해제' : '음소거' }}
+        </button>
+      </div>
+
     </header>
-    <div v-if="(session != null) && (userType == 'ROLE_SEEKER')" class="seeker-wrapper" >
-      <div class="vip-video">
-        <div id="video-container" class="col-md-6">
-          <UserVideo :stream-manager="publisher" @click="updateMainVideoStreamManager(publisher)" />
-          <UserVideo v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" 
-            @click="updateMainVideoStreamManager(sub)"
-          />
+    <div v-if="(session != null) && (userType == ('ROLE_SEEKER' || 'ROLE_ESTIMATOR'))" class="seeker-wrapper" >
+        <div id="video-container" class="video-container">
+          <UserVideo 
+            class="video" 
+            :isSubscriber="false" 
+            :stream-manager="publisher" 
+            @click="updateMainVideoStreamManager(publisher)" />
+            <UserVideo 
+          class="video" 
+          :isSubscriber="true" 
+          v-for="sub in subscribers" 
+          :key="sub.stream.connection.connectionId" 
+          :stream-manager="sub"
+          :audio-muted="sub.audioMuted"
+          @toggle-audio="handleToggleSubsAudio" 
+          @click="updateMainVideoStreamManager(sub)"
+        />
         </div>
-      </div>
-      <div class="vip-video">
-        <div id="main-video" class="col-md-6">
-          <p>abcd</p>
-          <UserVideo :stream-manager="mainStreamManager" />
-        </div>
-      </div>
+        <!-- <div id="main-video" class="main-video-container">
+          <UserVideo class="video" :stream-manager="mainStreamManager" />
+        </div> -->
     </div>
-    <div v-if="(session != null) && (userType == 'ROLE_ESTIMATOR')" class="vie-wrapper"
-    >
+    <div v-if="(session != null) && (userType == 'ROLE_ESTIMATOR')" class="vie-wrapper">
       <div class="vie-video">
         <img class="vie-img" src="../../assets/img/irs_black.png" alt="" />
       </div>
@@ -61,7 +72,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { UseVideoInterviewStore } from "@/stores/UseVideoInterviewStore";
 import { UseAuthStore } from "@/stores/UseAuthStore";
 import { OpenVidu } from "openvidu-browser";
@@ -76,18 +87,39 @@ const subscribers = ref([]);
 const authStore = UseAuthStore();
 const videoInterviewStore = UseVideoInterviewStore();
 const route = useRoute();
-// const router = useRouter()
+const router = useRouter()
 const toast = useToast();
-// const yourname = ref('');
-// const announceUUID = ref('');
-// const videoInterviewRoomUUID = ref('');
 const userName = ref("");
 const userType = ref("");
+const audioMuted = ref(false);
 
 onMounted(async() => {
   await joinSession(route.params.announceUUID, route.params.videoInterviewUUID);
 });
 
+
+const handleToggleSubsAudio = (connection) => {
+  if (session.value) {
+    const subscriber = subscribers.value.find(sub => sub.stream.connection.connectionId === connection.connectionId);
+    if (subscriber) {
+      const isAudioEnabled = subscriber.stream.getMediaStream().getAudioTracks().some(track => track.enabled);
+      
+      subscriber.stream.getMediaStream().getAudioTracks().forEach(track => {
+        track.enabled = !isAudioEnabled;
+      });
+
+      subscriber.audioMuted = !isAudioEnabled;
+    }
+  }
+};
+
+
+const handleTogglePubsAudio = () => {
+  audioMuted.value = !audioMuted.value;
+  if (publisher.value) {
+    publisher.value.publishAudio(!audioMuted.value);
+  }
+};
 
 const handleSessionToken = async (announceUUID, videoInterviewUUID) => {
   try {
@@ -117,11 +149,8 @@ const updateMainVideoStreamManager = (stream) => {
 
 const joinSession = async (announceUUID, videoInterviewUUID) => {
   try {
-    // OpenVidu 객체 초기화
     OV.value = new OpenVidu();
     session.value = OV.value.initSession();
-
-    // 스트림 이벤트 처리
     session.value.on("streamCreated", ({ stream }) => {
       const subscriber = session.value.subscribe(stream);
       subscribers.value.push(subscriber);
@@ -136,8 +165,6 @@ const joinSession = async (announceUUID, videoInterviewUUID) => {
 
     console.log(`${videoInterviewUUID} Session에 접속중: ${token}`);
     await session.value.connect(token, { clientData: userName.value });
-
-    // 퍼블리셔 초기화
     publisher.value = OV.value.initPublisher(undefined, {
       audioSource: undefined,
       videoSource: undefined,
@@ -148,14 +175,11 @@ const joinSession = async (announceUUID, videoInterviewUUID) => {
       insertMode: "APPEND",
       mirror: false,
     });
-
-    // 스트림 퍼블리시
     mainStreamManager.value = publisher.value;
     await session.value.publish(publisher.value);
     toast.success("면접방에 오신 걸 환영합니다.\n지원자는 마이크를 끄고 대기해주시길 바랍니다.");
   } catch (error) {
-    // router.push(`/video-interview/${route.params.announceUUID}`)
-    console.log(error);
+    router.push(`/video-interview/${route.params.announceUUID}`)
     toast.error("지원자는 정해진 시간에 정해진 면접방과 일정에 맞춰 참여 바랍니다.");
   }
   window.addEventListener("beforeunload", leaveSession);
@@ -169,16 +193,17 @@ const leaveSession = () => {
   subscribers.value = [];
   OV.value = undefined;
   window.removeEventListener("beforeunload", leaveSession);
+  router.push(`/video-interview/${route.params.announceUUID}`)
 };
 </script>
 
 <style scoped>
 .header {
-  background-color: #f8f9fa; /* 배경색 */
-  color: #333; /* 글자색 */
-  padding: 20px; /* 안쪽 여백 */
-  text-align: center; /* 텍스트 정렬 */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  background-color: #f8f9fa; 
+  color: #333; 
+  padding: 20px; 
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -198,7 +223,7 @@ const leaveSession = () => {
   width: 150px;
 }
 
-.exitbtn {
+.exitBtn {
   background-color: white;
   color: red;
   border: none;
@@ -206,9 +231,20 @@ const leaveSession = () => {
   padding: 10px 20px;
   cursor: pointer;
   font-size: 16px;
+  margin-right: 10px
 }
 
-.exitbtn:hover {
+.soundBtn{
+  background-color: white;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
   opacity: 70%;
 }
 
@@ -218,7 +254,7 @@ const leaveSession = () => {
   height: 100%;
   padding: 0;
   display: block;
-  flex-direction: column;
+  flex-direction: row;
   margin: 0 auto;
 }
 
@@ -229,7 +265,7 @@ const leaveSession = () => {
   padding: 0;
   display: flex;
   flex-direction: column;
-  margin: 0 auto;
+  margin: 100px 0;
 }
 
 .estimator-wrapper {
@@ -242,18 +278,49 @@ const leaveSession = () => {
   margin: 0 auto;
 }
 
-.vip-video {
-  width: 100%;
-  padding-top: 50px;
+.video-container {
+  position: relative;
+  margin: 20px 0;
+  height: min-content;
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
-.vip-img {
-  width: fit-content;
-  height: 300px;
-  border: 1px solid black;
+.video {
+  position: relative;
+  object-fit: cover;
+  height: auto;
+  max-width: 100%;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
 }
+
+.video-menu {
+  position: absolute; /* 버튼을 절대 위치로 설정 */
+  top: 5px; /* 비디오 상단에서의 위치 */
+  right: 5px; /* 비디오 오른쪽에서의 위치 */
+  background-color: rgba(0, 0, 0, 0.5); /* 배경색 */
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 18px;
+  text-align: center;
+  cursor: pointer; /* 커서 스타일 */
+  z-index: 999; /* 버튼을 다른 요소 위로 */
+}
+
+
+/* .main-video-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+} */
+
+
 
 .vip-video {
   width: 100%;
