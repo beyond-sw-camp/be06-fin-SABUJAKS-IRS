@@ -10,6 +10,6 @@ import lombok.*;
 @Builder
 public class CustomLetterCreateReq {
     private String title;
-    private Integer charLimit;
+    private Integer charNum;
     private String contents;
 }

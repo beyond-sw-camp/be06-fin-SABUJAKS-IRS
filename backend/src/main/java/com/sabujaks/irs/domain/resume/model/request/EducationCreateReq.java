@@ -11,7 +11,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class EducationCreateReq {
-    private Boolean highLess;
     private String schoolDiv;
     private String schoolName;
     private String enteredAt;

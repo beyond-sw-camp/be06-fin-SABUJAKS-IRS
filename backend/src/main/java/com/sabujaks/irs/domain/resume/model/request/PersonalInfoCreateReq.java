@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Builder
 public class PersonalInfoCreateReq {
     private String name;
-    private LocalDate birth;
+    private String birth;
     private String gender;
     private String email;
     private String phone;
