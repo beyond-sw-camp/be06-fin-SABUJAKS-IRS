@@ -3,7 +3,7 @@ import axios from 'axios';
 import { backend } from '@/const';
 
 
-export const UseVideoInterviewStore = defineStore('VideoInterview', {
+export const UseVideoInterviewStore = defineStore('videoInterivew', {
     state: () => ({}),
     persist: { storage: sessionStorage, },
     actions: {
