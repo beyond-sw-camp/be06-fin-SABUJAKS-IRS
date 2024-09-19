@@ -75,7 +75,11 @@ public enum BaseResponseMessage {
     // ALARM 5000~5999
     ALARM_REGISTER_SUCCESS(true, 5000, "알람 생성이 완료되었습니다."),
     ALARM_SEARCH_SUCCESS(true, 5001, "알람 조회에 성공했습니다."),
-    ALARM_SEARCH_FAIL(false, 5002, "알람 조회에 실패했습니다.");
+    ALARM_SEARCH_FAIL(false, 5002, "알람 조회에 실패했습니다."),
+
+    // 인터뷰 평가표 6000~6999
+    INTERVIEW_EVALUATE_CREATE_FORM_SUCCESS(true, 6000, "인터뷰 평가표 생성에 성공했습니다."),
+    INTERVIEW_EVALUATE_CREATE_FORM_FAIL_IS_EXIST(false, 6001, "인터뷰 평가표가 이미 존재합니다.");
 
     private Boolean success;
     private Integer code;

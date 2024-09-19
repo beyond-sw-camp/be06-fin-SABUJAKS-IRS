@@ -13,7 +13,7 @@
       </div>
 
     </header>
-    <div v-if="(session != null) && (userType == ('ROLE_SEEKER' || 'ROLE_ESTIMATOR'))" class="seeker-wrapper" >
+    <div v-if="(session != null) && (userType == 'ROLE_SEEKER')" class="seeker-wrapper" >
         <div id="video-container" class="video-container">
           <UserVideo 
             class="video" 
@@ -21,27 +21,40 @@
             :stream-manager="publisher" 
             @click="updateMainVideoStreamManager(publisher)" />
             <UserVideo 
-          class="video" 
-          :isSubscriber="true" 
-          v-for="sub in subscribers" 
-          :key="sub.stream.connection.connectionId" 
-          :stream-manager="sub"
-          :audio-muted="sub.audioMuted"
-          @toggle-audio="handleToggleSubsAudio" 
-          @click="updateMainVideoStreamManager(sub)"
-        />
+            class="video" 
+            :isSubscriber="true" 
+            v-for="sub in subscribers" 
+            :key="sub.stream.connection.connectionId" 
+            :stream-manager="sub"
+            :audio-muted="sub.audioMuted"
+            @toggle-audio="handleToggleSubsAudio" 
+            @click="updateMainVideoStreamManager(sub)"
+          />
         </div>
         <!-- <div id="main-video" class="main-video-container">
           <UserVideo class="video" :stream-manager="mainStreamManager" />
         </div> -->
     </div>
-    <div v-if="(session != null) && (userType == 'ROLE_ESTIMATOR')" class="vie-wrapper">
-      <div class="vie-video">
-        <img class="vie-img" src="../../assets/img/irs_black.png" alt="" />
-      </div>
+    <div v-if="(session != null) && (userType == 'ROLE_ESTIMATOR')" class="estimator-wrapper">
+      <div id="video-container" class="video-container">
+          <UserVideo 
+            class="video" 
+            :isSubscriber="false" 
+            :stream-manager="publisher" 
+            @click="updateMainVideoStreamManager(publisher)" />
+            <UserVideo 
+            class="video" 
+            :isSubscriber="true" 
+            v-for="sub in subscribers" 
+            :key="sub.stream.connection.connectionId" 
+            :stream-manager="sub"
+            :audio-muted="sub.audioMuted"
+            @toggle-audio="handleToggleSubsAudio" 
+            @click="updateMainVideoStreamManager(sub)"
+          />
+        </div>
       <div class="vie-evaluate">
         <div class="vie-menu">
-          <button class="vie-menubtn">지원자 정보</button>
           <button class="vie-menubtn">지원서 보기</button>
           <button class="vie-menubtn">면접자 평가</button>
         </div>
@@ -49,25 +62,6 @@
       </div>
     </div>
   </div>
-  <!-- <div class="vip-wrapper">
-    <div id="session" v-if="session">
-        <div id="video-container" class="col-md-6">
-            <UserVideo :stream-manager="publisher" @click="updateMainVideoStreamManager(publisher)" />
-            <UserVideo v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click="updateMainVideoStreamManager(sub)" />
-        </div>
-    </div> -->
-  <!-- <div id="session" v-if="session && userType=='estimator'">
-        <div id="session-header">
-          <input class="btn btn-large btn-danger" type="button" id="buttonLeaveSession" @click="leaveSession" value="Leave session" />
-      </div>
-        <div id="main-video" class="col-md-6">
-          <UserVideo :stream-manager="mainStreamManager" />
-        </div>
-        <div id="video-container" class="col-md-6">
-          <UserVideo :stream-manager="publisher" @click="updateMainVideoStreamManager(publisher)" />
-          <UserVideo v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub" @click="updateMainVideoStreamManager(sub)" />
-        </div>
-    </div> -->
 </template>
 
 <script setup>
@@ -78,7 +72,7 @@ import { UseAuthStore } from "@/stores/UseAuthStore";
 import { OpenVidu } from "openvidu-browser";
 import UserVideo from "@/components/video-interview/UserVideo.vue";
 import { useToast } from "vue-toastification";
-// OpenVidu 관련 상태
+
 const OV = ref(null);
 const session = ref(null);
 let mainStreamManager = ref(null);
@@ -96,7 +90,6 @@ const audioMuted = ref(false);
 onMounted(async() => {
   await joinSession(route.params.announceUUID, route.params.videoInterviewUUID);
 });
-
 
 const handleToggleSubsAudio = (connection) => {
   if (session.value) {
@@ -275,7 +268,7 @@ button:hover {
   padding: 0;
   display: flex;
   flex-direction: row;
-  margin: 0 auto;
+  margin: 100px 0;
 }
 
 .video-container {
@@ -320,36 +313,17 @@ button:hover {
   width: 100%;
 } */
 
-
-
-.vip-video {
-  width: 100%;
-  margin-top: 110px;
-  display: flex;
-  justify-content: center;
-}
-
-.vip-img {
-  width: fit-content;
-  height: 300px;
-  border: 1px solid black;
-}
 /* video-interview-estimator -> vie*/
 
 
-.vie-video {
-  margin-top: 100px;
+.video-estimator-container {
   position: relative;
-  top: 0;
-  flex-direction: column;
-  width: 40%;
-  align-items: center;
-  justify-content: center;
-  float: left;
-  box-sizing: border-box;
-  padding: 18px;
+  margin: 20px 0;
+  height: min-content;
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
 .vie-img {
@@ -359,7 +333,6 @@ button:hover {
 }
 
 .vie-evaluate {
-  margin-top: 100px;
   position: relative;
   top: 0;
   right: 0;
@@ -367,7 +340,7 @@ button:hover {
   /* scrollbar-width: none;  */
   display: flex;
   flex-direction: column;
-  width: 60%;
+  width: 100%;
   float: left;
   box-sizing: border-box;
   background: black;
