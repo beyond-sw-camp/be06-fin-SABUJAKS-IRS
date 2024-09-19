@@ -105,8 +105,8 @@
     bottom: 10px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
+    background-color: white;
+    color: black;
     padding: 10px;
     border-radius: 5px;
     font-size: 18px;
@@ -118,7 +118,7 @@
     bottom: 29px;
     left: 60%;
     transform: translateX(-50%);
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: white;
     color: white;
     border: none;
     width: 40px;

@@ -2,6 +2,7 @@ package com.sabujaks.irs.domain.interview_schedule.model.entity;
 
 import com.sabujaks.irs.domain.announce.model.entity.Announcement;
 import com.sabujaks.irs.domain.auth.model.entity.Recruiter;
+import com.sabujaks.irs.domain.interview_evaluate.model.entity.InterviewEvaluate;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -49,4 +50,7 @@ public class InterviewSchedule {
 
     @OneToMany(mappedBy = "interviewSchedule")
     private List<InterviewParticipate> interviewParticipateList;
+
+    @OneToMany(mappedBy = "interviewSchedule", fetch = FetchType.LAZY)
+    private List<InterviewEvaluate> interviewEvaluateList;
 }
