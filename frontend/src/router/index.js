@@ -4,16 +4,12 @@ import AnnounceRegisterStep1Page from "@/pages/recruiter/announce/AnnounceRegist
 import AnnounceRegisterStep2Page from '@/pages/recruiter/announce/AnnounceRegisterStep2Page.vue';
 import RecruiterLoginPage from '@/pages/recruiter/auth/RecruiterLoginPage.vue';
 import RecruiterSignupPage from '@/pages/recruiter/auth/RecruiterSignupPage.vue';
+import InterviewEvaluateMain from '@/pages/recruiter/interview-evaluate/InterviewEvaluateMain.vue';
 import InterviewScheduleMainExp from "@/pages/recruiter/interview-schedule/InterviewScheduleMainExp.vue";
 import InterviewScheduleMainNew from "@/pages/recruiter/interview-schedule/InterviewScheduleMainNew.vue";
 import ResumeDetailPage from '@/pages/recruiter/resume/ResumeDetailPage.vue';
 import ResumeListPage from '@/pages/recruiter/resume/ResumeListPage.vue';
 import ResumeMainPage from '@/pages/recruiter/resume/ResumeMainPage.vue';
-import VideoInterviewMainPage from '@/pages/video-interview/VideoInterviewMainPage.vue';
-import VideoInterviewRedirectPage from '@/pages/video-interview/VideoInterviewRedirectPage.vue';
-import VideoInterviewRoomPage from '@/pages/video-interview/VideoInterviewRoomPage.vue';
-import VideoInterViewTestPage from '@/pages/video-interview/VideoInterViewTest1Page.vue';
-import VideoInterViewTest2Page from '@/pages/video-interview/VideoInterViewTest2Page.vue';
 import AnnounceDetailPage from '@/pages/seeker/announce/AnnounceDetailPage.vue';
 import AnnounceReadAllPage from '@/pages/seeker/announce/AnnounceReadAllPage.vue';
 import SeekerLoginPage from '@/pages/seeker/auth/SeekerLoginPage.vue';
@@ -23,7 +19,10 @@ import MypageIntegrationeResumePage from '@/pages/seeker/mypage/MypageIntegratio
 import MypageMainPage from '@/pages/seeker/mypage/MypageMainPage.vue';
 import MypageNotificationPage from '@/pages/seeker/mypage/MypageNotificationPage.vue';
 import MypageSchedulePage from '@/pages/seeker/mypage/MypageSchedulePage.vue';
-import ResumeCreatePage from '@/pages/seeker/resume/ResumeCreatePage.vue'
+import ResumeCreatePage from '@/pages/seeker/resume/ResumeCreatePage.vue';
+import VideoInterviewMainPage from '@/pages/video-interview/VideoInterviewMainPage.vue';
+import VideoInterviewRedirectPage from '@/pages/video-interview/VideoInterviewRedirectPage.vue';
+import VideoInterviewRoomPage from '@/pages/video-interview/VideoInterviewRoomPage.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 
 
@@ -39,9 +38,7 @@ const router = createRouter({
 
         { path: '/recruiter/interview-schedule/new', component: InterviewScheduleMainNew },
         { path: '/recruiter/interview-schedule/exp', component: InterviewScheduleMainExp },
-
-        { path: '/video-interview/test1', component: VideoInterViewTestPage },
-        { path: '/video-interview/test2', component: VideoInterViewTest2Page },
+        { path: '/recruiter/interview-evaluate', component: InterviewEvaluateMain },
         { path: '/video-interview/login', component: VideoInterviewRedirectPage },
         { path: '/video-interview/:announceUUID', component: VideoInterviewMainPage, },
         { path: '/video-interview/:announceUUID/:videoInterviewUUID', component: VideoInterviewRoomPage },
