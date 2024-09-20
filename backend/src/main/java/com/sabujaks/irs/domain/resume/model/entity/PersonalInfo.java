@@ -21,8 +21,8 @@ public class PersonalInfo {
     @Column(nullable = false, length = 20)
     private String name;
 
-    @Column(nullable = false)
-    private LocalDate birth;
+    @Column(nullable = false, length = 10)
+    private String birth;
 
     @Column(nullable = false, length = 20)
     private String gender; // 0 남성, 1 여성

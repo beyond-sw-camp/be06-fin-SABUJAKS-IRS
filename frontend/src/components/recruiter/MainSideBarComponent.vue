@@ -39,7 +39,13 @@ const goAndReload = (path) => {
         <li @click="goAndReload('/recruiter/interview-schedule/exp')">
           경력
         </li>
+        <li @click="goAndReload('/recruiter/interview-schedule/exp')">
+          일정조율
+        </li>
       </ul>
+      <li @click="goAndReload('/recruiter/interview-evaluate')">
+          면접 평가표
+      </li>
       <li> 마이페이지</li>
     </ul>
   </div>

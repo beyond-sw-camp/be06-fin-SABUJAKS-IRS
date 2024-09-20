@@ -13,6 +13,6 @@ public class LanguageCreateReq {
     private String languageName;
     private String conversationLevel;
     private String officialTest;
-    private Double score;
+    private String score;
     private String takingAt;
 }

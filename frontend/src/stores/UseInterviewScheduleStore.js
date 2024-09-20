@@ -40,14 +40,14 @@ export const UseInterviewScheduleStore = defineStore('reservation', {
             try{
                 const response = await axios.get(
                     // `api/interview-schedule/create`,
-                    `/api/api/interview-schedule/read-all`,
+                    `/api/api/interview-schedule/read-all/exp`,
                     // 쿠키 포함
                     // { withCredentials: true }
                 );
 
-                console.log(response);
+                console.log(response.data.result);
 
-                return true;
+                return response.data.result;
             } catch (error) {
                 console.error("Error: ", error);
 

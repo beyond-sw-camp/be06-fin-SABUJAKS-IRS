@@ -7,8 +7,4 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 import java.util.Optional;
 
-public interface VideoInterviewRepository extends JpaRepository<VideoInterview, Long> {
-    @Query("SELECT vi FROM VideoInterview vi WHERE vi.announceUUID = :announceUUID")
-    Optional<List<VideoInterview>> findAllByAnnounceUUID(String announceUUID);
-
-}
+public interface VideoInterviewRepository extends JpaRepository<VideoInterview, Long> {}

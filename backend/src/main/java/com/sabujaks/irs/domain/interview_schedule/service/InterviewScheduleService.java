@@ -6,6 +6,7 @@ import com.sabujaks.irs.domain.announce.model.entity.Announcement;
 import com.sabujaks.irs.domain.announce.repository.AnnounceRepository;
 import com.sabujaks.irs.domain.auth.model.entity.Seeker;
 import com.sabujaks.irs.domain.interview_schedule.model.entity.*;
+import com.sabujaks.irs.domain.auth.model.entity.Estimator;
 import com.sabujaks.irs.domain.auth.model.entity.Recruiter;
 import com.sabujaks.irs.domain.auth.repository.EstimatorRepository;
 import com.sabujaks.irs.domain.auth.repository.RecruiterRepository;
@@ -144,6 +145,7 @@ public class InterviewScheduleService {
                     estimator = Estimator.builder()
                             .role("ROLE_ESTIMATOR")
                             .email(estimatorEmail)
+                            .name("면접관")
                             // UUID로 저장하고, UUID를 이메일로 전송
                             .password(passwordEncoder.encode("qwer1234"))
                             .emailAuth(true)

@@ -9,5 +9,6 @@ import lombok.*;
 @Builder
 public class VideoInterviewTokenGetRes {
     private String sessionToken;
-    private String videoInterviewToken;
+    private String userEmail;
+    private String userType;
 }

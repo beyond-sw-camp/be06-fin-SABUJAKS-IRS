@@ -20,6 +20,9 @@ public class Portfolio {
     @Column(nullable = false, length = 20)
     private String portfolioDiv;
 
+    @Column(nullable = false, length = 10)
+    private String portfolioType;
+
     @Column(nullable = false)
     private String portfolioUrl;
 

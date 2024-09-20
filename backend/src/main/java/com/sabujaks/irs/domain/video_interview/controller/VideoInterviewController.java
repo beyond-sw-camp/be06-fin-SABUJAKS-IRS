@@ -11,8 +11,6 @@ import com.sabujaks.irs.global.common.responses.BaseResponse;
 import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
 import com.sabujaks.irs.global.security.CustomUserDetails;
 import io.openvidu.java.client.*;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -38,30 +36,18 @@ public class VideoInterviewController {
 
     @GetMapping("/search-all")
     public ResponseEntity<BaseResponse<VideoInterviewSearchRes>> searchAll(
+        @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @RequestParam String announceUUID) throws BaseException {
-        List<VideoInterviewSearchRes> response = videoInterviewService.searchAll(announceUUID);
+        List<VideoInterviewSearchRes> response = videoInterviewService.searchAll(announceUUID, customUserDetails);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.VIDEO_INTERVIEW_SEARCH_ALL_SUCCESS, response));
     }
 
-    @GetMapping("/video-interview-token")
-    public ResponseEntity createVideoInterviewToken(
-        @RequestParam String announceUUID,
-        @RequestParam String videoInterviewUUID,
-        @RequestParam String userType,
-        @RequestParam String email,
-        @RequestParam String duration,
-        @RequestParam String startDate,
-        HttpServletResponse response) throws BaseException {
-        Cookie cookie = videoInterviewService.createVideoInterviewToken(announceUUID,videoInterviewUUID, userType, email, startDate, duration );
-        response.addCookie(cookie);
-        return ResponseEntity.ok("화상 면접방 접근 토큰을 생성했습니다.!");
-    }
-
-    @PostMapping("/access-token")
-    public ResponseEntity<BaseResponse> getSessionToken(
+    @PostMapping("/get-session-token")
+    public ResponseEntity<BaseResponse> sessionToken(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @RequestBody VideoInterviewTokenGetReq dto) throws OpenViduJavaClientException, OpenViduHttpException, BaseException {
-        VideoInterviewTokenGetRes response = videoInterviewService.getSessionToken(dto, customUserDetails);
-        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.VIDEO_INTERVIEW_JOIN_SUCCESS, response.getSessionToken()));
+        VideoInterviewTokenGetRes response = videoInterviewService.sessionToken(dto, customUserDetails);
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.VIDEO_INTERVIEW_JOIN_SUCCESS, response));
     }
+
 }

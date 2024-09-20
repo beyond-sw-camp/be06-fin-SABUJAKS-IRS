@@ -1,5 +1,6 @@
 package com.sabujaks.irs.global.security.exception;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,7 +22,6 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        response.sendRedirect("로그인하러보내기");
         handlerExceptionResolver.resolveException(request, response, null, accessDeniedException);
     }
 }

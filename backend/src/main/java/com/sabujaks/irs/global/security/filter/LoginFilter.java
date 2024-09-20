@@ -55,6 +55,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         CustomUserDetails member = (CustomUserDetails)authResult.getPrincipal();
         Long idx = member.getIdx();
+        String name = member.getName();
         String email = member.getEmail();
         String role = member.getRole();
         Collection<? extends GrantedAuthority> authorities = authResult.getAuthorities();

@@ -4,11 +4,15 @@ import com.sabujaks.irs.domain.auth.model.entity.Recruiter;
 import com.sabujaks.irs.domain.auth.model.entity.Seeker;
 import com.sabujaks.irs.domain.auth.model.request.AuthSignupReq;
 import com.sabujaks.irs.domain.auth.model.response.AuthSignupRes;
+import com.sabujaks.irs.domain.auth.model.response.UserInfoGetRes;
 import com.sabujaks.irs.domain.auth.repository.CompanyVerifyRepository;
+import com.sabujaks.irs.domain.auth.repository.EstimatorRepository;
 import com.sabujaks.irs.domain.auth.repository.RecruiterRepository;
 import com.sabujaks.irs.domain.auth.repository.SeekerRepository;
+import com.sabujaks.irs.domain.auth.model.entity.Estimator;
 import com.sabujaks.irs.global.common.exception.BaseException;
 import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
+import com.sabujaks.irs.global.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,6 +28,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final RecruiterRepository recruiterRepository;
     private final SeekerRepository seekerRepository;
+    private final EstimatorRepository estimatorRepository;
     private final CompanyVerifyRepository companyVerifyRepository;
     public AuthSignupRes signup(AuthSignupReq dto, String fileUrl) throws BaseException {
         if(Objects.equals(dto.getRole(), "ROLE_RECRUITER")){
@@ -105,5 +110,35 @@ public class AuthService {
             throw new BaseException(BaseResponseMessage.EMAIL_VERIFY_FAIL_INVALID_ROLE);
         }
         return true;
+    }
+
+    public UserInfoGetRes userInfo(CustomUserDetails customUserDetails) throws BaseException {
+        if(Objects.equals(customUserDetails.getRole(), "ROLE_SEEKER")){
+            Seeker seeker = seekerRepository.findBySeekerEmail(customUserDetails.getEmail())
+            .orElseThrow(() -> new BaseException(BaseResponseMessage.MEMBER_SEARCH_USER_INFO_FAIL));
+            return UserInfoGetRes.builder()
+                    .name(seeker.getName())
+                    .email(seeker.getEmail())
+                    .role(seeker.getRole())
+                    .build();
+        } else if (Objects.equals(customUserDetails.getRole(), "ROLE_ESTIMATOR")) {
+            Estimator estimator = estimatorRepository.findByEstimatorEmail(customUserDetails.getEmail())
+            .orElseThrow(() -> new BaseException(BaseResponseMessage.MEMBER_SEARCH_USER_INFO_FAIL));
+            return UserInfoGetRes.builder()
+                    .name(estimator.getName())
+                    .email(estimator.getEmail())
+                    .role(estimator.getRole())
+                    .build();
+        } else if(Objects.equals(customUserDetails.getRole(), "ROLE_RECRUITER")){
+            Seeker seeker = seekerRepository.findBySeekerIdx(customUserDetails.getIdx())
+            .orElseThrow(() -> new BaseException(BaseResponseMessage.MEMBER_SEARCH_USER_INFO_FAIL));
+            return UserInfoGetRes.builder()
+                    .name(seeker.getName())
+                    .email(seeker.getEmail())
+                    .role(seeker.getRole())
+                    .build();
+        } else {
+            throw  new BaseException(BaseResponseMessage.MEMBER_SEARCH_USER_INFO_FAIL);
+        }
     }
 }
