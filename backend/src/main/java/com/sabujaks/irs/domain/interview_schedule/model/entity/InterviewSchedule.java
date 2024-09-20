@@ -51,6 +51,9 @@ public class InterviewSchedule {
     @OneToMany(mappedBy = "interviewSchedule")
     private List<InterviewParticipate> interviewParticipateList;
 
+    @OneToMany(mappedBy = "interviewSchedule")
+    private List<ReSchedule> reScheduleList;
+  
     @OneToMany(mappedBy = "interviewSchedule", fetch = FetchType.LAZY)
     private List<InterviewEvaluate> interviewEvaluateList;
 }
