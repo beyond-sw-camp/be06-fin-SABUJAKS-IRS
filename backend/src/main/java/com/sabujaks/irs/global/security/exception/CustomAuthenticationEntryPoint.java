@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.expression.ExpressionException;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -33,7 +34,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         Exception exception = (Exception) request.getAttribute("exception");
         if(exception instanceof ExpiredJwtException){
             handlerExceptionResolver.resolveException(request, response, null, exception);
-        } else {
+        }  else {
             handlerExceptionResolver.resolveException(request, response, null, authenticationException);
         }
 
