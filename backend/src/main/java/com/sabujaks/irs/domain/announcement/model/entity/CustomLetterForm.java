@@ -1,4 +1,4 @@
-package com.sabujaks.irs.domain.announce.model.entity;
+package com.sabujaks.irs.domain.announcement.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,13 +9,15 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CustomForm { //지원서 맞춤 양식
+public class CustomLetterForm { //자기소개서 맞춤 양식
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
-    @Column(nullable = false, length = 20)
-    private String code; // 맞춤 양식 코드
+    @Column(nullable = false)
+    private String title; // 자기소개서 문항
+
+    private Integer chatLimit; // 글자수
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "announcement_idx")

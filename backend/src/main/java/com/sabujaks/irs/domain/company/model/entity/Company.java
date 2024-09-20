@@ -1,6 +1,5 @@
 package com.sabujaks.irs.domain.company.model.entity;
 
-import com.sabujaks.irs.domain.announce.model.entity.CustomForm;
 import com.sabujaks.irs.domain.auth.model.entity.Recruiter;
 import jakarta.persistence.*;
 import lombok.*;
@@ -55,6 +54,9 @@ public class Company {
 
     @OneToOne(fetch = FetchType.LAZY)
     private Recruiter recruiter; // 채용담당자 테이블과 1:1
+
+    @OneToMany(mappedBy = "company" ,fetch = FetchType.LAZY)
+    private List<CompanyImg> companyImgList = new ArrayList<>(); // 기업이미지 테이블과 관계
 
     @OneToMany(mappedBy = "company" ,fetch = FetchType.LAZY)
     private List<CompanyBenefits> companyBenefitsList = new ArrayList<>(); // 복리후생 테이블과 관계

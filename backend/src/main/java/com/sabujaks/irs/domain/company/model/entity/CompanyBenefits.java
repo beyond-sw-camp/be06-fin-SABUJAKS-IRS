@@ -1,6 +1,5 @@
 package com.sabujaks.irs.domain.company.model.entity;
 
-import com.sabujaks.irs.domain.announce.model.entity.Announcement;
 import jakarta.persistence.*;
 import lombok.*;
 

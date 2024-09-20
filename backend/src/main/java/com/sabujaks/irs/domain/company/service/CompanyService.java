@@ -1,6 +1,5 @@
 package com.sabujaks.irs.domain.company.service;
 
-import com.sabujaks.irs.domain.announce.model.entity.CustomLetterForm;
 import com.sabujaks.irs.domain.auth.model.entity.CompanyVerify;
 import com.sabujaks.irs.domain.auth.model.entity.Recruiter;
 import com.sabujaks.irs.domain.auth.repository.CompanyVerifyRepository;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
