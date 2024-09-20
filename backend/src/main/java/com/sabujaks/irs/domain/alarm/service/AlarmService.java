@@ -4,6 +4,7 @@ import com.sabujaks.irs.domain.alarm.model.entity.Alarm;
 import com.sabujaks.irs.domain.alarm.model.request.AlarmReq;
 import com.sabujaks.irs.domain.alarm.model.response.AlarmRes;
 import com.sabujaks.irs.domain.alarm.repository.AlarmRepository;
+import com.sabujaks.irs.domain.interview_schedule.repository.InterviewScheduleRepository;
 import com.sabujaks.irs.global.common.exception.BaseException;
 import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.List;
 public class AlarmService {
 
     private final AlarmRepository alarmRepository;
+    private final InterviewScheduleRepository interviewScheduleRepository;
 
     public AlarmRes create(AlarmReq dto) throws BaseException {
         Alarm alarm = alarmRepository.save(Alarm.builder()
@@ -49,6 +51,7 @@ public class AlarmService {
                     .message(alarm.getMessage())
                     .url(alarm.getUrl())
                     .createdAt(alarm.getCreatedAt())
+                    .interviewScheduleIdx(alarm.getInterviewSchedule().getIdx())
                     .build());
         }
 

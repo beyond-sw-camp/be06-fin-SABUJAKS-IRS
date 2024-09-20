@@ -49,4 +49,7 @@ public class InterviewSchedule {
 
     @OneToMany(mappedBy = "interviewSchedule")
     private List<InterviewParticipate> interviewParticipateList;
+
+    @OneToMany(mappedBy = "interviewSchedule")
+    private List<ReSchedule> reScheduleList;
 }

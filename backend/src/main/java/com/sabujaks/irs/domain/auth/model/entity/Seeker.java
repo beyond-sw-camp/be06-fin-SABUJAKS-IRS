@@ -3,6 +3,7 @@ package com.sabujaks.irs.domain.auth.model.entity;
 import com.sabujaks.irs.domain.alarm.model.entity.Alarm;
 import com.sabujaks.irs.domain.interview_schedule.model.entity.InterviewParticipate;
 import com.sabujaks.irs.domain.interview_schedule.model.entity.InterviewSchedule;
+import com.sabujaks.irs.domain.interview_schedule.model.entity.ReSchedule;
 import com.sabujaks.irs.domain.resume.model.entity.Resume;
 import com.sabujaks.irs.domain.resume.model.entity.ResumeInfo;
 import jakarta.persistence.*;
@@ -62,4 +63,8 @@ public class Seeker {
     // 알람 테이블과 1:n
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "seeker")
     private List<Alarm> alarmList;
+
+    // 면접 일정 조율 테이블과 1:n
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "seeker")
+    private List<ReSchedule> reScheduleList;
 }
