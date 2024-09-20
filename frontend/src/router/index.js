@@ -24,6 +24,7 @@ import InterviewScheduleMainExp from "@/pages/recruiter/interview-schedule/Inter
 import VideoInterViewTestPage from '@/pages/recruiter/video-interview/VideoInterViewTest1Page.vue';
 import VideoInterViewRoomCreatePage from '@/pages/recruiter/video-interview/VideoInterViewTest2Page.vue';
 import InterviewScheduleMain from '@/components/recruiter/InterviewScheduleMain.vue';
+import ReScheduleMainExp from "@/pages/recruiter/interview-schedule/ReScheduleMainExp.vue";
 
 
 const router = createRouter({
@@ -44,6 +45,7 @@ const router = createRouter({
         { path: '/recruiter/video-interview/estimator', component: VideoInterviewEstimatorPage },
         { path: '/recruiter/interview-schedule/new', component: InterviewScheduleMainNew },
         { path: '/recruiter/interview-schedule/exp', component: InterviewScheduleMainExp },
+        { path: '/recruiter/interview-schedule/reschedule', component: ReScheduleMainExp },
         { path: '/recruiter/video-interview/test1', component: VideoInterViewTestPage},
         { path: '/recruiter/video-interview/test2', component: VideoInterViewRoomCreatePage},
         { path: '/recruiter/interview-schedule', component: InterviewScheduleMain },
