@@ -18,6 +18,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -46,12 +47,11 @@ public class JwtFilter extends OncePerRequestFilter {
                 }
             }
         }
-        if (authorization == null) {
-            log.info("인증 쿠키 없음");
-            filterChain.doFilter(request, response);
-            return;
-        }
         try {
+            if (authorization == null) {
+                log.info("인증 쿠키 없음");
+                filterChain.doFilter(request, response);
+            }
             String token = authorization;
             Long idx = jwtUtil.getIdx(token);
             String email = jwtUtil.getUsername(token);
@@ -91,8 +91,7 @@ public class JwtFilter extends OncePerRequestFilter {
             Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, grantedAuthorities);
             SecurityContextHolder.getContext().setAuthentication(authToken);
 
-        } catch (ExpiredJwtException | UnsupportedJwtException | IllegalArgumentException e) {
-            log.error("JWT 처리 중 예외 발생: {}", e.getMessage());
+        } catch (ExpiredJwtException | UnsupportedJwtException | IllegalArgumentException | UsernameNotFoundException e) {
             request.setAttribute("exception", e);
         }
         filterChain.doFilter(request, response);

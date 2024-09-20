@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.rememberme.InvalidCookieException;
@@ -52,7 +53,9 @@ public class GlobalExceptionHandler {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new BaseResponse(BaseResponseMessage.BAD_CREDENTIAL, e.getMessage()));
         } else if (e instanceof InternalAuthenticationServiceException) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new BaseResponse(BaseResponseMessage.USER_NOT_FOUND, e.getMessage()));
-        } else {
+        } else if (e instanceof InsufficientAuthenticationException) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new BaseResponse(BaseResponseMessage.USER_NOT_FOUND, e.getMessage()));
+        }else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new BaseResponse(BaseResponseMessage.INVALID_TOKEN, e.getMessage()));
         }
     }
