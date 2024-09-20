@@ -82,20 +82,22 @@
                 <span class="close" @click="closeModal">&times;</span>
                 <h2>일정 조율</h2>
                 <div class="col-12 modal-section">
-                    <div class="form-group">
-                      <div class="col-12">
-                        <label for="interview-date" class="subtitle mb-30">가능한 날짜 범위 선택<span class="required">*</span></label>
-                        <div class="col-12 row">
-                          <input type="date" id="interview-date" v-model="interviewDate">
-                          <p class="margin-auto"> ~ </p>
-                          <input type="date" id="interview-date" v-model="interviewDate">
-                        </div>
-                      </div>
+                  <div class="form-group">
+                    <div class="col-12">
+                      <label for="start-date" class="subtitle mb-30">시작 날짜<span class="required">*</span></label>
+                      <input type="date" id="start-date" v-model="selectedDates[0]">
                     </div>
                   </div>
-              <div class="col-12">
-                <button class="submit-button" @click="submitSchedule">등록</button>
-              </div>
+                  <div class="form-group">
+                    <div class="col-12">
+                      <label for="end-date" class="subtitle mb-30">종료 날짜<span class="required">*</span></label>
+                      <input type="date" id="end-date" v-model="selectedDates[1]">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <button class="submit-button" @click="submitSchedule">등록</button>
+                </div>
               </div>
             </div>
           </div>
@@ -111,21 +113,27 @@ import {ref, onMounted} from 'vue';
 import SeekerHeaderComponent from "@/components/seeker/SeekerHeaderComponent.vue";
 import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.vue";
 import {UseMypageNotificationStore} from "@/stores/UseMypageNotificationStore";
+import {UseInterviewScheduleStore} from "@/stores/UseInterviewScheduleStore";
 
 const mypageNotificationStore = UseMypageNotificationStore();
+const interviewScheduleStore = UseInterviewScheduleStore();
 const alarms = ref([]);
 const isModalOpen = ref(false);
-const selectedDate = ref(null);
+const selectedDates = ref([null, null]);  // 두 개의 날짜를 저장
 const selectedAlarm = ref(null);
 
 // 알림 리스트 불러오기
 onMounted(async () => {
   alarms.value = await mypageNotificationStore.readAllAlarm();
+
+  // 최신순으로 정렬 (createdAt을 기준으로 내림차순)
+  alarms.value.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 });
 
 // 모달 열기
 const openScheduleModal = (alarm) => {
   selectedAlarm.value = alarm;
+  console.log(selectedAlarm.value);
   isModalOpen.value = true;
 };
 
@@ -133,13 +141,36 @@ const openScheduleModal = (alarm) => {
 const closeModal = () => {
   isModalOpen.value = false;
   selectedAlarm.value = null;
+  selectedDates.value = [null, null];  // 모달 닫을 때 날짜 초기화
 };
 
 // 면접 일정 제출
-const submitSchedule = () => {
-  console.log("면접 날짜:", selectedDate.value, "선택된 알람:", selectedAlarm.value);
-  closeModal();
+const submitSchedule = async () => {
+  if (selectedDates.value[0] && selectedDates.value[1] && selectedAlarm.value) {
+    // selectedAlarm.value에서 interviewScheduleIdx만 추출
+    const interviewScheduleIdx = selectedAlarm.value.interviewScheduleIdx;
+
+    const scheduleData = {
+      interviewStart: selectedDates.value[0],
+      interviewEnd: selectedDates.value[1],
+      interviewScheduleIdx: interviewScheduleIdx  // 인터뷰 일정 ID만 포함
+    };
+
+    // createReSchedule 메서드 호출 (적절한 API 호출로 변경)
+    const result = await interviewScheduleStore.createReSchedule(scheduleData);
+
+    if (result) {
+      alert("일정 조율 요청이 완료되었습니다.");
+      closeModal();
+    } else {
+      alert("일정 조율 요청에 실패했습니다. 관리자에게 문의하세요.");
+    }
+
+  } else {
+    alert('날짜와 알람 정보를 모두 입력해 주세요.');
+  }
 };
+
 
 // 날짜 포맷팅 함수
 const formatDate = (dateString) => {
@@ -408,6 +439,15 @@ input[type="text"] {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+}
+
+.main_div {
+  width: 100%;
+  background-color: #f4f4f4; /* 배경색 설정 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
 }
 
 </style>

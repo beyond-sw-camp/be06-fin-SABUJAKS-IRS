@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import {ref} from 'vue';
 import MainHeaderComponent from '../../../components/recruiter/MainHeaderComponent.vue';
 import MainSideBarComponent from '../../../components/recruiter/MainSideBarComponent.vue';
 import '@/assets/css/grid.css';
@@ -43,8 +43,6 @@ const handleCheckboxChange = (type) => {
     interviewType.value = type; // 새 타입을 선택
   }
 };
-
-
 
 const interviewScheduleLists = (announceIdx) => {
   isInterviewScheduleList.value = true;
@@ -131,15 +129,30 @@ const submitForm = () => {
   const selectedType = interviewType.value;
   const selectedTeamIdx = team.value;
 
-  alert(`
-    선택된 필터: ${selectedSpanValues}
-    면접관 이메일: ${participantEmails}
-    날짜: ${selectedDate}
-    방식: ${selectedType}
-    시작 시간: ${selectedStartTime}
-    종료 시간: ${selectedEndTime}
-    팀 배정: ${selectedTeamIdx}
-  `);
+  if (!selectedSpanValues.length) {
+    alert('면접자를 선택해주세요.');
+    return;
+  }
+  if (!participantEmails || participantEmails.length === 0) {
+    alert('면접관 이메일을 입력해주세요.');
+    return;
+  }
+  if (!selectedDate) {
+    alert('날짜를 선택해주세요.');
+    return;
+  }
+  if (!selectedType) {
+    alert('면접 방식을 선택해주세요.');
+    return;
+  }
+  if (!selectedTeamIdx) {
+    alert('팀을 배정해주세요.');
+    return;
+  }
+  if (!selectedStartTime || !selectedEndTime) {
+    alert('면접 시간을 입력해주세요.');
+    return;
+  }
 
   // 데이터 객체 생성
   const interviewData = {
@@ -153,12 +166,14 @@ const submitForm = () => {
     teamIdx: selectedTeamIdx,
   };
 
-  console.log("Selected Team: ", selectedTeamIdx);
-
   // Store의 createInterviewSchedule 함수 호출
   interviewScheduleStore.createInterviewSchedule(interviewData)
-      .then(() => {
-        alert('면접 일정이 성공적으로 등록되었습니다.');
+      .then((response) => {
+        if (response === true) { // Return 값이 true일 때만 실행
+          alert('면접 일정이 성공적으로 등록되었습니다.');
+        } else {
+          alert('면접 일정 등록에 실패했습니다.');
+        }
       })
       .catch((error) => {
         console.error('면접 일정 등록 중 오류 발생:', error);
@@ -195,7 +210,7 @@ const submitForm = () => {
             <div class="form-group col-12 row">
               <div class="col-11">
                 <label for="applicant">후보자 <span class="required">*</span></label>
-                <input type="text" id="applicant" placeholder="후보자를 추가해주세요." disabled>
+                <input type="text" id="applicant" placeholder="후보자를 추가해주세요." disabled required>
               </div>
               <div class="col-1 add-button-section">
                 <button class="add-button" @click="addEmail">+</button>
@@ -209,7 +224,7 @@ const submitForm = () => {
             <div class="form-group col-12 row">
               <div class="col-11">
                 <label for="participants">면접 참가자</label>
-                <input type="text" id="participants" placeholder="이메일을 입력해 주세요." v-model="participantEmail">
+                <input type="text" id="participants" placeholder="이메일을 입력해 주세요." v-model="participantEmail" required>
               </div>
               <div class="col-1 add-button-section">
                 <button class="add-email" @click="addParticipantEmail">+</button>
@@ -222,10 +237,10 @@ const submitForm = () => {
             </div>
             <div class="form-group">
               <div class="col-12">
-                <div class="form-group col-12 row">
+                <div class="form-group col-12 row mb-0">
                   <div class="form-group col-5">
                     <label for="interview-date" class="subtitle">날짜 <span class="required">*</span></label>
-                    <input type="date" id="interview-date" v-model="interviewDate">
+                    <input type="date" id="interview-date" v-model="interviewDate" required>
                   </div>
                   <div class="form-group col-5 ml-auto mb-0">
                     <label for="interview-type" class="subtitle">방식 <span class="required">*</span></label>
@@ -246,7 +261,7 @@ const submitForm = () => {
                 <div class="form-group col-12">
                   <div class="form-group">
                     <label for="end-time" class="subtitle">팀 <span class="required">*</span></label>
-                    <select class="time-select interview-calender" v-model="team">
+                    <select class="time-select interview-calender" v-model="team" required>
                       <option value="">팀을 선택하세요</option>
                       <option v-for="selectTeam in teamList" :key="selectTeam.idx" :value="selectTeam.idx">
                         {{ selectTeam.name }}
@@ -257,14 +272,14 @@ const submitForm = () => {
                 <div class="col-12 row">
                   <div class="form-group col-5">
                     <label for="start-time" class="subtitle">시작시간 <span class="required">*</span></label>
-                    <select class="time-select interview-calender" v-model="startTime">
+                    <select class="time-select interview-calender" v-model="startTime" required>
                       <option value="">시간을 선택하세요</option>
                       <option v-for="time in timeOptions" :key="time" :value="time">{{ time }}</option>
                     </select>
                   </div>
                   <div class="form-group col-5 ml-auto">
                     <label for="end-time" class="subtitle">종료시간 <span class="required">*</span></label>
-                    <select class="time-select interview-calender" v-model="endTime">
+                    <select class="time-select interview-calender" v-model="endTime" required>
                       <option value="">시간을 선택하세요</option>
                       <option v-for="time in timeOptions" :key="time" :value="time">{{ time }}</option>
                     </select>
@@ -307,79 +322,6 @@ const submitForm = () => {
   </div>
 </template>
 
-<!--<script>-->
-<!--import {defineComponent} from 'vue'-->
-<!--import FullCalendar from '@fullcalendar/vue3'-->
-<!--import dayGridPlugin from '@fullcalendar/daygrid'-->
-<!--import timeGridPlugin from '@fullcalendar/timegrid'-->
-<!--import interactionPlugin from '@fullcalendar/interaction'-->
-<!--import {createEventId} from './event-utils'-->
-
-<!--export default defineComponent({-->
-<!--  components: {-->
-<!--    FullCalendar,-->
-<!--  },-->
-<!--  data() {-->
-<!--    return {-->
-<!--      calendarOptions: {-->
-<!--        plugins: [-->
-<!--          dayGridPlugin,-->
-<!--          timeGridPlugin,-->
-<!--          interactionPlugin // needed for dateClick-->
-<!--        ],-->
-<!--        locale: 'ko',-->
-<!--        headerToolbar: {-->
-<!--          left: 'prev,next today',-->
-<!--          center: 'title',-->
-<!--          right: 'dayGridMonth,dayGridWeek,dayGridDay'-->
-<!--        },-->
-<!--        events: [],-->
-<!--        initialView: 'dayGridMonth',-->
-<!--        // initialEvents: INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed-->
-<!--        editable: true,-->
-<!--        selectable: true,-->
-<!--        selectMirror: true,-->
-<!--        dayMaxEvents: true,-->
-<!--        weekends: true,-->
-<!--        select: this.handleDateSelect,-->
-<!--        eventClick: this.handleEventClick,-->
-<!--        eventsSet: this.handleEvents-->
-<!--        /* you can update a remote database when these fire:-->
-<!--        eventAdd:-->
-<!--        eventChange:-->
-<!--        eventRemove:-->
-<!--        */-->
-<!--      },-->
-<!--      currentEvents: [],-->
-<!--    }-->
-<!--  },-->
-<!--  methods: {-->
-<!--    handleWeekendsToggle() {-->
-<!--      this.calendarOptions.weekends = !this.calendarOptions.weekends // update a property-->
-<!--    },-->
-<!--    handleDateSelect(selectInfo) {-->
-<!--      let title = prompt('새로운 일정을 등록해주세요.')-->
-<!--      let calendarApi = selectInfo.view.calendar-->
-
-<!--      calendarApi.unselect() // clear date selection-->
-
-<!--      if (title) {-->
-<!--        calendarApi.addEvent({-->
-<!--          id: createEventId(),-->
-<!--          title,-->
-<!--          start: selectInfo.startStr,-->
-<!--          end: selectInfo.endStr,-->
-<!--          allDay: selectInfo.allDay-->
-<!--        })-->
-<!--      }-->
-<!--    },-->
-
-<!--    handleEvents(events) {-->
-<!--      this.currentEvents = events-->
-<!--    },-->
-<!--  }-->
-<!--})-->
-<!--</script>-->
 <script>
 import { defineComponent } from 'vue'
 import FullCalendar from '@fullcalendar/vue3'

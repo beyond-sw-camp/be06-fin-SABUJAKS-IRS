@@ -65,6 +65,8 @@ public class SecurityConfig {
                         auth
                                 .requestMatchers("/api/test/ex01").hasAuthority("ROLE_SEEKER")
                                 .requestMatchers("/api/video-interview/create").hasAuthority("ROLE_RECRUITER")
+                                .requestMatchers("/api/interview-evaluate/create-form").hasAuthority("ROLE_RECRUITER")
+                                .requestMatchers("/api/resume/**").hasAuthority("ROLE_RECRUITER")
                                 .requestMatchers("/api/video-interview/search-all").access(this::hasVideoInterviewAuthorities)
                                 .requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/interview-schedule/**").permitAll()

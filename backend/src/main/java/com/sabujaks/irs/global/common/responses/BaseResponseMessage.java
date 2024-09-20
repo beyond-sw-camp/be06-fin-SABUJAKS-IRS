@@ -37,7 +37,13 @@ public enum BaseResponseMessage {
     COMPANY_VERIFY_FAIL_INVALID_REQUEST(false, 1202, "유효하지 않은 요청입니다."),
 
     // INTERVIEW_SCHEDULE 면접 일정 1300
-    INTERVIEW_SCHEDULE_CREATE_SUCCESS(true, 1300, "면접 일정 등록에 성공했습니다."), // VIDEO_INTERVIEW 화상 면접 1400
+    INTERVIEW_SCHEDULE_CREATE_SUCCESS(true, 1300, "면접 일정 등록에 성공했습니다."),
+    RESCHEDULE_CREATE_SUCCESS(true, 1301, "면접 조율 신청 생성 완료"),
+    INTERVIEW_SCHEDULE_NOT_FOUND(false, 1302, "해당 면접을 찾을 수 없습니다."),
+    RESCHEDULE_NOT_FOUND(false, 1303, "면접 조율 내역을 찾을 수 없습니다."),
+    RESCHEDULE_SEARCH_ALL_SUCCESS(true, 1304, "면접 조율 내역 조회에 성공했습니다."),
+
+    // VIDEO_INTERVIEW 화상 면접 1400
     VIDEO_INTERVIEW_CREATE_SUCCESS(true, 1400, "화상 면접 방 생성에 성공했습니다."),
     VIDEO_INTERVIEW_SEARCH_ALL_SUCCESS(true, 1401, "화상 면접방 목록 조회에 성공했습니다."),
     VIDEO_INTERVIEW_SEARCH_ALL_FAIL(false, 1402, "화상 면접방 목록 조회에 실패했습니다."),
@@ -75,7 +81,11 @@ public enum BaseResponseMessage {
     // ALARM 5000~5999
     ALARM_REGISTER_SUCCESS(true, 5000, "알람 생성이 완료되었습니다."),
     ALARM_SEARCH_SUCCESS(true, 5001, "알람 조회에 성공했습니다."),
-    ALARM_SEARCH_FAIL(false, 5002, "알람 조회에 실패했습니다.");
+    ALARM_SEARCH_FAIL(false, 5002, "알람 조회에 실패했습니다."),
+
+    // 인터뷰 평가표 6000~6999
+    INTERVIEW_EVALUATE_CREATE_FORM_SUCCESS(true, 6000, "인터뷰 평가표 생성에 성공했습니다."),
+    INTERVIEW_EVALUATE_CREATE_FORM_FAIL_IS_EXIST(false, 6001, "인터뷰 평가표가 이미 존재합니다.");
 
     private Boolean success;
     private Integer code;

@@ -1,5 +1,7 @@
 package com.sabujaks.irs.domain.alarm.model.response;
 
+import com.sabujaks.irs.domain.auth.model.entity.Seeker;
+import com.sabujaks.irs.domain.interview_schedule.model.entity.InterviewSchedule;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,4 +17,5 @@ public class AlarmRes {
     private String message;
     private String url;
     private LocalDateTime createdAt;
+    private Long interviewScheduleIdx;
 }

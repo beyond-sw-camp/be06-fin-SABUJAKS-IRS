@@ -147,7 +147,5 @@ public class CustomUserDetails implements UserDetails {
         return emailAuth;
     }
 
-    public Collection<? extends GrantedAuthority> getVideoInterviewAuthorities() {
-        return authorities;
-    }
+    public Collection<? extends GrantedAuthority> getVideoInterviewAuthorities() { return authorities;}
 }

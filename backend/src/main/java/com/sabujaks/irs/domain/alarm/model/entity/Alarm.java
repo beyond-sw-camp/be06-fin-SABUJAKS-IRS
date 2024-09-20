@@ -1,6 +1,7 @@
 package com.sabujaks.irs.domain.alarm.model.entity;
 
 import com.sabujaks.irs.domain.auth.model.entity.Seeker;
+import com.sabujaks.irs.domain.interview_schedule.model.entity.InterviewSchedule;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,13 +34,16 @@ public class Alarm {
     @Column(nullable = false)
     private String url;
 
-    @CreatedDate
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
     @ManyToOne
     @JoinColumn(name = "seeker_idx")
     private Seeker seeker;
 
+    @OneToOne
+    @JoinColumn(name = "interview_schedule_idx")
+    private InterviewSchedule interviewSchedule;
 
     public void setStatus(Boolean status) {
         this.status = status;

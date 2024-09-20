@@ -7,26 +7,6 @@ export const UseMypageNotificationStore = defineStore('notification', {
         {alarmList: [{ idx: 0, createdAt: "", time: "", section: "", floor: 0}]}
     ),
     actions: {
-        // 면접 일정 생성
-        async createInterviewSchedule(alarmData) {
-            try{
-                const response = await axios.post(
-                    // `api/interview-schedule/create`,
-                    `/api/api/alarm/create`,
-                    alarmData,
-                    // 쿠키 포함
-                    // { withCredentials: true }
-                );
-
-                console.log(response.data.result);
-                return true;
-            } catch (error) {
-                console.error("Error: ", error);
-
-                return false;
-            }
-        },
-
         // 면접 일정 전체 불러오기
         async readAllAlarm() {
             try{

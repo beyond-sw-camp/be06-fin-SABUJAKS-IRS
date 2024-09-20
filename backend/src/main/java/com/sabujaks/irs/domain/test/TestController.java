@@ -25,6 +25,10 @@ public class TestController {
     @GetMapping("/ex02")
     public ResponseEntity<Collection<? extends GrantedAuthority>> ex02(@AuthenticationPrincipal CustomUserDetails userDetails){
         return ResponseEntity.ok(userDetails.getVideoInterviewAuthorities());
+    }
 
+    @GetMapping("/ex03")
+    public ResponseEntity<String> ex03(@AuthenticationPrincipal CustomUserDetails userDetails){
+        return ResponseEntity.ok("");
     }
 }

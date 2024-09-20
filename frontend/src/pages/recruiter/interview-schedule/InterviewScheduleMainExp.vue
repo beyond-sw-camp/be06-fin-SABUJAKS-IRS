@@ -142,7 +142,7 @@ const submitForm = () => {
   // 데이터 객체 생성
   const interviewData = {
     seekerList: selectedSpanValues,
-    interviewerList: participantEmails,
+    estimatorList: participantEmails,
     isOnline: selectedType,
     interviewDate: selectedDate,
     interviewStart: selectedStartTime,

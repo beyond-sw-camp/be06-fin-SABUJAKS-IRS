@@ -54,6 +54,64 @@ export const UseInterviewScheduleStore = defineStore('reservation', {
                 return false;
             }
         },
+
+        async getAvailableTimes(requestData) {
+            try{
+                const response = await axios.post(
+                    `/api/api/interview-schedule/available-times`,
+                    requestData
+                );
+
+                console.log(response.data.result);
+
+                return response.data.result;
+            } catch (error) {
+                console.error("Error: ", error);
+                return false;
+            }
+        },
+
+        async createReSchedule(scheduleData) {
+            console.log(scheduleData);
+            try{
+                const response = await axios.post(
+                    `/api/api/interview-schedule/create/re-schedule`,
+                    scheduleData
+                );
+
+                console.log(response.data.result);
+
+                return response.data.result;
+            } catch (error) {
+                console.error("Error: ", error);
+                return false;
+            }
+        },
+
+        async readAllReSchedule(announceIdx) {
+            console.log(announceIdx);
+            announceIdx=1;
+            try{
+                const reScheduleResponse = await axios.get(
+                    `/api/api/interview-schedule/read-all/re-schedule?announcementIdx=${announceIdx}`,
+                    {withCredentials: true}
+                );
+
+                console.log(reScheduleResponse.data.result);
+
+                // const interviewSchedueResponse = await axios.get(
+                //     `${backend}/interview-schedule/read?`
+                // );
+
+
+
+
+                return reScheduleResponse.data.result;
+            } catch (error) {
+                console.error("Error: ", error);
+                return false;
+            }
+        }
         // async getReservationDetail() {
         //     const response = await axios.get(
         //         `api/reservation/reservation-list?`,{ // 쿠키 포함

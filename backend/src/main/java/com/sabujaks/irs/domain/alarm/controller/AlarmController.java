@@ -45,7 +45,7 @@ public class AlarmController {
 
         System.out.println(("????"));
         // 예: alarmService.updateStatusToRead(idx);
-        Boolean response = alarmService.updateStatus(idx);
+        Boolean response = alarmService.updateStatus (idx);
 
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.ALARM_SEARCH_SUCCESS, response));
     }
