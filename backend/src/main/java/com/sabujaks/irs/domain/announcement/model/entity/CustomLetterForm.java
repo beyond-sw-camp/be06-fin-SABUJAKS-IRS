@@ -1,4 +1,4 @@
-package com.sabujaks.irs.domain.announce.model.entity;
+package com.sabujaks.irs.domain.announcement.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

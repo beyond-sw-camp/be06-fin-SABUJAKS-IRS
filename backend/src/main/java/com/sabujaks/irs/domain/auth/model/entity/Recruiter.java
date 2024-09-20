@@ -1,7 +1,6 @@
 package com.sabujaks.irs.domain.auth.model.entity;
 
-import com.sabujaks.irs.domain.announce.model.entity.Announcement;
-import com.sabujaks.irs.domain.announce.model.entity.CustomForm;
+import com.sabujaks.irs.domain.announcement.model.entity.Announcement;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;

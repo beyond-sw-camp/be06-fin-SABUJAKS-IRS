@@ -7,6 +7,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CreateCompanyRes {
+public class CompanyCreateRes {
     private Long companyIdx;
 }

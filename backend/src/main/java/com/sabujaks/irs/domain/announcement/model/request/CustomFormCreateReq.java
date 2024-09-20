@@ -1,4 +1,4 @@
-package com.sabujaks.irs.domain.announce.model.request;
+package com.sabujaks.irs.domain.announcement.model.request;
 
 import lombok.*;
 
@@ -9,7 +9,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CustomFormReq {
+public class CustomFormCreateReq {
     private Long announceIdx;
     private List<String> code; // 맞춤 양식 코드 리스트
     // 예시)"code": ["resume_001", "resume_002", "resume_003"]

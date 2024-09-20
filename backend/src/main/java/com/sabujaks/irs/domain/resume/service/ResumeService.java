@@ -1,7 +1,7 @@
 package com.sabujaks.irs.domain.resume.service;
 
-import com.sabujaks.irs.domain.announce.model.entity.Announcement;
-import com.sabujaks.irs.domain.announce.repository.AnnounceRepository;
+import com.sabujaks.irs.domain.announcement.model.entity.Announcement;
+import com.sabujaks.irs.domain.announcement.repository.AnnouncementRepository;
 import com.sabujaks.irs.domain.auth.model.entity.Seeker;
 import com.sabujaks.irs.domain.auth.repository.SeekerRepository;
 import com.sabujaks.irs.domain.resume.model.entity.*;
@@ -34,7 +34,7 @@ public class ResumeService {
     private final CustomLetterRepository customLetterRepository;
     private final PortfolioRepository portfolioRepository;
     private final CustomResumeInfoRepository customResumeInfoRepository;
-    private final AnnounceRepository announceRepository;
+    private final AnnouncementRepository announcementRepository;
     private final ResumeRepository resumeRepository;
 
 
@@ -440,7 +440,7 @@ public class ResumeService {
 
 
             // 공고 idx로 공고 조회
-            Optional<Announcement> resultAnnouncement = announceRepository.findByAnnounceIdx(dto.getAnnouncementIdx());
+            Optional<Announcement> resultAnnouncement = announcementRepository.findByAnnounceIdx(dto.getAnnouncementIdx());
             if(resultAnnouncement.isPresent()) {
                 // 공고지원서 테이블에 저장
                 Resume resume = Resume.builder()

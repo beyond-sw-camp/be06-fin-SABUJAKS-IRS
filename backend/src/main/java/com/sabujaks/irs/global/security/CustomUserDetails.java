@@ -1,6 +1,6 @@
 package com.sabujaks.irs.global.security;
 
-import com.sabujaks.irs.domain.announce.model.entity.Announcement;
+import com.sabujaks.irs.domain.announcement.model.entity.Announcement;
 import com.sabujaks.irs.domain.auth.model.entity.Estimator;
 import com.sabujaks.irs.domain.auth.model.entity.Recruiter;
 import com.sabujaks.irs.domain.auth.model.entity.Seeker;

@@ -2,8 +2,8 @@ package com.sabujaks.irs.domain.interview_schedule.service;
 
 import com.sabujaks.irs.domain.alarm.model.entity.Alarm;
 import com.sabujaks.irs.domain.alarm.repository.AlarmRepository;
-import com.sabujaks.irs.domain.announce.model.entity.Announcement;
-import com.sabujaks.irs.domain.announce.repository.AnnounceRepository;
+import com.sabujaks.irs.domain.announcement.model.entity.Announcement;
+import com.sabujaks.irs.domain.announcement.repository.AnnouncementRepository;
 import com.sabujaks.irs.domain.auth.model.entity.Seeker;
 import com.sabujaks.irs.domain.interview_schedule.model.entity.*;
 import com.sabujaks.irs.domain.auth.model.entity.Estimator;
@@ -20,9 +20,7 @@ import com.sabujaks.irs.domain.interview_schedule.repository.InterviewScheduleRe
 import com.sabujaks.irs.domain.interview_schedule.repository.ReScheduleRepository;
 import com.sabujaks.irs.domain.interview_schedule.repository.TeamRepository;
 import com.sabujaks.irs.global.common.exception.BaseException;
-import com.sabujaks.irs.global.common.responses.BaseResponse;
 import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
-import com.sabujaks.irs.global.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -38,7 +36,7 @@ public class InterviewScheduleService {
     private final SeekerRepository seekerRepository;
     private final InterviewParticipateRepository interviewParticipateRepository;
     private final EstimatorRepository estimatorRepository;
-    private final AnnounceRepository announceRepository;
+    private final AnnouncementRepository announcementRepository;
     private final TeamRepository teamRepository;
     private final RecruiterRepository recruiterRepository;
     private final AlarmRepository alarmRepository;
@@ -113,7 +111,7 @@ public class InterviewScheduleService {
         String uuid = UUID.randomUUID().toString();
         Recruiter recruiter = recruiterRepository.findByRecruiterIdx(1L)
                 .orElseThrow(() -> new BaseException(BaseResponseMessage.MEMBER_NOT_FOUND));
-        Announcement announcement = announceRepository.findByAnnounceIdx(1L)
+        Announcement announcement = announcementRepository.findByAnnounceIdx(1L)
                 .orElseThrow(() -> new BaseException(BaseResponseMessage.ANNOUNCEMENT_SEARCH_FAIL));
         Team team = teamRepository.findByIdx(dto.getTeamIdx())
                 .orElseThrow(() -> new BaseException(BaseResponseMessage.TEAM_NOT_FOUND));

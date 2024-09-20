@@ -1,13 +1,9 @@
 package com.sabujaks.irs.domain.interview_evaluate.model.entity;
 
-import com.sabujaks.irs.domain.announce.model.entity.CustomForm;
 import com.sabujaks.irs.domain.auth.model.entity.Seeker;
 import com.sabujaks.irs.domain.interview_schedule.model.entity.InterviewSchedule;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
