@@ -1,4 +1,4 @@
-package com.sabujaks.irs.domain.announce.model.response;
+package com.sabujaks.irs.domain.announcement.model.response;
 
 import lombok.*;
 
@@ -9,7 +9,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CustomFormRes {
+public class CustomFormCreateRes {
     private List<Long> baseInfoIdxList; // 기준코드표의 지원서 맞춤 양식 idx 리스트
     private List<String> descriptionList; // 맞춤 양식 코드 설명 리스트
 

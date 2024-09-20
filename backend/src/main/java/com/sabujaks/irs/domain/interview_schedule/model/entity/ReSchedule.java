@@ -1,6 +1,5 @@
 package com.sabujaks.irs.domain.interview_schedule.model.entity;
 
-import com.sabujaks.irs.domain.announce.model.entity.Announcement;
 import com.sabujaks.irs.domain.auth.model.entity.Seeker;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

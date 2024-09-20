@@ -1,4 +1,4 @@
-package com.sabujaks.irs.domain.announce.model.entity;
+package com.sabujaks.irs.domain.announcement.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -20,4 +20,5 @@ public class CustomForm { //지원서 맞춤 양식
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "announcement_idx")
     private Announcement announcement;
+
 }

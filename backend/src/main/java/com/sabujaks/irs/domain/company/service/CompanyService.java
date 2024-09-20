@@ -1,6 +1,5 @@
 package com.sabujaks.irs.domain.company.service;
 
-import com.sabujaks.irs.domain.announce.model.entity.CustomLetterForm;
 import com.sabujaks.irs.domain.auth.model.entity.CompanyVerify;
 import com.sabujaks.irs.domain.auth.model.entity.Recruiter;
 import com.sabujaks.irs.domain.auth.repository.CompanyVerifyRepository;
@@ -8,8 +7,8 @@ import com.sabujaks.irs.domain.auth.repository.RecruiterRepository;
 import com.sabujaks.irs.domain.company.model.entity.Company;
 import com.sabujaks.irs.domain.company.model.entity.CompanyBenefits;
 import com.sabujaks.irs.domain.company.model.entity.CompanyImg;
-import com.sabujaks.irs.domain.company.model.request.CreateCompanyReq;
-import com.sabujaks.irs.domain.company.model.response.CreateCompanyRes;
+import com.sabujaks.irs.domain.company.model.request.CompanyCreateReq;
+import com.sabujaks.irs.domain.company.model.response.CompanyCreateRes;
 import com.sabujaks.irs.domain.company.repository.CompanyBenefitsRepository;
 import com.sabujaks.irs.domain.company.repository.CompanyImgRepository;
 import com.sabujaks.irs.domain.company.repository.CompanyRepository;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,9 +33,9 @@ public class CompanyService {
     private final CompanyVerifyRepository companyVerifyRepository;
 
     /*******채용담당자 기업정보 등록***********/
-    public CreateCompanyRes createCompany(
+    public CompanyCreateRes createCompany(
             Long recruiterIdx,
-            CreateCompanyReq dto) throws BaseException {
+            CompanyCreateReq dto) throws BaseException {
 
         // 채용담당자 확인
         Optional<Recruiter> resultRecruiter = recruiterRepository.findByRecruiterIdx(recruiterIdx);
@@ -80,7 +78,7 @@ public class CompanyService {
                 }
 
                 // 응답
-                return CreateCompanyRes.builder()
+                return CompanyCreateRes.builder()
                         .companyIdx(company.getIdx())
                         .build();
             }

@@ -1,8 +1,8 @@
 package com.sabujaks.irs.domain.company.controller;
 
-import com.sabujaks.irs.domain.announce.model.request.CustomFormReq;
-import com.sabujaks.irs.domain.company.model.request.CreateCompanyReq;
-import com.sabujaks.irs.domain.company.model.response.CreateCompanyRes;
+import com.sabujaks.irs.domain.announcement.model.request.CustomFormCreateReq;
+import com.sabujaks.irs.domain.company.model.request.CompanyCreateReq;
+import com.sabujaks.irs.domain.company.model.response.CompanyCreateRes;
 import com.sabujaks.irs.domain.company.service.CompanyService;
 import com.sabujaks.irs.global.common.exception.BaseException;
 import com.sabujaks.irs.global.common.responses.BaseResponse;
@@ -19,16 +19,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/mypage/recruiter")
+@RequestMapping("/api/company")
 @RequiredArgsConstructor
 public class CompanyController {
     private final CompanyService companyService;
     private final CloudFileUpload cloudFileUpload;
 
-    @RequestMapping(method = RequestMethod.POST, value = "/company/create")
-    public ResponseEntity<BaseResponse<CustomFormReq>> createInfo(
+    @PostMapping("/create")
+    public ResponseEntity<BaseResponse<CustomFormCreateReq>> createInfo(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @RequestPart CreateCompanyReq dto,
+            @RequestPart CompanyCreateReq dto,
             @RequestPart MultipartFile[] files) throws BaseException {
 
         if (customUserDetails == null) throw new BaseException(BaseResponseMessage.AUTH_FAIL);
@@ -47,7 +47,7 @@ public class CompanyController {
             }
             companyService.saveCompanyImages(fileUrlList);
         }
-        CreateCompanyRes response = companyService.createCompany(recruiterIdx, dto);
+        CompanyCreateRes response = companyService.createCompany(recruiterIdx, dto);
 
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.COMPANY_INFO_SUCCESS, response));
     }

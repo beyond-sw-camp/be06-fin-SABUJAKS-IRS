@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CreateCompanyReq {
+public class CompanyCreateReq {
 
     private String industry; // 산업
 

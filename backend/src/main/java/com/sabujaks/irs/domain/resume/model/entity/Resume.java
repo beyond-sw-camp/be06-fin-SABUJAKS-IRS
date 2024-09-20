@@ -1,6 +1,6 @@
 package com.sabujaks.irs.domain.resume.model.entity;
 
-import com.sabujaks.irs.domain.announce.model.entity.Announcement;
+import com.sabujaks.irs.domain.announcement.model.entity.Announcement;
 import com.sabujaks.irs.domain.auth.model.entity.Seeker;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity

@@ -1,7 +1,7 @@
 package com.sabujaks.irs.domain.interview_evaluate.service;
 
-import com.sabujaks.irs.domain.announce.model.entity.Announcement;
-import com.sabujaks.irs.domain.announce.repository.AnnounceRepository;
+import com.sabujaks.irs.domain.announcement.model.entity.Announcement;
+import com.sabujaks.irs.domain.announcement.repository.AnnounceRepository;
 import com.sabujaks.irs.domain.interview_evaluate.model.entity.InterviewEvaluateForm;
 import com.sabujaks.irs.domain.interview_evaluate.model.request.InterviewEvaluateFormCreateReq;
 import com.sabujaks.irs.domain.interview_evaluate.model.response.InterviewEvaluateFormCreateRes;
