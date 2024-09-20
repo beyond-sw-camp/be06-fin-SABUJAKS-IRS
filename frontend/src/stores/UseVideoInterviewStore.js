@@ -3,43 +3,41 @@ import axios from 'axios';
 import { backend } from '@/const';
 
 
-export const UseVideoInterviewStore = defineStore('VideoInterview', {
-    state: () => ({
-        room: [],
-    }),
+export const UseVideoInterviewStore = defineStore('videoInterivew', {
+    state: () => ({}),
     persist: { storage: sessionStorage, },
     actions: {
-        async createVideoInterview(videoInterviewCreateReq) {
+        async create(requestbody) {
             try {
                 const response = await axios.post(
-                    `${backend}/video-interview/create`,
-                    videoInterviewCreateReq ,
+                    `${backend}/video-interview/create`, requestbody ,
                     { headers: { 'Content-Type': 'application/json', },});
                 return response.data
             } catch (error) {
-                console.error("화상 면접 방 생성에 실패했습니다.")
+                return error.response.data
             }
         },
-        async searchAllVideoInterview(announceUUID) {
+        async searchAll(announceUUID) {
             try {
                 const response = await axios.get(
-                    `${backend}/video-interview/search-all?announceUUID=${announceUUID}`,
-                    { headers: { 'Content-Type': 'application/json', },});
+                `${backend}/video-interview/search-all?announceUUID=${announceUUID}`,
+                { headers: { 'Content-Type': 'application/json', },});
                 return response.data
             } catch (error) {
-                console.error("화상 면접 방 목록조회에 실패했습니다.")
+                return error.response.data
             }
         },
-        async getVideoInterviewToken(videoInterviewJoinReq) {
+        async getSessionToken(requestBody) {
             try {
                 const response = await axios.post(
-                    `${backend}/video-interview/token`,
-                    videoInterviewJoinReq,
-                    {headers: { 'Content-Type': 'application/json', },
+                `${backend}/video-interview/get-session-token`, requestBody,
+                { 
+                    headers: { 'Content-Type': 'application/json', },
+                    withCredentials: true
                 });
-                return response.data; // 토큰담김
+                return response.data
             } catch (error) {
-                console.error("화상 면접 방 참여에 실패했습니다.")
+                return error.response.data
             }
         },
     },

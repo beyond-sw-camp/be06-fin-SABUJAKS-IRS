@@ -21,7 +21,7 @@ public class CustomLetter {
     private String title;
 
     @Column(nullable = false)
-    private Integer charLimit;
+    private Integer charNum;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String contents;

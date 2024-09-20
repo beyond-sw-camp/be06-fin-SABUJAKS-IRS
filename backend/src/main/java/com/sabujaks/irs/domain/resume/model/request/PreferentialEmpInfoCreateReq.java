@@ -17,8 +17,8 @@ public class PreferentialEmpInfoCreateReq {
     private String disabilityDegree;
     private Boolean military;
     private String militaryClass;
-    private LocalDate militaryStart;
-    private LocalDate militaryEnd;
+    private String militaryStart;
+    private String militaryEnd;
     private String militaryType;
     private String militaryRank;
 }

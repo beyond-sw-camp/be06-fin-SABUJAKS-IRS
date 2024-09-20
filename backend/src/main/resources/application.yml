@@ -83,6 +83,8 @@ spring:
 openvidu:
     url: ${OPENVIDU_URL}
     secret: ${OPENVIDU_SECRET}
+    session:
+      timeout: 3600
 logging:
   level:
     org.hibernate.SQL: debug

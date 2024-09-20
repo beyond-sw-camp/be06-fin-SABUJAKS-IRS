@@ -1,7 +1,8 @@
 package com.sabujaks.irs.domain.announce.model.entity;
 
 import com.sabujaks.irs.domain.auth.model.entity.Recruiter;
-import com.sabujaks.irs.domain.resume.model.entity.Resume;
+import com.sabujaks.irs.domain.interview_evaluate.model.entity.InterviewEvaluate;
+import com.sabujaks.irs.domain.interview_evaluate.model.entity.InterviewEvaluateForm;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -75,7 +76,7 @@ public class Announcement { //공고
     @Column(nullable = false, unique = true, updatable = false)
     private String uuid; // UUID 인증코드
 
-    // 공고 등록 시 uuid 생성, 공고등록step1이 없어서 테스트 못해봄! 11일에 할 예정, 아마 될거임
+    // 공고 등록 시 uuid 생성
     @PrePersist
     public void createUUID() {
         this.uuid = UUID.randomUUID().toString(); // UUID 자동 생성
@@ -85,14 +86,11 @@ public class Announcement { //공고
     @JoinColumn(name = "recruiter_idx")
     private Recruiter recruiter; // 채용담당자 외래키
 
-    // 기업 외래키 추가 필요
-
     @OneToMany(mappedBy = "announcement" ,fetch = FetchType.LAZY)
-    private List<CustomForm> CustomFormList = new ArrayList<>(); // 지원서 맞춤양식 테이블과 관계
+    private List<CustomForm> customFormList = new ArrayList<>(); // 지원서 맞춤양식 테이블과 관계
     @OneToMany(mappedBy = "announcement" ,fetch = FetchType.LAZY)
     private List<CustomLetterForm> CustomLetterFormList = new ArrayList<>(); // 자기소개서 맞춤양식 테이블과 관계
+    @OneToMany(mappedBy = "announcement", fetch = FetchType.LAZY)
+    private List<InterviewEvaluateForm> interviewEvaluateFormList;
 
-    // 공고지원서 테이블과 1:n
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "announcement")
-    private List<Resume> resumeList;
 }
