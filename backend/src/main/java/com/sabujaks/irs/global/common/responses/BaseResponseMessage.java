@@ -106,12 +106,15 @@ public enum BaseResponseMessage {
     // 인터뷰 평가표 생성
     INTERVIEW_EVALUATE_CREATE_FORM_SUCCESS(true, 6000, "인터뷰 평가표 생성에 성공했습니다."),
     INTERVIEW_EVALUATE_CREATE_FORM_FAIL_IS_EXIST(false, 6001, "인터뷰 평가표가 이미 존재합니다."),
+    INTERVIEW_EVALUATE_CREATE_FORM_FAIL_INVALID_REQUEST(false, 6002, "해당 공고의 채용담당자가 아니면 인터뷰 평가표를 작성할 권한이 없습니다."),
     // 인터뷰 평가표 조회
-    INTERVIEW_EVALUATE_SEARCH_FORM_SUCCESS(true, 6002, "인터뷰 평가표 조회에 성공했습니다."),
-    INTERVIEW_EVALUATE_SEARCH_FORM_FAIL_IS_NOT_EXIST(false, 6002, "해당 공고의 인터뷰 평가표가 존재하지 않습니다.");
+    INTERVIEW_EVALUATE_SEARCH_FORM_SUCCESS(true, 6100, "인터뷰 평가표 조회에 성공했습니다."),
+    INTERVIEW_EVALUATE_SEARCH_FORM_FAIL_IS_NOT_EXIST(false, 6101, "해당 공고의 인터뷰 평가표가 존재하지 않습니다."),
+    INTERVIEW_EVALUATE_SEARCH_FORM_FAIL_INVALID_ACCESS(false, 6102, "해당 공고의 인터뷰 평가표에 접근할 수 없습니다."),
 
 
-
+    // 인터뷰 참여
+    INTERVIEW_PARTICIPATE_SEARCH_FAIL_NOT_FOUND(false, 6200, "해당 공고의 인터뷰 면접관이 아닙니다.");
 
 
 
