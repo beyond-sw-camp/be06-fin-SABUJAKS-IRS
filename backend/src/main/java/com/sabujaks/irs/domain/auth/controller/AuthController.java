@@ -38,14 +38,18 @@ public class AuthController {
         AuthSignupRes response = authService.signup(dto, fileUrl);
         String uuid = emailVerifyService.sendMail(response);
         emailVerifyService.save(dto.getEmail(), uuid);
-        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.AUTH_REGISTER_SUCCESS, response));
+        if(response.getInactive()){
+            return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.AUTH_RESTORE_SUCCESS, response));
+        }else{
+            return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.AUTH_REGISTER_SUCCESS, response));
+        }
     }
 
     @GetMapping("/email-verify")
     public ResponseEntity<BaseResponse> emailVerify(
         String email, String role, String uuid) throws Exception, BaseException {
         if(emailVerifyService.isExist(email, uuid)){
-            authService.activeMember(email, role);
+            authService.activeUser(email, role);
             return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.AUTH_EMAIL_VERIFY_SUCCESS));
         } else {
             return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.AUTH_EMAIL_VERIFY_FAIL));
@@ -72,5 +76,12 @@ public class AuthController {
         @RequestBody PasswordEditReq dto) throws BaseException {
         authService.editPassword(customUserDetails, dto);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.AUTH_EDIT_PASSWORD_SUCCESS));
+    }
+
+    @GetMapping("/inactive-user")
+    public ResponseEntity<BaseResponse> inactiveUser(
+        @AuthenticationPrincipal CustomUserDetails customUserDetails) throws BaseException {
+        authService.inactiveUser(customUserDetails);
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.AUTH_INACTIVE_USER_SUCCESS));
     }
 }

@@ -1,7 +1,7 @@
 package com.sabujaks.irs.domain.interview_evaluate.service;
 
 import com.sabujaks.irs.domain.announcement.model.entity.Announcement;
-import com.sabujaks.irs.domain.announcement.repository.AnnounceRepository;
+import com.sabujaks.irs.domain.announcement.repository.AnnouncementRepository;
 import com.sabujaks.irs.domain.interview_evaluate.model.entity.InterviewEvaluateForm;
 import com.sabujaks.irs.domain.interview_evaluate.model.request.InterviewEvaluateFormCreateReq;
 import com.sabujaks.irs.domain.interview_evaluate.model.response.InterviewEvaluateFormCreateRes;
@@ -21,10 +21,10 @@ public class InterviewEvaluateService {
     private final InterviewEvaluateRepository interviewEvaluateRepository;
     private final InterviewEvaluateFormRepository interviewEvaluateFormRepository;
     private final InterviewEvaluateResultRepository interviewEvaluateResultRepository;
-    private final AnnounceRepository announceRepository;
+    private final AnnouncementRepository announcementRepository;
 
     public InterviewEvaluateFormCreateRes createForm (InterviewEvaluateFormCreateReq dto) throws BaseException {
-        Announcement announcement = announceRepository.findByAnnounceIdx(dto.getAnnounceIdx())
+        Announcement announcement = announcementRepository.findByAnnounceIdx(dto.getAnnounceIdx())
         .orElseThrow(() -> new BaseException(BaseResponseMessage.ANNOUNCEMENT_SEARCH_FAIL));
         Optional<InterviewEvaluateForm> result = interviewEvaluateRepository.findByAnnounceIdx(dto.getAnnounceIdx());
         if(result.isEmpty()){

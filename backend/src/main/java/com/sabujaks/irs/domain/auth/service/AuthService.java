@@ -6,10 +6,7 @@ import com.sabujaks.irs.domain.auth.model.request.AuthSignupReq;
 import com.sabujaks.irs.domain.auth.model.request.PasswordEditReq;
 import com.sabujaks.irs.domain.auth.model.response.AuthSignupRes;
 import com.sabujaks.irs.domain.auth.model.response.UserInfoGetRes;
-import com.sabujaks.irs.domain.auth.repository.CompanyVerifyRepository;
-import com.sabujaks.irs.domain.auth.repository.EstimatorRepository;
-import com.sabujaks.irs.domain.auth.repository.RecruiterRepository;
-import com.sabujaks.irs.domain.auth.repository.SeekerRepository;
+import com.sabujaks.irs.domain.auth.repository.*;
 import com.sabujaks.irs.domain.auth.model.entity.Estimator;
 import com.sabujaks.irs.global.common.exception.BaseException;
 import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
@@ -18,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -31,38 +29,29 @@ public class AuthService {
     private final SeekerRepository seekerRepository;
     private final EstimatorRepository estimatorRepository;
     private final CompanyVerifyRepository companyVerifyRepository;
+    private final EmailVerifyRepository emailVerifyRepository;
+
     public AuthSignupRes signup(AuthSignupReq dto, String fileUrl) throws BaseException {
-        if(Objects.equals(dto.getRole(), "ROLE_RECRUITER")){
-            Optional<Recruiter> result = recruiterRepository.findByRecruiterEmail(dto.getEmail());
-            if(result.isEmpty()){
-                if(companyVerifyRepository.findByRecruiterEmail(dto.getEmail()).isEmpty()){
-                    throw new BaseException(BaseResponseMessage.AUTH_REGISTER_FAIL_NOT_COMPANY_AUTH);
+        if(Objects.equals(dto.getRole(), "ROLE_SEEKER")) {
+            if(recruiterRepository.findByRecruiterEmail(dto.getEmail()).isPresent()) {
+                throw new BaseException(BaseResponseMessage.AUTH_REGISTER_FAIL_ALREADY_REGISTER_AS_RECRUITER);
+            }
+            Optional<Seeker> result = seekerRepository.findBySeekerEmail(dto.getEmail());
+            if(result.isPresent()){
+                Seeker seeker = result.get();
+                if(!seeker.getEmailAuth() && seeker.getInactive()) {
+                    return AuthSignupRes.builder()
+                            .idx(seeker.getIdx())
+                            .role(seeker.getRole())
+                            .email_auth(seeker.getEmailAuth())
+                            .inactive(seeker.getInactive())
+                            .email(seeker.getEmail())
+                            .build();
+                } else {
+                    throw new BaseException(BaseResponseMessage.AUTH_REGISTER_FAIL_USER_ALREADY_EXITS);
                 }
-                Recruiter recruiter = Recruiter.builder()
-                        .role(dto.getRole())
-                        .companyAuth(true)
-                        .emailAuth(false)
-                        .inactive(false)
-                        .email(dto.getEmail())
-                        .password(passwordEncoder.encode(dto.getPassword()))
-                        .name(dto.getName())
-                        .phoneNumber(dto.getPhone_number())
-                        .build();
-                recruiterRepository.save(recruiter);
-                return AuthSignupRes.builder()
-                        .idx(recruiter.getIdx())
-                        .role(recruiter.getRole())
-                        .email_auth(recruiter.getEmailAuth())
-                        .inactive(recruiter.getInactive())
-                        .email(recruiter.getEmail())
-                        .build();
             }
             else {
-                throw new BaseException(BaseResponseMessage.AUTH_REGISTER_FAIL_MEMBER_ALREADY_EXITS);
-            }
-        } else if(Objects.equals(dto.getRole(), "ROLE_SEEKER")) {
-            Optional<Seeker> result = seekerRepository.findBySeekerEmail(dto.getEmail());
-            if(result.isEmpty()){
                 Seeker seeker = Seeker.builder()
                         .role(dto.getRole())
                         .emailAuth(false)
@@ -86,15 +75,55 @@ public class AuthService {
                         .inactive(seeker.getInactive())
                         .email(seeker.getEmail())
                         .build();
-            } else {
-                throw new BaseException(BaseResponseMessage.AUTH_REGISTER_FAIL_MEMBER_ALREADY_EXITS);
             }
-        } else {
+        } else if(Objects.equals(dto.getRole(), "ROLE_RECRUITER")){
+            if(seekerRepository.findBySeekerEmail(dto.getEmail()).isPresent()) {
+                throw new BaseException(BaseResponseMessage.AUTH_REGISTER_FAIL_ALREADY_REGISTER_AS_SEEKER);
+            }
+            Optional<Recruiter> result = recruiterRepository.findByRecruiterEmail(dto.getEmail());
+            if(result.isPresent()){
+                Recruiter recruiter = result.get();
+                if(!recruiter.getEmailAuth() && recruiter.getInactive()) {
+                    return AuthSignupRes.builder()
+                            .idx(recruiter.getIdx())
+                            .role(recruiter.getRole())
+                            .email_auth(recruiter.getEmailAuth())
+                            .inactive(recruiter.getInactive())
+                            .email(recruiter.getEmail())
+                            .build();
+                } else {
+                    throw new BaseException(BaseResponseMessage.AUTH_REGISTER_FAIL_USER_ALREADY_EXITS);
+                }
+            }
+            else {
+                if(companyVerifyRepository.findByRecruiterEmail(dto.getEmail()).isEmpty()){
+                    throw new BaseException(BaseResponseMessage.AUTH_REGISTER_FAIL_NOT_COMPANY_AUTH);
+                }
+                Recruiter recruiter = Recruiter.builder()
+                        .role(dto.getRole())
+                        .companyAuth(true)
+                        .emailAuth(false)
+                        .inactive(false)
+                        .email(dto.getEmail())
+                        .password(passwordEncoder.encode(dto.getPassword()))
+                        .name(dto.getName())
+                        .phoneNumber(dto.getPhone_number())
+                        .build();
+                recruiterRepository.save(recruiter);
+                return AuthSignupRes.builder()
+                        .idx(recruiter.getIdx())
+                        .role(recruiter.getRole())
+                        .email_auth(recruiter.getEmailAuth())
+                        .inactive(recruiter.getInactive())
+                        .email(recruiter.getEmail())
+                        .build();
+            }
+        }  else {
             throw new BaseException(BaseResponseMessage.AUTH_REGISTER_FAIL_INVALID_ROLE);
         }
     }
 
-    public Boolean activeMember(String email, String role) throws BaseException {
+    public Boolean activeUser(String email, String role) throws BaseException {
         if(Objects.equals(role, "ROLE_RECRUITER")){
             Recruiter recruiter = recruiterRepository.findByRecruiterEmail(email)
             .orElseThrow( () -> new BaseException(BaseResponseMessage.AUTH_EMAIL_VERIFY_FAIL_NOT_FOUND));
@@ -171,6 +200,34 @@ public class AuthService {
             }
         } else {
             throw new BaseException(BaseResponseMessage.AUTH_EDIT_PASSWORD_FAIL);
+        }
+    }
+    @Transactional(rollbackFor = Exception.class)
+    public void inactiveUser(CustomUserDetails customUserDetails) throws BaseException{
+        if(Objects.equals(customUserDetails.getRole(), "ROLE_SEEKER")){
+            Optional<Seeker> result = seekerRepository.findBySeekerIdx(customUserDetails.getIdx());
+            if(result.isPresent()){
+                Seeker seeker = result.get();
+                seeker.setEmailAuth(false);
+                seeker.setInactive(true);
+                if(seeker.getPassword() == null){
+                    seekerRepository.save(seeker);
+                } else {
+                    seekerRepository.save(seeker);
+                    emailVerifyRepository.deleteByEmail(seeker.getEmail());
+                }
+            }
+        } else if(Objects.equals(customUserDetails.getRole(), "ROLE_RECRUITER")) {
+            Optional<Recruiter> result = recruiterRepository.findByRecruiterIdx(customUserDetails.getIdx());
+            if(result.isPresent()) {
+                Recruiter recruiter = result.get();
+                recruiter.setEmailAuth(false);
+                recruiter.setInactive(true);
+                recruiterRepository.save(recruiter);
+                emailVerifyRepository.deleteByEmail(recruiter.getEmail());
+            }
+        } else {
+            throw new BaseException(BaseResponseMessage.AUTH_INACTIVE_USER_FAIL);
         }
     }
 }

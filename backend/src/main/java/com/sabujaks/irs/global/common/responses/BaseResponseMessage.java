@@ -19,10 +19,12 @@ public enum BaseResponseMessage {
     // AUTH 1000~1999
     // 회원가입 1000
     AUTH_REGISTER_SUCCESS(true, 1000, "회원가입에 성공했습니다. 이메일 인증 후 로그인 해주세요"),
-    AUTH_REGISTER_FAIL_MEMBER_ALREADY_EXITS(false, 1001, "이미 다른 계정이 존재합니다." ),
+    AUTH_REGISTER_FAIL_USER_ALREADY_EXITS(false, 1001, "이미 다른 계정이 존재합니다." ),
     AUTH_REGISTER_FAIL_INVALID_ROLE(false, 1002, "유효하지 않은 회원가입입니다. "),
     AUTH_REGISTER_FAIL_NOT_COMPANY_AUTH(false, 1003, "기업 인증을 하지 않은 사용자는 가입할 수 없습니다."),
-
+    AUTH_REGISTER_FAIL_ALREADY_REGISTER_AS_SEEKER(false, 1004, "이미 지원자 회원으로 가입된 계정입니다. 지원자 회원은 채용담당자 회원으로 회원가입 할 수 없습니다."),
+    AUTH_REGISTER_FAIL_ALREADY_REGISTER_AS_RECRUITER(false, 1004, "이미 채용담당자 회원으로 가입된 계정입니다. 채용담당자 회원은 지원자 회원으로 회원가입 할 수 없습니다."),
+    AUTH_RESTORE_SUCCESS(true, 1010, "비활성화된 계정입니다. 복구 절차로 이메일 인증을 해주세요"),
     // 이메일 검증 1100
     AUTH_EMAIL_VERIFY_SUCCESS(true, 1100, "이메일 검증을 완료했습니다."),
     AUTH_EMAIL_VERIFY_FAIL(false, 1101, "이메일 검증을 실패했습니다."),
@@ -42,6 +44,10 @@ public enum BaseResponseMessage {
     AUTH_EDIT_PASSWORD_SUCCESS(true, 1400, "계정 비밀번호 변경에 성공했습니다."),
     AUTH_EDIT_PASSWORD_FAIL_PASSWORD_NOT_MATCH(false, 1401, "계정 패스워드가 다릅니다."),
     AUTH_EDIT_PASSWORD_FAIL(false, 1402, "계정 비밀번호 변경에 실패했습니다."),
+
+    // 계정 비활성화 1500
+    AUTH_INACTIVE_USER_SUCCESS(true, 1500, "계정 비활성화에 성공했습니다."),
+    AUTH_INACTIVE_USER_FAIL(false, 1501, "계정 비활성화에 실패했습니다."),
 
     // INTERVIEW_SCHEDULE 면접 일정 1300
     INTERVIEW_SCHEDULE_CREATE_SUCCESS(true, 1300, "면접 일정 등록에 성공했습니다."),
