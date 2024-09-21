@@ -733,8 +733,7 @@ public class ResumeService {
 
     @Transactional
     public ResumeReadIntegratedRes readIntegrated(CustomUserDetails customUserDetails) throws BaseException {
-//        Long seekerIdx = customUserDetails.getIdx();
-        Long seekerIdx = 1L;
+        Long seekerIdx = customUserDetails.getIdx();
         // 지원자 테이블 조회
         Optional<Seeker> resultSeeker = seekerRepository.findBySeekerIdx(seekerIdx);
         if(resultSeeker.isPresent()) {
