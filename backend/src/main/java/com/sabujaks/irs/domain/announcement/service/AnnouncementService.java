@@ -45,12 +45,19 @@ public class AnnouncementService {
         // 채용담당자 확인
         Optional<Recruiter> resultRecruiter = recruiterRepository.findByRecruiterIdx(recruiterIdx);
         if(resultRecruiter.isPresent()) {
-            // 셀렉트 폼이 트루면 = 파일url이 있으면 파일만 공고 엔티티에 저장
+            // 셀렉트 폼이 트루면 = 파일url과 일부 정보 공고 엔티티에 저장
             if(dto.getSelectForm()) {
                 Announcement announcement = Announcement.builder()
                         .recruiter(resultRecruiter.get())
                         .selectForm(dto.getSelectForm())
-                        .title(dto.getTitle())
+                        .title(dto.getTitle()) // 공고제목
+                        .jobTitle(dto.getJobTitle()) // 모집분야명
+                        .recruitedNum(dto.getRecruitedNum()) // 모집인원
+                        .careerBase(dto.getCareerBase()) // 신입경력
+                        .region(dto.getRegion()) // 근무지역
+                        .announcementStart(dto.getAnnouncementStart()) // 시작날
+                        .announcementEnd(dto.getAnnouncementEnd()) // 종료날
+                        .interviewNum(dto.getInterviewNum()) // 면접횟수
                         .imgUrl(fileUrl)
                         .build();
                 announcementRepository.save(announcement);
@@ -104,7 +111,7 @@ public class AnnouncementService {
         // 클라이언트에서 넣을 폼을 선택 -> dto에 그 폼의 코드값이 들어옴
 
         // 예외 처리) 공고가 잘 저장되어 있는지 먼저 확인 필요
-        Optional<Announcement> resultAnnouncement = announcementRepository.findByAnnounceIdx(dto.getAnnounceIdx());
+        Optional<Announcement> resultAnnouncement = announcementRepository.findByAnnounceIdx(dto.getAnnouncementIdx());
         if (!resultAnnouncement.isPresent()) {
             throw new BaseException(BaseResponseMessage.ANNOUNCEMENT_REGISTER_STEP_TWO_FAIL_NOT_FOUND);
         }
@@ -237,6 +244,43 @@ public class AnnouncementService {
         } else {
             // 채용담당자 유저에서 찾을 수 없을 때
             throw new BaseException(BaseResponseMessage.ANNOUNCEMENT_REGISTER_STEP_ONE_FAIL_NOT_RECRUITER);
+        }
+    }
+
+
+    /*******공고 전체 조회***********/
+    public List<AnnouncementReadAllRes> readAllSee() throws BaseException {
+        List<Announcement> resultAnnouncementList = announcementRepository.findAll();
+
+        List<AnnouncementReadAllRes> resultReadAllResList = new ArrayList<>();
+        for (Announcement am : resultAnnouncementList) {
+            resultReadAllResList.add(
+                    AnnouncementReadAllRes.builder()
+                            .announcementIdx(am.getIdx())
+                            .companyName(companyRepository.findByRecruiterIdx(am.getRecruiter().getIdx()).get().getName())
+                            .announcementTitle(am.getTitle())
+                            .jobTitle(am.getJobTitle())
+                            .careerBase(am.getCareerBase())
+                            .region(am.getRegion())
+                            .announcementEnd(am.getAnnouncementEnd())
+                            .build()
+            );
+        }
+        return resultReadAllResList;
+    }
+
+    /*******공고 상세 조회***********/
+    public AnnouncementReadDetailRes readDetailSee(Long announcementIdx) throws BaseException {
+        Optional<Announcement> resultAnnouncement = announcementRepository.findByAnnounceIdx(announcementIdx);
+
+        if(resultAnnouncement.isPresent()) {
+            AnnouncementReadDetailRes announcementReadDetailRes = AnnouncementReadDetailRes.builder()
+                    .build();
+            // 작성중
+            return null;
+        } else {
+            // 공고 정보가 없을 때
+            throw new BaseException(BaseResponseMessage.ANNOUNCEMENT_SEARCH_FAIL);
         }
     }
 }

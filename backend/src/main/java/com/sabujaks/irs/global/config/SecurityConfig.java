@@ -66,6 +66,8 @@ public class SecurityConfig {
                                 .requestMatchers("/api/test/ex03").hasAuthority("ROLE_RECRUITER")
                                 .requestMatchers("/api/video-interview/create").hasAuthority("ROLE_RECRUITER")
                                 .requestMatchers("/api/interview-evaluate/create-form").hasAuthority("ROLE_RECRUITER")
+                                .requestMatchers("/api/interview-evaluate/search-form").hasAnyAuthority("ROLE_RECRUITER" ,"ROLE_ESTIMATOR")
+                                .requestMatchers("/api/resume/**").hasAuthority("ROLE_RECRUITER")
                                 .requestMatchers("/api/resume/create").hasAuthority("ROLE_SEEKER")
                                 .requestMatchers("/api/resume/submit").hasAuthority("ROLE_SEEKER")
                                 .requestMatchers("/api/resume/read").hasAnyAuthority("ROLE_SEEKER", "ROLE_RECRUITER")

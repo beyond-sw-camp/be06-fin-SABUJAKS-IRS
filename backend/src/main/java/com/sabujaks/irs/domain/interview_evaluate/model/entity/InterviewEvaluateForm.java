@@ -28,7 +28,7 @@ public class InterviewEvaluateForm {
     private String q10;
 
     @ManyToOne
-    @JoinColumn(name = "announcement_uuid")
+    @JoinColumn(name = "announcement_uuid", referencedColumnName = "uuid")
     private Announcement announcement;
 
     @OneToMany(mappedBy = "interviewEvaluateForm")
