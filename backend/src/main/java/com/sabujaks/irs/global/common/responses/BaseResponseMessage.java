@@ -118,8 +118,7 @@ public enum BaseResponseMessage {
 
 
     // 인터뷰 참여
-    INTERVIEW_PARTICIPATE_SEARCH_FAIL_NOT_FOUND(false, 6200, "해당 공고의 인터뷰 면접관이 아닙니다.");
-
+    INTERVIEW_PARTICIPATE_SEARCH_FAIL_NOT_FOUND(false, 6200, "해당 인터뷰 면접관이 아닙니다.");
 
 
     private Boolean success;

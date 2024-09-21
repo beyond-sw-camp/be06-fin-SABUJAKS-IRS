@@ -53,12 +53,31 @@
             @click="updateMainVideoStreamManager(sub)"
           />
         </div>
-      <div class="vie-evaluate">
-        <div class="vie-menu">
-          <button class="vie-menubtn">지원서 보기</button>
-          <button class="vie-menubtn">면접자 평가</button>
+      <div class="evaluate-container">
+        <div class="evaluate-seeker-list">
+          <div v-for="testUser in testUsers" :key="testUser.index" class="evaluate-seeker">
+            <span @click="handleClickSeeker(testUser)" class="evaluate-button">{{ testUser }}</span>
+          </div>
         </div>
-        <div class="vie-content"></div>
+        <div v-if="showEvaluateMenus" class="evaluate-menu">
+          <button  class="evaluate-button">지원서 보기</button>
+          <div class="resume">
+          
+          </div>
+          <button @click="showEvaluate" class="evaluate-button">면접자 평가</button>
+          <div v-show="showEvaluateForm" class="evaluate">
+            <label>{{ evaluateForm.q1 }}</label>
+            <label>{{ evaluateForm.q2 }}</label>
+            <label>{{ evaluateForm.q3 }}</label>
+            <label>{{ evaluateForm.q4 }}</label>
+            <label>{{ evaluateForm.q5 }}</label>
+            <label>{{ evaluateForm.q6 }}</label>
+            <label>{{ evaluateForm.q7 }}</label>
+            <label>{{ evaluateForm.q8 }}</label>
+            <label>{{ evaluateForm.q9 }}</label>
+            <label>{{ evaluateForm.q10 }}</label>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -69,6 +88,7 @@ import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { UseVideoInterviewStore } from "@/stores/UseVideoInterviewStore";
 import { UseAuthStore } from "@/stores/UseAuthStore";
+import { UseInterviewEvaluateStore } from "@/stores/UseInterviewEvaluateStore";
 import { OpenVidu } from "openvidu-browser";
 import UserVideo from "@/components/video-interview/UserVideo.vue";
 import { useToast } from "vue-toastification";
@@ -80,17 +100,49 @@ const publisher = ref(null);
 const subscribers = ref([]);
 const authStore = UseAuthStore();
 const videoInterviewStore = UseVideoInterviewStore();
+const interviewEvaluateStore = UseInterviewEvaluateStore();
 const route = useRoute();
 const router = useRouter()
 const toast = useToast();
 const userName = ref("");
 const userType = ref("");
+const evaluateForm = ref({q1: "", q2: "", q3: "", q4: "", q5: "", q6: "", q7: "", q8: "", q9: "", q10: ""});
 const audioMuted = ref(false);
+const testUsers = ref(["박종성", "구은주", "서재은", "서시현"]);
+const showEvaluateMenus = ref(false);
+const showEvaluateForm = ref(false);
+const currentUser = ref(null);
+const handleClickSeeker = async (testUser) => {
+  currentUser.value = testUser;
+  if(showEvaluateMenus.value == false)showEvaluateMenus.value = true;
+  else( showEvaluateMenus.value = false)
+}
+const showEvaluate = () => {
+  showEvaluateForm.value = !showEvaluateForm.value;
+};
 
 onMounted(async() => {
   await joinSession(route.params.announceUUID, route.params.videoInterviewUUID);
+  await getInterviewForm(route.params.announceUUID, route.params.videoInterviewUUID)
 });
 
+const getInterviewForm = async (announceUUID, videoInterviewUUID) => {
+  try {
+    const response = await interviewEvaluateStore.searchFormforEstimator(announceUUID, videoInterviewUUID)
+    evaluateForm.value.q1 = response.result.q1;
+    evaluateForm.value.q2 = response.result.q2;
+    evaluateForm.value.q3 = response.result.q3;
+    evaluateForm.value.q4 = response.result.q4;
+    evaluateForm.value.q5 = response.result.q5;
+    evaluateForm.value.q6 = response.result.q6;
+    evaluateForm.value.q7 = response.result.q7;
+    evaluateForm.value.q8 = response.result.q8;
+    evaluateForm.value.q9 = response.result.q9;
+    evaluateForm.value.q10 = response.result.q10;
+  } catch (error) {
+    toast.error(error);
+  }
+}
 const handleToggleSubsAudio = (connection) => {
   if (session.value) {
     const subscriber = subscribers.value.find(sub => sub.stream.connection.connectionId === connection.connectionId);
@@ -125,7 +177,6 @@ const handleSessionToken = async (announceUUID, videoInterviewUUID) => {
       params: { customSessionId: videoInterviewUUID },
     };
     const response = await videoInterviewStore.getSessionToken(requestBody);
-    toast.success(response.data);
     return response.result.sessionToken;
   } catch (error) {
     toast.error(error);
@@ -305,34 +356,7 @@ button:hover {
   z-index: 999; /* 버튼을 다른 요소 위로 */
 }
 
-
-/* .main-video-container {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-  width: 100%;
-} */
-
-/* video-interview-estimator -> vie*/
-
-
-.video-estimator-container {
-  position: relative;
-  margin: 20px 0;
-  height: min-content;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-
-.vie-img {
-  width: fit-content;
-  height: fit-content;
-  border: 1px solid black;
-}
-
-.vie-evaluate {
+.evaluate-container {
   position: relative;
   top: 0;
   right: 0;
@@ -350,14 +374,14 @@ button:hover {
   padding: 18px;
 }
 
-.vie-menu {
+.evaluate-menu {
   display: flex;
   justify-content: center;
   align-items: center;
   column-gap: 5px;
 }
 
-.vie-menubtn {
+.evaluate-button {
   width: 100%;
   height: fit-content;
   background-color: #f1f1f1;
@@ -371,16 +395,25 @@ button:hover {
   transition: background-color 0.3s;
 }
 
-.vie-menubtn:hover {
+.button:hover {
   background-color: #ddd;
 }
 
-.vie-content {
+.evaluate-seeker-list {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  align-items: center;
+  column-gap: 5px;
+  margin: 10px;
+}
+
+.evaluate-content {
   display: flex;
   flex-direction: column;
 }
 
-.vie-evaluate::-webkit-scrollbar {
+.evaluate-container::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera*/
 }
 
