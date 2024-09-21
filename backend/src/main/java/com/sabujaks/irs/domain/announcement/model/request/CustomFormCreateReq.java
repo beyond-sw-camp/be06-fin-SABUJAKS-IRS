@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class CustomFormCreateReq {
-    private Long announceIdx;
+    private Long announcementIdx;
     private List<String> code; // 맞춤 양식 코드 리스트
     // 예시)"code": ["resume_001", "resume_002", "resume_003"]
 

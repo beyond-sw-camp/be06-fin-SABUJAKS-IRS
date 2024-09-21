@@ -479,14 +479,14 @@ export default {
         <div class="section">
           <h2>공고 기본 설정</h2>
           <div class="required-parents-div">
-            <label class="required">공고 제목</label>
+            <label class="required required2">공고 제목</label>
             <div class="required-child-div">
               <input v-model="formData.title" type="text"
                 placeholder="직무명이 포함된 공고 제목을 지원자들이 선호해요. (ex. 하반기 기계조작원 신입채용)">
             </div>
           </div>
           <div class="required-parents-div">
-            <label class="required">양식 선택</label>
+            <label class="required required2">양식 선택</label>
             <div class="required-child-div">
               <div class="btn-group">
                 <button :class="{ active: isImageUpload }" @click="selectFormType('imageUpload')">공고 이미지 업로드</button>
@@ -564,7 +564,7 @@ export default {
 
             <!-- 모집분야명 -->
             <div class="required-parents-div">
-              <label class="required">모집분야명</label>
+              <label class="required required2">모집분야명</label>
               <div class="required-child-div">
                 <input type="text" v-model="formData.recruitmentFieldName" placeholder="oo시스템 IT 교육(부트캠프) 운영 매니저 채용" />
               </div>
@@ -572,7 +572,7 @@ export default {
 
             <!-- 모집인원 -->
             <div class="required-parents-div">
-              <label class="required">모집인원</label>
+              <label class="required required2">모집인원</label>
               <div class="required-child-div">
                 <input type="number" v-model.number="formData.numberOfRecruit" min="0"
                   style="width: 100px; padding: 10px;" /> 명 모집
@@ -581,7 +581,7 @@ export default {
 
             <!-- 경력 -->
             <div class="required-parents-div">
-              <label class="required">경력</label>
+              <label class="required required2">경력</label>
               <div class="required-child-div">
                 <input type="checkbox" id="newbie" v-model="formData.isNewbie"
                   @change="exclusiveCheckbox('isNewbie', 'isExperienced')" /> 신입
@@ -640,7 +640,7 @@ export default {
 
             <!-- 근무지역 -->
             <div class="required-parents-div">
-              <label class="required">근무지역</label>
+              <label class="required required2">근무지역</label>
               <div class="required-child-div">
                 <input type="checkbox" v-model="formData.isOverseas" /> 해외지역
                 <input type="checkbox" v-model="formData.isReworkPossible" style="margin-left: 20px;" /> 재택근무 가능
@@ -824,7 +824,7 @@ export default {
 
             <!-- 지원 접수 기간 -->
             <div class="required-parents-div">
-              <label class="required">지원 접수 기간</label>
+              <label class="required required2">지원 접수 기간</label>
               <div class="required-child-div">
                 <div class="btn-group" style="margin-bottom: 20px;">
                   <button :class="{ active: selectedPeriod === '1개월' }" @click="setActiveButton('1개월')">1개월</button>
@@ -850,7 +850,7 @@ export default {
 
             <!-- 면접 횟수 -->
             <div class="required-parents-div">
-              <label class="required">면접 횟수</label>
+              <label class="required required2">면접 횟수</label>
               <div class="required-child-div">
                 <select v-model="formData.interviewCount">
                   <option value="선택해 주세요">선택해 주세요</option>
@@ -1030,7 +1030,12 @@ input[type="email"] {
   border-radius: 5px;
 }
 
-.required:after {
+/* .required:after {
+  content: "*";
+  color: red;
+} */
+
+.required2:after {
   content: "*";
   color: red;
 }
