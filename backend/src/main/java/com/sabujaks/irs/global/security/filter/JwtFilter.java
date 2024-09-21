@@ -47,11 +47,11 @@ public class JwtFilter extends OncePerRequestFilter {
                 }
             }
         }
+        if (authorization == null) {
+            log.info("인증 쿠키 없음");
+            filterChain.doFilter(request, response);
+        }
         try {
-            if (authorization == null) {
-                log.info("인증 쿠키 없음");
-                filterChain.doFilter(request, response);
-            }
             String token = authorization;
             Long idx = jwtUtil.getIdx(token);
             String email = jwtUtil.getUsername(token);

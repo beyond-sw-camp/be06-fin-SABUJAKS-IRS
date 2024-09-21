@@ -2,6 +2,7 @@ package com.sabujaks.irs.domain.auth.controller;
 
 import com.sabujaks.irs.domain.auth.model.request.AuthSignupReq;
 import com.sabujaks.irs.domain.auth.model.request.CompanyVerifyReq;
+import com.sabujaks.irs.domain.auth.model.request.PasswordEditReq;
 import com.sabujaks.irs.domain.auth.model.response.AuthSignupRes;
 import com.sabujaks.irs.domain.auth.model.response.CompanyVerifyRes;
 import com.sabujaks.irs.domain.auth.model.response.CrnApiRes;
@@ -37,7 +38,7 @@ public class AuthController {
         AuthSignupRes response = authService.signup(dto, fileUrl);
         String uuid = emailVerifyService.sendMail(response);
         emailVerifyService.save(dto.getEmail(), uuid);
-        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.MEMBER_REGISTER_SUCCESS, response));
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.AUTH_REGISTER_SUCCESS, response));
     }
 
     @GetMapping("/email-verify")
@@ -45,9 +46,9 @@ public class AuthController {
         String email, String role, String uuid) throws Exception, BaseException {
         if(emailVerifyService.isExist(email, uuid)){
             authService.activeMember(email, role);
-            return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.EMAIL_VERIFY_SUCCESS));
+            return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.AUTH_EMAIL_VERIFY_SUCCESS));
         } else {
-            return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.EMAIL_VERIFY_FAIL));
+            return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.AUTH_EMAIL_VERIFY_FAIL));
         }
     }
 
@@ -55,13 +56,21 @@ public class AuthController {
     public ResponseEntity<BaseResponse<CrnApiRes>> companyVerify(
         @RequestBody CompanyVerifyReq dto) throws BaseException {
         CompanyVerifyRes response = crnVerifyService.companyVerify(dto);
-        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.COMPANY_VERIFY_SUCCESS, response));
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.AUTH_COMPANY_VERIFY_SUCCESS, response));
     }
 
     @GetMapping("/user-info")
     public ResponseEntity<BaseResponse<UserInfoGetRes>> userInfo(
         @AuthenticationPrincipal CustomUserDetails customUserDetails) throws BaseException {
         UserInfoGetRes response = authService.userInfo(customUserDetails);
-        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.MEMBER_SEARCH_USER_INFO_SUCCESS, response));
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.AUTH_SEARCH_USER_INFO_SUCCESS, response));
+    }
+
+    @PostMapping("/edit-password")
+    public ResponseEntity<BaseResponse> editPassword(
+        @AuthenticationPrincipal CustomUserDetails customUserDetails,
+        @RequestBody PasswordEditReq dto) throws BaseException {
+        authService.editPassword(customUserDetails, dto);
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.AUTH_EDIT_PASSWORD_SUCCESS));
     }
 }

@@ -43,6 +43,7 @@
     }
   };
   
+  
   const handleStartSpeaking = (event) => {
     if (event.connection.connectionId === props.streamManager.stream.connection.connectionId) {
       isSpeaking.value = true;

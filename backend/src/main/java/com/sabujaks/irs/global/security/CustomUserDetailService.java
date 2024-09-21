@@ -6,8 +6,6 @@ import com.sabujaks.irs.domain.auth.model.entity.Seeker;
 import com.sabujaks.irs.domain.auth.repository.EstimatorRepository;
 import com.sabujaks.irs.domain.auth.repository.RecruiterRepository;
 import com.sabujaks.irs.domain.auth.repository.SeekerRepository;
-import com.sabujaks.irs.global.common.exception.BaseException;
-import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -39,36 +37,34 @@ public class CustomUserDetailService implements UserDetailsService {
                     .emailAuth(seeker.getEmailAuth())
                     .interviewParticipateList(seeker.getInterviewParticipateList())
                     .build();
-        }else {
-            Optional<Estimator> estimatorOpt = estimatorRepository.findByEstimatorEmail(email);
-            if (estimatorOpt.isPresent()) {
-                Estimator estimator = estimatorOpt.get();
-                return CustomUserDetails.builder()
-                        .estimator(estimator)
-                        .idx(estimator.getIdx())
-                        .email(estimator.getEmail())
-                        .password(estimator.getPassword())
-                        .role(estimator.getRole())
-                        .emailAuth(true)
-                        .build();
-            } else {
-                Optional<Recruiter> recruiterOpt = recruiterRepository.findByRecruiterEmail(email);
-                if (recruiterOpt.isPresent()) {
-                    Recruiter recruiter = recruiterOpt.get();
-                    return CustomUserDetails.builder()
-                            .recruiter(recruiter)
-                            .idx(recruiter.getIdx())
-                            .name(recruiter.getName())
-                            .email(recruiter.getEmail())
-                            .password(recruiter.getPassword())
-                            .role(recruiter.getRole())
-                            .emailAuth(recruiter.getEmailAuth())
-                            .announcementList(recruiter.getAnnouncementList())
-                            .build();
-                } else {
-                    throw new UsernameNotFoundException("사용자가 존재하지 않습니다.");
-                }
-            }
+        }
+        Optional<Estimator> estimatorOpt = estimatorRepository.findByEstimatorEmail(email);
+        if (estimatorOpt.isPresent()) {
+            Estimator estimator = estimatorOpt.get();
+            return CustomUserDetails.builder()
+                    .estimator(estimator)
+                    .idx(estimator.getIdx())
+                    .email(estimator.getEmail())
+                    .password(estimator.getPassword())
+                    .role(estimator.getRole())
+                    .emailAuth(true)
+                    .build();
+        }
+        Optional<Recruiter> recruiterOpt = recruiterRepository.findByRecruiterEmail(email);
+        if (recruiterOpt.isPresent()) {
+            Recruiter recruiter = recruiterOpt.get();
+            return CustomUserDetails.builder()
+                    .recruiter(recruiter)
+                    .idx(recruiter.getIdx())
+                    .name(recruiter.getName())
+                    .email(recruiter.getEmail())
+                    .password(recruiter.getPassword())
+                    .role(recruiter.getRole())
+                    .emailAuth(recruiter.getEmailAuth())
+                    .announcementList(recruiter.getAnnouncementList())
+                    .build();
+        } else {
+            throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
         }
     }
 }

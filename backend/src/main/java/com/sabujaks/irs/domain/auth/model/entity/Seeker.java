@@ -17,6 +17,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 // 지원자 엔티티
 @Entity
@@ -32,6 +33,8 @@ public class Seeker {
     private Long idx;
     @Column(nullable = false, length = 100, unique = true)
     private String email; // 이메일
+
+    @Setter
     private String password; // 비밀번호
     private String name; // 지원자명
     private String nickname; // 닉네임
@@ -72,4 +75,5 @@ public class Seeker {
 
     @OneToMany(mappedBy = "seeker", fetch = FetchType.LAZY)
     private List<InterviewEvaluate> interviewEvaluateList = new ArrayList<>();
+
 }
