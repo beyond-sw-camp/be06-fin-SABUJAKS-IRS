@@ -5,6 +5,7 @@ import com.sabujaks.irs.domain.announcement.repository.AnnouncementRepository;
 import com.sabujaks.irs.domain.interview_evaluate.model.entity.InterviewEvaluateForm;
 import com.sabujaks.irs.domain.interview_evaluate.model.request.InterviewEvaluateFormCreateReq;
 import com.sabujaks.irs.domain.interview_evaluate.model.response.InterviewEvaluateFormCreateRes;
+import com.sabujaks.irs.domain.interview_evaluate.model.response.InterviewEvaluateFormReadRes;
 import com.sabujaks.irs.domain.interview_evaluate.repository.InterviewEvaluateFormRepository;
 import com.sabujaks.irs.domain.interview_evaluate.repository.InterviewEvaluateRepository;
 import com.sabujaks.irs.domain.interview_evaluate.repository.InterviewEvaluateResultRepository;
@@ -62,5 +63,22 @@ public class InterviewEvaluateService {
                     .idx(interviewEvaluateForm.getIdx())
                     .build();
         }
+    }
+
+    public InterviewEvaluateFormReadRes searchForm(String announcementUUID) throws  BaseException {
+        InterviewEvaluateForm interviewEvaluateForm = interviewEvaluateFormRepository.findByAnnouncementUUID(announcementUUID)
+        .orElseThrow(() -> new BaseException(BaseResponseMessage.INTERVIEW_EVALUATE_SEARCH_FORM_FAIL_IS_NOT_EXIST));
+        return InterviewEvaluateFormReadRes.builder()
+                .q1(interviewEvaluateForm.getQ1())
+                .q2(interviewEvaluateForm.getQ2())
+                .q3(interviewEvaluateForm.getQ3())
+                .q4(interviewEvaluateForm.getQ4())
+                .q5(interviewEvaluateForm.getQ5())
+                .q6(interviewEvaluateForm.getQ6())
+                .q7(interviewEvaluateForm.getQ7())
+                .q8(interviewEvaluateForm.getQ8())
+                .q9(interviewEvaluateForm.getQ9())
+                .q10(interviewEvaluateForm.getQ10())
+                .build();
     }
 }
