@@ -7,6 +7,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ResumeCreateRes {
-    private Long resumeInfoIdx;
+public class ResumeSubmitRes {
+    private Long resumeIdx;
 }
