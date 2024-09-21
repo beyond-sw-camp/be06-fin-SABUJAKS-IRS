@@ -248,7 +248,7 @@ public class ResumeService {
             }
 
             return ResumeCreateRes.builder()
-                    .resume_info_idx(resumeInfo.getIdx())
+                    .resumeInfoIdx(resumeInfo.getIdx())
                     .build();
         } else {
             throw new BaseException(BaseResponseMessage.RESUME_REGISTER_FAIL_NOT_FOUND_SEEKER);
@@ -256,7 +256,7 @@ public class ResumeService {
     }
 
     @Transactional
-    public ResumeCreateRes submit(CustomUserDetails customUserDetails, ResumeSubmitReq dto, String fileUrl) throws BaseException {
+    public ResumeSubmitRes submit(CustomUserDetails customUserDetails, ResumeSubmitReq dto, String fileUrl) throws BaseException {
         Long seekerIdx = customUserDetails.getIdx();
         // 지원자 테이블 조회
         Optional<Seeker> resultSeeker = seekerRepository.findBySeekerIdx(seekerIdx);
@@ -467,8 +467,8 @@ public class ResumeService {
                     resumeRepository.save(resume);
 
 
-                    return ResumeCreateRes.builder()
-                            .resume_info_idx(resumeInfo.getIdx())
+                    return ResumeSubmitRes.builder()
+                            .resumeIdx(resume.getIdx())
                             .build();
                 } else {
                     throw new BaseException(BaseResponseMessage.RESUME_REGISTER_FAIL_RESUME_DUPLICATE);

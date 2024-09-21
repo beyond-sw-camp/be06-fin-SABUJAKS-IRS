@@ -5,6 +5,7 @@ import com.sabujaks.irs.domain.resume.model.request.ResumeSubmitReq;
 import com.sabujaks.irs.domain.resume.model.response.ResumeCreateRes;
 import com.sabujaks.irs.domain.resume.model.response.ResumeReadRes;
 import com.sabujaks.irs.domain.resume.model.response.ResumeReadSubmitInfoRes;
+import com.sabujaks.irs.domain.resume.model.response.ResumeSubmitRes;
 import com.sabujaks.irs.domain.resume.service.ResumeService;
 import com.sabujaks.irs.global.common.exception.BaseException;
 import com.sabujaks.irs.global.common.responses.BaseResponse;
@@ -28,7 +29,7 @@ public class ResumeController {
 
     // (지원자) 마이페이지 -> 지원서 등록
     @PostMapping("/create")
-    public ResponseEntity<BaseResponse<ResumeCreateReq>> create(
+    public ResponseEntity<BaseResponse<ResumeCreateRes>> create(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestPart ResumeCreateReq dto,
             @RequestPart MultipartFile file,
@@ -62,7 +63,7 @@ public class ResumeController {
 
     // (지원자) 공고 -> 지원서 등록
     @PostMapping("/submit")
-    public ResponseEntity<BaseResponse<ResumeCreateReq>> submit(
+    public ResponseEntity<BaseResponse<ResumeSubmitRes>> submit(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestPart ResumeSubmitReq dto,
             @RequestPart MultipartFile file,
@@ -90,14 +91,14 @@ public class ResumeController {
         }
 
         String fileUrl = cloudFileUpload.upload(file);
-        ResumeCreateRes response = resumeService.submit(customUserDetails, dto, fileUrl);
+        ResumeSubmitRes response = resumeService.submit(customUserDetails, dto, fileUrl);
 
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.RESUME_REGISTER_SUCCESS, response));
     }
 
     // (지원자) 공고 -> 지원서 제출 페이지 진입 시
     @GetMapping("/read/submit-info")
-    public ResponseEntity<BaseResponse<ResumeSubmitReq>> readSubmitInfo(
+    public ResponseEntity<BaseResponse<ResumeReadSubmitInfoRes>> readSubmitInfo(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             Long announcementIdx) throws BaseException {
 
@@ -107,7 +108,7 @@ public class ResumeController {
 
     // (지원자) 마이페이지 -> 통합 지원서 조회
     @GetMapping("/read/integrated")
-    public ResponseEntity<BaseResponse<ResumeSubmitReq>> readIntegrated(
+    public ResponseEntity<BaseResponse<ResumeReadRes>> readIntegrated(
             @AuthenticationPrincipal CustomUserDetails customUserDetails) throws BaseException {
 
         ResumeReadRes response = resumeService.readIntegrated(customUserDetails);
@@ -116,7 +117,7 @@ public class ResumeController {
 
     // (지원자, 채용담당자) 지원서 상세 조회
     @GetMapping("/read")
-    public ResponseEntity<BaseResponse<ResumeSubmitReq>> read(Long resumeIdx) throws BaseException {
+    public ResponseEntity<BaseResponse<ResumeReadRes>> read(Long resumeIdx) throws BaseException {
 
         ResumeReadRes response = resumeService.read(resumeIdx);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.RESUME_READ_SUCCESS, response));
