@@ -10,7 +10,6 @@ import com.sabujaks.irs.domain.interview_evaluate.repository.InterviewEvaluateFo
 import com.sabujaks.irs.domain.interview_evaluate.repository.InterviewEvaluateRepository;
 import com.sabujaks.irs.domain.interview_evaluate.repository.InterviewEvaluateResultRepository;
 import com.sabujaks.irs.domain.interview_schedule.model.entity.InterviewParticipate;
-import com.sabujaks.irs.domain.interview_schedule.model.entity.InterviewSchedule;
 import com.sabujaks.irs.domain.interview_schedule.repository.InterviewParticipateRepository;
 import com.sabujaks.irs.domain.interview_schedule.repository.InterviewScheduleRepository;
 import com.sabujaks.irs.global.common.exception.BaseException;
@@ -19,6 +18,7 @@ import com.sabujaks.irs.global.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -96,8 +96,9 @@ public class InterviewEvaluateService {
                     .q10(interviewEvaluateForm.getQ10())
                     .build();
         } else if(Objects.equals(customUserDetails.getRole(), "ROLE_ESTIMATOR")) {
-            InterviewParticipate interviewParticipate = interviewParticipateRepository.findByEstimatorIdxAndInterviewScheduleUUID(customUserDetails.getIdx(), interviewScheduleUUID)
-            .orElseThrow(() -> new BaseException(BaseResponseMessage.INTERVIEW_EVALUATE_SEARCH_FORM_FAIL_INVALID_ACCESS));
+            if(interviewParticipateRepository.findFirstByEstimatorIdxAndInterviewScheduleUUID(customUserDetails.getIdx(), interviewScheduleUUID).isEmpty()){
+                throw new BaseException(BaseResponseMessage.INTERVIEW_EVALUATE_SEARCH_FORM_FAIL_INVALID_ACCESS);
+            }
             InterviewEvaluateForm interviewEvaluateForm = interviewEvaluateFormRepository.findByAnnouncementUUID(announcementUUID)
             .orElseThrow(() -> new BaseException(BaseResponseMessage.INTERVIEW_EVALUATE_SEARCH_FORM_FAIL_IS_NOT_EXIST));
             return InterviewEvaluateFormReadRes.builder()
@@ -116,4 +117,5 @@ public class InterviewEvaluateService {
             throw new BaseException(BaseResponseMessage.INTERVIEW_EVALUATE_SEARCH_FORM_FAIL_INVALID_ACCESS);
         }
     }
+    
 }

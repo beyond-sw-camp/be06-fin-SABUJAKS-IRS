@@ -20,15 +20,18 @@ export const UseInterviewEvaluateStore = defineStore('interviewEvaluate', {
                 console.error("면접폼 생성에 실패했습니다.")
             }
         },
-        async searchForm(announcementUUID) {
+        async searchFormforEstimator(announcementUUID, interviewScheduleUUID) {
             try {
-                const response = await axios.post(
-                    `${backend}/interview-evaluate/search-form?announcementUUID=${announcementUUID}`,
-                    { headers: { 'Content-Type': 'application/json', },}
+                const response = await axios.get(
+                    `${backend}/interview-evaluate/search-form?announcementUUID=${announcementUUID}&interviewScheduleUUID=${interviewScheduleUUID}`,
+                    { 
+                        headers: { 'Content-Type': 'application/json', },
+                        withCredentials: true
+                    }
                 );
                 return response.data
             } catch (error) {
-                console.error("면접폼 생성에 실패했습니다.")
+                console.error("면접폼 조회에 실패했습니다.")
             }
         },
     },

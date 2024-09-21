@@ -4,9 +4,13 @@ import com.sabujaks.irs.domain.interview_schedule.model.entity.InterviewParticip
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface InterviewParticipateRepository extends JpaRepository<InterviewParticipate, Long> {
     @Query("SELECT ip FROM InterviewParticipate ip WHERE estimator.idx = :estimatorIdx AND interviewSchedule.uuid = :interviewScheduleUUID")
-    Optional<InterviewParticipate> findByEstimatorIdxAndInterviewScheduleUUID(Long estimatorIdx, String interviewScheduleUUID);
+    Optional<List<InterviewParticipate>> findFirstByEstimatorIdxAndInterviewScheduleUUID(Long estimatorIdx, String interviewScheduleUUID);
+
+    @Query("SELECT ip FROM InterviewParticipate ip WHERE estimator.idx = :estimatorIdx AND interviewSchedule.uuid = :interviewScheduleUUID")
+    Optional<List<InterviewParticipate>> findAllByEstimatorIdxAndInterviewScheduleUUID(Long estimatorIdx, String interviewScheduleUUID);
 }
