@@ -160,12 +160,12 @@ public class AuthService {
                     .role(estimator.getRole())
                     .build();
         } else if(Objects.equals(customUserDetails.getRole(), "ROLE_RECRUITER")){
-            Seeker seeker = seekerRepository.findBySeekerIdx(customUserDetails.getIdx())
+            Recruiter recruiter = recruiterRepository.findByRecruiterIdx(customUserDetails.getIdx())
             .orElseThrow(() -> new BaseException(BaseResponseMessage.AUTH_SEARCH_USER_INFO_FAIL));
             return UserInfoGetRes.builder()
-                    .name(seeker.getName())
-                    .email(seeker.getEmail())
-                    .role(seeker.getRole())
+                    .name(recruiter.getName())
+                    .email(recruiter.getEmail())
+                    .role(recruiter.getRole())
                     .build();
         } else {
             throw  new BaseException(BaseResponseMessage.AUTH_SEARCH_USER_INFO_FAIL);

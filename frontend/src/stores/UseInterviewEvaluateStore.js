@@ -20,5 +20,16 @@ export const UseInterviewEvaluateStore = defineStore('interviewEvaluate', {
                 console.error("면접폼 생성에 실패했습니다.")
             }
         },
+        async searchForm(announcementUUID) {
+            try {
+                const response = await axios.post(
+                    `${backend}/interview-evaluate/search-form?announcementUUID=${announcementUUID}`,
+                    { headers: { 'Content-Type': 'application/json', },}
+                );
+                return response.data
+            } catch (error) {
+                console.error("면접폼 생성에 실패했습니다.")
+            }
+        },
     },
 });
