@@ -37,8 +37,8 @@ public enum BaseResponseMessage {
     AUTH_COMPANY_VERIFY_FAIL_INVALID_REQUEST(false, 1202, "유효하지 않은 요청입니다."),
 
     // 회원 정보 조회 1300
-    AUTH_SEARCH_USER_INFO_SUCCESS(true, 1300, "회원 정보 조회에 성공했습니다."),
-    AUTH_SEARCH_USER_INFO_FAIL(false, 1301, "회원 정보 조회에 실패했습니다."),
+    AUTH_SEARCH_USER_INFO_SUCCESS(true, 1310, "회원 정보 조회에 성공했습니다."),
+    AUTH_SEARCH_USER_INFO_FAIL(false, 1311, "회원 정보 조회에 실패했습니다."),
 
     // 비밀 번호 변경 1400
     AUTH_EDIT_PASSWORD_SUCCESS(true, 1400, "계정 비밀번호 변경에 성공했습니다."),
@@ -107,18 +107,17 @@ public enum BaseResponseMessage {
     ALARM_SEARCH_FAIL(false, 5002, "알람 조회에 실패했습니다."),
 
     // 인터뷰 평가 6000~6999
-    // 인터뷰 평가표 생성
+    // 인터뷰 평가표 생성 6000
     INTERVIEW_EVALUATE_CREATE_FORM_SUCCESS(true, 6000, "인터뷰 평가표 생성에 성공했습니다."),
-    INTERVIEW_EVALUATE_CREATE_FORM_FAIL_IS_EXIST(false, 6001, "인터뷰 평가표가 이미 존재합니다."),
+    INTERVIEW_EVALUATE_CREATE_FORM_FAIL_ALREADY_EXIST(false, 6001, "인터뷰 평가표가 이미 존재합니다."),
     INTERVIEW_EVALUATE_CREATE_FORM_FAIL_INVALID_REQUEST(false, 6002, "해당 공고의 채용담당자가 아니면 인터뷰 평가표를 작성할 권한이 없습니다."),
-    // 인터뷰 평가표 조회
+    // 인터뷰 평가표 조회 6100
     INTERVIEW_EVALUATE_SEARCH_FORM_SUCCESS(true, 6100, "인터뷰 평가표 조회에 성공했습니다."),
     INTERVIEW_EVALUATE_SEARCH_FORM_FAIL_IS_NOT_EXIST(false, 6101, "해당 공고의 인터뷰 평가표가 존재하지 않습니다."),
     INTERVIEW_EVALUATE_SEARCH_FORM_FAIL_INVALID_ACCESS(false, 6102, "해당 공고의 인터뷰 평가표에 접근할 수 없습니다."),
-
-
-    // 인터뷰 참여
-    INTERVIEW_PARTICIPATE_SEARCH_FAIL_NOT_FOUND(false, 6200, "해당 인터뷰 면접관이 아닙니다.");
+    // 인터뷰 지원서 조회 6200
+    INTERVIEW_EVALUATE_SEARCH_RESUME_SUCCESS(true, 6200, "지원자들의 지원서 정보를 불러오는데 성공했습니다." ),
+    INTERVIEW_EVALUATE_SEARCH_RESUME_FAIL_NOT_FOUND(false, 6201, "지원자들의 지원서 정보를 불러오는데 실패했습니다.");
 
 
     private Boolean success;

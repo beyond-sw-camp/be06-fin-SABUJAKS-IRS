@@ -3,6 +3,8 @@ package com.sabujaks.irs.domain.interview_evaluate.controller;
 import com.sabujaks.irs.domain.interview_evaluate.model.request.InterviewEvaluateFormCreateReq;
 import com.sabujaks.irs.domain.interview_evaluate.model.response.InterviewEvaluateFormCreateRes;
 import com.sabujaks.irs.domain.interview_evaluate.model.response.InterviewEvaluateFormReadRes;
+import com.sabujaks.irs.domain.interview_evaluate.model.response.InterviewEvaluateReadAllResumeInfo;
+import com.sabujaks.irs.domain.interview_evaluate.model.response.InterviewEvaluateReadResumeInfoRes;
 import com.sabujaks.irs.domain.interview_evaluate.service.InterviewEvaluateService;
 import com.sabujaks.irs.global.common.exception.BaseException;
 import com.sabujaks.irs.global.common.responses.BaseResponse;
@@ -12,6 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -35,5 +40,14 @@ public class InterviewEvaluateController {
         @RequestParam(required = false) String interviewScheduleUUID) throws BaseException {
         InterviewEvaluateFormReadRes response = interviewEvaluateService.searchForm(customUserDetails, announcementUUID, interviewScheduleUUID);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_EVALUATE_SEARCH_FORM_SUCCESS, response));
+    }
+
+    @GetMapping("/read-all/resume-info")
+    public ResponseEntity<BaseResponse<InterviewEvaluateReadAllResumeInfo>> readAllResumeInfo(
+        @AuthenticationPrincipal CustomUserDetails customUserDetails,
+        @RequestParam String announcementUUID,
+        @RequestParam String interviewScheduleUUID) throws BaseException {
+        InterviewEvaluateReadAllResumeInfo response = interviewEvaluateService.readAllResumeInfo(customUserDetails, announcementUUID, interviewScheduleUUID);
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_EVALUATE_SEARCH_RESUME_SUCCESS, response));
     }
 }

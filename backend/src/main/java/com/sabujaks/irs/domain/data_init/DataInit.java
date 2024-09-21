@@ -17,7 +17,7 @@ public class DataInit {
     // 어노테이션 주석 해제하면 init 됨
     // 테이블 없으면 yml create로 바꾸고 주석해제 후 프로젝트 실행(한번 넣기)
     // 그 후 주석처리 안하고 프로젝트 돌리면 중복으로 들어가니까 다시 주석처리!
-    @PostConstruct //애플리케이션의 빈이 초기화될 때 실행
+//    @PostConstruct //애플리케이션의 빈이 초기화될 때 실행
     public void dataInsert() {
 
         // 1. 지원서 폼 등록
