@@ -3,6 +3,7 @@ package com.sabujaks.irs.domain.auth.service;
 import com.sabujaks.irs.domain.auth.model.entity.Recruiter;
 import com.sabujaks.irs.domain.auth.model.entity.Seeker;
 import com.sabujaks.irs.domain.auth.model.request.AuthSignupReq;
+import com.sabujaks.irs.domain.auth.model.request.PasswordEditReq;
 import com.sabujaks.irs.domain.auth.model.response.AuthSignupRes;
 import com.sabujaks.irs.domain.auth.model.response.UserInfoGetRes;
 import com.sabujaks.irs.domain.auth.repository.CompanyVerifyRepository;
@@ -35,7 +36,7 @@ public class AuthService {
             Optional<Recruiter> result = recruiterRepository.findByRecruiterEmail(dto.getEmail());
             if(result.isEmpty()){
                 if(companyVerifyRepository.findByRecruiterEmail(dto.getEmail()).isEmpty()){
-                    throw new BaseException(BaseResponseMessage.MEMBER_REGISTER_FAIL_NOT_COMPANY_AUTH);
+                    throw new BaseException(BaseResponseMessage.AUTH_REGISTER_FAIL_NOT_COMPANY_AUTH);
                 }
                 Recruiter recruiter = Recruiter.builder()
                         .role(dto.getRole())
@@ -57,7 +58,7 @@ public class AuthService {
                         .build();
             }
             else {
-                throw new BaseException(BaseResponseMessage.MEMBER_REGISTER_FAIL_MEMBER_ALREADY_EXITS);
+                throw new BaseException(BaseResponseMessage.AUTH_REGISTER_FAIL_MEMBER_ALREADY_EXITS);
             }
         } else if(Objects.equals(dto.getRole(), "ROLE_SEEKER")) {
             Optional<Seeker> result = seekerRepository.findBySeekerEmail(dto.getEmail());
@@ -86,28 +87,28 @@ public class AuthService {
                         .email(seeker.getEmail())
                         .build();
             } else {
-                throw new BaseException(BaseResponseMessage.MEMBER_REGISTER_FAIL_MEMBER_ALREADY_EXITS);
+                throw new BaseException(BaseResponseMessage.AUTH_REGISTER_FAIL_MEMBER_ALREADY_EXITS);
             }
         } else {
-            throw new BaseException(BaseResponseMessage.MEMBER_REGISTER_FAIL_INVALID_ROLE);
+            throw new BaseException(BaseResponseMessage.AUTH_REGISTER_FAIL_INVALID_ROLE);
         }
     }
 
     public Boolean activeMember(String email, String role) throws BaseException {
         if(Objects.equals(role, "ROLE_RECRUITER")){
             Recruiter recruiter = recruiterRepository.findByRecruiterEmail(email)
-            .orElseThrow( () -> new BaseException(BaseResponseMessage.EMAIL_VERIFY_FAIL_NOT_FOUND));
+            .orElseThrow( () -> new BaseException(BaseResponseMessage.AUTH_EMAIL_VERIFY_FAIL_NOT_FOUND));
             recruiter.setEmailAuth(true);
             recruiter.setInactive(false);
             recruiterRepository.save(recruiter);
         } else if(Objects.equals(role, "ROLE_SEEKER")) {
             Seeker seeker = seekerRepository.findBySeekerEmail(email)
-                    .orElseThrow( () -> new BaseException(BaseResponseMessage.EMAIL_VERIFY_FAIL_NOT_FOUND));
+                    .orElseThrow( () -> new BaseException(BaseResponseMessage.AUTH_EMAIL_VERIFY_FAIL_NOT_FOUND));
             seeker.setEmailAuth(true);
             seeker.setInactive(false);
             seekerRepository.save(seeker);
         } else {
-            throw new BaseException(BaseResponseMessage.EMAIL_VERIFY_FAIL_INVALID_ROLE);
+            throw new BaseException(BaseResponseMessage.AUTH_EMAIL_VERIFY_FAIL_INVALID_ROLE);
         }
         return true;
     }
@@ -115,7 +116,7 @@ public class AuthService {
     public UserInfoGetRes userInfo(CustomUserDetails customUserDetails) throws BaseException {
         if(Objects.equals(customUserDetails.getRole(), "ROLE_SEEKER")){
             Seeker seeker = seekerRepository.findBySeekerEmail(customUserDetails.getEmail())
-            .orElseThrow(() -> new BaseException(BaseResponseMessage.MEMBER_SEARCH_USER_INFO_FAIL));
+            .orElseThrow(() -> new BaseException(BaseResponseMessage.AUTH_SEARCH_USER_INFO_FAIL));
             return UserInfoGetRes.builder()
                     .name(seeker.getName())
                     .email(seeker.getEmail())
@@ -123,7 +124,7 @@ public class AuthService {
                     .build();
         } else if (Objects.equals(customUserDetails.getRole(), "ROLE_ESTIMATOR")) {
             Estimator estimator = estimatorRepository.findByEstimatorEmail(customUserDetails.getEmail())
-            .orElseThrow(() -> new BaseException(BaseResponseMessage.MEMBER_SEARCH_USER_INFO_FAIL));
+            .orElseThrow(() -> new BaseException(BaseResponseMessage.AUTH_SEARCH_USER_INFO_FAIL));
             return UserInfoGetRes.builder()
                     .name(estimator.getName())
                     .email(estimator.getEmail())
@@ -131,14 +132,45 @@ public class AuthService {
                     .build();
         } else if(Objects.equals(customUserDetails.getRole(), "ROLE_RECRUITER")){
             Seeker seeker = seekerRepository.findBySeekerIdx(customUserDetails.getIdx())
-            .orElseThrow(() -> new BaseException(BaseResponseMessage.MEMBER_SEARCH_USER_INFO_FAIL));
+            .orElseThrow(() -> new BaseException(BaseResponseMessage.AUTH_SEARCH_USER_INFO_FAIL));
             return UserInfoGetRes.builder()
                     .name(seeker.getName())
                     .email(seeker.getEmail())
                     .role(seeker.getRole())
                     .build();
         } else {
-            throw  new BaseException(BaseResponseMessage.MEMBER_SEARCH_USER_INFO_FAIL);
+            throw  new BaseException(BaseResponseMessage.AUTH_SEARCH_USER_INFO_FAIL);
+        }
+    }
+
+    public void editPassword(CustomUserDetails customUserDetails, PasswordEditReq dto) throws BaseException {
+        if(Objects.equals(customUserDetails.getRole(), "ROLE_SEEKER")){
+            Optional<Seeker> result = seekerRepository.findBySeekerIdx(customUserDetails.getIdx());
+            if(result.isPresent()){
+                Seeker seeker = result.get();
+                if(passwordEncoder.matches(dto.getOriginPassword(), seeker.getPassword())){
+                    seeker.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+                    seekerRepository.save(seeker);
+                }
+                else {
+                    throw new BaseException(BaseResponseMessage.AUTH_EDIT_PASSWORD_FAIL_PASSWORD_NOT_MATCH);
+                }
+            }
+        } else if(Objects.equals(customUserDetails.getRole(), "ROLE_RECRUITER")) {
+            Optional<Recruiter> result = recruiterRepository.findByRecruiterIdx(customUserDetails.getIdx());
+            if(result.isPresent()) {
+                Recruiter recruiter = result.get();
+                if(passwordEncoder.matches(dto.getOriginPassword(), recruiter.getPassword()))
+                {
+                    recruiter.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+                    recruiterRepository.save(recruiter);
+                }
+                else {
+                    throw new BaseException(BaseResponseMessage.AUTH_EDIT_PASSWORD_FAIL_PASSWORD_NOT_MATCH);
+                }
+            }
+        } else {
+            throw new BaseException(BaseResponseMessage.AUTH_EDIT_PASSWORD_FAIL);
         }
     }
 }

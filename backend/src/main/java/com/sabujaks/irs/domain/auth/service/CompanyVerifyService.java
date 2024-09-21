@@ -54,7 +54,7 @@ public class CompanyVerifyService {
                     .auth_success(true)
                     .build();
         } else {
-            throw new BaseException(BaseResponseMessage.COMPANY_VERIFY_FAIL);
+            throw new BaseException(BaseResponseMessage.AUTH_COMPANY_VERIFY_FAIL);
         }
     }
 }

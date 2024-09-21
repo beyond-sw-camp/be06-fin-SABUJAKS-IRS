@@ -22,7 +22,7 @@ public class EmailVerifyService {
 
     public Boolean isExist(String email, String uuid) throws BaseException {
         EmailVerify emailVerify = emailVerifyRepository.findByEmail(email)
-        .orElseThrow(() -> new BaseException(BaseResponseMessage.EMAIL_VERIFY_FAIL));
+        .orElseThrow(() -> new BaseException(BaseResponseMessage.AUTH_EMAIL_VERIFY_FAIL));
         if (emailVerify.getUuid().equals(uuid)) {
             return true;
         } else {
@@ -54,7 +54,7 @@ public class EmailVerifyService {
                 message.setSubject("IRS - 지원자 계정 복구 이메일");
             }
         } else {
-            throw new BaseException(BaseResponseMessage.EMAIL_VERIFY_FAIL_INVALID_ROLE);
+            throw new BaseException(BaseResponseMessage.AUTH_EMAIL_VERIFY_FAIL_INVALID_ROLE);
         }
         String uuid = UUID.randomUUID().toString();
         message.setText("http://localhost:8080/api/auth/email-verify?email="+response.getEmail()+"&role="+response.getRole()+"&uuid="+uuid);

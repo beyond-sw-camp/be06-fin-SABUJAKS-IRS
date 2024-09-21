@@ -25,6 +25,8 @@ public class Recruiter {
     private Long idx;
     @Column(nullable = false, length = 100, unique = true)
     private String email; // 이메일
+
+    @Setter
     @Column(nullable = false, length = 100, unique = true)
     private String password; // 비밀번호
     private String name; // 가입자명

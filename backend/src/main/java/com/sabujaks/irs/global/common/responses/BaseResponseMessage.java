@@ -13,28 +13,35 @@ public enum BaseResponseMessage {
     USER_NOT_FOUND(false, 308, "계정이 존재하지 않습니다. 회원가입 진행 후 로그인 해주세요."),
     FILE_UPLOAD_FAIL(false, 309,"이미지 업로드에 실패했습니다."),
     AUTH_FAIL(false, 310, "사용자 인증에 실패하였습니다."),
+    EMAIL_SEND_FAIL(false, 311, "이메일 전송에 실패했습니다."),
     INTERNAL_SERVER_ERROR(false, 500, "내부 서버 오류가 발생해서 처리할 수 없습니다."),
 
     // AUTH 1000~1999
-    // MEMBER 회원가입 1000
-    MEMBER_REGISTER_SUCCESS(true, 1000, "회원가입에 성공했습니다. 이메일 인증 후 로그인 해주세요"),
-    MEMBER_REGISTER_FAIL_MEMBER_ALREADY_EXITS(false, 1001, "이미 다른 계정이 존재합니다." ),
-    MEMBER_REGISTER_FAIL_INVALID_ROLE(false, 1002, "유효하지 않은 회원가입입니다. "),
-    MEMBER_REGISTER_FAIL_NOT_COMPANY_AUTH(false, 1003, "기업 인증을 하지 않은 사용자는 가입할 수 없습니다."),
-    // 회원 정보 조회
-    MEMBER_SEARCH_USER_INFO_SUCCESS(true, 1004, "회원 정보 조회에 성공했습니다."),
-    MEMBER_SEARCH_USER_INFO_FAIL(false, 1005, "회원 정보 조회에 실패했습니다."),
-    // EMAIL_VERIFY 이메일 검증 1100
-    EMAIL_VERIFY_SUCCESS(true, 1100, "이메일 검증을 완료했습니다."),
-    EMAIL_VERIFY_FAIL(false, 1101, "이메일 검증을 실패했습니다."),
-    EMAIL_VERIFY_FAIL_NOT_FOUND(false, 1102, "해당 유저를 찾을 수 없습니다."),
-    EMAIL_VERIFY_FAIL_INVALID_ROLE(false, 1102, "유효하지 않은 이메일 검증입니다."),
-    EMAIL_SEND_FAIL(false, 1103, "이메일 전송에 실패했습니다."),
+    // 회원가입 1000
+    AUTH_REGISTER_SUCCESS(true, 1000, "회원가입에 성공했습니다. 이메일 인증 후 로그인 해주세요"),
+    AUTH_REGISTER_FAIL_MEMBER_ALREADY_EXITS(false, 1001, "이미 다른 계정이 존재합니다." ),
+    AUTH_REGISTER_FAIL_INVALID_ROLE(false, 1002, "유효하지 않은 회원가입입니다. "),
+    AUTH_REGISTER_FAIL_NOT_COMPANY_AUTH(false, 1003, "기업 인증을 하지 않은 사용자는 가입할 수 없습니다."),
 
-    // COMPANY_VERIFY 기업 인증 1200
-    COMPANY_VERIFY_SUCCESS(true, 1200, "기업 인증을 완료했습니다."),
-    COMPANY_VERIFY_FAIL(false, 1201, "기업 인증에 실패했습니다."),
-    COMPANY_VERIFY_FAIL_INVALID_REQUEST(false, 1202, "유효하지 않은 요청입니다."),
+    // 이메일 검증 1100
+    AUTH_EMAIL_VERIFY_SUCCESS(true, 1100, "이메일 검증을 완료했습니다."),
+    AUTH_EMAIL_VERIFY_FAIL(false, 1101, "이메일 검증을 실패했습니다."),
+    AUTH_EMAIL_VERIFY_FAIL_NOT_FOUND(false, 1102, "해당 유저를 찾을 수 없습니다."),
+    AUTH_EMAIL_VERIFY_FAIL_INVALID_ROLE(false, 1103, "유효하지 않은 이메일 검증입니다."),
+
+    // 기업 인증 1200
+    AUTH_COMPANY_VERIFY_SUCCESS(true, 1200, "기업 인증을 완료했습니다."),
+    AUTH_COMPANY_VERIFY_FAIL(false, 1201, "기업 인증에 실패했습니다."),
+    AUTH_COMPANY_VERIFY_FAIL_INVALID_REQUEST(false, 1202, "유효하지 않은 요청입니다."),
+
+    // 회원 정보 조회 1300
+    AUTH_SEARCH_USER_INFO_SUCCESS(true, 1300, "회원 정보 조회에 성공했습니다."),
+    AUTH_SEARCH_USER_INFO_FAIL(false, 1301, "회원 정보 조회에 실패했습니다."),
+
+    // 비밀 번호 변경 1400
+    AUTH_EDIT_PASSWORD_SUCCESS(true, 1400, "계정 비밀번호 변경에 성공했습니다."),
+    AUTH_EDIT_PASSWORD_FAIL_PASSWORD_NOT_MATCH(false, 1401, "계정 패스워드가 다릅니다."),
+    AUTH_EDIT_PASSWORD_FAIL(false, 1402, "계정 비밀번호 변경에 실패했습니다."),
 
     // INTERVIEW_SCHEDULE 면접 일정 1300
     INTERVIEW_SCHEDULE_CREATE_SUCCESS(true, 1300, "면접 일정 등록에 성공했습니다."),
