@@ -28,9 +28,9 @@ public class CustomUserDetails implements UserDetails {
     private final Boolean emailAuth;
     private List<InterviewParticipate> interviewParticipateList = new ArrayList<>();
     private List<Announcement> announcementList = new ArrayList<>();
-    private Collection<SimpleGrantedAuthority> authorities;
+    private Set<SimpleGrantedAuthority> authorities;
 
-    public CustomUserDetails(Seeker seeker, Collection<SimpleGrantedAuthority> grantedAuthorities) {
+    public CustomUserDetails(Seeker seeker, Set<SimpleGrantedAuthority> grantedAuthorities) {
         this.seeker = seeker;
         this.recruiter = null;
         this.estimator = null;
@@ -44,7 +44,7 @@ public class CustomUserDetails implements UserDetails {
         this.authorities = grantedAuthorities;
     }
 
-    public CustomUserDetails(Recruiter recruiter, Collection<SimpleGrantedAuthority> grantedAuthorities) {
+    public CustomUserDetails(Recruiter recruiter, Set<SimpleGrantedAuthority> grantedAuthorities) {
         this.seeker = null;
         this.recruiter = recruiter;
         this.estimator = null;
@@ -58,7 +58,7 @@ public class CustomUserDetails implements UserDetails {
         this.authorities = grantedAuthorities;
     }
 
-    public CustomUserDetails(Estimator estimator, Collection<SimpleGrantedAuthority> grantedAuthorities) {
+    public CustomUserDetails(Estimator estimator, Set<SimpleGrantedAuthority> grantedAuthorities) {
         this.seeker = null ;
         this.recruiter = null;
         this.estimator = estimator;

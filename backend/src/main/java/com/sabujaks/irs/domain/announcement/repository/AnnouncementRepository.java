@@ -9,4 +9,7 @@ import java.util.Optional;
 public interface AnnouncementRepository extends JpaRepository<Announcement, Long> {
     @Query("SELECT a FROM Announcement a WHERE a.idx = :announceIdx")
     Optional<Announcement> findByAnnounceIdx(Long announceIdx);
+
+    @Query("SELECT a FROM Announcement a WHERE a.uuid = :announcementUUID")
+    Optional<Announcement> findByAnnouncementUUID(String announcementUUID);
 }

@@ -22,10 +22,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -56,7 +53,7 @@ public class JwtFilter extends OncePerRequestFilter {
             Long idx = jwtUtil.getIdx(token);
             String email = jwtUtil.getUsername(token);
             String role = jwtUtil.getRole(token);
-            Collection<SimpleGrantedAuthority> grantedAuthorities = new ArrayList<>();
+            Set<SimpleGrantedAuthority> grantedAuthorities = new HashSet<>();
             SimpleGrantedAuthority defaultRole = new SimpleGrantedAuthority(role);
             grantedAuthorities.add(defaultRole);
             for (String grantedAuthorityToken : viAuthorizationList) {
