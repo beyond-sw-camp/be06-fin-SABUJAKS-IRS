@@ -3,7 +3,7 @@ package com.sabujaks.irs.domain.resume.controller;
 import com.sabujaks.irs.domain.resume.model.request.ResumeCreateReq;
 import com.sabujaks.irs.domain.resume.model.request.ResumeSubmitReq;
 import com.sabujaks.irs.domain.resume.model.response.ResumeCreateRes;
-import com.sabujaks.irs.domain.resume.model.response.ResumeReadIntegratedRes;
+import com.sabujaks.irs.domain.resume.model.response.ResumeReadRes;
 import com.sabujaks.irs.domain.resume.model.response.ResumeReadSubmitInfoRes;
 import com.sabujaks.irs.domain.resume.service.ResumeService;
 import com.sabujaks.irs.global.common.exception.BaseException;
@@ -17,8 +17,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -67,10 +65,28 @@ public class ResumeController {
     public ResponseEntity<BaseResponse<ResumeCreateReq>> submit(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestPart ResumeSubmitReq dto,
-            @RequestPart MultipartFile file) throws BaseException {
+            @RequestPart MultipartFile file,
+            @RequestPart(required = false) MultipartFile[] portfolioFiles) throws BaseException {
 
         if(file.isEmpty()) {
             throw new BaseException(BaseResponseMessage.RESUME_REGISTER_FAIL_NOT_FOUND_FILE);
+        }
+
+        // 포트폴리오 파일 로직
+        if(dto.getCodes().contains("resume_009")) {
+            if (portfolioFiles != null && portfolioFiles.length > 0) {
+                List<String> portfolioUrls = cloudFileUpload.multipleUpload(portfolioFiles);
+                int fileIndex = 0;
+                for (int i = 0; i < dto.getPortfolios().size(); i++) {
+                    if (dto.getPortfolios().get(i).getPortfolioType().equals("파일")) {
+                        // TYPE이 파일이고 URL이 null인 경우
+                        if (fileIndex < portfolioFiles.length) {
+                            dto.getPortfolios().get(i).setPortfolioUrl(portfolioUrls.get(fileIndex));
+                            fileIndex++;
+                        }
+                    }
+                }
+            }
         }
 
         String fileUrl = cloudFileUpload.upload(file);
@@ -94,7 +110,15 @@ public class ResumeController {
     public ResponseEntity<BaseResponse<ResumeSubmitReq>> readIntegrated(
             @AuthenticationPrincipal CustomUserDetails customUserDetails) throws BaseException {
 
-        ResumeReadIntegratedRes response = resumeService.readIntegrated(customUserDetails);
+        ResumeReadRes response = resumeService.readIntegrated(customUserDetails);
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.RESUME_READ_SUCCESS, response));
+    }
+
+    // (지원자, 채용담당자) 지원서 상세 조회
+    @GetMapping("/read")
+    public ResponseEntity<BaseResponse<ResumeSubmitReq>> read(Long resumeIdx) throws BaseException {
+
+        ResumeReadRes response = resumeService.read(resumeIdx);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.RESUME_READ_SUCCESS, response));
     }
 }

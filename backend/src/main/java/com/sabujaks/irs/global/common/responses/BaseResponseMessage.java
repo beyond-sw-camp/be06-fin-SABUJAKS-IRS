@@ -77,9 +77,12 @@ public enum BaseResponseMessage {
     RESUME_REGISTER_FAIL_NOT_FOUND_SEEKER(false, 2004, "해당 유저를 찾을 수 없습니다."),
     RESUME_REGISTER_FAIL_NOT_FOUND_FILE(false, 2005, "파일을 찾을 수 없습니다."),
     RESUME_REGISTER_FAIL_NOT_FOUND_CUSTOM_FORM(false, 2006, "지원서 맞춤 양식을 조회할 수 없습니다."),
+    RESUME_REGISTER_FAIL_RESUME_DUPLICATE(false, 2007, "이미 지원서가 제출된 공고입니다."),
     RESUME_READ_SUCCESS(false, 2100, "지원서 조회에 성공하였습니다." ),
     RESUME_READ_FAIL(false, 2101, "지원서 조회에 실패하였습니다." ),
     RESUME_READ_FAIL_INTEGRATED(false, 2102, "통합 지원서를 등록하지 않았습니다. 먼저 등록해주세요." ),
+    RESUME_READ_FAIL_RESUME(false, 2103, "해당 공고에 지원한 기록이 존재하지 않습니다." ),
+    RESUME_READ_FAIL_RESUME_INFO(false, 2104, "해당 공고에 지원한 지원서가 존재하지 않습니다." ),
 
     // ANNOUNCEMENT 3000~3999
     ANNOUNCEMENT_REGISTER_STEP_ONE_SUCCESS(true, 3000, "공고 등록에 성공했습니다."),

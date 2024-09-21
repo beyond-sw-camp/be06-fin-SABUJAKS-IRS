@@ -70,6 +70,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/resume/**").hasAuthority("ROLE_RECRUITER")
                                 .requestMatchers("/api/resume/create").hasAuthority("ROLE_SEEKER")
                                 .requestMatchers("/api/resume/submit").hasAuthority("ROLE_SEEKER")
+                                .requestMatchers("/api/resume/read").hasAnyAuthority("ROLE_SEEKER", "ROLE_RECRUITER")
                                 .requestMatchers("/api/resume/read/submit-info").hasAuthority("ROLE_SEEKER")
                                 .requestMatchers("/api/video-interview/search-all").access(this::hasVideoInterviewAuthorities)
                                 .requestMatchers("/api/auth/**").permitAll()

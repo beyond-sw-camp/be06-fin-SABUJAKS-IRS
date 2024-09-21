@@ -10,4 +10,7 @@ import java.util.Optional;
 public interface ResumeInfoRepository extends JpaRepository<ResumeInfo, Long> {
     @Query("SELECT r FROM ResumeInfo r WHERE r.seeker.idx = :seekerIdx AND r.integrated = :integration")
     Optional<ResumeInfo> findBySeekerIdxAndIntegrated(Long seekerIdx, Boolean integration);
+
+    @Query("SELECT r FROM ResumeInfo r WHERE r.idx = :resumeInfoIdx")
+    Optional<ResumeInfo> findByResumeInfoIdx(Long resumeInfoIdx);
 }

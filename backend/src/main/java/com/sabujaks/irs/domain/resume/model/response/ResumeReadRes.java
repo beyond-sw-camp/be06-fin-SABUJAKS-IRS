@@ -9,7 +9,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ResumeReadIntegratedRes {
+public class ResumeReadRes {
     private List<String> codes;
     private PersonalInfoReadRes personalInfo; // 인적사항 1개
     private PreferentialEmpReadRes preferentialEmp; // 취업우대·병역 1개
