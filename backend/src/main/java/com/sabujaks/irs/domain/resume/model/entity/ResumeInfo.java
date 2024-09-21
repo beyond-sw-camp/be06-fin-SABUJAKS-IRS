@@ -20,7 +20,7 @@ public class ResumeInfo {
     private Long idx;
 
     @Column(nullable = false)
-    private Boolean integration;
+    private Boolean integrated;
 
 
     // 학력 테이블과 1:n
