@@ -71,7 +71,7 @@ public class AnnouncementController {
 //        Long recruiterIdx = customUserDetails.getIdx();
         RecruiterInfoReadRes response = announcementService.readRecruiterInfo(recruiterIdx);
 
-        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.MEMBER_SEARCH_USER_INFO_SUCCESS, response));
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.AUTH_SEARCH_USER_INFO_SUCCESS, response));
     }
 
 
