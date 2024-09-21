@@ -3,6 +3,8 @@ package com.sabujaks.irs.domain.interview_evaluate.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -24,7 +26,6 @@ public class InterviewEvaluateResult {
     private String r9;
     private String r10;
 
-    @ManyToOne
-    @JoinColumn(name = "interviewEvaluate_idx")
-    private InterviewEvaluate interviewEvaluate;
+    @OneToMany(mappedBy = "interviewEvaluateResult")
+    private List<InterviewEvaluate> interviewEvaluateList;
 }

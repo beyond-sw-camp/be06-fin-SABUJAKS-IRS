@@ -85,7 +85,7 @@ public enum BaseResponseMessage {
     ANNOUNCEMENT_REGISTER_STEP_TWO_FAIL_NOT_FOUND(false, 3101, "공고가 저장되지 않아 찾을 수 없습니다."),
     ANNOUNCEMENT_REGISTER_STEP_TWO_FAIL(false, 3102, "지원서 폼 조립에 실패하였습니다." ),
     ANNOUNCEMENT_SEARCH_FAIL(false, 3103, "공고 조회에 실패했습니다."),
-
+    ANNOUNCEMENT_SEARCH_FAIL_NOT_FOUND(false, 3104, "해당 공고를 찾을 수 없습니다."),
     // COMPANY 기업정보 관련 4000~4999
     COMPANY_INFO_SUCCESS(true, 4000, "기업 정보 등록에 성공했습니다."),
     COMPANY_INFO_SUCCESS_REGISTER(true, 4001, "기업 복리후생 조회에 성공했습니다."),
@@ -98,9 +98,18 @@ public enum BaseResponseMessage {
     ALARM_SEARCH_SUCCESS(true, 5001, "알람 조회에 성공했습니다."),
     ALARM_SEARCH_FAIL(false, 5002, "알람 조회에 실패했습니다."),
 
-    // 인터뷰 평가표 6000~6999
+    // 인터뷰 평가 6000~6999
+    // 인터뷰 평가표 생성
     INTERVIEW_EVALUATE_CREATE_FORM_SUCCESS(true, 6000, "인터뷰 평가표 생성에 성공했습니다."),
-    INTERVIEW_EVALUATE_CREATE_FORM_FAIL_IS_EXIST(false, 6001, "인터뷰 평가표가 이미 존재합니다.");
+    INTERVIEW_EVALUATE_CREATE_FORM_FAIL_IS_EXIST(false, 6001, "인터뷰 평가표가 이미 존재합니다."),
+    // 인터뷰 평가표 조회
+    INTERVIEW_EVALUATE_SEARCH_FORM_SUCCESS(true, 6002, "인터뷰 평가표 조회에 성공했습니다."),
+    INTERVIEW_EVALUATE_SEARCH_FORM_FAIL_IS_NOT_EXIST(false, 6002, "해당 공고의 인터뷰 평가표가 존재하지 않습니다.");
+
+
+
+
+
 
     private Boolean success;
     private Integer code;

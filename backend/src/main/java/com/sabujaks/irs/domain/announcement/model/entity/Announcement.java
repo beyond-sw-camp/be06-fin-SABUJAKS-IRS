@@ -1,6 +1,7 @@
 package com.sabujaks.irs.domain.announcement.model.entity;
 
 import com.sabujaks.irs.domain.auth.model.entity.Recruiter;
+import com.sabujaks.irs.domain.interview_evaluate.model.entity.InterviewEvaluateForm;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -104,7 +105,8 @@ public class Announcement { //공고
     private List<CustomForm> customFormList = new ArrayList<>(); // 지원서 맞춤양식 테이블과 관계
     @OneToMany(mappedBy = "announcement" ,fetch = FetchType.LAZY)
     private List<CustomLetterForm> CustomLetterFormList = new ArrayList<>(); // 자기소개서 맞춤양식 테이블과 관계
-
+    @OneToMany(mappedBy = "announcement", fetch = FetchType.LAZY)
+    private List<InterviewEvaluateForm> interviewEvaluateFormList = new ArrayList<>();
 
     // 공고 등록 시 uuid 생성
     @PrePersist
