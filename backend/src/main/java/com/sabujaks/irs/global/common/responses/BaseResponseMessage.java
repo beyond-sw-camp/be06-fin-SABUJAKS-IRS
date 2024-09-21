@@ -71,11 +71,15 @@ public enum BaseResponseMessage {
 
     // RESUME 2000~2999
     RESUME_REGISTER_SUCCESS(true, 2000, "지원서 등록에 성공했습니다."),
-    RESUME_REGISTER_FAIL_NOT_FOUND_ANNOUNCE(false, 2001, "해당 공고를 찾을 수 없습니다."),
-    RESUME_REGISTER_FAIL_INTEGRATION(false, 2002, "통합 지원서가 이미 존재합니다."),
-    RESUME_REGISTER_FAIL_NOT_FOUND_SEEKER(false, 2003, "해당 유저를 찾을 수 없습니다."),
-    RESUME_REGISTER_FAIL_NOT_FOUND_FILE(false, 2004, "파일을 찾을 수 없습니다."),
-    RESUME_REGISTER_FAIL(false, 2005, "지원서 등록에 실패하였습니다." ),
+    RESUME_REGISTER_FAIL(false, 2001, "지원서 등록에 실패하였습니다." ),
+    RESUME_REGISTER_FAIL_NOT_FOUND_ANNOUNCE(false, 2002, "해당 공고를 찾을 수 없습니다."),
+    RESUME_REGISTER_FAIL_INTEGRATED(false, 2003, "통합 지원서가 이미 존재합니다."),
+    RESUME_REGISTER_FAIL_NOT_FOUND_SEEKER(false, 2004, "해당 유저를 찾을 수 없습니다."),
+    RESUME_REGISTER_FAIL_NOT_FOUND_FILE(false, 2005, "파일을 찾을 수 없습니다."),
+    RESUME_REGISTER_FAIL_NOT_FOUND_CUSTOM_FORM(false, 2006, "지원서 맞춤 양식을 조회할 수 없습니다."),
+    RESUME_READ_SUCCESS(false, 2100, "지원서 조회에 성공하였습니다." ),
+    RESUME_READ_FAIL(false, 2101, "지원서 조회에 실패하였습니다." ),
+    RESUME_READ_FAIL_INTEGRATED(false, 2102, "통합 지원서를 등록하지 않았습니다. 먼저 등록해주세요." ),
 
     // ANNOUNCEMENT 3000~3999
     ANNOUNCEMENT_REGISTER_STEP_ONE_SUCCESS(true, 3000, "공고 등록에 성공했습니다."),
