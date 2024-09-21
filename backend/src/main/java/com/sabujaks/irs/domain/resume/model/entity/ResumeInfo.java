@@ -22,10 +22,6 @@ public class ResumeInfo {
     @Column(nullable = false)
     private Boolean integration;
 
-    // 회원 테이블과 n:1
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seeker_idx")
-    private Seeker seeker;
 
     // 학력 테이블과 1:n
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "resumeInfo")
@@ -74,4 +70,9 @@ public class ResumeInfo {
     // 맞춤 지원정보 테이블과 1:n
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "resumeInfo")
     private List<CustomResumeInfo> customResumeInfoList;
+
+    // 회원 테이블과 n:1
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seeker_idx")
+    private Seeker seeker;
 }
