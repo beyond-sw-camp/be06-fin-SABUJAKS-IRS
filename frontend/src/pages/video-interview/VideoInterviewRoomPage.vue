@@ -85,14 +85,14 @@
                   {{ currentUser.personalInfo.name }}의 평가
                   (합계: {{ calculateTotalScore(currentUser.personalInfo.name) }})
               </h3>
-              <div v-for="(question, index) in Object.entries(evaluateForm)" :key="index" class="evaluate-form-item">
+              <div v-for="(question, index) in Object.entries(evaluateForm)" :key="index+1" class="evaluate-form-item">
                 <label v-if="question[1]">{{ question[1] }}</label>
                 <div v-if="question[1]" class="score-options">
                   <div v-for="score in [1, 2, 3, 4, 5]" :key="score" class="score-option">
                     <input
                       type="radio"
                       :value="score"
-                      v-model="currentUserScores[currentUser.personalInfo.name][index]"
+                      v-model="currentUserScores[currentUser.personalInfo.name][index+1]"
                     />
                     <label>{{ score }}</label>
                   </div>
