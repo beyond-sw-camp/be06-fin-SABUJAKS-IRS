@@ -47,6 +47,7 @@ public class JwtFilter extends OncePerRequestFilter {
         if (authorization == null) {
             log.info("인증 쿠키 없음");
             filterChain.doFilter(request, response);
+            return;
         }
         try {
             String token = authorization;
