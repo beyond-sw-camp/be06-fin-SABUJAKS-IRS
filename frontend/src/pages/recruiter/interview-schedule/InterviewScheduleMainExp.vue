@@ -143,37 +143,43 @@ const removeFilter = (filter) => {
 
 const submitForm = () => {
   // const selectedSpanValues = selectedFilters.value;
-  const selectedSpanValues = [1, 2];
-  const participantEmails = selectedEmails.value// 참가자 이메일
-  const selectedDate = interviewDate.value;
-  const selectedStartTime = startTime.value;
-  const selectedEndTime = endTime.value;
-  const selectedType = interviewType.value;
-  const selectedTeamIdx = team.value;
+  if (confirm("면접 일정을 등록하시겠습니까?")) {
+    const selectedSpanValues = [1, 2];
+    const participantEmails = selectedEmails.value// 참가자 이메일
+    const selectedDate = interviewDate.value;
+    const selectedStartTime = startTime.value;
+    const selectedEndTime = endTime.value;
+    const selectedType = interviewType.value;
+    const selectedTeamIdx = team.value;
 
-  // 데이터 객체 생성
-  const interviewData = {
-    seekerList: selectedSpanValues,
-    estimatorList: participantEmails,
-    isOnline: selectedType,
-    interviewDate: selectedDate,
-    interviewStart: selectedStartTime,
-    interviewEnd: selectedEndTime,
-    careerBase: "경력",
-    teamIdx: selectedTeamIdx,
-    announcementIdx: announcementIdxInfo.value
-  };
+    // 데이터 객체 생성
+    const interviewData = {
+      seekerList: selectedSpanValues,
+      estimatorList: participantEmails,
+      isOnline: selectedType,
+      interviewDate: selectedDate,
+      interviewStart: selectedStartTime,
+      interviewEnd: selectedEndTime,
+      careerBase: "경력",
+      teamIdx: selectedTeamIdx,
+      announcementIdx: announcementIdxInfo.value
+    };
 
-  console.log("Selected Team: ", selectedTeamIdx);
+    // Store의 createInterviewSchedule 함수 호출
+    interviewScheduleStore.createInterviewSchedule(interviewData)
+        .then(() => {
+          if(confirm('면접 일정이 성공적으로 등록되었습니다.')) {
+            // 면접 일정 리스트 업데이트
 
-  // Store의 createInterviewSchedule 함수 호출
-  interviewScheduleStore.createInterviewSchedule(interviewData)
-      .then(() => {
-        alert('면접 일정이 성공적으로 등록되었습니다.');
-      })
-      .catch((error) => {
-        console.error('면접 일정 등록 중 오류 발생:', error);
-      });
+            closeModal();
+            interviewScheduleLists(announcementIdxInfo, announcementUuidInfo);
+          }
+        })
+        .catch((error) => {
+          console.error('면접 일정 등록 중 오류 발생:', error);
+        });
+  }
+
 };
 </script>
 

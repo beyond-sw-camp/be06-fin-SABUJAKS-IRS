@@ -1,44 +1,65 @@
-<script>
+<script setup>
+import {ref, onMounted} from "vue";
+import Cookies from "js-cookie";
+import jwtDecode from "jwt-decode";
+import {useRouter} from 'vue-router';
 
+// 상태 및 라우터 설정
+const isLoggedIn = ref(false);
+const userName = ref("");
+const router = useRouter();
+
+// 로그인 상태 확인 함수
+const checkLoginStatus = () => {
+  const token = Cookies.get('ATOKEN'); // 쿠키에서 토큰 가져오기
+  if (token) {
+    try {
+      const decodedToken = jwtDecode(token); // JWT 토큰 디코딩
+      userName.value = decodedToken.name; // 토큰에서 이름 추출하여 설정
+      isLoggedIn.value = true; // 로그인 상태 설정
+    } catch (error) {
+      console.error("토큰 디코딩 실패:", error);
+    }
+  }
+};
+
+// 로그아웃 함수
+const logout = () => {
+  Cookies.remove('ATOKEN'); // 쿠키에서 토큰 삭제
+  isLoggedIn.value = false;
+  userName.value = "";
+  router.push('/login'); // 로그아웃 후 로그인 페이지로 이동
+};
+
+// 컴포넌트 마운트 시 로그인 상태 확인
+onMounted(() => {
+  checkLoginStatus();
+});
 </script>
 
 <template>
   <header class="header">
-    <div class="logo"><img src="@/assets/img/irs_white.png" style="width: 150px;"></div>
+    <div class="logo">
+      <img src="@/assets/img/irs_white.png" style="width: 150px;">
+    </div>
     <div class="user-info">
-      <div class="user-name">John Doe</div>
-      <button class="logout-button">Logout</button>
+      <!-- 로그인된 상태라면 사용자 이름 표시 -->
+      <div class="user-name" v-if="isLoggedIn">{{ userName }}</div>
+      <!-- 로그인이 된 상태에서만 로그아웃 버튼 표시 -->
+      <button class="logout-button" @click="logout" v-if="isLoggedIn">Logout</button>
     </div>
   </header>
 </template>
 
+
 <style scoped>
+/* 스타일 부분은 그대로 유지 */
 header {
-  background-color: #f8f9fa; /* 배경색 */
-  color: #333; /* 글자색 */
-  padding: 20px; /* 안쪽 여백 */
-  text-align: center; /* 텍스트 정렬 */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
-}
-
-header h1 {
-  font-size: 2em; /* 제목 크기 */
-  margin: 0; /* 기본 여백 제거 */
-}
-
-header nav {
-  display: flex; /* 내비게이션 바를 플렉스 박스로 */
-  justify-content: center; /* 중앙 정렬 */
-}
-
-header nav a {
-  margin: 0 15px; /* 링크 사이 간격 */
-  text-decoration: none; /* 밑줄 제거 */
-  color: #007bff; /* 링크 색상 */
-}
-
-header nav a:hover {
-  color: #0056b3; /* 호버 시 색상 변화 */
+  background-color: #f8f9fa;
+  color: #333;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .header {

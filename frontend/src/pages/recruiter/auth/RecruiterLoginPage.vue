@@ -64,10 +64,16 @@ const handleLogin = async () => {
       email: username.value,
       password: password.value
     }
-    if (await userStore.login(user)){
+
+    const result = await userStore.login(user);
+    if (result){
       await router.push('/recruiter/announce');  // 로그인 성공 시 recruiter/announce로 라우팅
+      router.go(0);
+    } else {
+      alert('로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.');
     }
   } catch (error) {
+    alert('로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.');
     console.error('로그인 오류:', error)
   }
 }

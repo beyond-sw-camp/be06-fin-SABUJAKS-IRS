@@ -1,5 +1,7 @@
 import { defineStore } from "pinia"
 import axios from "axios";
+import Cookies from "js-cookie";
+import {jwtDecode} from "jwt-decode";
 import {backend} from "@/const";
 
 export const UseUserStore = defineStore("user", {
@@ -8,16 +10,27 @@ export const UseUserStore = defineStore("user", {
         uuid: "",
         nickname:"",
         userIdx: '',
-        userNickName: '',
+        userName: '',
         isLoggedIn: false,
     }),
     actions: {
         async login(user) {
             try {
+                console.log(backend);
+                console.log(`${backend}/auth/login`);
                 let response = await axios.post(
-                    `${backend}/auth/login`
-                    , user );
+                    `${backend}/auth/login`,
+                    user ,
+                    {withCredentials: true}
+                );
                 if (response.status === 200) {
+                    this.isLoggedIn = true;
+                    let atoken = Cookies.get('ATOKEN');
+                    if (atoken) {
+                        const decoded = jwtDecode(atoken);
+                        this.userIdx = decoded.idx;
+                        this.userName = decoded.name;
+                    }
                     return true;
                 } else{
                     return false;
