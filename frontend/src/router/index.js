@@ -14,6 +14,7 @@ import MypageMainPage from '@/pages/seeker/mypage/MypageMainPage.vue';
 import MypageNotificationPage from '@/pages/seeker/mypage/MypageNotificationPage.vue';
 import MypageSchedulePage from '@/pages/seeker/mypage/MypageSchedulePage.vue';
 import ResumeCreatePage from '@/pages/seeker/resume/ResumeCreatePage.vue';
+import ResumeSubmitPage from '@/pages/seeker/resume/ResumeSubmitPage.vue'
 import VideoInterviewMainPage from '@/pages/video-interview/VideoInterviewMainPage.vue';
 import VideoInterviewRedirectPage from '@/pages/video-interview/VideoInterviewRedirectPage.vue';
 import VideoInterviewRoomPage from '@/pages/video-interview/VideoInterviewRoomPage.vue';
@@ -59,6 +60,7 @@ const router = createRouter({
         { path: '/seeker/mypage/integration-resume', component: MypageIntegrationeResumePage },
         { path: '/seeker/mypage/notification', component: MypageNotificationPage },
         { path: '/seeker/resume/create', component: ResumeCreatePage },
+        { path: '/seeker/resume/submit/:announcementIdx', component: ResumeSubmitPage },
     ]
 })
 

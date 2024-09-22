@@ -19,13 +19,27 @@
 </template>
 
 <script setup>
-import { ref, defineEmits, watch } from 'vue';
+import { ref, defineEmits, watch, defineProps } from 'vue';
 
-const certName = ref(null);
-const organization = ref(null);
-const takingAt = ref(null);
+const props = defineProps({
+    data: {
+        type: Object
+    }
+});
+
+const certification = props.data || {
+    certName: null,
+    organization: null,
+    takingAt: null
+};
+
+const certName = ref(certification.certName);
+const organization = ref(certification.organization);
+const takingAt = ref(certification.takingAt);
 
 const emit = defineEmits(['updateData']);
+emit('updateData', props.data);
+
 
 const updateData = () => {
   const data = {

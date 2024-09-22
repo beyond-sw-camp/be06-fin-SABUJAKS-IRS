@@ -65,22 +65,40 @@
 
 
 <script setup>
-import { ref, defineEmits, onMounted, watch } from 'vue';
+import { ref, defineEmits, onMounted, watch, defineProps } from 'vue';
 import { UseResumeStore } from '@/stores/UseResumeStore';
 
-const name = ref(null);
-const birth = ref(null);
-const gender = ref(null);
-const email = ref(null);
-const phone = ref(null);
-const tel = ref(null);
-const address = ref(null);
+const store = UseResumeStore();
+const props = defineProps({
+    data: {
+        type: Object
+    }
+});
+
+const personalInfo = props.data || {
+  name: null,
+  birth: null,
+  gender: null,
+  email: null,
+  phone: null,
+  tel: null,
+  address: null
+};
+
+const name = ref(personalInfo.name);
+const birth = ref(personalInfo.birth);
+const gender = ref(personalInfo.gender);
+const email = ref(personalInfo.email);
+const phone = ref(personalInfo.phone);
+const tel = ref(personalInfo.tel);
+const address = ref(personalInfo.address);
 const photo = ref(null);
 
 const fileInput = ref(null);
-const emit = defineEmits(['updateData']); // 데이터 전달 이벤트
+const emit = defineEmits(['updateData']);
+emit('updateData', props.data);
 
-const store = UseResumeStore();
+
 
 const updateData = () => {
   const data = {

@@ -38,15 +38,31 @@
 </template>
 
 <script setup>
-import { ref, defineEmits, watch } from 'vue';
+import { ref, defineEmits, watch, defineProps } from 'vue';
 
-const activityDiv = ref(null);
-const organization = ref(null);
-const startAt = ref(null);
-const endAt = ref(null);
-const contents = ref(null);
+const props = defineProps({
+    data: {
+        type: Object
+    }
+});
+
+const internsActivity = props.data || {
+    activityDiv: null,
+    organization: null,
+    startAt: null,
+    endAt: null,
+    contents: null
+};
+
+const activityDiv = ref(internsActivity.activityDiv);
+const organization = ref(internsActivity.organization);
+const startAt = ref(internsActivity.startAt);
+const endAt = ref(internsActivity.endAt);
+const contents = ref(internsActivity.contents);
 
 const emit = defineEmits(['updateData']);
+emit('updateData', props.data);
+
 
 const updateData = () => {
   const data = {

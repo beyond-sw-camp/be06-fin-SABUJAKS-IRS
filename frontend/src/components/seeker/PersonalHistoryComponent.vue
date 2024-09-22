@@ -7,8 +7,8 @@
           <input type="text" id="companyName" v-model="companyName" />
         </div>
         <div class="form-item">
-          <label for="departmentName">부서명 <span class="required">*</span></label>
-          <input type="text" id="departmentName" v-model="departmentName" />
+          <label for="deptName">부서명 <span class="required">*</span></label>
+          <input type="text" id="deptName" v-model="deptName" />
         </div>
 
         <!-- 입사년월과 퇴사년월을 같은 행에 배치 -->
@@ -115,25 +115,45 @@
 </template>
 
 <script setup>
-import { ref, defineEmits, watch } from 'vue';
+import { ref, defineEmits, watch, defineProps } from 'vue';
 
-const companyName = ref(null);
-const departmentName = ref(null);
-const enteredAt = ref(null);
-const quitAt = ref(null);
-const empStatus = ref(null);
-const position = ref(null);
-const job = ref(null);
-const work = ref(null);
-const salary = ref(null);
+const props = defineProps({
+    data: {
+        type: Object
+    }
+});
+
+const personalHistory = props.data || {
+    companyName: null,
+    deptName: null,
+    enteredAt: null,
+    quitAt: null,
+    empStatus: false,
+    position: null,
+    job: null,
+    work: null,
+    salary: null
+};
+
+const companyName = ref(personalHistory.companyName);
+const deptName = ref(personalHistory.deptName);
+const enteredAt = ref(personalHistory.enteredAt);
+const quitAt = ref(personalHistory.quitAt);
+const empStatus = ref(personalHistory.empStatus);
+const position = ref(personalHistory.position);
+const job = ref(personalHistory.job);
+const work = ref(personalHistory.work);
+const salary = ref(personalHistory.salary);
 
 
 const emit = defineEmits(['updateData']);
+emit('updateData', props.data);
+
 
 const updateData = () => {
   const data = {
     companyName: companyName.value,
-    departmentName: departmentName.value,
+    deptName: deptName.value,
     enteredAt: enteredAt.value,
     quitAt: quitAt.value,
     empStatus: empStatus.value,
@@ -146,7 +166,7 @@ const updateData = () => {
 };
 
 watch(
-  [companyName, departmentName, enteredAt, quitAt, empStatus, position, job, work, salary],
+  [companyName, deptName, enteredAt, quitAt, empStatus, position, job, work, salary],
   updateData,
 );
 

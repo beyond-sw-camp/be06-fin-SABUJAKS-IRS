@@ -94,17 +94,35 @@
   </template>
   
 <script setup>
-import { ref, defineEmits, watch } from 'vue';
+import { ref, defineEmits, watch, defineProps } from 'vue';
 
-const testDiv = ref(null);
-const languageName = ref(null);
-const conversationLevel = ref(null);
-const officialTest = ref(null);
-const score = ref(null);
-const selectScore = ref(null);
-const takingAt = ref(null);
+const props = defineProps({
+    data: {
+        type: Object
+    }
+});
+
+const language = props.data || {
+    testDiv: null,
+    languageName: null,
+    conversationLevel: null,
+    officialTest: null,
+    score: null,
+    selectScore: false,
+    takingAt: null
+};
+
+const testDiv = ref(language.testDiv);
+const languageName = ref(language.languageName);
+const conversationLevel = ref(language.conversationLevel);
+const officialTest = ref(language.officialTest);
+const score = ref(language.score);
+const selectScore = ref(language.selectScore);
+const takingAt = ref(language.takingAt);
 
 const emit = defineEmits(['updateData']);
+emit('updateData', props.data);
+
 
 const updateData = () => {
   const data = {
