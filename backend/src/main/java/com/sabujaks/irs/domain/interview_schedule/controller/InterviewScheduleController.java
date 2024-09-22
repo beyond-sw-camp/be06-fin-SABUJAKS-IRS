@@ -25,28 +25,22 @@ public class InterviewScheduleController {
     private final InterviewScheduleService interviewScheduleService;
     private final EmailSender emailSender;
 
-//    @PostMapping("/create")
-//    public ResponseEntity<BaseResponse<InterviewScheduleReq>> create (
-//        @AuthenticationPrincipal CustomUserDetails customUserDetails,
-//        @RequestBody InterviewScheduleReq dto) throws BaseException {
-//        InterviewScheduleRes response = interviewScheduleService.create(customUserDetails, dto);
-//        emailSender.sendEmail(response, dto.getEstimatorList());
-//        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_SCHEDULE_CREATE_SUCCESS, response));
-//    }
-
     @PostMapping("/create")
     public ResponseEntity<BaseResponse<InterviewScheduleReq>> create (
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestBody InterviewScheduleReq dto) throws BaseException {
-        InterviewScheduleRes response = interviewScheduleService.create(dto);
+        InterviewScheduleRes response = interviewScheduleService.create(customUserDetails, dto);
         emailSender.sendEmail(response, dto.getEstimatorList());
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_SCHEDULE_CREATE_SUCCESS, response));
     }
 
-    @GetMapping("/read-all/exp")
-    public ResponseEntity<BaseResponse<?>> readAllExp (){
-        List<InterviewScheduleRes> response = interviewScheduleService.readAllExp();
+    @GetMapping("/read-all")
+    public ResponseEntity<BaseResponse<?>> readAll (
+            @RequestParam String careerBase,
+            @RequestParam Long announcementIdx){
+        List<InterviewScheduleRes> response = interviewScheduleService.readAll(careerBase, announcementIdx);
 
-        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_SCHEDULE_CREATE_SUCCESS, response));
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_SCHEDULE_READ_ALL_SUCCESS, response));
     }
 
     // CustomUserDetail 추가하기

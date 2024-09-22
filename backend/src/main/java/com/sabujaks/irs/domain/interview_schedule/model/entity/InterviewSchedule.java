@@ -56,4 +56,8 @@ public class InterviewSchedule {
   
     @OneToMany(mappedBy = "interviewSchedule", fetch = FetchType.LAZY)
     private List<InterviewEvaluate> interviewEvaluateList;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="team_idx")
+    private Team team;
 }

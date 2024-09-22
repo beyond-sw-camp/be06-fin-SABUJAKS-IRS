@@ -10,6 +10,7 @@ import com.sabujaks.irs.domain.announcement.repository.AnnouncementRepository;
 import com.sabujaks.irs.domain.announcement.repository.CustomFormRepository;
 import com.sabujaks.irs.domain.announcement.repository.CustomLetterFormRepository;
 import com.sabujaks.irs.domain.auth.model.entity.Recruiter;
+import com.sabujaks.irs.domain.auth.model.response.RecruiterRes;
 import com.sabujaks.irs.domain.auth.repository.RecruiterRepository;
 import com.sabujaks.irs.domain.company.model.entity.Company;
 import com.sabujaks.irs.domain.company.repository.CompanyBenefitsRepository;
@@ -345,5 +346,42 @@ public class AnnouncementService {
             // 공고 정보가 없을 때
             throw new BaseException(BaseResponseMessage.ANNOUNCEMENT_SEARCH_FAIL);
         }
+    }
+
+    public List<AnnouncementReadAllRes2> readAllAnnouncement(Long recruiterIdx, String careerBase) throws BaseException {
+        Optional<Recruiter> recruiter = recruiterRepository.findByRecruiterIdx(recruiterIdx);
+        Optional<List<Announcement>> result = announcementRepository.findByRecruiterIdxAndCareerBase(recruiterIdx, careerBase);
+
+        List<AnnouncementReadAllRes2> announcementList = new ArrayList<>();
+        for(Announcement announcement : result.get()) {
+            announcementList.add(AnnouncementReadAllRes2.builder()
+                    .idx(announcement.getIdx())
+                    .title(announcement.getTitle())
+                    .selectForm(announcement.getSelectForm())
+                    .imgUrl(announcement.getImgUrl())
+                    .jobCategory(announcement.getJobCategory())
+                    .jobTitle(announcement.getJobTitle())
+                    .recruitedNum(announcement.getRecruitedNum())
+                    .careerBase(announcement.getCareerBase())
+                    .positionQuali(announcement.getPositionQuali())
+                    .region(announcement.getRegion())
+                    .jobType(announcement.getJobType())
+                    .salary(announcement.getSalary())
+                    .conditions(announcement.getConditions())
+                    .benefits(announcement.getBenefits())
+                    .announcementStart(announcement.getAnnouncementStart())
+                    .announcementEnd(announcement.getAnnouncementEnd())
+                    .interviewNum(announcement.getInterviewNum())
+                    .process(announcement.getProcess())
+                    .note(announcement.getNote())
+                    .uuid(announcement.getUuid())
+                    .recruiterRes(RecruiterRes.builder()
+                            .email(recruiter.get().getEmail())
+                            .name(recruiter.get().getName())
+                            .build())
+                    .build());
+        }
+
+        return announcementList;
     }
 }

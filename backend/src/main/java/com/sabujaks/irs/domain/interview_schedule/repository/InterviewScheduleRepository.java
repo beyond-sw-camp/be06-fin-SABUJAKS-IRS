@@ -15,6 +15,9 @@ public interface InterviewScheduleRepository extends JpaRepository<InterviewSche
     List<InterviewSchedule> findByInterviewDate(String interviewDate);
     List<InterviewSchedule> findByCareerBase(String careerBase);
 
+    @Query("SELECT s FROM InterviewSchedule s WHERE s.careerBase = :careerBase AND s.announcement.idx = :announcementIdx")
+    Optional<List<InterviewSchedule>> findByCareerBaseAndAnnouncementIdx(String careerBase, Long announcementIdx);
+
     @Query("SELECT s FROM InterviewSchedule s WHERE s.idx = :interviewScheduleIdx")
     Optional<InterviewSchedule> findByInterviewScheduleIdx(Long interviewScheduleIdx);
 

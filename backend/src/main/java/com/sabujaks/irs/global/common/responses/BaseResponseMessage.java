@@ -55,6 +55,7 @@ public enum BaseResponseMessage {
     INTERVIEW_SCHEDULE_NOT_FOUND(false, 1302, "해당 면접을 찾을 수 없습니다."),
     RESCHEDULE_NOT_FOUND(false, 1303, "면접 조율 내역을 찾을 수 없습니다."),
     RESCHEDULE_SEARCH_ALL_SUCCESS(true, 1304, "면접 조율 내역 조회에 성공했습니다."),
+    INTERVIEW_SCHEDULE_READ_ALL_SUCCESS(true, 1305, "면접 내역 조회에 성공했습니다."),
 
     // VIDEO_INTERVIEW 화상 면접 1400
     VIDEO_INTERVIEW_CREATE_SUCCESS(true, 1400, "화상 면접 방 생성에 성공했습니다."),
@@ -91,6 +92,7 @@ public enum BaseResponseMessage {
     ANNOUNCEMENT_REGISTER_STEP_TWO_SUCCESS(true, 3100, "지원서 폼 조립에 성공했습니다."),
     ANNOUNCEMENT_REGISTER_STEP_TWO_FAIL_NOT_FOUND(false, 3101, "공고가 저장되지 않아 찾을 수 없습니다."),
     ANNOUNCEMENT_REGISTER_STEP_TWO_FAIL(false, 3102, "지원서 폼 조립에 실패하였습니다." ),
+    ANNOUNCEMENT_READ_ALL_SUCCESS(true, 3105, "공고 전체조회에 성공했습니다."),
     ANNOUNCEMENT_SEARCH_SUCCESS(true, 3200, "공고 조회에 성공했습니다."),
     ANNOUNCEMENT_SEARCH_FAIL(false, 3201, "공고 조회에 실패했습니다."),
     ANNOUNCEMENT_SEARCH_FAIL_NOT_FOUND(false, 3202, "해당 공고를 찾을 수 없습니다."),
