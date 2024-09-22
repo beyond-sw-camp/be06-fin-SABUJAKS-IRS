@@ -6,6 +6,18 @@ const props = defineProps({
   title: {
     type: String,
     required: true
+  },
+  interviewSchedules: {
+    type: Array,
+    required: false
+  },
+  announcementIdx: {
+    type: Number,
+    required: false
+  },
+  announcementUuid: {
+    type: String,
+    required: false
   }
 });
 
@@ -19,6 +31,14 @@ const handleRowClick = (type) => {
 
 const createVideoInterview = (uuid) => {
   emit('createVideoInterview', uuid)
+}
+
+const formatDate = (datetime) => {
+  const date = new Date(datetime);
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 
 </script>
@@ -35,15 +55,25 @@ const createVideoInterview = (uuid) => {
     <table class="review-table">
       <tr>
         <th>번호</th>
-        <th>면접일정</th>
-        <th>??????</th>
+        <th>면접일</th>
+        <th>면접시간</th>
+        <th>팀</th>
+        <th>참가자</th>
         <th>면접방생성</th>
       </tr>
-      <tr>
-        <td>1</td>
-        <td>2024.09.24 - 2024.10.24</td>
-        <td>백엔드 엔지니어 신입공채</td>
-        <td><button @click="createVideoInterview(uuid)">방 생성</button></td>
+      <tr v-for="(schedule, index) in props.interviewSchedules" :key="schedule.uuid">
+        <td>{{ index + 1 }}</td>
+        <td>{{ formatDate(schedule.interviewDate) }}</td>
+        <td>{{ schedule.interviewStart }} - {{ schedule.interviewEnd }}</td>
+        <td>{{ schedule.teamIdx }} 팀</td>
+        <td>
+          <ul>
+            <li v-for="(seeker, i) in schedule.seekerList" :key="i">
+              {{ seeker.name }}
+            </li>
+          </ul>
+        </td>
+        <td><button @click="createVideoInterview(schedule.uuid)">방 생성</button></td>
       </tr>
     </table>
   </div>
@@ -56,17 +86,24 @@ const createVideoInterview = (uuid) => {
 }
 
 .review-table th:nth-child(2) { /* 두 번째 열 (신입/경력) */
-  width: 40%; /* 비율 조정 */
-}
-
-.review-table th:nth-child(3) { /* 두 번째 열 (신입/경력) */
-  width: 30%; /* 비율 조정 */
-}
-
-.review-table th:nth-child(4) { /* 두 번째 열 (신입/경력) */
   width: 20%; /* 비율 조정 */
 }
 
+.review-table th:nth-child(3) { /* 두 번째 열 (신입/경력) */
+  width: 20%; /* 비율 조정 */
+}
+
+.review-table th:nth-child(4) { /* 두 번째 열 (신입/경력) */
+  width: 10%; /* 비율 조정 */
+}
+
+.review-table th:nth-child(5) { /* 두 번째 열 (신입/경력) */
+  width: 20%; /* 비율 조정 */
+}
+
+.review-table th:nth-child(6) { /* 두 번째 열 (신입/경력) */
+  width: 10%; /* 비율 조정 */
+}
 .interview-add {
   float: right;
   margin: 10px 0;

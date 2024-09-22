@@ -16,13 +16,14 @@ export const UseInterviewScheduleStore = defineStore('reservation', {
                 interviewData.isOnline = true;
             }
 
+            console.log(interviewData.announcementIdx);
             try{
                 const response = await axios.post(
                     // `api/interview-schedule/create`,
                     `/api/api/interview-schedule/create`,
                     interviewData,
                     // 쿠키 포함
-                    // { withCredentials: true }
+                    { withCredentials: true }
                 );
 
                 console.log(response);
@@ -36,13 +37,33 @@ export const UseInterviewScheduleStore = defineStore('reservation', {
         },
 
         // 면접 일정 전체 불러오기
-        async readAllExpInterviewSchedule() {
+        async readAllAnnouncement(careerBase) {
             try{
                 const response = await axios.get(
                     // `api/interview-schedule/create`,
-                    `/api/api/interview-schedule/read-all/exp`,
+                    `/api/api/announcement/recruiter/read-all?careerBase=${careerBase}`,
                     // 쿠키 포함
-                    // { withCredentials: true }
+                    { withCredentials: true }
+                );
+
+                console.log(response.data.result);
+
+                return response.data.result;
+            } catch (error) {
+                console.error("Error: ", error);
+
+                return false;
+            }
+        },
+
+        // 면접 일정 전체 불러오기
+        async readAllInterviewSchedule(reqData) {
+            try{
+                const response = await axios.get(
+                    // `api/interview-schedule/create`,
+                    `/api/api/interview-schedule/read-all?careerBase=${reqData.careerBase}&announcementIdx=${reqData.announcementIdx}`,
+                    // 쿠키 포함
+                    { withCredentials: true }
                 );
 
                 console.log(response.data.result);
@@ -102,9 +123,6 @@ export const UseInterviewScheduleStore = defineStore('reservation', {
                 // const interviewSchedueResponse = await axios.get(
                 //     `${backend}/interview-schedule/read?`
                 // );
-
-
-
 
                 return reScheduleResponse.data.result;
             } catch (error) {
