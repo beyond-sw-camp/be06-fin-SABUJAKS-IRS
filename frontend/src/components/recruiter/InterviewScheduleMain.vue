@@ -9,7 +9,7 @@ const props = defineProps({
   },
   careerBase: {
     type: String,
-    required: true
+    required: false
   },
   announcements: {
     type: Array,
@@ -45,14 +45,12 @@ const formatDate = (datetime) => {
         <th>번호</th>
         <th>공고기간</th>
         <th>공고명</th>
-        <th>지원자수</th>
       </tr>
 <!--      <tr @click="handleRowClick('경력')">-->
       <tr v-for="(announcement, index) in props.announcements" :key="announcement.idx" @click="handleRowClick(announcement.idx, announcement.uuid)">
         <td>{{ index + 1 }}</td>
         <td>{{ formatDate(announcement.announcementStart) }} - {{ formatDate(announcement.announcementEnd) }}</td>
-        <td>{{ announcement.jobTitle }}</td>
-        <td>{{ announcement.applicantCount }}</td>
+        <td>{{ announcement.title }}</td>
       </tr>
     </table>
   </div>
