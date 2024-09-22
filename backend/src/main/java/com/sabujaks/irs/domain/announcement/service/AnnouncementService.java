@@ -18,6 +18,8 @@ import com.sabujaks.irs.domain.data_init.entity.BaseInfo;
 import com.sabujaks.irs.domain.data_init.repository.BaseInfoRepository;
 import com.sabujaks.irs.global.common.exception.BaseException;
 import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
+import com.sabujaks.irs.global.security.CustomUserDetails;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.sabujaks.irs.domain.company.model.entity.CompanyBenefits;
@@ -37,11 +39,13 @@ public class AnnouncementService {
     private final CompanyRepository companyRepository;
 
     /*******채용담당자 공고 등록 (step1)***********/
+    @Transactional
     public AnnouncementCreateRes createAnnouncement(
-            Long recruiterIdx,
-            String fileUrl,
-            AnnouncementCreateReq dto) throws BaseException {
+        CustomUserDetails customUserDetails,
+        String fileUrl,
+        AnnouncementCreateReq dto) throws BaseException {
 
+        Long recruiterIdx = customUserDetails.getIdx();
         // 채용담당자 확인
         Optional<Recruiter> resultRecruiter = recruiterRepository.findByRecruiterIdx(recruiterIdx);
         if(resultRecruiter.isPresent()) {
@@ -107,8 +111,16 @@ public class AnnouncementService {
 
 
     /*******채용담당자 지원서 폼 조립 + 자기소개서 문항 등록 (step2)***********/
-    public CustomFormCreateRes createCustomForm(CustomFormCreateReq dto) throws BaseException {
+    public CustomFormCreateRes createCustomForm(
+        CustomUserDetails customUserDetails,
+        CustomFormCreateReq dto) throws BaseException {
         // 클라이언트에서 넣을 폼을 선택 -> dto에 그 폼의 코드값이 들어옴
+
+        Long recruiterIdx = customUserDetails.getIdx();
+        Optional<Recruiter> resultRecruiter = recruiterRepository.findByRecruiterIdx(recruiterIdx);
+        if(!resultRecruiter.isPresent()) {
+            throw new BaseException(BaseResponseMessage.ANNOUNCEMENT_REGISTER_STEP_ONE_FAIL_NOT_RECRUITER);
+        }
 
         // 예외 처리) 공고가 잘 저장되어 있는지 먼저 확인 필요
         Optional<Announcement> resultAnnouncement = announcementRepository.findByAnnounceIdx(dto.getAnnouncementIdx());
@@ -161,7 +173,8 @@ public class AnnouncementService {
 
 
     /*******공고 등록 페이지 클릭시 채용담당자 정보 조회***********/
-    public RecruiterInfoReadRes readRecruiterInfo(Long recruiterIdx) throws BaseException {
+    public RecruiterInfoReadRes readRecruiterInfo(CustomUserDetails customUserDetails) throws BaseException {
+        Long recruiterIdx = customUserDetails.getIdx();
         // 채용담당자 확인
         Optional<Recruiter> resultRecruiter = recruiterRepository.findByRecruiterIdx(recruiterIdx);
         if(resultRecruiter.isPresent()) {
@@ -257,7 +270,9 @@ public class AnnouncementService {
             resultReadAllResList.add(
                     AnnouncementReadAllRes.builder()
                             .announcementIdx(am.getIdx())
-                            .companyName(companyRepository.findByRecruiterIdx(am.getRecruiter().getIdx()).get().getName())
+                            .companyName(companyRepository.findByRecruiterIdx(am.getRecruiter().getIdx())
+                                    .orElseThrow(()-> new BaseException(BaseResponseMessage.COMPANY_INFO_FAIL_NOT_REGISTER))
+                                    .getName())
                             .announcementTitle(am.getTitle())
                             .jobTitle(am.getJobTitle())
                             .careerBase(am.getCareerBase())
@@ -271,13 +286,61 @@ public class AnnouncementService {
 
     /*******공고 상세 조회***********/
     public AnnouncementReadDetailRes readDetailSee(Long announcementIdx) throws BaseException {
+        // 공고 찾기
         Optional<Announcement> resultAnnouncement = announcementRepository.findByAnnounceIdx(announcementIdx);
-
         if(resultAnnouncement.isPresent()) {
-            AnnouncementReadDetailRes announcementReadDetailRes = AnnouncementReadDetailRes.builder()
-                    .build();
-            // 작성중
-            return null;
+            Announcement announcement = resultAnnouncement.get();
+            // 기업 찾기
+            Optional<Company> resultCompany = companyRepository.findByRecruiterIdx(announcement.getRecruiter().getIdx());
+            if (resultCompany.isPresent()) {
+                Company company = resultCompany.get();
+
+                AnnouncementReadDetailRes announcementReadDetailRes = AnnouncementReadDetailRes.builder()
+                        .announcementIdx(announcementIdx)
+                        .companyIdx(company.getIdx())
+
+                        .title(announcement.getTitle())
+                        .selectForm(announcement.getSelectForm())
+                        .imgUrl(announcement.getImgUrl())
+                        .jobCategory(announcement.getJobCategory())
+                        .jobTitle(announcement.getJobTitle())
+                        .recruitedNum(announcement.getRecruitedNum())
+                        .careerBase(announcement.getCareerBase())
+                        .positionQuali(announcement.getPositionQuali())
+                        .region(announcement.getRegion())
+                        .jobType(announcement.getJobType())
+                        .salary(announcement.getSalary())
+                        .conditions(announcement.getConditions())
+                        .benefits(announcement.getBenefits())
+                        .managerName(announcement.getManagerName())
+                        .managerContact(announcement.getManagerContact())
+                        .managerEmail(announcement.getManagerEmail())
+                        .intro(announcement.getIntro())
+                        .announcementStart(announcement.getAnnouncementStart())
+                        .announcementEnd(announcement.getAnnouncementEnd())
+                        .interviewNum(announcement.getInterviewNum())
+                        .process(announcement.getProcess())
+                        .note(announcement.getNote())
+
+                        .companyIndustry(company.getIndustry())
+                        .companyName(company.getName())
+                        .companyType(company.getType())
+                        .companyInfo(company.getCompanyInfo())
+                        .companyCapital(company.getCapital())
+                        .companyTotalEmp(company.getTotalEmp())
+                        .companyEstablishDate(company.getEstablishDate())
+                        .companySales(company.getSales())
+                        .companyBusiness(company.getBusiness())
+                        .companyUrl(company.getUrl())
+                        .companyAddress(company.getAddress())
+                        .companyBenefitsDataList(readCompanyInfo(announcement.getRecruiter().getIdx()).getBenefitsDataList())
+                        .build();
+
+                return announcementReadDetailRes;
+            } else {
+                // 기업을 찾을 수 없을 때
+                throw new BaseException(BaseResponseMessage.COMPANY_INFO_FAIL_NOT_REGISTER);
+            }
         } else {
             // 공고 정보가 없을 때
             throw new BaseException(BaseResponseMessage.ANNOUNCEMENT_SEARCH_FAIL);

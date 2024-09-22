@@ -1,7 +1,8 @@
 package com.sabujaks.irs.domain.announcement.model.response;
 
-import jakarta.persistence.Column;
 import lombok.*;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -10,7 +11,9 @@ import lombok.*;
 @Builder
 public class AnnouncementReadDetailRes {
     private Long announcementIdx;
+    private Long companyIdx;
 
+    /*******공고 쪽 정보*******/
     // 공고 기본 설정
     private String title; // 공고제목
     private Boolean selectForm; // 양식 선택
@@ -47,6 +50,19 @@ public class AnnouncementReadDetailRes {
     // 유의사항
     private String note; // 유의사항
 
-    // 기업 쪽 정보 추가
+
+    /*******기업 쪽 정보*******/
+    private String companyIndustry; // 산업(업종) (솔루션 등)
+    private String companyName; // 기업명
+    private String companyType; // 기업구분(중견기업, 벤처기업 등)
+    private String companyInfo; // 기업소개
+    private String companyCapital; // 자본금
+    private String companyTotalEmp; // 사원수
+    private String companyEstablishDate; // 설립일
+    private String companySales; // 매출액
+    private String companyBusiness; // 주요사업
+    private String companyUrl; // 홈페이지url
+    private String companyAddress; // 기업주소
+    private List<BenefitCategory> companyBenefitsDataList; // 복리후생 카테고리 리스트
 
 }
