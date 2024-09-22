@@ -1,6 +1,7 @@
 package com.sabujaks.irs.domain.interview_schedule.controller;
 
 import com.sabujaks.irs.domain.interview_schedule.model.request.InterviewScheduleReq;
+import com.sabujaks.irs.domain.interview_schedule.model.request.InterviewScheduleUpdateReq;
 import com.sabujaks.irs.domain.interview_schedule.model.request.ReScheduleReq;
 import com.sabujaks.irs.domain.interview_schedule.model.response.InterviewScheduleRes;
 import com.sabujaks.irs.domain.interview_schedule.model.response.ReScheduleRes;
@@ -37,7 +38,7 @@ public class InterviewScheduleController {
     @GetMapping("/read-all")
     public ResponseEntity<BaseResponse<?>> readAll (
             @RequestParam String careerBase,
-            @RequestParam Long announcementIdx){
+            @RequestParam Long announcementIdx) throws BaseException {
         List<InterviewScheduleRes> response = interviewScheduleService.readAll(careerBase, announcementIdx);
 
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_SCHEDULE_READ_ALL_SUCCESS, response));
