@@ -16,4 +16,7 @@ public interface AnnouncementRepository extends JpaRepository<Announcement, Long
 
     @Query("SELECT a FROM Announcement a WHERE a.recruiter.idx = :recruiterIdx AND a.careerBase=:careerBase")
     Optional<List<Announcement>> findByRecruiterIdxAndCareerBase(Long recruiterIdx, String careerBase);
+
+    @Query("SELECT a FROM Announcement a WHERE a.recruiter.idx = :recruiterIdx")
+    Optional<List<Announcement>> findByRecruiterIdx(Long recruiterIdx);
 }

@@ -24,6 +24,9 @@ public class ReSchedule {
     @Column(nullable = false)
     private String interviewEnd;
 
+    @Column(nullable = false)
+    private Boolean status;
+
     @ManyToOne
     @JoinColumn(name = "interview_schedule_idx")
     private InterviewSchedule interviewSchedule;

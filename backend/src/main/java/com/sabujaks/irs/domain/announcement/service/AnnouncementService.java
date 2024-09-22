@@ -350,7 +350,12 @@ public class AnnouncementService {
 
     public List<AnnouncementReadAllRes2> readAllAnnouncement(Long recruiterIdx, String careerBase) throws BaseException {
         Optional<Recruiter> recruiter = recruiterRepository.findByRecruiterIdx(recruiterIdx);
-        Optional<List<Announcement>> result = announcementRepository.findByRecruiterIdxAndCareerBase(recruiterIdx, careerBase);
+        Optional<List<Announcement>> result;
+        if(careerBase.equals("전체")) {
+            result = announcementRepository.findByRecruiterIdx(recruiterIdx);
+        } else {
+            result = announcementRepository.findByRecruiterIdxAndCareerBase(recruiterIdx, careerBase);
+        }
 
         List<AnnouncementReadAllRes2> announcementList = new ArrayList<>();
         for(Announcement announcement : result.get()) {

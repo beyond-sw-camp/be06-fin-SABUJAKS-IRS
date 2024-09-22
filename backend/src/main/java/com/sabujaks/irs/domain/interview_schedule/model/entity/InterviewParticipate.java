@@ -4,10 +4,7 @@ import com.sabujaks.irs.domain.auth.model.entity.Estimator;
 import com.sabujaks.irs.domain.auth.model.entity.Seeker;
 import com.sabujaks.irs.domain.interview_evaluate.model.entity.InterviewEvaluate;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -20,6 +17,9 @@ public class InterviewParticipate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
+
+    @Setter
+    private Boolean status;
 
     @OneToMany(mappedBy = "interviewParticipate")
     private List<InterviewEvaluate> interviewEvaluateList;

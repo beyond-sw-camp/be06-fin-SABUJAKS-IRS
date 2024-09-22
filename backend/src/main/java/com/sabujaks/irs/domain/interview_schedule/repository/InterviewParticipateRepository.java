@@ -20,5 +20,8 @@ public interface InterviewParticipateRepository extends JpaRepository<InterviewP
             "ip.interviewSchedule.uuid = :interviewScheduleUUID")
     Optional<InterviewParticipate> findBySeekerEmailAndEstimatorIdxAndInterviewScheduleUUID(String seekerEmail, Long estimatorIdx, String interviewScheduleUUID);
 
-    List<InterviewParticipate> findByInterviewScheduleIdx(Long interviewScheduleIdx);
+    Optional<List<InterviewParticipate>> findByInterviewScheduleIdx(Long interviewScheduleIdx);
+
+    @Query("SELECT ip FROM InterviewParticipate ip WHERE ip.interviewSchedule.idx = :interviewScheduleIdx AND ip.seeker.idx = :seekerIdx")
+    Optional<InterviewParticipate> findByInterviewScheduleIdxAndSeekerIdx(Long interviewScheduleIdx, Long seekerIdx);
 }

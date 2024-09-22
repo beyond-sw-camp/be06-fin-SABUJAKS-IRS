@@ -43,6 +43,22 @@ public class InterviewScheduleController {
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_SCHEDULE_READ_ALL_SUCCESS, response));
     }
 
+    @GetMapping("/read")
+    public ResponseEntity<BaseResponse<?>> read (
+            @RequestParam Long interviewScheduleIdx) throws BaseException {
+        InterviewScheduleRes response = interviewScheduleService.read(interviewScheduleIdx);
+
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_SCHEDULE_READ_ALL_SUCCESS, response));
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity<BaseResponse<InterviewScheduleUpdateReq>> create (
+            @RequestBody InterviewScheduleUpdateReq dto) throws BaseException {
+        interviewScheduleService.update(dto);
+
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_SCHEDULE_UPDATE_SUCCESS));
+    }
+
     // CustomUserDetail 추가하기
     @PostMapping("/create/re-schedule")
     public ResponseEntity<BaseResponse<ReScheduleReq>> createReSchedule (

@@ -56,6 +56,9 @@ public enum BaseResponseMessage {
     RESCHEDULE_NOT_FOUND(false, 1303, "면접 조율 내역을 찾을 수 없습니다."),
     RESCHEDULE_SEARCH_ALL_SUCCESS(true, 1304, "면접 조율 내역 조회에 성공했습니다."),
     INTERVIEW_SCHEDULE_READ_ALL_SUCCESS(true, 1305, "면접 내역 조회에 성공했습니다."),
+    INTERVIEW_SCHEDULE_UPDATE_SUCCESS(true, 1306, "면접 내역 업데이트에 성공했습니다."),
+
+    INTERVIEW_PARTICIPATE_NOT_FOUND(false, 1320, "면접 연관 정보를 찾을 수 없습니다."),
 
     // VIDEO_INTERVIEW 화상 면접 1400
     VIDEO_INTERVIEW_CREATE_SUCCESS(true, 1400, "화상 면접 방 생성에 성공했습니다."),

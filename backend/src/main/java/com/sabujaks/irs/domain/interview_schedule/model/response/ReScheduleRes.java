@@ -1,6 +1,7 @@
 package com.sabujaks.irs.domain.interview_schedule.model.response;
 
 import com.sabujaks.irs.domain.auth.model.entity.Seeker;
+import com.sabujaks.irs.domain.auth.model.response.SeekerInfoGetRes;
 import com.sabujaks.irs.domain.interview_schedule.model.entity.InterviewSchedule;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,6 +12,6 @@ public class ReScheduleRes {
     private Long idx;
     private String interviewStart;
     private String interviewEnd;
-    private Long interviewScheduleIdx;
-    private Long seekerIdx;
+    private InterviewScheduleRes interviewScheduleRes;
+    private SeekerInfoGetRes seekerInfoGetRes;
 }

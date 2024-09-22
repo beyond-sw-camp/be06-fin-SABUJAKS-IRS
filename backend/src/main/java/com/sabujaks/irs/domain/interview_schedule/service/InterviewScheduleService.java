@@ -5,6 +5,7 @@ import com.sabujaks.irs.domain.alarm.repository.AlarmRepository;
 import com.sabujaks.irs.domain.announcement.model.entity.Announcement;
 import com.sabujaks.irs.domain.announcement.repository.AnnouncementRepository;
 import com.sabujaks.irs.domain.auth.model.entity.Seeker;
+import com.sabujaks.irs.domain.auth.model.response.EstimatorInfoGetRes;
 import com.sabujaks.irs.domain.auth.model.response.SeekerInfoGetRes;
 import com.sabujaks.irs.domain.interview_schedule.model.entity.*;
 import com.sabujaks.irs.domain.auth.model.entity.Estimator;
@@ -13,6 +14,7 @@ import com.sabujaks.irs.domain.auth.repository.EstimatorRepository;
 import com.sabujaks.irs.domain.auth.repository.RecruiterRepository;
 import com.sabujaks.irs.domain.auth.repository.SeekerRepository;
 import com.sabujaks.irs.domain.interview_schedule.model.request.InterviewScheduleReq;
+import com.sabujaks.irs.domain.interview_schedule.model.request.InterviewScheduleUpdateReq;
 import com.sabujaks.irs.domain.interview_schedule.model.request.ReScheduleReq;
 import com.sabujaks.irs.domain.interview_schedule.model.response.InterviewParticipateReadRes;
 import com.sabujaks.irs.domain.interview_schedule.model.response.InterviewScheduleRes;
@@ -99,9 +101,22 @@ public class InterviewScheduleService {
                 interviewParticipateRepository.save(interviewParticipate);
             }
         }
+
+        System.out.println("@@@@@@@알람 등록 시작");
+        // Alarm 저장 로직
+        for(Long seekerIdx : dto.getSeekerList()) {
+            alarmRepository.save(Alarm.builder()
+                    .type("면접일정")
+                    .status(false)
+                    .message("귀하의 면접일정은 다음과 같습니다.")
+                    .seeker(seekerRepository.findBySeekerIdx(seekerIdx).orElseThrow(() -> new BaseException(BaseResponseMessage.MEMBER_NOT_FOUND)))
+                    .interviewSchedule(interviewSchedule)
+                    .createdAt(LocalDateTime.now())
+                    .url("iehglskjfasel-welifhwlkgjwelifj")
+                    .build());
+        }
         return InterviewScheduleRes.builder()
                 .idx(interviewSchedule.getIdx())
-                .estimatorList(dto.getEstimatorList())
                 .isOnline(interviewSchedule.getIsOnline())
                 .interviewDate(interviewSchedule.getInterviewDate())
                 .interviewEnd(interviewSchedule.getInterviewEnd())
@@ -134,23 +149,21 @@ public class InterviewScheduleService {
         return uuid;
     }
 
-    public List<InterviewScheduleRes> readAll(String careerBase, Long idx) {
+    public List<InterviewScheduleRes> readAll(String careerBase, Long idx) throws BaseException {
         Optional<List<InterviewSchedule>> result;
-        if(careerBase == "전체") {
+        if(careerBase.equals("전체")) {
             result = interviewScheduleRepository.findByAnnouncementIdx(idx);
         } else {
             result = interviewScheduleRepository.findByCareerBaseAndAnnouncementIdx(careerBase, idx);
         }
-
-
-//        Optional<List<SeekerInfoGetRes>> seekerResult =
 
         List<InterviewScheduleRes> interviewScheduleList = new ArrayList<>();
 
         if(!result.isEmpty()) {
             for (InterviewSchedule interviewSchedule : result.get()) {
                 List<SeekerInfoGetRes> seekerInfoGetResList = new ArrayList<>();
-                List<InterviewParticipate> participateResult = interviewParticipateRepository.findByInterviewScheduleIdx(interviewSchedule.getIdx());
+                List<InterviewParticipate> participateResult = interviewParticipateRepository.findByInterviewScheduleIdx(interviewSchedule.getIdx()).orElseThrow(() ->
+                        new BaseException(BaseResponseMessage.INTERVIEW_PARTICIPATE_NOT_FOUND));
 
                 for(InterviewParticipate interviewParticipate : participateResult) {
                     seekerInfoGetResList.add(SeekerInfoGetRes.builder()
@@ -174,6 +187,63 @@ public class InterviewScheduleService {
         return interviewScheduleList;
     }
 
+    public InterviewScheduleRes read(Long interviewScheduleIdx) throws BaseException {
+        InterviewSchedule result = interviewScheduleRepository.findByInterviewScheduleIdx(interviewScheduleIdx).orElseThrow(() ->
+                new BaseException(BaseResponseMessage.INTERVIEW_SCHEDULE_NOT_FOUND));
+
+        List<InterviewParticipate> participateResult = interviewParticipateRepository.findByInterviewScheduleIdx(interviewScheduleIdx).orElseThrow(() ->
+                new BaseException(BaseResponseMessage.INTERVIEW_PARTICIPATE_NOT_FOUND));
+
+        List<EstimatorInfoGetRes> estimatorInfoGetResList = new ArrayList<>();
+        List<SeekerInfoGetRes> seekerInfoGetResList = new ArrayList<>();
+
+        // estimator 정보 담기
+        for(InterviewParticipate interviewParticipate : participateResult) {
+            estimatorInfoGetResList.add(EstimatorInfoGetRes.builder()
+                    .idx(interviewParticipate.getEstimator().getIdx())
+                    .email(interviewParticipate.getEstimator().getEmail())
+                    .name(interviewParticipate.getEstimator().getName())
+                    .build());
+        }
+
+        // seeker 정보 담기
+        for(InterviewParticipate interviewParticipate : participateResult) {
+            seekerInfoGetResList.add(SeekerInfoGetRes.builder()
+                    .idx(interviewParticipate.getSeeker().getIdx())
+                    .email(interviewParticipate.getSeeker().getEmail())
+                    .name(interviewParticipate.getSeeker().getName())
+                    .build());
+        }
+
+        InterviewScheduleRes interviewScheduleRes = InterviewScheduleRes.builder()
+                .idx(result.getIdx())
+                .isOnline(result.getIsOnline())
+                .interviewDate(result.getInterviewDate())
+                .interviewEnd(result.getInterviewEnd())
+                .interviewStart(result.getInterviewStart())
+                .teamIdx(result.getTeam().getIdx())
+                .uuid(result.getUuid())
+                .estimatorList(estimatorInfoGetResList)
+                .seekerList(seekerInfoGetResList)
+                .build();
+        return interviewScheduleRes;
+    }
+
+    public void update(InterviewScheduleUpdateReq dto) throws BaseException {
+        for (Long seekerIdx : dto.getSeekerList()) {
+            Long interviewScheduleIdx = dto.getInterviewScheduleIdx();
+
+            InterviewParticipate interviewParticipate = interviewParticipateRepository
+                    .findByInterviewScheduleIdxAndSeekerIdx(interviewScheduleIdx, seekerIdx)
+                    .orElseThrow(() -> new BaseException(BaseResponseMessage.INTERVIEW_PARTICIPATE_NOT_FOUND));
+
+            if (interviewParticipate != null) {
+                interviewParticipate.setStatus(false);
+                interviewParticipateRepository.save(interviewParticipate);
+            }
+        }
+    }
+
     public ReScheduleRes createReSchedule(ReScheduleReq dto) throws BaseException {
 
         InterviewSchedule interviewSchedule = interviewScheduleRepository.findByInterviewScheduleIdx(dto.getInterviewScheduleIdx())
@@ -191,8 +261,20 @@ public class InterviewScheduleService {
                 .idx(reSchedule.getIdx())
                 .interviewStart(reSchedule.getInterviewStart())
                 .interviewEnd(reSchedule.getInterviewEnd())
-                .interviewScheduleIdx(reSchedule.getInterviewSchedule().getIdx())
-                .seekerIdx(reSchedule.getSeeker().getIdx())
+                .interviewScheduleRes(InterviewScheduleRes.builder()
+                        .idx(reSchedule.getInterviewSchedule().getIdx())
+                        .isOnline(reSchedule.getInterviewSchedule().getIsOnline())
+                        .interviewDate(reSchedule.getInterviewSchedule().getInterviewDate())
+                        .interviewStart(reSchedule.getInterviewSchedule().getInterviewStart())
+                        .interviewEnd(reSchedule.getInterviewSchedule().getInterviewEnd())
+                        .teamIdx(reSchedule.getInterviewSchedule().getTeam().getIdx())
+                        .uuid(reSchedule.getInterviewSchedule().getUuid())
+                        .build())
+                .seekerInfoGetRes(SeekerInfoGetRes.builder()
+                        .idx(reSchedule.getSeeker().getIdx())
+                        .email(reSchedule.getSeeker().getEmail())
+                        .name(reSchedule.getSeeker().getName())
+                        .build())
                 .build();
     }
 
@@ -202,14 +284,36 @@ public class InterviewScheduleService {
 
         for(InterviewSchedule interviewSchedule : result) {
             ReSchedule reSchedule = reScheduleRepository.findByInterviewScheduleIdx(interviewSchedule.getIdx());
+            if(reSchedule == null) {
+                continue;
+            }
+            System.out.println("?????@?@?@?@?");
+            System.out.println(reSchedule.getIdx());
+            System.out.println(reSchedule.getInterviewStart());
+            System.out.println(reSchedule.getInterviewEnd());
+            System.out.println(reSchedule.getSeeker().getIdx());
+            System.out.println("?????@?@?@?@?");
+            Seeker seeker = seekerRepository.findBySeekerIdx(reSchedule.getSeeker().getIdx()).get();
 
             if(reSchedule != null) {
                 reScheduleResList.add(ReScheduleRes.builder()
                         .idx(reSchedule.getIdx())
                         .interviewStart(reSchedule.getInterviewStart())
                         .interviewEnd(reSchedule.getInterviewEnd())
-                        .interviewScheduleIdx(reSchedule.getInterviewSchedule().getIdx())
-                        .seekerIdx(reSchedule.getSeeker().getIdx())
+                        .interviewScheduleRes(InterviewScheduleRes.builder()
+                                .idx(interviewSchedule.getIdx())
+                                .isOnline(interviewSchedule.getIsOnline())
+                                .interviewDate(interviewSchedule.getInterviewDate())
+                                .interviewStart(interviewSchedule.getInterviewStart())
+                                .interviewEnd(interviewSchedule.getInterviewEnd())
+                                .teamIdx(interviewSchedule.getTeam().getIdx())
+                                .uuid(interviewSchedule.getUuid())
+                                .build())
+                        .seekerInfoGetRes(SeekerInfoGetRes.builder()
+                                .idx(seeker.getIdx())
+                                .email(seeker.getEmail())
+                                .name(seeker.getName())
+                                .build())
                         .build());
             }
         }
