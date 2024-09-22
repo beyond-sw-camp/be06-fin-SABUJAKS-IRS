@@ -174,27 +174,55 @@
 </template>
 
 <script setup>
-import { ref, defineEmits, watch } from 'vue';
+import { ref, defineEmits, watch, defineProps } from 'vue';
 
+const props = defineProps({
+    data: {
+        type: Object
+    }
+});
 
-const schoolDiv = ref(null);
-const schoolName = ref(null);
-const graduatedAt = ref(null);
-const passedAt = ref(null);
-const graduationStatus = ref(null);
-const qualificationExam = ref(false);
-const enteredAt = ref(null);
-const transfer = ref(false);
-const grade = ref(null);
-const totalGrade = ref(null);
-const majorName = ref(null);
-const majorType = ref(null);
-const otherMajor = ref(null);
-const graduationWork = ref(null);
-const degree = ref(null);
+const education = props.data || {
+    schoolDiv: null,
+    schoolName: null,
+    graduatedAt: null,
+    passedAt: null,
+    graduationStatus: null,
+    qualificationExam: false,
+    enteredAt: null,
+    transfer: false,
+    grade: null,
+    totalGrade: null,
+    majorName: null,
+    majorType: null,
+    otherMajor: null,
+    graduationWork: null,
+    degree: null
+};
+
+const schoolDiv = ref(education.schoolDiv);
+const schoolName = ref(education.schoolName);
+const graduatedAt = ref(education.graduatedAt);
+const passedAt = ref(education.passAt);
+const graduationStatus = ref(education.graduationStatus);
+const qualificationExam = ref(education.qualificationExam);
+const enteredAt = ref(education.enteredAt);
+const transfer = ref(education.transfer);
+const grade = ref(education.grade);
+const totalGrade = ref(education.totalGrade);
+const majorName = ref(education.majorName);
+const majorType = ref(education.majorType);
+const otherMajor = ref(education.otherMajor);
+const graduationWork = ref(education.graduationWork);
+const degree = ref(education.degree);
+const otherMajorVisible = ref(education.otherMajor);
+const graduationWorkVisible = ref(education.graduationWork);
+
 
 
 const emit = defineEmits(['updateData']);
+emit('updateData', props.data);
+
 
 const updateData = () => {
   const data = {
@@ -218,15 +246,13 @@ const updateData = () => {
 };
 
 watch(
-  [schoolDiv, schoolName, graduatedAt, passedAt, graduationStatus, qualificationExam, enteredAt, transfer
-  , grade, totalGrade, totalGrade, majorName, majorType, otherMajor, graduationWork, degree
-  ],
-  updateData,
+  [schoolDiv, schoolName, graduatedAt, passedAt, graduationStatus, qualificationExam, enteredAt, transfer, 
+    grade, totalGrade, totalGrade, majorName, majorType, otherMajor, graduationWork, degree],
+  updateData
 );
 
 
-const otherMajorVisible = ref(false);
-const graduationWorkVisible = ref(false);
+
 
 const toggleQualificationExam = () => {
     qualificationExam.value = !qualificationExam.value;

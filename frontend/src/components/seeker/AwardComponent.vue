@@ -12,7 +12,7 @@
     
             <div class="form-item">
                 <label for="year">수상연도</label>
-                <input type="text" id="year" v-model="year" placeholder="2023.03" class="small-input" />
+                <input type="text" id="year" v-model="year" placeholder="2023" class="small-input" />
             </div>
     
             <div class="form-item contents-item">
@@ -24,14 +24,29 @@
 </template>
 
 <script setup>
-import { ref, defineEmits, watch } from 'vue';
+import { ref, defineEmits, watch, defineProps } from 'vue';
 
-const awardName = ref(null);
-const organization = ref(null);
-const year = ref(null);
-const contents = ref(null);
+const props = defineProps({
+    data: {
+        type: Object
+    }
+});
+
+const award = props.data || {
+    awardName: null,
+    organization: null,
+    year: null,
+    contents: null
+};
+
+const awardName = ref(award.awardName);
+const organization = ref(award.organization);
+const year = ref(award.year);
+const contents = ref(award.contents);
 
 const emit = defineEmits(['updateData']);
+emit('updateData', props.data);
+
 
 const updateData = () => {
   const data = {

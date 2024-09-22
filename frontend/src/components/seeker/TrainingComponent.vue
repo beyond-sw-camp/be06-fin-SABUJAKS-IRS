@@ -30,15 +30,31 @@
 </template>
 
 <script setup>
-import { ref, defineEmits, watch } from 'vue';
+import { ref, defineEmits, watch, defineProps } from 'vue';
 
-const trainingName = ref(null);
-const organization = ref(null);
-const startAt = ref(null);
-const endAt = ref(null);
-const contents = ref(null);
+const props = defineProps({
+    data: {
+        type: Object
+    }
+});
+
+const training = props.data || {
+    trainingName: null,
+    organization: null,
+    startAt: null,
+    endAt: null,
+    contents: null
+};
+
+const trainingName = ref(training.trainingName);
+const organization = ref(training.organization);
+const startAt = ref(training.startAt);
+const endAt = ref(training.endAt);
+const contents = ref(training.contents);
 
 const emit = defineEmits(['updateData']);
+emit('updateData', props.data);
+
 
 const updateData = () => {
   const data = {
