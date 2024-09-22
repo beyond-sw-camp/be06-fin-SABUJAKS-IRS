@@ -119,8 +119,11 @@ public enum BaseResponseMessage {
     INTERVIEW_EVALUATE_SEARCH_FORM_FAIL_INVALID_ACCESS(false, 6102, "해당 공고의 인터뷰 평가표에 접근할 수 없습니다."),
     // 인터뷰 지원서 조회 6200
     INTERVIEW_EVALUATE_SEARCH_RESUME_SUCCESS(true, 6200, "지원자들의 지원서 정보를 불러오는데 성공했습니다." ),
-    INTERVIEW_EVALUATE_SEARCH_RESUME_FAIL_NOT_FOUND(false, 6201, "지원자들의 지원서 정보를 불러오는데 실패했습니다.");
-
+    INTERVIEW_EVALUATE_SEARCH_RESUME_FAIL_NOT_FOUND(false, 6201, "지원자들의 지원서 정보를 불러오는데 실패했습니다."),
+    // 인터뷰 평가 생성 6300
+    INTERVIEW_EVALUATE_CREATE_SUCCESS(true, 6300, "해당 지원자의 인터뷰 평가를 생성하는데 성공했습니다."),
+    INTERVIEW_EVALUATE_CREATE_FAIL_INVALID_FORM(false, 6302, "해당 공고의 인터뷰 평가 항목이 잘못되었습니다."),
+    INTERVIEW_EVALUATE_CREATE_FAIL_NOT_FOUND_SCHEDULE(false, 6301, "해당 면접관과 지원자의 인터뷰 스케줄 정보가 없습니다.");
 
     private Boolean success;
     private Integer code;

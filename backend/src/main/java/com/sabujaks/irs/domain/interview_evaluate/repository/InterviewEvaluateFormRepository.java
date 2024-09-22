@@ -13,4 +13,6 @@ import java.util.Optional;
 public interface InterviewEvaluateFormRepository extends JpaRepository<InterviewEvaluateForm, Long> {
     @Query("SELECT ief FROM InterviewEvaluateForm ief WHERE ief.announcement.uuid = :announcementUUID")
     Optional<InterviewEvaluateForm> findByAnnouncementUUID(String announcementUUID);
+    @Query("SELECT ief FROM InterviewEvaluateForm ief WHERE ief.announcement.idx = :announceIdx")
+    Optional<InterviewEvaluateForm> findByAnnounceIdx(Long announceIdx);
 }
