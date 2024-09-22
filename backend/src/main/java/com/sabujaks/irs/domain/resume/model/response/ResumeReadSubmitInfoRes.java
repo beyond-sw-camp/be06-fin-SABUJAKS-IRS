@@ -10,7 +10,8 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class ResumeReadSubmitInfoRes {
-    private List<String> codes;
+    private List<String> codes; // 지원서 맞춤 양식 코드
+    private Boolean integrated; // 통합 지원서 등록 여부 반환
     private PersonalInfoReadRes personalInfo; // 인적사항 1개
     private PreferentialEmpReadRes preferentialEmp; // 취업우대·병역 1개
     private List<EducationReadRes> educations; // 학력 n개
