@@ -35,7 +35,9 @@ export const UseResumeStore = defineStore('resume', {
         showPreferentialEmp: false,
 
         resumeTitle: null,
-        announcementIdx: 0
+        announcementIdx: 0,
+
+        resumeDetail: {}
     }),
     actions: {
         updateShowEducation(value) {
@@ -110,7 +112,7 @@ export const UseResumeStore = defineStore('resume', {
                 // 학력
                 if (this.educations.length > 0 && !this.codes.includes("resume_001") && this.showEducation) {
                     this.codes.push("resume_001");
-                } 
+                }
                 if (!this.showEducation) {
                     const index = this.codes.indexOf("resume_001");
                     if (index > -1) {
@@ -120,7 +122,7 @@ export const UseResumeStore = defineStore('resume', {
                 // 경력
                 if (this.personalHistories.length > 0 && !this.codes.includes("resume_002") && this.showPersonalHistory) {
                     this.codes.push("resume_002");
-                } 
+                }
                 if (!this.showPersonalHistory) {
                     const index = this.codes.indexOf("resume_002");
                     if (index > -1) {
@@ -130,7 +132,7 @@ export const UseResumeStore = defineStore('resume', {
                 // 인턴 대외활동
                 if (this.internsActivities.length > 0 && !this.codes.includes("resume_003") && this.showInternsActivity) {
                     this.codes.push("resume_003");
-                } 
+                }
                 if (!this.showInternsActivity) {
                     const index = this.codes.indexOf("resume_003");
                     if (index > -1) {
@@ -140,7 +142,7 @@ export const UseResumeStore = defineStore('resume', {
                 // 교육이수
                 if (this.trainings.length > 0 && !this.codes.includes("resume_004") && this.showTraining) {
                     this.codes.push("resume_004");
-                } 
+                }
                 if (!this.showTraining) {
                     const index = this.codes.indexOf("resume_004");
                     if (index > -1) {
@@ -150,7 +152,7 @@ export const UseResumeStore = defineStore('resume', {
                 // 자격증
                 if (this.certifications.length > 0 && !this.codes.includes("resume_005") && this.showCertification) {
                     this.codes.push("resume_005");
-                } 
+                }
                 if (!this.showCertification) {
                     const index = this.codes.indexOf("resume_005");
                     if (index > -1) {
@@ -160,7 +162,7 @@ export const UseResumeStore = defineStore('resume', {
                 // 수상
                 if (this.awards.length > 0 && !this.codes.includes("resume_006") && this.showAward) {
                     this.codes.push("resume_006");
-                } 
+                }
                 if (!this.showAward) {
                     const index = this.codes.indexOf("resume_006");
                     if (index > -1) {
@@ -170,7 +172,7 @@ export const UseResumeStore = defineStore('resume', {
                 // 해외경험
                 if (this.studyingAbroads.length > 0 && !this.codes.includes("resume_007") && this.showStudyingAbroad) {
                     this.codes.push("resume_007");
-                } 
+                }
                 if (!this.showStudyingAbroad) {
                     const index = this.codes.indexOf("resume_007");
                     if (index > -1) {
@@ -180,7 +182,7 @@ export const UseResumeStore = defineStore('resume', {
                 // 어학
                 if (this.languages.length > 0 && !this.codes.includes("resume_008") && this.showLanguage) {
                     this.codes.push("resume_008");
-                } 
+                }
                 if (!this.showLanguage) {
                     const index = this.codes.indexOf("resume_008");
                     if (index > -1) {
@@ -190,7 +192,7 @@ export const UseResumeStore = defineStore('resume', {
                 // 포트폴리오
                 if (this.portfolios.length > 0 && !this.codes.includes("resume_009") && this.showPortfolio) {
                     this.codes.push("resume_009");
-                } 
+                }
                 if (!this.showPortfolio) {
                     const index = this.codes.indexOf("resume_009");
                     if (index > -1) {
@@ -200,7 +202,7 @@ export const UseResumeStore = defineStore('resume', {
                 // 취업우대 병역
                 if (Object.keys(this.preferentialEmp).length > 0 && !this.codes.includes("resume_010") && this.showPreferentialEmp) {
                     this.codes.push("resume_010");
-                } 
+                }
                 if (!this.showPreferentialEmp) {
                     const index = this.codes.indexOf("resume_010");
                     if (index > -1) {
@@ -210,7 +212,7 @@ export const UseResumeStore = defineStore('resume', {
                 // 자기소개서
                 if (this.customLetters.length > 0 && !this.codes.includes("resume_011") && this.showCustomLetter) {
                     this.codes.push("resume_011");
-                } 
+                }
                 if (!this.showCustomLetter) {
                     const index = this.codes.indexOf("resume_011");
                     if (index > -1) {
@@ -272,7 +274,7 @@ export const UseResumeStore = defineStore('resume', {
                 // 학력
                 if (this.educations.length > 0 && !this.codes.includes("resume_001") && this.showEducation) {
                     this.codes.push("resume_001");
-                } 
+                }
                 if (!this.showEducation) {
                     const index = this.codes.indexOf("resume_001");
                     if (index > -1) {
@@ -282,7 +284,7 @@ export const UseResumeStore = defineStore('resume', {
                 // 경력
                 if (this.personalHistories.length > 0 && !this.codes.includes("resume_002") && this.showPersonalHistory) {
                     this.codes.push("resume_002");
-                } 
+                }
                 if (!this.showPersonalHistory) {
                     const index = this.codes.indexOf("resume_002");
                     if (index > -1) {
@@ -292,7 +294,7 @@ export const UseResumeStore = defineStore('resume', {
                 // 인턴 대외활동
                 if (this.internsActivities.length > 0 && !this.codes.includes("resume_003") && this.showInternsActivity) {
                     this.codes.push("resume_003");
-                } 
+                }
                 if (!this.showInternsActivity) {
                     const index = this.codes.indexOf("resume_003");
                     if (index > -1) {
@@ -302,7 +304,7 @@ export const UseResumeStore = defineStore('resume', {
                 // 교육이수
                 if (this.trainings.length > 0 && !this.codes.includes("resume_004") && this.showTraining) {
                     this.codes.push("resume_004");
-                } 
+                }
                 if (!this.showTraining) {
                     const index = this.codes.indexOf("resume_004");
                     if (index > -1) {
@@ -312,7 +314,7 @@ export const UseResumeStore = defineStore('resume', {
                 // 자격증
                 if (this.certifications.length > 0 && !this.codes.includes("resume_005") && this.showCertification) {
                     this.codes.push("resume_005");
-                } 
+                }
                 if (!this.showCertification) {
                     const index = this.codes.indexOf("resume_005");
                     if (index > -1) {
@@ -322,7 +324,7 @@ export const UseResumeStore = defineStore('resume', {
                 // 수상
                 if (this.awards.length > 0 && !this.codes.includes("resume_006") && this.showAward) {
                     this.codes.push("resume_006");
-                } 
+                }
                 if (!this.showAward) {
                     const index = this.codes.indexOf("resume_006");
                     if (index > -1) {
@@ -332,7 +334,7 @@ export const UseResumeStore = defineStore('resume', {
                 // 해외경험
                 if (this.studyingAbroads.length > 0 && !this.codes.includes("resume_007") && this.showStudyingAbroad) {
                     this.codes.push("resume_007");
-                } 
+                }
                 if (!this.showStudyingAbroad) {
                     const index = this.codes.indexOf("resume_007");
                     if (index > -1) {
@@ -342,7 +344,7 @@ export const UseResumeStore = defineStore('resume', {
                 // 어학
                 if (this.languages.length > 0 && !this.codes.includes("resume_008") && this.showLanguage) {
                     this.codes.push("resume_008");
-                } 
+                }
                 if (!this.showLanguage) {
                     const index = this.codes.indexOf("resume_008");
                     if (index > -1) {
@@ -352,7 +354,7 @@ export const UseResumeStore = defineStore('resume', {
                 // 포트폴리오
                 if (this.portfolios.length > 0 && !this.codes.includes("resume_009") && this.showPortfolio) {
                     this.codes.push("resume_009");
-                } 
+                }
                 if (!this.showPortfolio) {
                     const index = this.codes.indexOf("resume_009");
                     if (index > -1) {
@@ -362,7 +364,7 @@ export const UseResumeStore = defineStore('resume', {
                 // 취업우대 병역
                 if (Object.keys(this.preferentialEmp).length > 0 && !this.codes.includes("resume_010") && this.showPreferentialEmp) {
                     this.codes.push("resume_010");
-                } 
+                }
                 if (!this.showPreferentialEmp) {
                     const index = this.codes.indexOf("resume_010");
                     if (index > -1) {
@@ -372,7 +374,7 @@ export const UseResumeStore = defineStore('resume', {
                 // 자기소개서
                 if (this.customLetters.length > 0 && !this.codes.includes("resume_011") && this.showCustomLetter) {
                     this.codes.push("resume_011");
-                } 
+                }
                 if (!this.showCustomLetter) {
                     const index = this.codes.indexOf("resume_011");
                     if (index > -1) {
@@ -430,6 +432,7 @@ export const UseResumeStore = defineStore('resume', {
                 alert(response.data.message);
                 console.log('서버 응답:', response.data);
             } catch (error) {
+                console.log(error);
                 alert(error.response.data.message);
             }
         },
@@ -445,9 +448,41 @@ export const UseResumeStore = defineStore('resume', {
             } catch (error) {
                 alert(error.response.data.message);
             }
-            
+        },
+        async read(resumeIdx) {
+            try {
+                const response = await axios.get(`${backend}/resume/read?resumeIdx=${resumeIdx}`, {
+                    headers: { 'Content-Type': 'application/json', },
+                    withCredentials: true
+                });
+                this.resumeDetail = response.data.result;
 
-        }
+            } catch (error) {
+                alert(error.response.data.message);
+            }
+        },
+        async updateDocPassed(resumeIdx, docPassedValue) {
+            try {
+                const response = await axios.patch(`${backend}/resume/update/docPassed/${resumeIdx}`,
+                    {
+                        docPassed: docPassedValue
+                    },
+                    {
+                        headers: { 'Content-Type': 'application/json' },
+                        withCredentials: true
+                    }
+                );
+                // 합격/불합격 처리 성공
+
+                if (confirm(response.data.message)) {
+                    location.reload();
+                }
+
+            } catch (error) {
+                alert(error.response.data.message);
+            }
+        },
+
 
 
     },
