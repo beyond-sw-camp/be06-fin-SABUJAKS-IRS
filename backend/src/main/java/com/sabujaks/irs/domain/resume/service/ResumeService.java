@@ -739,7 +739,7 @@ public class ResumeService {
     }
 
     @Transactional
-    public ResumeReadRes readIntegrated(CustomUserDetails customUserDetails) throws BaseException {
+    public ResumeReadIntegratedRes readIntegrated(CustomUserDetails customUserDetails) throws BaseException {
         Long seekerIdx = customUserDetails.getIdx();
         // 지원자 테이블 조회
         Optional<Seeker> resultSeeker = seekerRepository.findBySeekerIdx(seekerIdx);
@@ -747,7 +747,7 @@ public class ResumeService {
             // 지원정보 테이블 조회 (integration == 1)
             Optional<ResumeInfo> resultResumeInfo = resumeInfoRepository.findBySeekerIdxAndIntegrated(seekerIdx, true);
             if(resultResumeInfo.isPresent()) {
-                ResumeReadRes.ResumeReadResBuilder responseBuilder = ResumeReadRes.builder();
+                ResumeReadIntegratedRes.ResumeReadIntegratedResBuilder responseBuilder = ResumeReadIntegratedRes.builder();
 
                 // 인적사항 조회
                 Optional<PersonalInfo> resultPersonalInfo = personalInfoRepository.findByResumeInfoIdx(resultResumeInfo.get().getIdx());
@@ -997,10 +997,13 @@ public class ResumeService {
     public ResumeReadRes read(Long resumeIdx) throws BaseException {
         Optional<Resume> resultResume = resumeRepository.findByResumeIdx(resumeIdx);
         if(resultResume.isPresent()) {
+            ResumeReadRes.ResumeReadResBuilder responseBuilder = ResumeReadRes.builder();
+
+            responseBuilder.resumeTitle(resultResume.get().getResumeTitle());
+            responseBuilder.resumedAt(resultResume.get().getResumedAt());
             // 지원정보 테이블 조회
             Optional<ResumeInfo> resultResumeInfo = resumeInfoRepository.findByResumeInfoIdx(resultResume.get().getResumeInfo().getIdx());
             if(resultResumeInfo.isPresent()) {
-                ResumeReadRes.ResumeReadResBuilder responseBuilder = ResumeReadRes.builder();
 
                 // 인적사항 조회
                 Optional<PersonalInfo> resultPersonalInfo = personalInfoRepository.findByResumeInfoIdx(resultResumeInfo.get().getIdx());
