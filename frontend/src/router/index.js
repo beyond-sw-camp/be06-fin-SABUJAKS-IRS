@@ -16,7 +16,6 @@ import MypageSchedulePage from '@/pages/seeker/mypage/MypageSchedulePage.vue';
 import ResumeCreatePage from '@/pages/seeker/resume/ResumeCreatePage.vue';
 import ResumeSubmitPage from '@/pages/seeker/resume/ResumeSubmitPage.vue'
 import VideoInterviewMainPage from '@/pages/video-interview/VideoInterviewMainPage.vue';
-import VideoInterviewRedirectPage from '@/pages/video-interview/VideoInterviewRedirectPage.vue';
 import VideoInterviewRoomPage from '@/pages/video-interview/VideoInterviewRoomPage.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import SeekerSignupPage from '@/pages/seeker/auth/SeekerSignupPage.vue';
@@ -26,7 +25,6 @@ import InterviewScheduleMainNew from "@/pages/recruiter/interview-schedule/Inter
 import InterviewScheduleMainExp from "@/pages/recruiter/interview-schedule/InterviewScheduleMainExp.vue";
 import InterviewScheduleMain from '@/components/recruiter/InterviewScheduleMain.vue';
 import ReScheduleMainExp from "@/pages/recruiter/interview-schedule/ReScheduleMainExp.vue";
-import SeekerLoginPage1 from '@/pages/seeker/auth/SeekerLoginPage1.vue';
 import {UseAuthStore} from "@/stores/UseAuthStore";
 
 const requireRecruiterLogin = async (to, from, next) => {
@@ -52,16 +50,14 @@ const router = createRouter({
     routes: [
         { path: '/', component: AnnounceReadAllPage },
         { path: '/recruiter/login', component: RecruiterLoginPage },
-
         { path: '/recruiter/signup', component: RecruiterSignupPage },
         { path: '/recruiter/announce', component: AnnounceMainPage, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/announce/register-step2', component: AnnounceRegisterStep2Page, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/announce/register-step1', component: AnnounceRegisterStep1Page, beforeEnter: requireRecruiterLogin },
-
         { path: '/recruiter/interview-schedule/new', component: InterviewScheduleMainNew, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/interview-schedule/exp', component: InterviewScheduleMainExp, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/interview-evaluate', component: InterviewEvaluateMain, beforeEnter: requireRecruiterLogin },
-        { path: '/video-interview/login', component: VideoInterviewRedirectPage },
+
         { path: '/video-interview/:announceUUID', component: VideoInterviewMainPage, },
         { path: '/video-interview/:announceUUID/:videoInterviewUUID', component: VideoInterviewRoomPage },
 
@@ -71,8 +67,8 @@ const router = createRouter({
         { path: '/recruiter/resume/list', component: ResumeListPage, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/resume/detail:resumeIdx', component: ResumeDetailPage, beforeEnter: requireRecruiterLogin },
         { path: '/seeker/login', component: SeekerLoginPage },
-        { path: '/seeker/login1', component: SeekerLoginPage1 },
         { path: '/seeker/signup', component: SeekerSignupPage },
+        
         { path: '/seeker/announce', component: AnnounceReadAllPage },
         { path: '/seeker/announce/detail', component: AnnounceDetailPage },
         { path: '/seeker/mypage', component: MypageMainPage },
