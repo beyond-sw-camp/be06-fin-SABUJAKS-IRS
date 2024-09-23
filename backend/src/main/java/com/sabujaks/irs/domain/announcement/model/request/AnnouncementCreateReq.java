@@ -14,7 +14,7 @@ public class AnnouncementCreateReq {
     private String title; // 공고제목
     private Boolean selectForm; // 양식 선택
 
-    private List<String> jobCategoryList = new ArrayList<>(); // 직무 카테고리
+    private String jobCategoryList; // 직무 카테고리
     private String jobTitle; // 모집분야명
     private Integer recruitedNum; // 모집인원
     private String careerBase; // 경력 (경력인지 신입인지 무관인지 알바인지 등등 뽑는 기준)

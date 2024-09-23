@@ -29,16 +29,13 @@ public class AnnouncementController {
     public ResponseEntity<BaseResponse<AnnouncementCreateRes>> createStepOne(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
         @RequestPart AnnouncementCreateReq dto,
-        @RequestPart MultipartFile file) throws BaseException {
+        @RequestPart(required = false) MultipartFile file) throws BaseException {
 
-//        if (customUserDetails == null) throw new BaseException(BaseResponseMessage.AUTH_FAIL);
-//        Long recruiterIdx = customUserDetails.getIdx();
+        String fileUrl = null; // 파일 URL 초기화
 
-        String fileUrl = "";
-        if(file.isEmpty()) {
-            fileUrl = "";
-        } else {
-            fileUrl = cloudFileUpload.upload(file);
+        // 파일이 존재하고 비어 있지 않을 때만 업로드 처리
+        if (file != null && !file.isEmpty()) {
+            fileUrl = cloudFileUpload.upload(file); // 파일 업로드 및 URL 저장
         }
         AnnouncementCreateRes response = announcementService.createAnnouncement(customUserDetails, fileUrl, dto);
 
@@ -68,9 +65,9 @@ public class AnnouncementController {
 
     // 공고 등록을 위한 조회2
     @GetMapping("/read-company-info")
-    public ResponseEntity<BaseResponse<CompanyInfoReadRes>> readCompanyInfo(Long recruiterIdx) throws BaseException {
+    public ResponseEntity<BaseResponse<CompanyInfoReadRes>> readCompanyInfo(String recruiterEmail) throws BaseException {
 
-        CompanyInfoReadRes response = announcementService.readCompanyInfo(recruiterIdx);
+        CompanyInfoReadRes response = announcementService.readCompanyInfo(recruiterEmail);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.COMPANY_INFO_SUCCESS_REGISTER, response));
     }
 
