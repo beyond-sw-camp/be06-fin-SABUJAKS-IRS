@@ -65,8 +65,7 @@ const router = createRouter({
         { path: '/recruiter/interview-schedule', component: InterviewScheduleMain, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/resume', component: ResumeMainPage, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/resume/list', component: ResumeListPage, beforeEnter: requireRecruiterLogin },
-        { path: '/recruiter/resume/detail', component: ResumeDetailPage, beforeEnter: requireRecruiterLogin },
-        
+        { path: '/recruiter/resume/detail:resumeIdx', component: ResumeDetailPage, beforeEnter: requireRecruiterLogin },
         { path: '/seeker/login', component: SeekerLoginPage },
         { path: '/seeker/signup', component: SeekerSignupPage },
         
@@ -116,7 +115,7 @@ router.beforeEach((to, from, next) => {
             document.head.removeChild(existingLink);
         }
     }
-  
+
     // /recruiter/announce/register-step2 페이지에만 CSS 추가
     if (to.path === '/recruiter/announce/register-step2') {
         if (!document.querySelector('link[href="/css/AnnounceRegisterStep2Page.css"]')) {
