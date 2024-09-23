@@ -41,17 +41,19 @@ const formatDate = (datetime) => {
     <!-- props.title을 직접 사용합니다 -->
     <h1>{{ props.title }}</h1>
     <table class="review-table">
+      <tbody>
       <tr>
         <th>번호</th>
         <th>공고기간</th>
         <th>공고명</th>
       </tr>
-<!--      <tr @click="handleRowClick('경력')">-->
+      <!--      <tr @click="handleRowClick('경력')">-->
       <tr v-for="(announcement, index) in props.announcements" :key="announcement.idx" @click="handleRowClick(announcement.idx, announcement.uuid)">
         <td>{{ index + 1 }}</td>
         <td>{{ formatDate(announcement.announcementStart) }} - {{ formatDate(announcement.announcementEnd) }}</td>
         <td>{{ announcement.title }}</td>
       </tr>
+      </tbody>
     </table>
   </div>
 
