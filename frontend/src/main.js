@@ -13,7 +13,14 @@ const pinia = createPinia();
 
 pinia.use(piniaPersistedState);
 app.use(router)
-app.use(Toast)
+app.use(Toast, 
+    {
+        timeout: 2000,
+        enter: "fade-enter-active",
+        leave: "Vue-Toastification__bounce-leave-active",
+        move: "fade-move",
+        position: "bottom-right"
+    })
 app.use(pinia);
 
 app.mount('#app')
