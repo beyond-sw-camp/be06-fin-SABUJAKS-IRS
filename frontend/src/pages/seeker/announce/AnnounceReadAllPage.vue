@@ -168,7 +168,7 @@ import SeekerHeaderComponent from "@/components/seeker/SeekerHeaderComponent.vue
 
 .main-content {
   max-width: 1200px;
-  margin: 20px auto;
+  margin: 100px auto;
   background-color: #fff;
   padding: 20px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);

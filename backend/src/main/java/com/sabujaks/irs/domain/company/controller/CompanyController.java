@@ -29,7 +29,7 @@ public class CompanyController {
     public ResponseEntity<BaseResponse<CustomFormCreateReq>> createInfo(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestPart CompanyCreateReq dto,
-            @RequestPart MultipartFile[] files) throws BaseException {
+            @RequestPart(required = false) MultipartFile[] files) throws BaseException {
 
         if (customUserDetails == null) throw new BaseException(BaseResponseMessage.AUTH_FAIL);
         Long recruiterIdx = customUserDetails.getIdx();
