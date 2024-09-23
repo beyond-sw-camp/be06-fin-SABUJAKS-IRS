@@ -5,20 +5,22 @@
           <div id="content">
               <h1>지원자 리스트</h1>
               <table>
+                  <tbody>
                   <tr>
-                      <th>번호</th>
-                      <th>이름</th>
-                      <th>신입/경력</th>
-                      <th>결과</th>
-                      <th>비고 <input type="checkbox"></th>
+                    <th>번호</th>
+                    <th>이름</th>
+                    <th>신입/경력</th>
+                    <th>결과</th>
+                    <th>비고 <input type="checkbox"></th>
                   </tr>
                   <tr onclick="location.href='./seeker_detail.html';">
-                      <td>1</td>
-                      <td><a class="applicant-name" data-pdf="./seeker1.pdf">서시현</a></td>
-                      <td>신입</td>
-                      <td>합격</td>
-                      <td><input type="checkbox"></td>
+                    <td>1</td>
+                    <td><a class="applicant-name" data-pdf="./seeker1.pdf">서시현</a></td>
+                    <td>신입</td>
+                    <td>합격</td>
+                    <td><input type="checkbox"></td>
                   </tr>
+                  </tbody>
               </table>
               <div class="button-container">
                   <button class="register-button">결과전송</button>

@@ -20,7 +20,7 @@ export const UseAuthStore = defineStore('auth', {
                     loginReq ,
                     { headers: { 'Content-Type': 'application/json', },}
                 );
-                return response.data
+                return response.status
             } catch (error) {
                 console.error("로그인에 실패했습니다.")
             }

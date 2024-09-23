@@ -37,6 +37,7 @@ const handleRowClick = (schedule) => {
     <h1>{{ props.title }}</h1>
     <div class="col-12"></div>
     <table class="review-table">
+      <tbody>
       <tr>
         <th>번호</th>
         <th>기존면접일자</th>
@@ -53,6 +54,7 @@ const handleRowClick = (schedule) => {
         <td>{{ schedule.seekerInfoGetRes.name }}</td>
         <td>{{ schedule.status ? '완료' : '조율중' }}</td>
       </tr>
+      </tbody>
     </table>
   </div>
 </template>
