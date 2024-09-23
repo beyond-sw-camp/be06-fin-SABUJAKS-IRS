@@ -256,12 +256,12 @@ onMounted(async () => {
 
   if(response.result.integrated) {
     // 인적사항
-    if(showPersonalInfo.value) {
+    if(showPersonalInfo.value && response.result.personalInfo) {
       personalInfo.value = response.result.personalInfo;
     }
     
     // 학력
-    if(showEducation.value) {
+    if(showEducation.value && response.result.educations) {
       educationActivities.value = response.result.educations.map((education, index) => ({
         id: index,
         data: education
