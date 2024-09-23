@@ -72,11 +72,12 @@ public class AnnouncementService {
                         .build();
 
             } else { // 셀렉트 폼이 폴스면 = 파일url이 없으면 들어온 dto만 저장
+                System.out.println(dto.getJobCategoryList());
                 Announcement announcement = Announcement.builder()
                         .recruiter(resultRecruiter.get())
                         .selectForm(dto.getSelectForm())
                         .title(dto.getTitle())
-                        .jobCategory(dto.getJobCategoryList().toString())
+                        .jobCategory(dto.getJobCategoryList())
                         .jobTitle(dto.getJobTitle())
                         .recruitedNum(dto.getRecruitedNum())
                         .careerBase(dto.getCareerBase())
@@ -202,12 +203,13 @@ public class AnnouncementService {
 
 
     /*******공고 등록 페이지 클릭시 채용담당자 기업 복리후생 조회***********/
-    public CompanyInfoReadRes readCompanyInfo(Long recruiterIdx) throws BaseException {
+    public CompanyInfoReadRes readCompanyInfo(String recruiterEmail) throws BaseException {
         // 채용담당자 확인
-        Optional<Recruiter> resultRecruiter = recruiterRepository.findByRecruiterIdx(recruiterIdx);
+        Optional<Recruiter> resultRecruiter = recruiterRepository.findByRecruiterEmail(recruiterEmail);
         if(resultRecruiter.isPresent()) {
+            Recruiter recruiter = resultRecruiter.get();
             // 채용담당자가 등록한 기업 확인
-            Optional<Company> resultCompany = companyRepository.findByRecruiterIdx(recruiterIdx);
+            Optional<Company> resultCompany = companyRepository.findByRecruiterIdx(recruiter.getIdx());
             if (resultCompany.isPresent()) {
                 Long companyIdx = resultCompany.get().getIdx();
 
@@ -294,7 +296,7 @@ public class AnnouncementService {
             Optional<Company> resultCompany = companyRepository.findByRecruiterIdx(announcement.getRecruiter().getIdx());
             if (resultCompany.isPresent()) {
                 Company company = resultCompany.get();
-
+                Recruiter resultRecruiter = recruiterRepository.findByRecruiterIdx(company.getRecruiter().getIdx()).get();
                 AnnouncementReadDetailRes announcementReadDetailRes = AnnouncementReadDetailRes.builder()
                         .announcementIdx(announcementIdx)
                         .companyIdx(company.getIdx())
@@ -333,7 +335,7 @@ public class AnnouncementService {
                         .companyBusiness(company.getBusiness())
                         .companyUrl(company.getUrl())
                         .companyAddress(company.getAddress())
-                        .companyBenefitsDataList(readCompanyInfo(announcement.getRecruiter().getIdx()).getBenefitsDataList())
+                        .companyBenefitsDataList(readCompanyInfo(resultRecruiter.getEmail()).getBenefitsDataList())
                         .build();
 
                 return announcementReadDetailRes;
