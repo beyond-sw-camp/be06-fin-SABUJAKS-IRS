@@ -158,6 +158,7 @@ const submitForm = () => {
   <div id="content">
     <h1>{{ props.title }}</h1>
     <table class="review-table">
+      <tbody>
       <tr>
         <th>면접 정보</th>
         <th>상세 내용</th>
@@ -178,6 +179,7 @@ const submitForm = () => {
         <td>요청 면접자</td>
         <td>{{ props.reScheduleInfo.seekerInfoGetRes ? props.reScheduleInfo.seekerInfoGetRes.name : '정보 없음' }}</td>
       </tr>
+      </tbody>
     </table>
 
     <h2>일정 조율</h2>

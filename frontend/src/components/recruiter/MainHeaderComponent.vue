@@ -1,34 +1,38 @@
 <script setup>
 import {ref, onMounted} from "vue";
-import Cookies from "js-cookie";
-import jwtDecode from "jwt-decode";
 import {useRouter} from 'vue-router';
+import {UseAuthStore} from "@/stores/UseAuthStore";
 
 // 상태 및 라우터 설정
 const isLoggedIn = ref(false);
 const userName = ref("");
 const router = useRouter();
+const authStore = UseAuthStore();
 
 // 로그인 상태 확인 함수
 const checkLoginStatus = () => {
-  const token = Cookies.get('ATOKEN'); // 쿠키에서 토큰 가져오기
-  if (token) {
-    try {
-      const decodedToken = jwtDecode(token); // JWT 토큰 디코딩
-      userName.value = decodedToken.name; // 토큰에서 이름 추출하여 설정
-      isLoggedIn.value = true; // 로그인 상태 설정
-    } catch (error) {
-      console.error("토큰 디코딩 실패:", error);
+  try {
+    // sessionStorage에서 회원 정보를 가져옴
+    const storedUserInfo = sessionStorage.getItem('auth');
+    if (storedUserInfo) {
+      const user = JSON.parse(storedUserInfo); // 문자열을 객체로 변환
+      userName.value = user.userInfo.name; // name 값 셋팅
+      isLoggedIn.value = true; // 로그인 상태로 변경
+    } else {
+      console.error('회원 정보가 없습니다.');
     }
+  } catch (error) {
+    console.error('에러 발생:', error);
   }
 };
 
+
 // 로그아웃 함수
 const logout = () => {
-  Cookies.remove('ATOKEN'); // 쿠키에서 토큰 삭제
+  sessionStorage.clear();
+  authStore.logout();
   isLoggedIn.value = false;
-  userName.value = "";
-  router.push('/login'); // 로그아웃 후 로그인 페이지로 이동
+  router.push('/recruiter/login'); // 로그아웃 후 로그인 페이지로 이동
 };
 
 // 컴포넌트 마운트 시 로그인 상태 확인

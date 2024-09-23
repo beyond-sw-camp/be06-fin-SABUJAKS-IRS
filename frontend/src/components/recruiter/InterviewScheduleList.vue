@@ -53,6 +53,7 @@ const formatDate = (datetime) => {
       </div>
     </div>
     <table class="review-table">
+      <tbody>
       <tr>
         <th>번호</th>
         <th>면접일</th>
@@ -75,6 +76,7 @@ const formatDate = (datetime) => {
         </td>
         <td><button @click="createVideoInterview(schedule.uuid)">방 생성</button></td>
       </tr>
+      </tbody>
     </table>
   </div>
 

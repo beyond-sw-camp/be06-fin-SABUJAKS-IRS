@@ -50,13 +50,13 @@
 
 <script setup>
 import { ref } from 'vue'
-import { UseUserStore } from '@/stores/UseUserStore'
 import router from "@/router";
+import {UseAuthStore} from "@/stores/UseAuthStore";
 
 const username = ref('')
 const password = ref('')
 
-const userStore = UseUserStore();
+const userStore = UseAuthStore();
 
 const handleLogin = async () => {
   try {
@@ -68,7 +68,6 @@ const handleLogin = async () => {
     const result = await userStore.login(user);
     if (result){
       await router.push('/recruiter/announce');  // 로그인 성공 시 recruiter/announce로 라우팅
-      router.go(0);
     } else {
       alert('로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.');
     }
