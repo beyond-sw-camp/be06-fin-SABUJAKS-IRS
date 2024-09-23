@@ -2,6 +2,8 @@ package com.sabujaks.irs.domain.resume.model.entity;
 
 import com.sabujaks.irs.domain.announcement.model.entity.Announcement;
 import com.sabujaks.irs.domain.auth.model.entity.Seeker;
+import com.sabujaks.irs.global.common.exception.BaseException;
+import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,6 +31,8 @@ public class Resume {
     @CreationTimestamp
     private LocalDateTime resumedAt;
 
+    private Boolean docPassed;
+
     // 지원정보 테이블과 n:1
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "resume_info_idx")
@@ -43,4 +47,13 @@ public class Resume {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seeker_idx")
     private Seeker seeker;
+
+    public Boolean updateDocPassed(Boolean docPassed) {
+        if (this.docPassed == null) {
+            this.docPassed = docPassed;
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

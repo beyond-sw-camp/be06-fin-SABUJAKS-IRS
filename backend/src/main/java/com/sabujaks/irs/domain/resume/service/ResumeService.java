@@ -6,7 +6,9 @@ import com.sabujaks.irs.domain.announcement.model.entity.CustomLetterForm;
 import com.sabujaks.irs.domain.announcement.repository.AnnouncementRepository;
 import com.sabujaks.irs.domain.announcement.repository.CustomFormRepository;
 import com.sabujaks.irs.domain.announcement.repository.CustomLetterFormRepository;
+import com.sabujaks.irs.domain.auth.model.entity.Recruiter;
 import com.sabujaks.irs.domain.auth.model.entity.Seeker;
+import com.sabujaks.irs.domain.auth.repository.RecruiterRepository;
 import com.sabujaks.irs.domain.auth.repository.SeekerRepository;
 import com.sabujaks.irs.domain.resume.model.entity.*;
 import com.sabujaks.irs.domain.resume.model.request.*;
@@ -45,6 +47,7 @@ public class ResumeService {
     private final ResumeRepository resumeRepository;
     private final CustomLetterFormRepository customLetterFormRepository;
     private final CustomFormRepository customFormRepository;
+    private final RecruiterRepository recruiterRepository;
 
 
     @Transactional
@@ -774,7 +777,7 @@ public class ResumeService {
                     for(CustomResumeInfo customResumeInfo : resultCustomResumeInfos) {
                         formCodes.add(customResumeInfo.getCode());
                     }
-                    
+
                     // 나머지 조회
                     if(formCodes.contains("resume_001")) { // 학력
                         List<Education> resultEducations = educationRepository.findAllByResumeInfoIdx(resultResumeInfo.get().getIdx());
@@ -1001,6 +1004,7 @@ public class ResumeService {
 
             responseBuilder.resumeTitle(resultResume.get().getResumeTitle());
             responseBuilder.resumedAt(resultResume.get().getResumedAt());
+            responseBuilder.docPassed(resultResume.get().getDocPassed());
             // 지원정보 테이블 조회
             Optional<ResumeInfo> resultResumeInfo = resumeInfoRepository.findByResumeInfoIdx(resultResume.get().getResumeInfo().getIdx());
             if(resultResumeInfo.isPresent()) {
@@ -1245,6 +1249,41 @@ public class ResumeService {
 
         } else {
             throw new BaseException(BaseResponseMessage.RESUME_READ_FAIL_RESUME);
+        }
+
+    }
+
+    @Transactional
+    public ResumeUpdateDocPassedRes updateDocPassed(
+        CustomUserDetails customUserDetails,
+        Long resumeIdx,
+        ResumeUpdateDocPassedReq dto) throws BaseException {
+        Long recruiterIdx = customUserDetails.getIdx();
+        // 채용담당자 테이블 조회
+        Optional<Recruiter> resultRecruiter = recruiterRepository.findByRecruiterIdx(recruiterIdx);
+        if(resultRecruiter.isPresent()) {
+            Optional<Resume> resultResume = resumeRepository.findByResumeIdx(resumeIdx);
+            if(resultResume.isPresent()) {
+                Resume resume = resultResume.get();
+                // 채용담당자가 등록한 공고에 지원한 지원서인지 확인
+                if(resume.getAnnouncement().getRecruiter().getIdx().equals(recruiterIdx)) {
+                    // 서류 결과가 null이면 update
+                    if(resume.updateDocPassed(dto.getDocPassed())) {
+                        return ResumeUpdateDocPassedRes.builder()
+                                .resumeIdx(resume.getIdx())
+                                .docPassed(resume.getDocPassed())
+                                .build();
+                    } else {
+                        throw new BaseException(BaseResponseMessage.RESUME_UPDATE_FAIL_DOC_PASSED_ALREADY);
+                    }
+                } else {
+                    throw new BaseException(BaseResponseMessage.RESUME_UPDATE_FAIL_DOC_PASSED);
+                }
+            } else {
+                throw new BaseException(BaseResponseMessage.RESUME_UPDATE_FAIL_DOC_PASSED);
+            }
+        } else {
+            throw new BaseException(BaseResponseMessage.RESUME_REGISTER_FAIL_NOT_FOUND_SEEKER);
         }
 
     }
