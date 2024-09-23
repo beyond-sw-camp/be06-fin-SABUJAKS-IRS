@@ -9,20 +9,25 @@ export const UseAuthStore = defineStore('auth', {
             email: '',
             name: '',
             role: '',
-        }
+        },
+        isLoggedIn: false,
      }),
     persist: { storage: sessionStorage, },
     actions: {
-        async login(loginReq) {
+        async login(requestBody) {
             try {
                 const response = await axios.post(
                     `${backend}/auth/login`, 
-                    loginReq ,
+                    requestBody,
                     { headers: { 'Content-Type': 'application/json', },}
                 );
-                return response.data
+                if(response) {
+                    this.isLoggedIn = true;
+                    return true
+                }
             } catch (error) {
-                console.error("로그인에 실패했습니다.")
+                this.isLoggedIn = false;
+                return false
             }
         },
         async logout(){

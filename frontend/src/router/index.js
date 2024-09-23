@@ -26,6 +26,7 @@ import InterviewScheduleMainNew from "@/pages/recruiter/interview-schedule/Inter
 import InterviewScheduleMainExp from "@/pages/recruiter/interview-schedule/InterviewScheduleMainExp.vue";
 import InterviewScheduleMain from '@/components/recruiter/InterviewScheduleMain.vue';
 import ReScheduleMainExp from "@/pages/recruiter/interview-schedule/ReScheduleMainExp.vue";
+import SeekerLoginPage1 from '@/pages/seeker/auth/SeekerLoginPage1.vue';
 
 
 const router = createRouter({
@@ -33,6 +34,7 @@ const router = createRouter({
     routes: [
         { path: '/', component: AnnounceReadAllPage },
         { path: '/recruiter/login', component: RecruiterLoginPage },
+
         { path: '/recruiter/signup', component: RecruiterSignupPage },
         { path: '/recruiter/announce', component: AnnounceMainPage },
         { path: '/recruiter/announce/register-step2', component: AnnounceRegisterStep2Page },
@@ -51,6 +53,7 @@ const router = createRouter({
         { path: '/recruiter/resume/list', component: ResumeListPage },
         { path: '/recruiter/resume/detail', component: ResumeDetailPage },
         { path: '/seeker/login', component: SeekerLoginPage },
+        { path: '/seeker/login1', component: SeekerLoginPage1 },
         { path: '/seeker/signup', component: SeekerSignupPage },
         { path: '/seeker/announce', component: AnnounceReadAllPage },
         { path: '/seeker/announce/detail', component: AnnounceDetailPage },
