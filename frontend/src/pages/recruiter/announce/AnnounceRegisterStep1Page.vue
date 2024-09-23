@@ -4,6 +4,7 @@ import MainSideBarComponent from '../../../components/recruiter/MainSideBarCompo
 
 import { ref, computed, onMounted, watch } from "vue";
 import { UseAnnouncementStore } from '@/stores/UseAnnouncementStore';
+import { UseAuthStore } from '@/stores/UseAuthStore';
 
 export default {
   components: {
@@ -13,60 +14,8 @@ export default {
 
   setup() {
     const announcementStore = UseAnnouncementStore();
+    const authStore = UseAuthStore();
 
-    // 입력값 기본 세팅 ************************************************************************************
-    const formData = ref({
-      title: '',
-
-      // 1. 모집분야
-      recruitmentFieldName: '',
-      numberOfRecruit: 0,
-      isNewbie: false, // 신입 체크박스 상태
-      isExperienced: false, // 경력 체크박스 상태
-      mainDuty: '',
-      department: '',
-      position: '',
-      requirement: '',
-
-      // 2. 지원자격/근무조건
-      isOverseas: false,
-      isReworkPossible: false,
-      workLocationCity: '',
-      workLocationDetail: '',
-      salaryType: '연봉',
-      salaryAmount: 0,
-      workHoursPerWeek: 0,
-      isNegotiable: false,
-      workDays: '주 5일(월~금)',
-      startTime: '07시',
-      endTime: '17시',
-
-      // 3. 기업 복리후생
-      additionalBenefits: '',
-
-      // 4. 인사담당자/기업정보
-      managerName: '',
-      isManagerNamePrivate: false,
-      phone1: '',
-      phone2: '',
-      phone3: '',
-      isPhonePrivate: false,
-      email: '',
-      isEmailPrivate: false,
-      companyIntro: '',
-
-      // 5. 채용절차
-      startDate: '', // 시작 날짜
-      endDate: '',   // 마감 날짜
-      startTimeRegi: '07시', // 시작 시간
-      endTimeRegi: '18시',   // 마감 시간
-      recruitmentType: '마감일지정', // 모집 유형
-      interviewCount: '선택해 주세요', // 면접 횟수
-
-      // 6. 유의사항
-      precautions: '',  // 유의사항 데이터
-
-    });
 
     // 1. 항목 추가 필드 상태 (true/false)
     const fields = ref({
@@ -82,35 +31,47 @@ export default {
       workTime: false,
     });
 
-    // 3. 기업 복리후생
-    const benefitsData = ref([]);  // 초기 데이터는 빈 배열
-
 
     // 셀렉트 폼 관련 js ***********************************************************************************
 
     const isImageUpload = ref(true); // 이미지 업로드 양식 여부
-    const imageUrl = ref(''); // 이미지 URL, 기본값 빈 문자열로 설정
+    const imageUrl = ref(''); // 이미지 URL, 기본값 빈 문자열로 설정, 미리보기용
 
     // 양식 선택 함수
     const selectFormType = (type) => {
-      if (type === 'imageUpload') {
-        isImageUpload.value = true;
-      } else {
-        isImageUpload.value = false;
-      }
+      // if (type === 'imageUpload') {
+      //   isImageUpload.value = true;
+      // } else {
+      //   isImageUpload.value = false;
+      // }
+      isImageUpload.value = type;
     };
 
-    // 이미지 미리보기 함수
+    const fileName = ref(''); // 선택된 파일 이름 저장 변수
+
+    // 이미지 미리보기 함수 수정
     const previewImage = (event) => {
       const file = event.target.files[0];
       if (file) {
         const reader = new FileReader();
         reader.onload = (e) => {
           imageUrl.value = e.target.result;
+          announcementStore.file = file; // 스토어의 파일 변수 업데이트
+          fileName.value = file.name; // 파일 이름 저장
         };
         reader.readAsDataURL(file);
-      } else {
-        imageUrl.value = '';
+      }
+    };
+
+    // 이미지 초기화 함수
+    const resetImage = () => {
+      imageUrl.value = ''; // 이미지 미리보기 초기화
+      fileName.value = ''; // 파일 이름 초기화
+      announcementStore.file = null; // 스토어의 파일 변수 초기화
+
+      const fileInput = document.querySelector('input[type="file"]');
+      if (fileInput) {
+        fileInput.value = ''; // 파일 선택 초기화
       }
     };
 
@@ -188,8 +149,8 @@ export default {
 
     // 하나의 체크박스만 선택되도록 하는 함수 - 경력
     const exclusiveCheckbox = (checkedKey, otherKey) => {
-      if (formData.value[checkedKey]) {
-        formData.value[otherKey] = false; // 하나 선택 시 다른 체크박스 해제
+      if (announcementStore.formData[checkedKey]) {
+        announcementStore.formData[otherKey] = false; // 하나 선택 시 다른 체크박스 해제
       }
     };
 
@@ -217,6 +178,40 @@ export default {
       });
     };
 
+    // 선택된 체크박스 값 저장
+    const getSelectedJobType = () => {
+      const selectedType = Object.keys(employmentTypes.value).find(type => employmentTypes.value[type]);
+
+      // 선택된 값이 있으면 해당하는 한글 문자열을 저장
+      if (selectedType) {
+        switch (selectedType) {
+          case 'fullTime':
+            announcementStore.formData.jobType = '정규직';
+            break;
+          case 'contract':
+            announcementStore.formData.jobType = '계약직';
+            break;
+          case 'partTime':
+            announcementStore.formData.jobType = '아르바이트';
+            break;
+          case 'intern':
+            announcementStore.formData.jobType = '인턴직';
+            break;
+          case 'freelancer':
+            announcementStore.formData.jobType = '프리랜서';
+            break;
+          case 'part':
+            announcementStore.formData.jobType = '파트';
+            break;
+          default:
+            announcementStore.formData.jobType = '';
+        }
+      } else {
+        announcementStore.formData.jobType = ''; // 선택된 값이 없으면 빈 문자열 저장
+      }
+    };
+
+
     // 근무 요일 선택 옵션
     const workDaysOptions = [
       '주 5일(월~금)', '주 6일(월~토)', '주 3일(격일제)', '유연근무제', '면접 후 결정',
@@ -240,44 +235,10 @@ export default {
 
     // 3. 기업 복리후생 폼 관련 *********************************************************************************
 
-    // 복리후생 데이터 (대분류와 소분류 항목), 데이터베이스와 연동 예정
-    // const benefitsData = ref([
-    //   {
-    //     category: "연금&보험",
-    //     subcategories: ["국민연금", "고용보험", "건강보험"]
-    //   },
-    //   {
-    //     category: "휴무&휴가&행사",
-    //     subcategories: ["연차제도", "자유로운 휴가문화"]
-    //   },
-    //   {
-    //     category: "보상&수당&지원",
-    //     subcategories: [
-    //       "본인학자금", "교육비 지원", "자격증 취득 지원", "자기계발비 지원",
-    //       "장기근속 포상", "우수사원 포상제도", "복지포인트"
-    //     ]
-    //   },
-    //   {
-    //     category: "사내제도&성장",
-    //     subcategories: ["수평적 문화", "유연근무제", "자율복장"]
-    //   },
-    //   {
-    //     category: "편의&여가&건강",
-    //     subcategories: ["출퇴근 셔틀버스", "건강검진"]
-    //   },
-    //   {
-    //     category: "근무환경",
-    //     subcategories: ["노트북 지원", "비상경보장치", "카페테리아"]
-    //   }
-    // ]);
-
     // 선택된 복리후생 대분류 및 소분류
     const selectedBenefitCategory = ref('');
     const selectedBenefitSubcategories = ref([]);
     const selectedBenefits = ref({});
-
-    // 추가 복지혜택
-    // const additionalBenefits = ref('');
 
     // 기업 복리후생 자동 추가 함수
     const addBenefit = () => {
@@ -303,23 +264,27 @@ export default {
     watch(
       () => announcementStore.managerInfo,
       (newValue) => {
-        managerInfo.value = { ...newValue };
+        console.log("Manager Info Updated:", newValue);
+        managerInfo.value = newValue; // Spread 연산자 제거
       },
-      { immediate: true } // 컴포넌트가 로드될 때도 적용
+      { immediate: true } // 컴포넌트 로드 시 바로 적용
     );
 
     // 데이터를 전송할 때 비공개 체크된 항목 처리
     const prepareDataForSave = () => {
-      const pagePostData = {
-        managerName: managerInfo.value.isManagerNamePrivate ? '비공개' : managerInfo.value.managerName,
-        managerContact: managerInfo.value.isPhonePrivate
-          ? '비공개'
-          : `${managerInfo.value.phone1}-${managerInfo.value.phone2}-${managerInfo.value.phone3}`,
-        managerEmail: managerInfo.value.isEmailPrivate ? '비공개' : managerInfo.value.managerEmail,
-        companyIntro: managerInfo.value.companyIntro
-      };
+      // 담당자 이름 비공개 처리
+      announcementStore.formData.managerName =
+        announcementStore.managerInfo.isManagerNamePrivate ? '비공개' : announcementStore.managerInfo.managerName;
 
-      return pagePostData;
+      // 연락처 비공개 처리
+      announcementStore.formData.managerContact =
+        announcementStore.managerInfo.isPhonePrivate
+          ? '비공개'
+          : `${announcementStore.managerInfo.phone1}-${announcementStore.managerInfo.phone2}-${announcementStore.managerInfo.phone3}`;
+
+      // 이메일 비공개 처리
+      announcementStore.formData.managerEmail =
+        announcementStore.managerInfo.isEmailPrivate ? '비공개' : announcementStore.managerInfo.managerEmail;
     };
 
     // 5. 채용절차 폼 관련 *************************************************************************************
@@ -330,7 +295,7 @@ export default {
 
     const processSteps = computed(() => {
       const steps = ['서류전형', '면접전형 > 1차', '최종합격'];
-      if (formData.value.interviewCount === '2') {
+      if (announcementStore.formData.interviewCount === '2') {
         steps.splice(2, 0, '면접전형 > 2차');
       }
       return steps;
@@ -339,14 +304,22 @@ export default {
     // 1개월2개월 버튼클릭시 마감일 자동설정 함수
     const setActiveButton = (period) => {
       selectedPeriod.value = period;
-      const startDate = new Date(formData.value.startDate || new Date());
+
+      // formData가 정의되었는지 확인
+      if (!announcementStore.formData) {
+        console.error('formData가 정의되지 않았습니다.');
+        return;
+      }
+
+      const startDate = new Date(announcementStore.formData.startDate || new Date());
       const endDate = new Date(startDate);
+
       if (period === '1개월') {
         endDate.setMonth(endDate.getMonth() + 1);
       } else if (period === '2개월') {
         endDate.setMonth(endDate.getMonth() + 2);
       }
-      formData.value.endDate = formatDate(endDate);
+      announcementStore.formData.endDate = formatDate(endDate);
     };
 
     // 전형절차 버튼클릭으로 해당 단계 활성화, 비활성화
@@ -370,6 +343,19 @@ export default {
       return `${year}-${month}-${day}`;
     };
 
+    // 시간 형식 변환 함수 (18시 -> 18:00:00)
+    const formatTime = (time) => {
+      // 시간 부분만 추출 (e.g., "18시" -> "18")
+      const hour = time.replace('시', '').padStart(2, '0');
+      return `${hour}:00:00`;
+    };
+
+    // 날짜와 시간을 받아서 "YYYY-MM-DD HH:MM:SS" 형식으로 변환하는 함수
+    const formatDateTime = (date, time) => {
+      const formattedDate = formatDate(date); // 날짜 형식 변환
+      const formattedTime = formatTime(time); // 시간 형식 변환
+      return `${formattedDate} ${formattedTime}`; // "YYYY-MM-DD HH:MM:SS" 형식으로 결합
+    };
 
 
     // 에러 메시지를 포함한 모달 창을 보여주는 함수
@@ -379,21 +365,18 @@ export default {
       // 예: this.$bvModal.msgBoxOk(message, { title: '에러 발생' });
     };
 
+
     // 컴포넌트가 마운트될 때 실행
     onMounted(async () => {
       try {
-        addBenefit();
-        const recruiterIdx = 1; // 예시 값 (로그인한 유저의 recruiterIdx를 넣으면 됨)
+        // addBenefit();
 
-        // 채용 담당자 정보와 복리후생 정보를 동시에 가져오기
-        await announcementStore.fetchManagerInfo(recruiterIdx);
-        await announcementStore.fetchCompanyBenefits(recruiterIdx);
-
-        // 복리후생 데이터를 가져와서 할당
-        benefitsData.value = announcementStore.companyBenefits;
+        // 채용 담당자 정보와 기업 복리후생 정보를 동시에 가져오기
+        await announcementStore.fetchManagerInfo();
+        await announcementStore.fetchCompanyBenefits(announcementStore.managerInfo.managerEmail);
 
         const today = new Date();
-        formData.value.startDate = formatDate(today); // 페이지 로드 시 오늘 날짜로 초기화
+        announcementStore.formData.startDate = formatDate(today); // 페이지 로드 시 오늘 날짜로 초기화
       } catch (error) {
         showErrorModal(error.message);
       }
@@ -402,17 +385,22 @@ export default {
 
     // 저장하기 전 작업
     const alreadyFun = () => {
-      prepareDataForSave; // 비공개 처리
+      getSelectedJobType();  // 근무형태 체크박스 값 가져오기
+      prepareDataForSave(); // 인사담당자 정보 비공개 처리
+      announcementStore.formData.processSteps = formattedProcessSteps.value; // 전형절차 문자열 저장
+      // startDate, startTimeRegi, endDate, endTimeRegi를 각각 묶어서 저장
+      announcementStore.formData.announcementStart = formatDateTime(announcementStore.formData.startDate, announcementStore.formData.startTimeRegi);
+      announcementStore.formData.announcementEnd = formatDateTime(announcementStore.formData.endDate, announcementStore.formData.endTimeRegi);
 
-      announcementStore.saveFormData(formData, isImageUpload, selectedCategories); // 스토어 저장 처리
+      announcementStore.createAnnouncement(selectedCategories, fields.value, fields2.value); // 스토어 저장 처리
     }
 
 
     return {
       announcementStore,
+      authStore,
 
       // 입력값 기본 세팅
-      formData,
       fields,
       fields2,
 
@@ -421,6 +409,7 @@ export default {
       imageUrl,
       selectFormType,
       previewImage,
+      resetImage,
 
       // 1. 모집분야 섹션 관련
       categoryData,
@@ -443,11 +432,9 @@ export default {
       toggleWorkTimeSelect,
 
       // 3. 기업 복리후생 섹션 관련
-      benefitsData,
       selectedBenefitCategory,
       selectedBenefitSubcategories,
       selectedBenefits,
-      // additionalBenefits,
       addBenefit,
 
       // 4. 인사담당자/기업정보 섹션 관련
@@ -474,14 +461,14 @@ export default {
   <MainHeaderComponent />
   <div class="container">
     <MainSideBarComponent />
-    <div id="content">
+    <div id="content2">
       <div class="container-regi">
         <div class="section">
           <h2>공고 기본 설정</h2>
           <div class="required-parents-div">
             <label class="required required2">공고 제목</label>
             <div class="required-child-div">
-              <input v-model="formData.title" type="text"
+              <input v-model="announcementStore.formData.title" type="text"
                 placeholder="직무명이 포함된 공고 제목을 지원자들이 선호해요. (ex. 하반기 기계조작원 신입채용)">
             </div>
           </div>
@@ -489,8 +476,8 @@ export default {
             <label class="required required2">양식 선택</label>
             <div class="required-child-div">
               <div class="btn-group">
-                <button :class="{ active: isImageUpload }" @click="selectFormType('imageUpload')">공고 이미지 업로드</button>
-                <button :class="{ active: !isImageUpload }" @click="selectFormType('templateWrite')">공고 템플릿 작성</button>
+                <button :class="{ active: isImageUpload }" @click="selectFormType(true)">공고 이미지 업로드</button>
+                <button :class="{ active: !isImageUpload }" @click="selectFormType(false)">공고 템플릿 작성</button>
               </div>
             </div>
           </div>
@@ -503,8 +490,12 @@ export default {
           <h3>이미지 업로드</h3>
           <div style="text-align: left;">
             <input type="file" @change="previewImage" accept="image/*" />
+            <!-- <p v-if="fileName">{{ fileName }}</p> -->
             <div id="imagePreviewContainer"
-              style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background-color: #fff;">
+              style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; flex-direction: column; background-color: #fff;">
+              <!-- 이미지 초기화 버튼 -->
+              <button @click="resetImage" v-if="imageUrl"
+                style="margin-top: 10px; border: 1px solid #abadb8; border-radius: 2px;">이미지 초기화</button>
               <img v-if="imageUrl" :src="imageUrl" id="imagePreview"
                 style="width: 100%; height: 100%; object-fit: contain;">
               <p v-else id="noImageText" style="color: #777;">이미지를 선택하세요.</p>
@@ -566,7 +557,8 @@ export default {
             <div class="required-parents-div">
               <label class="required required2">모집분야명</label>
               <div class="required-child-div">
-                <input type="text" v-model="formData.recruitmentFieldName" placeholder="oo시스템 IT 교육(부트캠프) 운영 매니저 채용" />
+                <input type="text" v-model="announcementStore.formData.recruitmentFieldName"
+                  placeholder="oo시스템 IT 교육(부트캠프) 운영 매니저 채용" />
               </div>
             </div>
 
@@ -574,7 +566,7 @@ export default {
             <div class="required-parents-div">
               <label class="required required2">모집인원</label>
               <div class="required-child-div">
-                <input type="number" v-model.number="formData.numberOfRecruit" min="0"
+                <input type="number" v-model.number="announcementStore.formData.numberOfRecruit" min="0"
                   style="width: 100px; padding: 10px;" /> 명 모집
               </div>
             </div>
@@ -583,10 +575,10 @@ export default {
             <div class="required-parents-div">
               <label class="required required2">경력</label>
               <div class="required-child-div">
-                <input type="checkbox" id="newbie" v-model="formData.isNewbie"
+                <input type="checkbox" id="newbie" v-model="announcementStore.formData.isNewbie"
                   @change="exclusiveCheckbox('isNewbie', 'isExperienced')" /> 신입
-                <input type="checkbox" id="experienced" v-model="formData.isExperienced" style="margin-left: 20px;"
-                  @change="exclusiveCheckbox('isExperienced', 'isNewbie')" /> 경력
+                <input type="checkbox" id="experienced" v-model="announcementStore.formData.isExperienced"
+                  style="margin-left: 20px;" @change="exclusiveCheckbox('isExperienced', 'isNewbie')" /> 경력
               </div>
             </div>
 
@@ -608,25 +600,29 @@ export default {
               <div v-if="fields.mainDuty" class="required-parents-div">
                 <label></label>
                 <div class="required-child-div">
-                  <input type="text" v-model="formData.mainDuty" placeholder="주요 업무 입력" name="mainDuty" />
+                  <input type="text" v-model="announcementStore.formData.mainDuty" placeholder="주요 업무 입력"
+                    name="mainDuty" />
                 </div>
               </div>
               <div v-if="fields.department" class="required-parents-div">
                 <label></label>
                 <div class="required-child-div">
-                  <input type="text" v-model="formData.department" placeholder="근무 부서 입력" name="department" />
+                  <input type="text" v-model="announcementStore.formData.department" placeholder="근무 부서 입력"
+                    name="department" />
                 </div>
               </div>
               <div v-if="fields.position" class="required-parents-div">
                 <label></label>
                 <div class="required-child-div">
-                  <input type="text" v-model="formData.position" placeholder="직급 직책 입력" name="position" />
+                  <input type="text" v-model="announcementStore.formData.position" placeholder="직급 직책 입력"
+                    name="position" />
                 </div>
               </div>
               <div v-if="fields.requirement" class="required-parents-div">
                 <label></label>
                 <div class="required-child-div">
-                  <input type="text" v-model="formData.requirement" placeholder="필수/우대조건 입력" name="requirement" />
+                  <input type="text" v-model="announcementStore.formData.requirement" placeholder="필수/우대조건 입력"
+                    name="requirement" />
                 </div>
               </div>
             </div>
@@ -642,11 +638,12 @@ export default {
             <div class="required-parents-div">
               <label class="required required2">근무지역</label>
               <div class="required-child-div">
-                <input type="checkbox" v-model="formData.isOverseas" /> 해외지역
-                <input type="checkbox" v-model="formData.isReworkPossible" style="margin-left: 20px;" /> 재택근무 가능
-                <input type="text" v-model="formData.workLocationCity" placeholder="서울시 동작구 보라매로"
+                <input type="checkbox" v-model="announcementStore.formData.isOverseas" /> 해외지역
+                <input type="checkbox" v-model="announcementStore.formData.isReworkPossible"
+                  style="margin-left: 20px;" /> 재택근무 가능
+                <input type="text" v-model="announcementStore.formData.workLocationCity" placeholder="서울시 동작구 보라매로"
                   style="width: 30%; margin-left: 20px; margin-right: 10px;" />
-                <input type="text" v-model="formData.workLocationDetail" placeholder="87 플레이데이터 동작캠퍼스"
+                <input type="text" v-model="announcementStore.formData.workLocationDetail" placeholder="87 플레이데이터 동작캠퍼스"
                   style="width: 30%;" />
               </div>
             </div>
@@ -674,7 +671,7 @@ export default {
             <div class="required-parents-div">
               <label class="required">급여</label>
               <div class="required-child-div">
-                <select v-model="formData.salaryType" style="padding: 10px; margin-right: 10px;">
+                <select v-model="announcementStore.formData.salaryType" style="padding: 10px; margin-right: 10px;">
                   <option value="연봉">연봉</option>
                   <option value="월급">월급</option>
                   <option value="주급">주급</option>
@@ -682,7 +679,8 @@ export default {
                   <option value="시급">시급</option>
                   <option value="건당">건당</option>
                 </select>
-                <input type="number" v-model="formData.salaryAmount" min="0" style="width: 100px; padding: 10px;" /> 만원
+                <input type="number" v-model="announcementStore.formData.salaryAmount" min="0"
+                  style="width: 100px; padding: 10px;" /> 만원
               </div>
             </div>
 
@@ -690,9 +688,10 @@ export default {
             <div class="required-parents-div">
               <label class="required">근무시간</label>
               <div class="required-child-div">
-                <input type="number" v-model="formData.workHoursPerWeek" min="0"
+                <input type="number" v-model="announcementStore.formData.workHoursPerWeek" min="0"
                   style="width: 50px; margin-right: 5px;" /> 시간 / 주
-                <input type="checkbox" v-model="formData.isNegotiable" style="margin-left: 20px;" /> 면접 후 결정
+                <input type="checkbox" v-model="announcementStore.formData.isNegotiable" style="margin-left: 20px;" />
+                면접 후 결정
               </div>
             </div>
 
@@ -712,7 +711,7 @@ export default {
               <div v-if="fields2.workDays" class="required-parents-div">
                 <label>근무 요일 선택</label>
                 <div class="required-child-div">
-                  <select v-model="formData.workDays" style="width: 200px; padding: 10px;">
+                  <select v-model="announcementStore.formData.workDays" style="width: 200px; padding: 10px;">
                     <option v-for="option in workDaysOptions" :key="option" :value="option">{{ option }}</option>
                   </select>
                 </div>
@@ -721,11 +720,11 @@ export default {
               <div v-if="fields2.workTime" class="required-parents-div">
                 <label>출퇴근 시간</label>
                 <div class="required-child-div">
-                  <select v-model="formData.startTime" style="width: 200px; padding: 10px;">
+                  <select v-model="announcementStore.formData.startTime" style="width: 200px; padding: 10px;">
                     <option v-for="time in timeOptions" :key="time" :value="time">{{ time }}</option>
                   </select>
                   ~
-                  <select v-model="formData.endTime" style="width: 200px; padding: 10px;">
+                  <select v-model="announcementStore.formData.endTime" style="width: 200px; padding: 10px;">
                     <option v-for="time in timeOptions" :key="time" :value="time">{{ time }}</option>
                   </select>
                 </div>
@@ -742,7 +741,8 @@ export default {
             <!-- 복리후생 박스 -->
             <div class="benefits-box">
               <!-- 복리후생 대분류 및 소분류 표시 -->
-              <div v-for="(benefit, index) in benefitsData" :key="index" style="margin-bottom: 10px;">
+              <div v-for="(benefit, index) in announcementStore.companyBenefits" :key="index"
+                style="margin-bottom: 10px;">
                 <strong class="category-label">{{ benefit.category }} > </strong>
                 <span v-for="(subcategory, subIndex) in benefit.subcategories" :key="subIndex"
                   class="subcategory-label">
@@ -755,7 +755,7 @@ export default {
             <div class="required-parents-div">
               <label class="required">추가 복지혜택</label>
               <div class="required-child-div">
-                <textarea v-model="formData.additionalBenefits"
+                <textarea v-model="announcementStore.formData.additionalBenefits"
                   placeholder="지원자에게 추가로 어필하고 싶은 우리 팀의 근무환경, 복지 등 혜택을 작성 해 주세요."
                   style="width: 100%; height: 150px;"></textarea>
               </div>
@@ -772,9 +772,10 @@ export default {
             <div class="required-parents-div">
               <label class="required">담당자명</label>
               <div class="required-child-div">
-                <input type="text" v-model="managerInfo.managerName" placeholder="ooo" style="width: 40%;" />
+                <input type="text" v-model="announcementStore.managerInfo.managerName" placeholder="ooo"
+                  style="width: 40%;" />
                 <label>
-                  <input type="checkbox" v-model="managerInfo.isManagerNamePrivate" /> 비공개
+                  <input type="checkbox" v-model="announcementStore.managerInfo.isManagerNamePrivate" /> 비공개
                 </label>
               </div>
             </div>
@@ -783,14 +784,14 @@ export default {
             <div class="required-parents-div">
               <label class="required">연락처</label>
               <div class="required-child-div">
-                <input type="text" v-model="managerInfo.phone1" placeholder="010"
+                <input type="text" v-model="announcementStore.managerInfo.phone1" placeholder="010"
                   style="width: 10%; margin-right: 10px;" />
-                <input type="text" v-model="managerInfo.phone2" placeholder="1234"
+                <input type="text" v-model="announcementStore.managerInfo.phone2" placeholder="1234"
                   style="width: 10%; margin-right: 10px;" />
-                <input type="text" v-model="managerInfo.phone3" placeholder="5678"
+                <input type="text" v-model="announcementStore.managerInfo.phone3" placeholder="5678"
                   style="width: 10%; margin-right: 3px;" />
                 <label>
-                  <input type="checkbox" v-model="managerInfo.isPhonePrivate" /> 비공개
+                  <input type="checkbox" v-model="announcementStore.managerInfo.isPhonePrivate" /> 비공개
                 </label>
               </div>
             </div>
@@ -799,9 +800,10 @@ export default {
             <div class="required-parents-div">
               <label class="required">이메일</label>
               <div class="required-child-div">
-                <input type="email" v-model="managerInfo.managerEmail" placeholder="ex@ooo.com" style="width: 40%;" />
+                <input type="email" v-model="announcementStore.managerInfo.managerEmail" placeholder="ex@ooo.com"
+                  style="width: 40%;" />
                 <label>
-                  <input type="checkbox" v-model="managerInfo.isEmailPrivate" /> 비공개
+                  <input type="checkbox" v-model="announcementStore.managerInfo.isEmailPrivate" /> 비공개
                 </label>
               </div>
             </div>
@@ -810,7 +812,7 @@ export default {
             <div class="required-parents-div">
               <label class="required">회사소개</label>
               <div class="required-child-div">
-                <textarea v-model="formData.companyIntro" placeholder="회사 소개를 작성 해 주세요."
+                <textarea v-model="announcementStore.formData.companyIntro" placeholder="회사 소개를 작성 해 주세요."
                   style="width: 100%; height: 150px;"></textarea>
               </div>
             </div>
@@ -831,16 +833,16 @@ export default {
                   <button :class="{ active: selectedPeriod === '2개월' }" @click="setActiveButton('2개월')">2개월</button>
                 </div>
                 <div>
-                  <input type="date" v-model="formData.startDate" />
-                  <select v-model="formData.startTimeRegi">
+                  <input type="date" v-model="announcementStore.formData.startDate" />
+                  <select v-model="announcementStore.formData.startTimeRegi">
                     <option v-for="time in times" :key="time" :value="time">{{ time }}</option>
                   </select>
                   ~
-                  <input type="date" v-model="formData.endDate" />
-                  <select v-model="formData.endTimeRegi">
+                  <input type="date" v-model="announcementStore.formData.endDate" />
+                  <select v-model="announcementStore.formData.endTimeRegi">
                     <option v-for="time in times" :key="time" :value="time">{{ time }}</option>
                   </select>
-                  <select v-model="formData.recruitmentType">
+                  <select v-model="announcementStore.formData.recruitmentType">
                     <option value="마감일지정">마감일지정</option>
                     <option value="상시모집">상시모집</option>
                   </select>
@@ -852,7 +854,7 @@ export default {
             <div class="required-parents-div">
               <label class="required required2">면접 횟수</label>
               <div class="required-child-div">
-                <select v-model="formData.interviewCount">
+                <select v-model="announcementStore.formData.interviewCount">
                   <option value="선택해 주세요">선택해 주세요</option>
                   <option value="1">1</option>
                   <option value="2">2</option>
@@ -887,7 +889,7 @@ export default {
             <div class="required-parents-div">
               <label class="required">유의사항</label>
               <div class="required-child-div">
-                <textarea v-model="formData.precautions" placeholder="유의사항을 작성 해 주세요."
+                <textarea v-model="announcementStore.formData.precautions" placeholder="유의사항을 작성 해 주세요."
                   style="width: 100%; height: 150px;"></textarea>
               </div>
             </div>
@@ -913,8 +915,9 @@ export default {
   width: 100%;
 }
 
-#content {
-  padding: 100px 0;
+#content2 {
+  margin: 0 0 0 200px;
+  /* padding: 100px 0; */
   width: 80%;
 }
 
