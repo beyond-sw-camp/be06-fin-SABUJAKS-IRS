@@ -2,10 +2,7 @@ package com.sabujaks.irs.domain.resume.controller;
 
 import com.sabujaks.irs.domain.resume.model.request.ResumeCreateReq;
 import com.sabujaks.irs.domain.resume.model.request.ResumeSubmitReq;
-import com.sabujaks.irs.domain.resume.model.response.ResumeCreateRes;
-import com.sabujaks.irs.domain.resume.model.response.ResumeReadRes;
-import com.sabujaks.irs.domain.resume.model.response.ResumeReadSubmitInfoRes;
-import com.sabujaks.irs.domain.resume.model.response.ResumeSubmitRes;
+import com.sabujaks.irs.domain.resume.model.response.*;
 import com.sabujaks.irs.domain.resume.service.ResumeService;
 import com.sabujaks.irs.global.common.exception.BaseException;
 import com.sabujaks.irs.global.common.responses.BaseResponse;
@@ -111,7 +108,7 @@ public class ResumeController {
     public ResponseEntity<BaseResponse<ResumeReadRes>> readIntegrated(
             @AuthenticationPrincipal CustomUserDetails customUserDetails) throws BaseException {
 
-        ResumeReadRes response = resumeService.readIntegrated(customUserDetails);
+        ResumeReadIntegratedRes response = resumeService.readIntegrated(customUserDetails);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.RESUME_READ_SUCCESS, response));
     }
 
