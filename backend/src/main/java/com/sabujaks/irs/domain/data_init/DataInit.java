@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
-@Component
+//@Component
 public class DataInit {
     private final BaseInfoRepository baseInfoRepository;
     private final TeamRepository teamRepository;

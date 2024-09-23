@@ -492,16 +492,34 @@ public class ResumeService {
             // 공고 idx로 공고 조회
             Optional<Announcement> resultAnnouncement = announcementRepository.findByAnnounceIdx(announcementIdx);
             if(resultAnnouncement.isPresent()) {
+                ResumeReadSubmitInfoRes.ResumeReadSubmitInfoResBuilder responseBuilder = ResumeReadSubmitInfoRes.builder();
                 // 지원서 맞춤 양식 테이블 조회
                 List<CustomForm> resultCustomForms = customFormRepository.findAllByAnnouncementIdx(resultAnnouncement.get().getIdx());
                 List<String> formCodes = new ArrayList<>();
-                for(CustomForm cf : resultCustomForms) {
-                    formCodes.add(cf.getCode());
+                if(!resultCustomForms.isEmpty()) {
+                    for(CustomForm cf : resultCustomForms) {
+                        formCodes.add(cf.getCode());
+                    }
+                    responseBuilder.codes(formCodes);
+                }
+                if(formCodes.contains("resume_011")) { // 자기소개서
+                    List<CustomLetterForm> resultCustomLetterForm = customLetterFormRepository.findAllByAnnouncementIdx(announcementIdx);
+                    if(!resultCustomLetterForm.isEmpty()) {
+                        // 자기소개서 맞춤 양식 테이블 조회 (공고 idx로)
+                        List<CustomLetterFormReadRes> customLetterFormResList = new ArrayList<>();
+                        for(CustomLetterForm customLetterForm : resultCustomLetterForm) {
+                            CustomLetterFormReadRes customLetterFormRes = CustomLetterFormReadRes.builder()
+                                    .title(customLetterForm.getTitle())
+                                    .chatLimit(customLetterForm.getChatLimit())
+                                    .build();
+                            customLetterFormResList.add(customLetterFormRes);
+                        }
+                        responseBuilder.customLetterForms(customLetterFormResList);
+                    }
                 }
                 // 지원정보 테이블 조회 (통합 지원서)
                 Optional<ResumeInfo> resultResumeInfo = resumeInfoRepository.findBySeekerIdxAndIntegrated(seekerIdx, true);
                 if(resultResumeInfo.isPresent()) {
-                    ResumeReadSubmitInfoRes.ResumeReadSubmitInfoResBuilder responseBuilder = ResumeReadSubmitInfoRes.builder();
                     // 인적사항
                     Optional<PersonalInfo> resultPersonalInfo = personalInfoRepository.findByResumeInfoIdx(resultResumeInfo.get().getIdx());
                     if(resultPersonalInfo.isPresent()) {
@@ -518,217 +536,199 @@ public class ResumeService {
                                 .build();
                         responseBuilder.personalInfo(personalInfoRes);
                     }
-
-
-                    if(!resultCustomForms.isEmpty()) {
-                        responseBuilder.codes(formCodes);
-
-                        if(formCodes.contains("resume_001")) { // 학력
-                            List<Education> resultEducations = educationRepository.findAllByResumeInfoIdx(resultResumeInfo.get().getIdx());
-                            if(!resultEducations.isEmpty()) {
-                                List<EducationReadRes> educationResList = new ArrayList<>();
-                                for(Education education : resultEducations) {
-                                    EducationReadRes educationRes = EducationReadRes.builder()
-                                            .schoolDiv(education.getSchoolDiv())
-                                            .schoolName(education.getSchoolName())
-                                            .enteredAt(education.getEnteredAt())
-                                            .graduatedAt(education.getGraduatedAt())
-                                            .graduationStatus(education.getGraduationStatus())
-                                            .majorName(education.getMajorName())
-                                            .grade(education.getGrade())
-                                            .totalGrade(education.getTotalGrade())
-                                            .transfer(education.getTransfer())
-                                            .majorType(education.getMajorType())
-                                            .otherMajor(education.getOtherMajor())
-                                            .graduationWork(education.getGraduationWork())
-                                            .degree(education.getDegree())
-                                            .qualificationExam(education.getQualificationExam())
-                                            .passedAt(education.getPassedAt())
-                                            .build();
-                                    educationResList.add(educationRes);
-                                }
-                                responseBuilder.educations(educationResList);
-                            }
-                        }
-                        if(formCodes.contains("resume_002")) { // 경력
-                            List<PersonalHistory> resultPersonalHistories = personalHistoryRepository.findAllByResumeInfoIdx(resultResumeInfo.get().getIdx());
-                            if(!resultPersonalHistories.isEmpty()) {
-                                List<PersonalHistoryReadRes> personalHistoryResList = new ArrayList<>();
-                                for(PersonalHistory personalHistory : resultPersonalHistories) {
-                                    PersonalHistoryReadRes personalHistoryRes = PersonalHistoryReadRes.builder()
-                                            .companyName(personalHistory.getCompanyName())
-                                            .deptName(personalHistory.getDeptName())
-                                            .enteredAt(personalHistory.getEnteredAt())
-                                            .quitAt(personalHistory.getQuitAt())
-                                            .empStatus(personalHistory.getEmpStatus())
-                                            .position(personalHistory.getPosition())
-                                            .job(personalHistory.getJob())
-                                            .salary(personalHistory.getSalary())
-                                            .work(personalHistory.getWork())
-                                            .build();
-                                    personalHistoryResList.add(personalHistoryRes);
-                                }
-                                responseBuilder.personalHistories(personalHistoryResList);
-                            }
-                        }
-                        if(formCodes.contains("resume_003")) { // 인턴&대외활동
-                            List<InternsActivity> resultInternsActivities = internActivitiesRepository.findAllByResumeInfoIdx(resultResumeInfo.get().getIdx());
-                            if(!resultInternsActivities.isEmpty()) {
-                                List<InternsActivityReadRes> internsActivityResList = new ArrayList<>();
-                                for(InternsActivity internsActivity : resultInternsActivities) {
-                                    InternsActivityReadRes internsActivityRes = InternsActivityReadRes.builder()
-                                            .activityDiv(internsActivity.getActivityDiv())
-                                            .organization(internsActivity.getOrganization())
-                                            .startAt(internsActivity.getStartAt())
-                                            .endAt(internsActivity.getEndAt())
-                                            .contents(internsActivity.getContents())
-                                            .build();
-                                    internsActivityResList.add(internsActivityRes);
-                                }
-                                responseBuilder.internsActivities(internsActivityResList);
-                            }
-                        }
-                        if(formCodes.contains("resume_004")) { // 교육이수
-                            List<Training> resultTrainings = trainingRepository.findAllByResumeInfoIdx(resultResumeInfo.get().getIdx());
-                            if(!resultTrainings.isEmpty()) {
-                                List<TrainingReadRes> trainingResList = new ArrayList<>();
-                                for(Training training : resultTrainings) {
-                                    TrainingReadRes trainingRes = TrainingReadRes.builder()
-                                            .trainingName(training.getTrainingName())
-                                            .organization(training.getOrganization())
-                                            .startAt(training.getStartAt())
-                                            .endAt(training.getEndAt())
-                                            .contents(training.getContents())
-                                            .build();
-                                    trainingResList.add(trainingRes);
-                                }
-                                responseBuilder.trainings(trainingResList);
-                            }
-                        }
-                        if(formCodes.contains("resume_005")) { // 자격증
-                            List<Certification> resultCertifications = certificationRepository.findAllByResumeInfoIdx(resultResumeInfo.get().getIdx());
-                            if(!resultCertifications.isEmpty()) {
-                                List<CertificationReadRes> certificationResList = new ArrayList<>();
-                                for(Certification certification : resultCertifications) {
-                                    CertificationReadRes certificationRes = CertificationReadRes.builder()
-                                            .certName(certification.getCertName())
-                                            .organization(certification.getOrganization())
-                                            .takingAt(certification.getTakingAt())
-                                            .build();
-                                    certificationResList.add(certificationRes);
-                                }
-                                responseBuilder.certifications(certificationResList);
-                            }
-                        }
-                        if(formCodes.contains("resume_006")) { // 수상
-                            List<Award> resultAwards = awardRepository.findAllByResumeInfoIdx(resultResumeInfo.get().getIdx());
-                            if(!resultAwards.isEmpty()) {
-                                List<AwardReadRes> awardResList = new ArrayList<>();
-                                for(Award award : resultAwards) {
-                                    AwardReadRes awardRes = AwardReadRes.builder()
-                                            .awardName(award.getAwardName())
-                                            .contents(award.getContents())
-                                            .organization(award.getOrganization())
-                                            .year(award.getYear())
-                                            .build();
-                                    awardResList.add(awardRes);
-                                }
-                                responseBuilder.awards(awardResList);
-                            }
-                        }
-                        if(formCodes.contains("resume_007")) { // 해외경험
-                            List<StudyingAbroad> resultStudyingAbroads = studyingAboardRepository.findAllByResumeInfoIdx(resultResumeInfo.get().getIdx());
-                            if(!resultStudyingAbroads.isEmpty()) {
-                                List<StudyingAbroadReadRes> studyingAbroadResList = new ArrayList<>();
-                                for(StudyingAbroad studyingAbroad : resultStudyingAbroads) {
-                                    StudyingAbroadReadRes studyingAbroadRes = StudyingAbroadReadRes.builder()
-                                            .countryName(studyingAbroad.getCountryName())
-                                            .startAt(studyingAbroad.getStartAt())
-                                            .endAt(studyingAbroad.getEndAt())
-                                            .contents(studyingAbroad.getContents())
-                                            .build();
-                                    studyingAbroadResList.add(studyingAbroadRes);
-                                }
-                                responseBuilder.studyingAbroads(studyingAbroadResList);
-                            }
-
-                        }
-                        if(formCodes.contains("resume_008")) { // 어학
-                            List<Language> resultLanguages = languageRepository.findAllByResumeInfoIdx(resultResumeInfo.get().getIdx());
-                            if(!resultLanguages.isEmpty()) {
-                                List<LanguageReadRes> languageResList = new ArrayList<>();
-                                for(Language language : resultLanguages) {
-                                    LanguageReadRes languageRes = LanguageReadRes.builder()
-                                            .testDiv(language.getTestDiv())
-                                            .languageName(language.getLanguageName())
-                                            .conversationLevel(language.getConversationLevel())
-                                            .officialTest(language.getOfficialTest())
-                                            .score(language.getScore())
-                                            .takingAt(language.getTakingAt())
-                                            .build();
-                                    languageResList.add(languageRes);
-                                }
-                                responseBuilder.languages(languageResList);
-                            }
-                        }
-                        if(formCodes.contains("resume_009")) { // 포트폴리오
-                            List<Portfolio> resultPortfolios = portfolioRepository.findAllByResumeInfoIdx(resultResumeInfo.get().getIdx());
-                            if(!resultPortfolios.isEmpty()) {
-                                List<PortfolioReadRes> portfolioResList = new ArrayList<>();
-                                for(Portfolio portfolio : resultPortfolios) {
-                                    PortfolioReadRes portfolioRes = PortfolioReadRes.builder()
-                                            .portfolioDiv(portfolio.getPortfolioDiv())
-                                            .portfolioType(portfolio.getPortfolioType())
-                                            .portfolioUrl(portfolio.getPortfolioUrl())
-                                            .build();
-                                    portfolioResList.add(portfolioRes);
-                                }
-                                responseBuilder.portfolios(portfolioResList);
-                            }
-
-                        }
-                        if(formCodes.contains("resume_010")) { // 취업우대&병역
-                            Optional<PreferentialEmp> resultPreferentialEmp = preferentialEmpRepository.findByResumeInfoIdx(resultResumeInfo.get().getIdx());
-                            if(resultPreferentialEmp.isPresent()) {
-                                PreferentialEmp preferentialEmp = resultPreferentialEmp.get();
-                                PreferentialEmpReadRes preferentialEmpRes = PreferentialEmpReadRes.builder()
-                                        .veterans(preferentialEmp.getVeterans())
-                                        .protection(preferentialEmp.getProtection())
-                                        .subsidy(preferentialEmp.getSubsidy())
-                                        .disability(preferentialEmp.getDisability())
-                                        .disabilityDegree(preferentialEmp.getDisabilityDegree())
-                                        .military(preferentialEmp.getMilitary())
-                                        .militaryClass(preferentialEmp.getMilitaryClass())
-                                        .militaryStart(preferentialEmp.getMilitaryStart())
-                                        .militaryEnd(preferentialEmp.getMilitaryEnd())
-                                        .militaryType(preferentialEmp.getMilitaryType())
-                                        .militaryRank(preferentialEmp.getMilitaryRank())
+                    if(formCodes.contains("resume_001")) { // 학력
+                        List<Education> resultEducations = educationRepository.findAllByResumeInfoIdx(resultResumeInfo.get().getIdx());
+                        if(!resultEducations.isEmpty()) {
+                            List<EducationReadRes> educationResList = new ArrayList<>();
+                            for(Education education : resultEducations) {
+                                EducationReadRes educationRes = EducationReadRes.builder()
+                                        .schoolDiv(education.getSchoolDiv())
+                                        .schoolName(education.getSchoolName())
+                                        .enteredAt(education.getEnteredAt())
+                                        .graduatedAt(education.getGraduatedAt())
+                                        .graduationStatus(education.getGraduationStatus())
+                                        .majorName(education.getMajorName())
+                                        .grade(education.getGrade())
+                                        .totalGrade(education.getTotalGrade())
+                                        .transfer(education.getTransfer())
+                                        .majorType(education.getMajorType())
+                                        .otherMajor(education.getOtherMajor())
+                                        .graduationWork(education.getGraduationWork())
+                                        .degree(education.getDegree())
+                                        .qualificationExam(education.getQualificationExam())
+                                        .passedAt(education.getPassedAt())
                                         .build();
-                                responseBuilder.preferentialEmp(preferentialEmpRes);
+                                educationResList.add(educationRes);
                             }
-                        }
-                        if(formCodes.contains("resume_011")) { // 자기소개서
-                            List<CustomLetterForm> resultCustomLetterForm = customLetterFormRepository.findAllByAnnouncementIdx(announcementIdx);
-                            if(!resultCustomLetterForm.isEmpty()) {
-                                // 자기소개서 맞춤 양식 테이블 조회 (공고 idx로)
-                                List<CustomLetterFormReadRes> customLetterFormResList = new ArrayList<>();
-                                for(CustomLetterForm customLetterForm : resultCustomLetterForm) {
-                                    CustomLetterFormReadRes customLetterFormRes = CustomLetterFormReadRes.builder()
-                                            .title(customLetterForm.getTitle())
-                                            .chatLimit(customLetterForm.getChatLimit())
-                                            .build();
-                                    customLetterFormResList.add(customLetterFormRes);
-                                }
-                                responseBuilder.customLetterForms(customLetterFormResList);
-                            }
+                            responseBuilder.educations(educationResList);
                         }
                     }
+                    if(formCodes.contains("resume_002")) { // 경력
+                        List<PersonalHistory> resultPersonalHistories = personalHistoryRepository.findAllByResumeInfoIdx(resultResumeInfo.get().getIdx());
+                        if(!resultPersonalHistories.isEmpty()) {
+                            List<PersonalHistoryReadRes> personalHistoryResList = new ArrayList<>();
+                            for(PersonalHistory personalHistory : resultPersonalHistories) {
+                                PersonalHistoryReadRes personalHistoryRes = PersonalHistoryReadRes.builder()
+                                        .companyName(personalHistory.getCompanyName())
+                                        .deptName(personalHistory.getDeptName())
+                                        .enteredAt(personalHistory.getEnteredAt())
+                                        .quitAt(personalHistory.getQuitAt())
+                                        .empStatus(personalHistory.getEmpStatus())
+                                        .position(personalHistory.getPosition())
+                                        .job(personalHistory.getJob())
+                                        .salary(personalHistory.getSalary())
+                                        .work(personalHistory.getWork())
+                                        .build();
+                                personalHistoryResList.add(personalHistoryRes);
+                            }
+                            responseBuilder.personalHistories(personalHistoryResList);
+                        }
+                    }
+                    if(formCodes.contains("resume_003")) { // 인턴&대외활동
+                        List<InternsActivity> resultInternsActivities = internActivitiesRepository.findAllByResumeInfoIdx(resultResumeInfo.get().getIdx());
+                        if(!resultInternsActivities.isEmpty()) {
+                            List<InternsActivityReadRes> internsActivityResList = new ArrayList<>();
+                            for(InternsActivity internsActivity : resultInternsActivities) {
+                                InternsActivityReadRes internsActivityRes = InternsActivityReadRes.builder()
+                                        .activityDiv(internsActivity.getActivityDiv())
+                                        .organization(internsActivity.getOrganization())
+                                        .startAt(internsActivity.getStartAt())
+                                        .endAt(internsActivity.getEndAt())
+                                        .contents(internsActivity.getContents())
+                                        .build();
+                                internsActivityResList.add(internsActivityRes);
+                            }
+                            responseBuilder.internsActivities(internsActivityResList);
+                        }
+                    }
+                    if(formCodes.contains("resume_004")) { // 교육이수
+                        List<Training> resultTrainings = trainingRepository.findAllByResumeInfoIdx(resultResumeInfo.get().getIdx());
+                        if(!resultTrainings.isEmpty()) {
+                            List<TrainingReadRes> trainingResList = new ArrayList<>();
+                            for(Training training : resultTrainings) {
+                                TrainingReadRes trainingRes = TrainingReadRes.builder()
+                                        .trainingName(training.getTrainingName())
+                                        .organization(training.getOrganization())
+                                        .startAt(training.getStartAt())
+                                        .endAt(training.getEndAt())
+                                        .contents(training.getContents())
+                                        .build();
+                                trainingResList.add(trainingRes);
+                            }
+                            responseBuilder.trainings(trainingResList);
+                        }
+                    }
+                    if(formCodes.contains("resume_005")) { // 자격증
+                        List<Certification> resultCertifications = certificationRepository.findAllByResumeInfoIdx(resultResumeInfo.get().getIdx());
+                        if(!resultCertifications.isEmpty()) {
+                            List<CertificationReadRes> certificationResList = new ArrayList<>();
+                            for(Certification certification : resultCertifications) {
+                                CertificationReadRes certificationRes = CertificationReadRes.builder()
+                                        .certName(certification.getCertName())
+                                        .organization(certification.getOrganization())
+                                        .takingAt(certification.getTakingAt())
+                                        .build();
+                                certificationResList.add(certificationRes);
+                            }
+                            responseBuilder.certifications(certificationResList);
+                        }
+                    }
+                    if(formCodes.contains("resume_006")) { // 수상
+                        List<Award> resultAwards = awardRepository.findAllByResumeInfoIdx(resultResumeInfo.get().getIdx());
+                        if(!resultAwards.isEmpty()) {
+                            List<AwardReadRes> awardResList = new ArrayList<>();
+                            for(Award award : resultAwards) {
+                                AwardReadRes awardRes = AwardReadRes.builder()
+                                        .awardName(award.getAwardName())
+                                        .contents(award.getContents())
+                                        .organization(award.getOrganization())
+                                        .year(award.getYear())
+                                        .build();
+                                awardResList.add(awardRes);
+                            }
+                            responseBuilder.awards(awardResList);
+                        }
+                    }
+                    if(formCodes.contains("resume_007")) { // 해외경험
+                        List<StudyingAbroad> resultStudyingAbroads = studyingAboardRepository.findAllByResumeInfoIdx(resultResumeInfo.get().getIdx());
+                        if(!resultStudyingAbroads.isEmpty()) {
+                            List<StudyingAbroadReadRes> studyingAbroadResList = new ArrayList<>();
+                            for(StudyingAbroad studyingAbroad : resultStudyingAbroads) {
+                                StudyingAbroadReadRes studyingAbroadRes = StudyingAbroadReadRes.builder()
+                                        .countryName(studyingAbroad.getCountryName())
+                                        .startAt(studyingAbroad.getStartAt())
+                                        .endAt(studyingAbroad.getEndAt())
+                                        .contents(studyingAbroad.getContents())
+                                        .build();
+                                studyingAbroadResList.add(studyingAbroadRes);
+                            }
+                            responseBuilder.studyingAbroads(studyingAbroadResList);
+                        }
+
+                    }
+                    if(formCodes.contains("resume_008")) { // 어학
+                        List<Language> resultLanguages = languageRepository.findAllByResumeInfoIdx(resultResumeInfo.get().getIdx());
+                        if(!resultLanguages.isEmpty()) {
+                            List<LanguageReadRes> languageResList = new ArrayList<>();
+                            for(Language language : resultLanguages) {
+                                LanguageReadRes languageRes = LanguageReadRes.builder()
+                                        .testDiv(language.getTestDiv())
+                                        .languageName(language.getLanguageName())
+                                        .conversationLevel(language.getConversationLevel())
+                                        .officialTest(language.getOfficialTest())
+                                        .score(language.getScore())
+                                        .takingAt(language.getTakingAt())
+                                        .build();
+                                languageResList.add(languageRes);
+                            }
+                            responseBuilder.languages(languageResList);
+                        }
+                    }
+//                    if(formCodes.contains("resume_009")) { // 포트폴리오
+//                        List<Portfolio> resultPortfolios = portfolioRepository.findAllByResumeInfoIdx(resultResumeInfo.get().getIdx());
+//                        if(!resultPortfolios.isEmpty()) {
+//                            List<PortfolioReadRes> portfolioResList = new ArrayList<>();
+//                            for(Portfolio portfolio : resultPortfolios) {
+//                                PortfolioReadRes portfolioRes = PortfolioReadRes.builder()
+//                                        .portfolioDiv(portfolio.getPortfolioDiv())
+//                                        .portfolioType(portfolio.getPortfolioType())
+//                                        .portfolioUrl(portfolio.getPortfolioUrl())
+//                                        .build();
+//                                portfolioResList.add(portfolioRes);
+//                            }
+//                            responseBuilder.portfolios(portfolioResList);
+//                        }
+//                    }
+                    if(formCodes.contains("resume_010")) { // 취업우대&병역
+                        Optional<PreferentialEmp> resultPreferentialEmp = preferentialEmpRepository.findByResumeInfoIdx(resultResumeInfo.get().getIdx());
+                        if(resultPreferentialEmp.isPresent()) {
+                            PreferentialEmp preferentialEmp = resultPreferentialEmp.get();
+                            PreferentialEmpReadRes preferentialEmpRes = PreferentialEmpReadRes.builder()
+                                    .veterans(preferentialEmp.getVeterans())
+                                    .protection(preferentialEmp.getProtection())
+                                    .subsidy(preferentialEmp.getSubsidy())
+                                    .disability(preferentialEmp.getDisability())
+                                    .disabilityDegree(preferentialEmp.getDisabilityDegree())
+                                    .military(preferentialEmp.getMilitary())
+                                    .militaryClass(preferentialEmp.getMilitaryClass())
+                                    .militaryStart(preferentialEmp.getMilitaryStart())
+                                    .militaryEnd(preferentialEmp.getMilitaryEnd())
+                                    .militaryType(preferentialEmp.getMilitaryType())
+                                    .militaryRank(preferentialEmp.getMilitaryRank())
+                                    .build();
+                            responseBuilder.preferentialEmp(preferentialEmpRes);
+                        }
+                    }
+
+
                     // 응답 dto 생성
                     return responseBuilder
+                            .integrated(true)
                             .build();
-                } else {
-                    throw new BaseException(BaseResponseMessage.RESUME_READ_FAIL_INTEGRATED);
                 }
+                return responseBuilder
+                        .integrated(false)
+                        .build();
             } else {
                 throw new BaseException(BaseResponseMessage.RESUME_REGISTER_FAIL_NOT_FOUND_ANNOUNCE);
             }
@@ -739,7 +739,7 @@ public class ResumeService {
     }
 
     @Transactional
-    public ResumeReadRes readIntegrated(CustomUserDetails customUserDetails) throws BaseException {
+    public ResumeReadIntegratedRes readIntegrated(CustomUserDetails customUserDetails) throws BaseException {
         Long seekerIdx = customUserDetails.getIdx();
         // 지원자 테이블 조회
         Optional<Seeker> resultSeeker = seekerRepository.findBySeekerIdx(seekerIdx);
@@ -747,7 +747,7 @@ public class ResumeService {
             // 지원정보 테이블 조회 (integration == 1)
             Optional<ResumeInfo> resultResumeInfo = resumeInfoRepository.findBySeekerIdxAndIntegrated(seekerIdx, true);
             if(resultResumeInfo.isPresent()) {
-                ResumeReadRes.ResumeReadResBuilder responseBuilder = ResumeReadRes.builder();
+                ResumeReadIntegratedRes.ResumeReadIntegratedResBuilder responseBuilder = ResumeReadIntegratedRes.builder();
 
                 // 인적사항 조회
                 Optional<PersonalInfo> resultPersonalInfo = personalInfoRepository.findByResumeInfoIdx(resultResumeInfo.get().getIdx());
@@ -997,10 +997,13 @@ public class ResumeService {
     public ResumeReadRes read(Long resumeIdx) throws BaseException {
         Optional<Resume> resultResume = resumeRepository.findByResumeIdx(resumeIdx);
         if(resultResume.isPresent()) {
+            ResumeReadRes.ResumeReadResBuilder responseBuilder = ResumeReadRes.builder();
+
+            responseBuilder.resumeTitle(resultResume.get().getResumeTitle());
+            responseBuilder.resumedAt(resultResume.get().getResumedAt());
             // 지원정보 테이블 조회
             Optional<ResumeInfo> resultResumeInfo = resumeInfoRepository.findByResumeInfoIdx(resultResume.get().getResumeInfo().getIdx());
             if(resultResumeInfo.isPresent()) {
-                ResumeReadRes.ResumeReadResBuilder responseBuilder = ResumeReadRes.builder();
 
                 // 인적사항 조회
                 Optional<PersonalInfo> resultPersonalInfo = personalInfoRepository.findByResumeInfoIdx(resultResumeInfo.get().getIdx());

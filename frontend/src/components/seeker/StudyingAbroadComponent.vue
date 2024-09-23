@@ -26,14 +26,29 @@
 </template>
 
 <script setup>
-import { ref, defineEmits, watch } from 'vue';
+import { ref, defineEmits, watch, defineProps } from 'vue';
 
-const countryName = ref(null);
-const startAt = ref(null);
-const endAt = ref(null);
-const contents = ref(null);
+const props = defineProps({
+    data: {
+        type: Object
+    }
+});
+
+const studyingAbroad = props.data || {
+    countryName: null,
+    startAt: null,
+    endAt: null,
+    contents: null
+};
+
+const countryName = ref(studyingAbroad.countryName);
+const startAt = ref(studyingAbroad.startAt);
+const endAt = ref(studyingAbroad.endAt);
+const contents = ref(studyingAbroad.contents);
 
 const emit = defineEmits(['updateData']);
+emit('updateData', props.data);
+
 
 const updateData = () => {
   const data = {

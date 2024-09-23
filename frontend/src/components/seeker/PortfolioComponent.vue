@@ -40,7 +40,6 @@
 <script setup>
 import { ref, defineEmits, watch } from 'vue';
 
-
 const portfolioDiv = ref(null);
 const portfolioType = ref(null);
 const portfolioUrl = ref(null);

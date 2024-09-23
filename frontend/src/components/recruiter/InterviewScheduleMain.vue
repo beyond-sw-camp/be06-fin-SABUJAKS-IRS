@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, defineEmits, ref } from 'vue';
+import { defineProps, defineEmits } from 'vue';
 
 // props를 정의합니다.
 const props = defineProps({
@@ -9,18 +9,30 @@ const props = defineProps({
   },
   careerBase: {
     type: String,
-    required: true
+    required: false
+  },
+  announcements: {
+    type: Array,
+    required: false
   }
 });
 
 const emit = defineEmits(['interviewScheduleList']);
 
-const announceIdx = ref(0);
+// const announceIdx = ref(0);
 
-
-const handleRowClick = (announceIdx) => {
-  emit('interviewScheduleList', announceIdx);
+const handleRowClick = (announcementIdx, announcementUuid) => {
+  emit('interviewScheduleList', announcementIdx);
+  emit('announcementUuid', announcementUuid);
   emit('titleModal', props.careerBase);
+}
+
+const formatDate = (datetime) => {
+  const date = new Date(datetime);
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 </script>
 
@@ -29,19 +41,19 @@ const handleRowClick = (announceIdx) => {
     <!-- props.title을 직접 사용합니다 -->
     <h1>{{ props.title }}</h1>
     <table class="review-table">
+      <tbody>
       <tr>
         <th>번호</th>
         <th>공고기간</th>
         <th>공고명</th>
-        <th>지원자수</th>
       </tr>
-<!--      <tr @click="handleRowClick('경력')">-->
-      <tr @click="handleRowClick(announceIdx)">
-        <td>1</td>
-        <td>2024.09.24 - 2024.10.24</td>
-        <td>백엔드 엔지니어 신입공채</td>
-        <td>24</td>
+      <!--      <tr @click="handleRowClick('경력')">-->
+      <tr v-for="(announcement, index) in props.announcements" :key="announcement.idx" @click="handleRowClick(announcement.idx, announcement.uuid)">
+        <td>{{ index + 1 }}</td>
+        <td>{{ formatDate(announcement.announcementStart) }} - {{ formatDate(announcement.announcementEnd) }}</td>
+        <td>{{ announcement.title }}</td>
       </tr>
+      </tbody>
     </table>
   </div>
 

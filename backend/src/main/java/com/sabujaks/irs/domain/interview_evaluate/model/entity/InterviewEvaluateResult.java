@@ -15,16 +15,16 @@ public class InterviewEvaluateResult {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
-    private String r1;
-    private String r2;
-    private String r3;
-    private String r4;
-    private String r5;
-    private String r6;
-    private String r7;
-    private String r8;
-    private String r9;
-    private String r10;
+    private Integer r1;
+    private Integer r2;
+    private Integer r3;
+    private Integer r4;
+    private Integer r5;
+    private Integer r6;
+    private Integer r7;
+    private Integer r8;
+    private Integer r9;
+    private Integer r10;
 
     @OneToMany(mappedBy = "interviewEvaluateResult")
     private List<InterviewEvaluate> interviewEvaluateList;

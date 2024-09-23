@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import {onMounted, ref} from 'vue';
 import MainHeaderComponent from '../../../components/recruiter/MainHeaderComponent.vue';
 import MainSideBarComponent from '../../../components/recruiter/MainSideBarComponent.vue';
 import '@/assets/css/grid.css';
@@ -33,8 +33,18 @@ const team = ref(''); // 선택된 팀의 Idx 값을 저장
 const timeOptions = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
 const showCalendar = ref(true); // 캘린더 기본으로 표시
 const showInterviewerList = ref(false); // 후보자 목록은 기본적으로 숨김
-
+const announcements = ref([]);
+const interviewSchedules = ref([]);
+const announcementIdxInfo = ref(0);
+const announcementUuidInfo = ref("");
 const interviewType = ref(''); // 선택된 면접 유형 (대면 또는 온라인)
+const reqData = ref({});
+
+onMounted(async () => {
+  announcements.value = await interviewScheduleStore.readAllAnnouncement(careerBase.value);
+
+  console.log(announcements);
+})
 
 const handleCheckboxChange = (type) => {
   if (interviewType.value === type) {
@@ -44,9 +54,21 @@ const handleCheckboxChange = (type) => {
   }
 };
 
-const interviewScheduleLists = (announceIdx) => {
+// eslint-disable-next-line no-undef
+defineExpose({ reqData });
+
+const interviewScheduleLists = async (announcementIdx, announcementUuid) => {
   isInterviewScheduleList.value = true;
   isInterviewScheduleMain.value = false;
+
+  reqData.value = {
+    careerBase: careerBase.value,
+    announcementIdx: announcementIdx,
+  };
+
+  interviewSchedules.value = await interviewScheduleStore.readAllInterviewSchedule(reqData.value);
+  announcementIdxInfo.value = announcementIdx;
+  announcementUuidInfo.value = announcementUuid;
 }
 
 const createVideoInterview = () => {
@@ -121,66 +143,67 @@ const removeFilter = (filter) => {
 
 const submitForm = () => {
   // const selectedSpanValues = selectedFilters.value;
-  const selectedSpanValues = [1, 2];
-  const participantEmails = selectedEmails.value// 참가자 이메일
-  const selectedDate = interviewDate.value;
-  const selectedStartTime = startTime.value;
-  const selectedEndTime = endTime.value;
-  const selectedType = interviewType.value;
-  const selectedTeamIdx = team.value;
+  if (confirm("면접 일정을 등록하시겠습니까?")) {
+    const selectedSpanValues = [1, 2];
+    const participantEmails = selectedEmails.value// 참가자 이메일
+    const selectedDate = interviewDate.value;
+    const selectedStartTime = startTime.value;
+    const selectedEndTime = endTime.value;
+    const selectedType = interviewType.value;
+    const selectedTeamIdx = team.value;
 
-  alert(`
-    선택된 필터: ${selectedSpanValues}
-    면접관 이메일: ${participantEmails}
-    날짜: ${selectedDate}
-    방식: ${selectedType}
-    시작 시간: ${selectedStartTime}
-    종료 시간: ${selectedEndTime}
-    팀 배정: ${selectedTeamIdx}
-  `);
+    // 데이터 객체 생성
+    const interviewData = {
+      seekerList: selectedSpanValues,
+      estimatorList: participantEmails,
+      isOnline: selectedType,
+      interviewDate: selectedDate,
+      interviewStart: selectedStartTime,
+      interviewEnd: selectedEndTime,
+      careerBase: "경력",
+      teamIdx: selectedTeamIdx,
+      announcementIdx: announcementIdxInfo.value
+    };
 
-  // 데이터 객체 생성
-  const interviewData = {
-    seekerList: selectedSpanValues,
-    estimatorList: participantEmails,
-    isOnline: selectedType,
-    interviewDate: selectedDate,
-    interviewStart: selectedStartTime,
-    interviewEnd: selectedEndTime,
-    careerBase: "경력",
-    teamIdx: selectedTeamIdx,
-  };
+    // Store의 createInterviewSchedule 함수 호출
+    interviewScheduleStore.createInterviewSchedule(interviewData)
+        .then(() => {
+          if(confirm('면접 일정이 성공적으로 등록되었습니다.')) {
+            // 면접 일정 리스트 업데이트
 
-  console.log("Selected Team: ", selectedTeamIdx);
+            closeModal();
+            interviewScheduleLists(announcementIdxInfo, announcementUuidInfo);
+          }
+        })
+        .catch((error) => {
+          console.error('면접 일정 등록 중 오류 발생:', error);
+        });
+  }
 
-  // Store의 createInterviewSchedule 함수 호출
-  interviewScheduleStore.createInterviewSchedule(interviewData)
-      .then(() => {
-        alert('면접 일정이 성공적으로 등록되었습니다.');
-      })
-      .catch((error) => {
-        console.error('면접 일정 등록 중 오류 발생:', error);
-      });
 };
 </script>
 
 
 <template>
   <MainHeaderComponent/>
-  <div class="container">
+  <div class="container padding-0">
     <MainSideBarComponent/>
     <!-- InterviewScheduleMainNew에서 이벤트를 받아 모달을 제어 -->
     <InterviewScheduleMain
         v-if="isInterviewScheduleMain"
         @interviewScheduleList="interviewScheduleLists"
-        :title="careerBase">
+        :title="careerBase"
+        :announcements="announcements">
     </InterviewScheduleMain>
     <InterviewScheduleList
         v-if="isInterviewScheduleList"
         @openModal="openModal"
         @createVideoInterview="createVideoInterview"
         :title="'면접일정'"
-        :titleModal="setModalTitle">
+        :titleModal="setModalTitle"
+        :interviewSchedules="interviewSchedules"
+        :announcementIdx="announcementIdxInfo"
+        :announcementUuid="announcementUuidInfo">
     </InterviewScheduleList>
 
 
@@ -304,80 +327,6 @@ const submitForm = () => {
     </div>
   </div>
 </template>
-
-<!--<script>-->
-<!--import {defineComponent} from 'vue'-->
-<!--import FullCalendar from '@fullcalendar/vue3'-->
-<!--import dayGridPlugin from '@fullcalendar/daygrid'-->
-<!--import timeGridPlugin from '@fullcalendar/timegrid'-->
-<!--import interactionPlugin from '@fullcalendar/interaction'-->
-<!--import {createEventId} from './event-utils'-->
-
-<!--export default defineComponent({-->
-<!--  components: {-->
-<!--    FullCalendar,-->
-<!--  },-->
-<!--  data() {-->
-<!--    return {-->
-<!--      calendarOptions: {-->
-<!--        plugins: [-->
-<!--          dayGridPlugin,-->
-<!--          timeGridPlugin,-->
-<!--          interactionPlugin // needed for dateClick-->
-<!--        ],-->
-<!--        locale: 'ko',-->
-<!--        headerToolbar: {-->
-<!--          left: 'prev,next today',-->
-<!--          center: 'title',-->
-<!--          right: 'dayGridMonth,dayGridWeek,dayGridDay'-->
-<!--        },-->
-<!--        events: [],-->
-<!--        initialView: 'dayGridMonth',-->
-<!--        // initialEvents: INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed-->
-<!--        editable: true,-->
-<!--        selectable: true,-->
-<!--        selectMirror: true,-->
-<!--        dayMaxEvents: true,-->
-<!--        weekends: true,-->
-<!--        select: this.handleDateSelect,-->
-<!--        eventClick: this.handleEventClick,-->
-<!--        eventsSet: this.handleEvents-->
-<!--        /* you can update a remote database when these fire:-->
-<!--        eventAdd:-->
-<!--        eventChange:-->
-<!--        eventRemove:-->
-<!--        */-->
-<!--      },-->
-<!--      currentEvents: [],-->
-<!--    }-->
-<!--  },-->
-<!--  methods: {-->
-<!--    handleWeekendsToggle() {-->
-<!--      this.calendarOptions.weekends = !this.calendarOptions.weekends // update a property-->
-<!--    },-->
-<!--    handleDateSelect(selectInfo) {-->
-<!--      let title = prompt('새로운 일정을 등록해주세요.')-->
-<!--      let calendarApi = selectInfo.view.calendar-->
-
-<!--      calendarApi.unselect() // clear date selection-->
-
-<!--      if (title) {-->
-<!--        calendarApi.addEvent({-->
-<!--          id: createEventId(),-->
-<!--          title,-->
-<!--          start: selectInfo.startStr,-->
-<!--          end: selectInfo.endStr,-->
-<!--          allDay: selectInfo.allDay-->
-<!--        })-->
-<!--      }-->
-<!--    },-->
-
-<!--    handleEvents(events) {-->
-<!--      this.currentEvents = events-->
-<!--    },-->
-<!--  }-->
-<!--})-->
-<!--</script>-->
 <script>
 import { defineComponent } from 'vue'
 import FullCalendar from '@fullcalendar/vue3'
@@ -425,7 +374,11 @@ export default defineComponent({
     async fetchInterviewSchedules() {
       const interviewScheduleStore = UseInterviewScheduleStore(); // 스토어 인스턴스 생성
       try {
-        const schedules = await interviewScheduleStore.readAllExpInterviewSchedule();
+        const reqData = {
+          careerBase: "전체",
+          announcementIdx: 3
+        }
+        const schedules = await interviewScheduleStore.readAllInterviewSchedule(reqData);
 
         if (!Array.isArray(schedules)) {
           console.error('Received schedules is not an array:', schedules);

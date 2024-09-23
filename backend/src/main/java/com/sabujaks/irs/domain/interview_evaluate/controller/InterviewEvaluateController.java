@@ -1,10 +1,8 @@
 package com.sabujaks.irs.domain.interview_evaluate.controller;
 
+import com.sabujaks.irs.domain.interview_evaluate.model.request.InterviewEvaluateCreateReq;
 import com.sabujaks.irs.domain.interview_evaluate.model.request.InterviewEvaluateFormCreateReq;
-import com.sabujaks.irs.domain.interview_evaluate.model.response.InterviewEvaluateFormCreateRes;
-import com.sabujaks.irs.domain.interview_evaluate.model.response.InterviewEvaluateFormReadRes;
-import com.sabujaks.irs.domain.interview_evaluate.model.response.InterviewEvaluateReadAllResumeInfo;
-import com.sabujaks.irs.domain.interview_evaluate.model.response.InterviewEvaluateReadResumeInfoRes;
+import com.sabujaks.irs.domain.interview_evaluate.model.response.*;
 import com.sabujaks.irs.domain.interview_evaluate.service.InterviewEvaluateService;
 import com.sabujaks.irs.global.common.exception.BaseException;
 import com.sabujaks.irs.global.common.responses.BaseResponse;
@@ -49,5 +47,13 @@ public class InterviewEvaluateController {
         @RequestParam String interviewScheduleUUID) throws BaseException {
         InterviewEvaluateReadAllResumeInfo response = interviewEvaluateService.readAllResumeInfo(customUserDetails, announcementUUID, interviewScheduleUUID);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_EVALUATE_SEARCH_RESUME_SUCCESS, response));
+    }
+
+    @PostMapping("/create-evaluate")
+    public ResponseEntity<BaseResponse<InterviewEvaluateCreateRes>> createEvaluate(
+        @AuthenticationPrincipal CustomUserDetails customUserDetails,
+        @RequestBody InterviewEvaluateCreateReq dto) throws BaseException {
+        InterviewEvaluateCreateRes response = interviewEvaluateService.createEvaluate(customUserDetails, dto);
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_EVALUATE_CREATE_SUCCESS, response));
     }
 }

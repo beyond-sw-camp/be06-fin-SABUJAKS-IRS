@@ -109,18 +109,55 @@
 </template>
 
 <script setup>
-import { ref, defineEmits, watch } from 'vue';
+import { ref, defineEmits, watch, defineProps } from 'vue';
+
+const props = defineProps({
+    data: {
+        type: Object
+    }
+});
+
+const preferentialEmp = props.data || {
+    veterans: false,
+    protection: false,
+    subsidy: false,
+    disability: false,
+    military: false,
+    disabilityDegree: null,
+    militaryClass: null,
+    militaryStart: null,
+    militaryEnd: null,
+    militaryRank: null,
+    militaryType: null
+};
 
 const selectedOptions = ref([]);
 
-const disabilityDegree = ref(null);
-const militaryClass = ref(null);
-const militaryStart = ref(null);
-const militaryEnd = ref(null);
-const militaryRank = ref(null);
-const militaryType = ref(null);
+if(preferentialEmp.veterans) {
+  selectedOptions.value.push('보훈대상');
+}
+if(preferentialEmp.protection) {
+  selectedOptions.value.push('취업보호 대상');
+}
+if(preferentialEmp.subsidy) {
+  selectedOptions.value.push('고용지원금 대상');
+}
+if(preferentialEmp.disability) {
+  selectedOptions.value.push('장애');
+}
+if(preferentialEmp.military) {
+  selectedOptions.value.push('병역');
+}
+const disabilityDegree = ref(preferentialEmp.disabilityDegree);
+const militaryClass = ref(preferentialEmp.militaryClass);
+const militaryStart = ref(preferentialEmp.militaryStart);
+const militaryEnd = ref(preferentialEmp.militaryEnd);
+const militaryRank = ref(preferentialEmp.militaryRank);
+const militaryType = ref(preferentialEmp.militaryType);
 
 const emit = defineEmits(['updateData']);
+emit('updateData', props.data);
+
 
 const updateData = () => {
   const data = {

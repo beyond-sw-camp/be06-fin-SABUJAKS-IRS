@@ -8,12 +8,12 @@ import com.sabujaks.irs.domain.announcement.repository.CustomFormRepository;
 import com.sabujaks.irs.domain.announcement.repository.CustomLetterFormRepository;
 import com.sabujaks.irs.domain.auth.model.entity.Seeker;
 import com.sabujaks.irs.domain.auth.repository.SeekerRepository;
+import com.sabujaks.irs.domain.interview_evaluate.model.entity.InterviewEvaluate;
 import com.sabujaks.irs.domain.interview_evaluate.model.entity.InterviewEvaluateForm;
+import com.sabujaks.irs.domain.interview_evaluate.model.entity.InterviewEvaluateResult;
+import com.sabujaks.irs.domain.interview_evaluate.model.request.InterviewEvaluateCreateReq;
 import com.sabujaks.irs.domain.interview_evaluate.model.request.InterviewEvaluateFormCreateReq;
-import com.sabujaks.irs.domain.interview_evaluate.model.response.InterviewEvaluateFormCreateRes;
-import com.sabujaks.irs.domain.interview_evaluate.model.response.InterviewEvaluateFormReadRes;
-import com.sabujaks.irs.domain.interview_evaluate.model.response.InterviewEvaluateReadAllResumeInfo;
-import com.sabujaks.irs.domain.interview_evaluate.model.response.InterviewEvaluateReadResumeInfoRes;
+import com.sabujaks.irs.domain.interview_evaluate.model.response.*;
 import com.sabujaks.irs.domain.interview_evaluate.repository.InterviewEvaluateFormRepository;
 import com.sabujaks.irs.domain.interview_evaluate.repository.InterviewEvaluateRepository;
 import com.sabujaks.irs.domain.interview_evaluate.repository.InterviewEvaluateResultRepository;
@@ -56,6 +56,7 @@ public class InterviewEvaluateService {
     private final AwardRepository awardRepository;
     private final PortfolioRepository portfolioRepository;
     private final CustomLetterFormRepository customLetterFormRepository;
+    private final InterviewEvaluateResultRepository interviewEvaluateResultRepository;
 
     public InterviewEvaluateFormCreateRes createForm (CustomUserDetails customUserDetails, InterviewEvaluateFormCreateReq dto) throws BaseException {
         Announcement announcement = announcementRepository.findByAnnounceIdx(dto.getAnnounceIdx())
@@ -63,7 +64,7 @@ public class InterviewEvaluateService {
         if(!Objects.equals(announcement.getRecruiter().getEmail(), customUserDetails.getEmail())){
             throw new BaseException(BaseResponseMessage.INTERVIEW_EVALUATE_CREATE_FORM_FAIL_INVALID_REQUEST);
         }
-        Optional<InterviewEvaluateForm> result = interviewEvaluateRepository.findByAnnounceIdx(dto.getAnnounceIdx());
+        Optional<InterviewEvaluateForm> result = interviewEvaluateFormRepository.findByAnnounceIdx(dto.getAnnounceIdx());
         if(result.isEmpty()){
             InterviewEvaluateForm interviewEvaluateForm = InterviewEvaluateForm.builder()
                     .announcement(announcement)
@@ -378,5 +379,71 @@ public class InterviewEvaluateService {
         return InterviewEvaluateReadAllResumeInfo.builder()
                 .interviewEvaluateReadResumeInfoResMap(interviewEvaluateReadResumeInfoResMap)
                 .build();
+    }
+
+    @Transactional
+    public InterviewEvaluateCreateRes createEvaluate(CustomUserDetails customUserDetails, InterviewEvaluateCreateReq dto) throws BaseException{
+        InterviewParticipate interviewParticipate = interviewParticipateRepository
+        .findBySeekerEmailAndEstimatorIdxAndInterviewScheduleUUID(dto.getUserEmail(), customUserDetails.getIdx(), dto.getVideoInterviewUUID())
+        .orElseThrow(() -> new BaseException(BaseResponseMessage.INTERVIEW_EVALUATE_CREATE_FAIL_NOT_FOUND_SCHEDULE));
+        InterviewEvaluateForm interviewEvaluateForm = interviewEvaluateFormRepository.findByAnnouncementUUID(dto.getAnnouncementUUID())
+        .orElseThrow(() -> new BaseException(BaseResponseMessage.INTERVIEW_EVALUATE_CREATE_FAIL_INVALID_FORM));
+        Optional<InterviewEvaluate> result = interviewEvaluateRepository.findByInterviewParticipateIdx(interviewParticipate.getIdx());
+        if(result.isPresent()){
+            InterviewEvaluate interviewEvaluate = result.get();
+            InterviewEvaluateResult interviewEvaluateResult = InterviewEvaluateResult.builder()
+                    .idx(interviewEvaluate.getInterviewEvaluateResult().getIdx())
+                    .r1(dto.getScores().get(1))
+                    .r2(dto.getScores().get(2))
+                    .r3(dto.getScores().get(3))
+                    .r4(dto.getScores().get(4))
+                    .r5(dto.getScores().get(5))
+                    .r6(dto.getScores().get(6))
+                    .r7(dto.getScores().get(7))
+                    .r8(dto.getScores().get(8))
+                    .r9(dto.getScores().get(9))
+                    .r10(dto.getScores().get(10))
+                    .build();
+            interviewEvaluateResultRepository.save(interviewEvaluateResult);
+            InterviewEvaluate newInterviewEvaluate = InterviewEvaluate.builder()
+                    .idx(interviewEvaluate.getIdx())
+                    .status(dto.getStatus())
+                    .totalScore(dto.getTotalScore())
+                    .comments(dto.getComments())
+                    .interviewEvaluateForm(interviewEvaluateForm)
+                    .interviewParticipate(interviewParticipate)
+                    .interviewEvaluateResult(interviewEvaluateResult)
+                    .build();
+            interviewEvaluateRepository.save(newInterviewEvaluate);
+            return InterviewEvaluateCreateRes.builder()
+                    .idx(newInterviewEvaluate.getIdx())
+                    .build();
+        } else {
+            InterviewEvaluateResult interviewEvaluateResult = InterviewEvaluateResult.builder()
+                    .r1(dto.getScores().get(1))
+                    .r2(dto.getScores().get(2))
+                    .r3(dto.getScores().get(3))
+                    .r4(dto.getScores().get(4))
+                    .r5(dto.getScores().get(5))
+                    .r6(dto.getScores().get(6))
+                    .r7(dto.getScores().get(7))
+                    .r8(dto.getScores().get(8))
+                    .r9(dto.getScores().get(9))
+                    .r10(dto.getScores().get(10))
+                    .build();
+            interviewEvaluateResultRepository.save(interviewEvaluateResult);
+            InterviewEvaluate interviewEvaluate = InterviewEvaluate.builder()
+                    .status(dto.getStatus())
+                    .totalScore(dto.getTotalScore())
+                    .comments(dto.getComments())
+                    .interviewEvaluateForm(interviewEvaluateForm)
+                    .interviewParticipate(interviewParticipate)
+                    .interviewEvaluateResult(interviewEvaluateResult)
+                    .build();
+            interviewEvaluateRepository.save(interviewEvaluate);
+            return InterviewEvaluateCreateRes.builder()
+                    .idx(interviewEvaluate.getIdx())
+                    .build();
+        }
     }
 }

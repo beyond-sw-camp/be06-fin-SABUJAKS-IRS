@@ -55,6 +55,10 @@ public enum BaseResponseMessage {
     INTERVIEW_SCHEDULE_NOT_FOUND(false, 1302, "해당 면접을 찾을 수 없습니다."),
     RESCHEDULE_NOT_FOUND(false, 1303, "면접 조율 내역을 찾을 수 없습니다."),
     RESCHEDULE_SEARCH_ALL_SUCCESS(true, 1304, "면접 조율 내역 조회에 성공했습니다."),
+    INTERVIEW_SCHEDULE_READ_ALL_SUCCESS(true, 1305, "면접 내역 조회에 성공했습니다."),
+    INTERVIEW_SCHEDULE_UPDATE_SUCCESS(true, 1306, "면접 내역 업데이트에 성공했습니다."),
+
+    INTERVIEW_PARTICIPATE_NOT_FOUND(false, 1320, "면접 연관 정보를 찾을 수 없습니다."),
 
     // VIDEO_INTERVIEW 화상 면접 1400
     VIDEO_INTERVIEW_CREATE_SUCCESS(true, 1400, "화상 면접 방 생성에 성공했습니다."),
@@ -78,7 +82,7 @@ public enum BaseResponseMessage {
     RESUME_REGISTER_FAIL_NOT_FOUND_FILE(false, 2005, "파일을 찾을 수 없습니다."),
     RESUME_REGISTER_FAIL_NOT_FOUND_CUSTOM_FORM(false, 2006, "지원서 맞춤 양식을 조회할 수 없습니다."),
     RESUME_REGISTER_FAIL_RESUME_DUPLICATE(false, 2007, "이미 지원서가 제출된 공고입니다."),
-    RESUME_READ_SUCCESS(false, 2100, "지원서 조회에 성공하였습니다." ),
+    RESUME_READ_SUCCESS(true, 2100, "지원서 조회에 성공하였습니다." ),
     RESUME_READ_FAIL(false, 2101, "지원서 조회에 실패하였습니다." ),
     RESUME_READ_FAIL_INTEGRATED(false, 2102, "통합 지원서를 등록하지 않았습니다. 먼저 등록해주세요." ),
     RESUME_READ_FAIL_RESUME(false, 2103, "해당 공고에 지원한 기록이 존재하지 않습니다." ),
@@ -91,6 +95,7 @@ public enum BaseResponseMessage {
     ANNOUNCEMENT_REGISTER_STEP_TWO_SUCCESS(true, 3100, "지원서 폼 조립에 성공했습니다."),
     ANNOUNCEMENT_REGISTER_STEP_TWO_FAIL_NOT_FOUND(false, 3101, "공고가 저장되지 않아 찾을 수 없습니다."),
     ANNOUNCEMENT_REGISTER_STEP_TWO_FAIL(false, 3102, "지원서 폼 조립에 실패하였습니다." ),
+    ANNOUNCEMENT_READ_ALL_SUCCESS(true, 3105, "공고 전체조회에 성공했습니다."),
     ANNOUNCEMENT_SEARCH_SUCCESS(true, 3200, "공고 조회에 성공했습니다."),
     ANNOUNCEMENT_SEARCH_FAIL(false, 3201, "공고 조회에 실패했습니다."),
     ANNOUNCEMENT_SEARCH_FAIL_NOT_FOUND(false, 3202, "해당 공고를 찾을 수 없습니다."),
@@ -117,8 +122,11 @@ public enum BaseResponseMessage {
     INTERVIEW_EVALUATE_SEARCH_FORM_FAIL_INVALID_ACCESS(false, 6102, "해당 공고의 인터뷰 평가표에 접근할 수 없습니다."),
     // 인터뷰 지원서 조회 6200
     INTERVIEW_EVALUATE_SEARCH_RESUME_SUCCESS(true, 6200, "지원자들의 지원서 정보를 불러오는데 성공했습니다." ),
-    INTERVIEW_EVALUATE_SEARCH_RESUME_FAIL_NOT_FOUND(false, 6201, "지원자들의 지원서 정보를 불러오는데 실패했습니다.");
-
+    INTERVIEW_EVALUATE_SEARCH_RESUME_FAIL_NOT_FOUND(false, 6201, "지원자들의 지원서 정보를 불러오는데 실패했습니다."),
+    // 인터뷰 평가 생성 6300
+    INTERVIEW_EVALUATE_CREATE_SUCCESS(true, 6300, "해당 지원자의 인터뷰 평가를 생성하는데 성공했습니다."),
+    INTERVIEW_EVALUATE_CREATE_FAIL_INVALID_FORM(false, 6302, "해당 공고의 인터뷰 평가 항목이 잘못되었습니다."),
+    INTERVIEW_EVALUATE_CREATE_FAIL_NOT_FOUND_SCHEDULE(false, 6301, "해당 면접관과 지원자의 인터뷰 스케줄 정보가 없습니다.");
 
     private Boolean success;
     private Integer code;

@@ -1,66 +1,46 @@
 <script setup>
-import {ref} from 'vue';
+import {onMounted, ref} from 'vue';
 import MainHeaderComponent from '../../../components/recruiter/MainHeaderComponent.vue';
 import MainSideBarComponent from '../../../components/recruiter/MainSideBarComponent.vue';
 import '@/assets/css/grid.css';
-import {UseInterviewScheduleStore} from '@/stores/UseInterviewScheduleStore';
+import { UseInterviewScheduleStore } from '@/stores/UseInterviewScheduleStore';
 import InterviewScheduleMain from "../../../components/recruiter/InterviewScheduleMain.vue";
 import ReScheduleList from "@/components/recruiter/ReScheduleList.vue";
+import ReScheduleDetail from "@/components/recruiter/ReScheduleDetail.vue";
+
 
 const isInterviewScheduleMain = ref(true);
 const isInterviewScheduleList = ref(false);
+const isReScheduleDetail = ref(false);
 
 const interviewScheduleStore = UseInterviewScheduleStore(); // Store 인스턴스
-const careerBase = ref('일정조율');
+const careerBase = ref("전체");
 const isModalOpen = ref(false);
 const modalTitle = ref('');
-const participantEmail = ref('');
-const selectedEmails = ref([]);
-const selectedFilters = ref([]);
-const interviewers = ref(['서시현', '구은주', '박종성', '서재은', '한별', '곽동현', '유송연', '강태성', '오규림', '송나경']);
-const selectedInterviewers = ref([]);
-const interviewDate = ref('');
-const startTime = ref('');
-const endTime = ref('');
-const teamList = [
-  { name: '1팀', idx: 1 },
-  { name: '2팀', idx: 2 },
-  { name: '3팀', idx: 3 },
-  { name: '4팀', idx: 4 },
-  { name: '5팀', idx: 5 }
-];
-const team = ref(''); // 선택된 팀의 Idx 값을 저장
-const timeOptions = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
-const showCalendar = ref(true); // 캘린더 기본으로 표시
-const showInterviewerList = ref(false); // 후보자 목록은 기본적으로 숨김
+const announcements = ref([]);
+const reSchedules = ref([]);
+const announcementIdxInfo = ref(0);
+const announcementUuidInfo = ref("");
+const interviewSchedules = ref([]);
+const interviewScheduleDetail = ref([]);
 
-const interviewType = ref(''); // 선택된 면접 유형 (대면 또는 온라인)
+onMounted(async () => {
+  announcements.value = await interviewScheduleStore.readAllAnnouncement(careerBase.value);
 
-const reScheduleList = ref([]);
+  console.log(announcements);
+})
 
-const handleCheckboxChange = (type) => {
-  if (interviewType.value === type) {
-    interviewType.value = ''; // 이미 선택된 타입을 클릭했을 경우 해제
-  } else {
-    interviewType.value = type; // 새 타입을 선택
-  }
-};
-
-const interviewScheduleLists = async (announceIdx) => {
+const interviewScheduleLists = async (announcementIdx) => {
   isInterviewScheduleList.value = true;
   isInterviewScheduleMain.value = false;
+  isReScheduleDetail.value = false;
 
-  try {
-    reScheduleList.value = await interviewScheduleStore.readAllReSchedule(announceIdx); // 결과를 interviewList에 저장
-  } catch (error) {
-    console.error('면접일정조율 조회중 에러: ', error);
-  }
-
-
+  reSchedules.value = await interviewScheduleStore.readAllReSchedule(announcementIdx);
+  announcementIdxInfo.value = announcementIdx;
 }
 
-const createVideoInterview = () => {
-
+const announcementUuid = async (announcementUuid) => {
+  announcementUuidInfo.value = announcementUuid;
 }
 
 const setModalTitle = (title) => {
@@ -70,367 +50,67 @@ const setModalTitle = (title) => {
 }
 
 // 모달 열기 함수에서 무한 호출 방지
-const openModal = () => {
-  if (!isModalOpen.value) {  // 모달이 열려있지 않을 때만 실행
-    isModalOpen.value = true;
-  }
+const interviewScheduleInfo = async (interviewScheduleInfo, announcementIdx, announcementUuid) => {
+  isInterviewScheduleList.value = false;
+  isReScheduleDetail.value = true;
+
+  interviewSchedules.value = interviewScheduleInfo;
+
+  interviewScheduleDetail.value = await interviewScheduleStore.readInterviewSchedule(interviewScheduleInfo.interviewScheduleRes.idx);
+  announcementIdxInfo.value = announcementIdx;
+  announcementUuidInfo.value = announcementUuid;
 };
 
-const closeModal = () => {
-  isModalOpen.value = false;
-  resetModal();
-};
+const updateData = async (updateData, updateInfo, pageUpdateData) => {
+  const updateResult = await interviewScheduleStore.updateInterviewSchedule(updateInfo);
+  const createResult = await interviewScheduleStore.createInterviewSchedule(updateData);
 
-const resetModal = () => {
-  participantEmail.value = '';
-  selectedEmails.value = [];
-  selectedFilters.value = [];
-  interviewDate.value = '';
-  startTime.value = '';
-  endTime.value = '';
-  team.value = '';
-  selectedInterviewers.value = [];
-  showCalendar.value = true; // 모달을 닫을 때 캘린더가 다시 보이게 설정
-  showInterviewerList.value = false; // 모달을 닫을 때 후보자 목록은 숨김
-};
+  if (createResult && updateResult) {
+    alert('성공했습니다!');
 
-const addParticipantEmail = () => {
-  const email = participantEmail.value.trim();
-  if (email && !selectedEmails.value.includes(email)) {
-    selectedEmails.value.push(email);
-    participantEmail.value = '';
+    console.log(pageUpdateData.announcementIdx);
+    console.log(pageUpdateData.announcementUuid);
+    window.scrollTo({ top: 0});
+    await interviewScheduleLists(pageUpdateData.announcementIdx);
   }
-};
-
-const removeEmail = (email) => {
-  selectedEmails.value = selectedEmails.value.filter(item => item !== email);
-};
-
-const addEmail = () => {
-  // 캘린더를 숨기고 후보자 목록을 보여줌
-  showCalendar.value = !showCalendar.value;
-  if (showCalendar.value === false) {
-    showInterviewerList.value = true;
-  } else {
-    showInterviewerList.value = false;
-  }
-};
-
-const selectInterviewers = () => {
-  // 후보자 선택 후 캘린더를 다시 보여줌
-  selectedFilters.value = [...selectedInterviewers.value]; // 선택한 면접자 필터 업데이트
-  showInterviewerList.value = false;
-  showCalendar.value = true; // 캘린더 다시 표시
-};
-
-// 선택된 필터 삭제
-const removeFilter = (filter) => {
-  selectedFilters.value = selectedFilters.value.filter(item => item !== filter);
-  selectedInterviewers.value = selectedInterviewers.value.filter(item => item !== filter); // 체크박스 해제
-};
-
-const submitForm = () => {
-  // const selectedSpanValues = selectedFilters.value;
-  const selectedSpanValues = [1, 2];
-  const participantEmails = selectedEmails.value// 참가자 이메일
-  const selectedDate = interviewDate.value;
-  const selectedStartTime = startTime.value;
-  const selectedEndTime = endTime.value;
-  const selectedType = interviewType.value;
-  const selectedTeamIdx = team.value;
-
-  if (!selectedSpanValues.length) {
-    alert('면접자를 선택해주세요.');
-    return;
-  }
-  if (!participantEmails || participantEmails.length === 0) {
-    alert('면접관 이메일을 입력해주세요.');
-    return;
-  }
-  if (!selectedDate) {
-    alert('날짜를 선택해주세요.');
-    return;
-  }
-  if (!selectedType) {
-    alert('면접 방식을 선택해주세요.');
-    return;
-  }
-  if (!selectedTeamIdx) {
-    alert('팀을 배정해주세요.');
-    return;
-  }
-  if (!selectedStartTime || !selectedEndTime) {
-    alert('면접 시간을 입력해주세요.');
-    return;
-  }
-
-  // 데이터 객체 생성
-  const interviewData = {
-    seekerList: selectedSpanValues,
-    interviewerList: participantEmails,
-    isOnline: selectedType,
-    interviewDate: selectedDate,
-    interviewStart: selectedStartTime,
-    interviewEnd: selectedEndTime,
-    careerBase: "신입",
-    teamIdx: selectedTeamIdx,
-  };
-
-  // Store의 createInterviewSchedule 함수 호출
-  interviewScheduleStore.createInterviewSchedule(interviewData)
-      .then((response) => {
-        if (response === true) { // Return 값이 true일 때만 실행
-          alert('면접 일정이 성공적으로 등록되었습니다.');
-        } else {
-          alert('면접 일정 등록에 실패했습니다.');
-        }
-      })
-      .catch((error) => {
-        console.error('면접 일정 등록 중 오류 발생:', error);
-      });
-};
+}
 </script>
 
 
 <template>
   <MainHeaderComponent/>
-  <div class="container">
+  <div class="container padding-0">
     <MainSideBarComponent/>
     <!-- InterviewScheduleMainNew에서 이벤트를 받아 모달을 제어 -->
     <InterviewScheduleMain
         v-if="isInterviewScheduleMain"
         @interviewScheduleList="interviewScheduleLists"
-        :title="careerBase">
+        @announcementUuid="announcementUuid"
+        :title="careerBase"
+        :announcements="announcements">
     </InterviewScheduleMain>
     <ReScheduleList
         v-if="isInterviewScheduleList"
-        @openModal="openModal"
-        @createVideoInterview="createVideoInterview"
-        :title="'일정 조율 요청 내역'"
+        @interviewScheduleInfo="interviewScheduleInfo"
+        :title="'일정 조율 신청 내역'"
         :titleModal="setModalTitle"
-        :reScheduleList="reScheduleList">
+        :reSchedules="reSchedules"
+        :announcementIdx="announcementIdxInfo"
+        :announcementUuid="announcementUuidInfo">
     </ReScheduleList>
 
-
-    <div v-if="isModalOpen" id="myModal" class="modal">
-      <div class="modal-content" id="draggableModal">
-        <span class="close" @click="closeModal">&times;</span>
-        <h2>{{ modalTitle }}</h2>
-        <div class="col-12 row mt-50 modal-section">
-          <div class="modal-left col-5 margin-auto">
-            <div class="form-group col-12 row">
-              <div class="col-11">
-                <label for="applicant">후보자 <span class="required">*</span></label>
-                <input type="text" id="applicant" placeholder="후보자를 추가해주세요." disabled required>
-              </div>
-              <div class="col-1 add-button-section">
-                <button class="add-button" @click="addEmail">+</button>
-              </div>
-            </div>
-            <div id="selected-filters-list">
-              <span v-for="filter in selectedFilters" :key="filter" @click="removeFilter(filter)">
-                  {{ filter }} ✕
-              </span>
-            </div>
-            <div class="form-group col-12 row">
-              <div class="col-11">
-                <label for="participants">면접 참가자</label>
-                <input type="text" id="participants" placeholder="이메일을 입력해 주세요." v-model="participantEmail" required>
-              </div>
-              <div class="col-1 add-button-section">
-                <button class="add-email" @click="addParticipantEmail">+</button>
-              </div>
-            </div>
-            <div id="selected-emails-list">
-              <span v-for="email in selectedEmails" :key="email" @click="removeEmail(email)">
-                  {{ email }} ✕
-              </span>
-            </div>
-            <div class="form-group">
-              <div class="col-12">
-                <div class="form-group col-12 row mb-0">
-                  <div class="form-group col-5">
-                    <label for="interview-date" class="subtitle">날짜 <span class="required">*</span></label>
-                    <input type="date" id="interview-date" v-model="interviewDate" required>
-                  </div>
-                  <div class="form-group col-5 ml-auto mb-0">
-                    <label for="interview-type" class="subtitle">방식 <span class="required">*</span></label>
-                    <div class="row">
-                      <label class="checkbox-label">
-                        <input type="checkbox" value="대면" :checked="interviewType === '대면'"
-                               @change="handleCheckboxChange('대면')"> 대면
-                      </label>
-
-                      <label class="checkbox-label ml-auto">
-                        <input type="checkbox" value="온라인" :checked="interviewType === '온라인'"
-                               @change="handleCheckboxChange('온라인')"> 온라인
-                      </label>
-                    </div>
-                  </div>
-
-                </div>
-                <div class="form-group col-12">
-                  <div class="form-group">
-                    <label for="end-time" class="subtitle">팀 <span class="required">*</span></label>
-                    <select class="time-select interview-calender" v-model="team" required>
-                      <option value="">팀을 선택하세요</option>
-                      <option v-for="selectTeam in teamList" :key="selectTeam.idx" :value="selectTeam.idx">
-                        {{ selectTeam.name }}
-                      </option>
-                    </select>
-                  </div>
-                </div>
-                <div class="col-12 row">
-                  <div class="form-group col-5">
-                    <label for="start-time" class="subtitle">시작시간 <span class="required">*</span></label>
-                    <select class="time-select interview-calender" v-model="startTime" required>
-                      <option value="">시간을 선택하세요</option>
-                      <option v-for="time in timeOptions" :key="time" :value="time">{{ time }}</option>
-                    </select>
-                  </div>
-                  <div class="form-group col-5 ml-auto">
-                    <label for="end-time" class="subtitle">종료시간 <span class="required">*</span></label>
-                    <select class="time-select interview-calender" v-model="endTime" required>
-                      <option value="">시간을 선택하세요</option>
-                      <option v-for="time in timeOptions" :key="time" :value="time">{{ time }}</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-12">
-              <button class="submit-button" @click="submitForm">등록</button>
-            </div>
-          </div>
-          <div class="modal-right col-5 margin-auto">
-            <div class='demo-app calendar' v-if="showCalendar">
-              <div class='demo-app-main'>
-                <FullCalendar
-                    class='demo-app-calendar'
-                    :options='calendarOptions'
-                >
-                </FullCalendar>
-              </div>
-            </div>
-            <!-- 후보자 목록 -->
-            <div v-if="showInterviewerList" id="interviewer">
-              <div id="interviewers-list">
-                <h3>면접자 목록</h3>
-                <form id="nameForm">
-                  <label v-for="name in interviewers" :key="name">
-                    <input type="checkbox" :value="name" v-model="selectedInterviewers"> {{ name }}
-                  </label><br>
-                </form>
-              </div>
-              <div class="add-button-section">
-                <button class="submit-button" @click="selectInterviewers">선택</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <ReScheduleDetail
+        v-if="isReScheduleDetail"
+        @updateData="updateData"
+        :title="'면접일정 세부내역'"
+        :reScheduleInfo="interviewSchedules"
+        :interviewScheduleDetail="interviewScheduleDetail"
+        :announcementIdx="announcementIdxInfo"
+        :announcementUuid="announcementUuidInfo">
+    </ReScheduleDetail>
   </div>
 </template>
 
-<script>
-import {defineComponent} from 'vue'
-import FullCalendar from '@fullcalendar/vue3'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import timeGridPlugin from '@fullcalendar/timegrid'
-import interactionPlugin from '@fullcalendar/interaction'
-import {createEventId} from './event-utils'
-
-export default defineComponent({
-  components: {
-    FullCalendar,
-  },
-  data() {
-    return {
-      calendarOptions: {
-        plugins: [
-          dayGridPlugin,
-          timeGridPlugin,
-          interactionPlugin // needed for dateClick
-        ],
-        locale: 'ko',
-        headerToolbar: {
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,dayGridWeek,dayGridDay'
-        },
-        events: [],
-        initialView: 'dayGridMonth',
-        editable: true,
-        selectable: true,
-        selectMirror: true,
-        dayMaxEvents: true,
-        weekends: true,
-        select: this.handleDateSelect,
-        eventClick: this.handleEventClick,
-        eventsSet: this.handleEvents
-      },
-      currentEvents: [],
-    }
-  },
-  mounted() {
-    this.fetchInterviewSchedules();
-  },
-  methods: {
-    async fetchInterviewSchedules() {
-      const interviewScheduleStore = UseInterviewScheduleStore(); // 스토어 인스턴스 생성
-      try {
-        const schedules = await interviewScheduleStore.readAllExpInterviewSchedule();
-
-        if (!Array.isArray(schedules)) {
-          console.error('Received schedules is not an array:', schedules);
-          return;
-        }
-
-        this.currentEvents = [];
-
-        for (const schedule of schedules) {
-          this.currentEvents.push({
-            title: schedule.isOnline ? '온라인 면접' : '대면 면접',
-            start: schedule.interviewDate + "T" + schedule.interviewStart + ":00",
-            end: schedule.interviewDate + "T" + schedule.interviewEnd + ":00",
-            allDay: false
-          });
-        }
-
-        this.calendarOptions.events = this.currentEvents;
-
-      } catch (error) {
-        console.error('Error fetching interview schedules:', error);
-      }
-    },
-
-    handleWeekendsToggle() {
-      this.calendarOptions.weekends = !this.calendarOptions.weekends;
-    },
-    handleDateSelect(selectInfo) {
-      let title = prompt('새로운 일정을 등록해주세요.')
-      let calendarApi = selectInfo.view.calendar
-
-      calendarApi.unselect()
-
-      if (title) {
-        calendarApi.addEvent({
-          id: createEventId(),
-          title,
-          start: selectInfo.startStr,
-          end: selectInfo.endStr,
-          allDay: selectInfo.allDay
-        })
-      }
-    },
-
-    handleEvents(events) {
-      this.currentEvents = events
-    },
-  }
-})
-</script>
 
 
 <style scoped>

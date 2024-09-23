@@ -5,9 +5,11 @@ import { backend } from '@/const';
 
 export const UseAuthStore = defineStore('auth', {
     state: () => ({
-        email: '',
-        name: '',
-        role: '',
+        userInfo: {
+            email: '',
+            name: '',
+            role: '',
+        }
      }),
     persist: { storage: sessionStorage, },
     actions: {
@@ -18,7 +20,7 @@ export const UseAuthStore = defineStore('auth', {
                     loginReq ,
                     { headers: { 'Content-Type': 'application/json', },}
                 );
-                return response.data
+                return response.status
             } catch (error) {
                 console.error("로그인에 실패했습니다.")
             }
@@ -34,7 +36,7 @@ export const UseAuthStore = defineStore('auth', {
                 );
                 return response.data
             } catch (error) {
-                console.error("권한을 불러오는데 실패했습니다.")
+                return error.response.data
             }
         },
         async getAuthorities(){
@@ -48,7 +50,7 @@ export const UseAuthStore = defineStore('auth', {
                 );
                 return response.data
             } catch (error) {
-                console.error("권한을 불러오는데 실패했습니다.")
+                return error.response.data
             }
         },
         async getUserInfo() {
@@ -60,12 +62,11 @@ export const UseAuthStore = defineStore('auth', {
                         withCredentials: true
                     }
                 );
-                this.email = response.data.result.email
-                this.name = response.data.result.name
-                this.role = response.data.result.role
+                const { email, name, role } = response.data.result;
+                this.userInfo = { email, name, role };
                 return response.data
             } catch (error) {
-                console.error("유저 정보를 불러오는데 실패했습니다.")
+                return error.response.data
             }
         },
     },

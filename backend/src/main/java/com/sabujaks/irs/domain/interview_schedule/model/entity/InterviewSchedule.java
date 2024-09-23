@@ -53,7 +53,8 @@ public class InterviewSchedule {
 
     @OneToMany(mappedBy = "interviewSchedule")
     private List<ReSchedule> reScheduleList;
-  
-    @OneToMany(mappedBy = "interviewSchedule", fetch = FetchType.LAZY)
-    private List<InterviewEvaluate> interviewEvaluateList;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="team_idx")
+    private Team team;
 }

@@ -19,15 +19,16 @@
             class="video" 
             :isSubscriber="false" 
             :stream-manager="publisher" 
-            @click="updateMainVideoStreamManager(publisher)" />
-            <UserVideo 
+            @click="updateMainVideoStreamManager(publisher)" 
+          />
+          <UserVideo 
             class="video" 
             :isSubscriber="true" 
             v-for="sub in subscribers" 
             :key="sub.stream.connection.connectionId" 
             :stream-manager="sub"
             :audio-muted="sub.audioMuted"
-            @toggle-audio="handleToggleSubsAudio" 
+            @handle-toggle-audio="handleToggleSubsAudio" 
             @click="updateMainVideoStreamManager(sub)"
           />
         </div>
@@ -41,8 +42,9 @@
             class="video" 
             :isSubscriber="false" 
             :stream-manager="publisher" 
-            @click="updateMainVideoStreamManager(publisher)" />
-            <UserVideo 
+            @click="updateMainVideoStreamManager(publisher)"
+          />
+          <UserVideo 
             class="video" 
             :isSubscriber="true" 
             v-for="sub in subscribers" 
@@ -55,29 +57,60 @@
         </div>
       <div class="evaluate-container">
         <div class="evaluate-seeker-list">
-          <div v-for="testUser in testUsers" :key="testUser.index" class="evaluate-seeker">
-            <span @click="handleClickSeeker(testUser)" class="evaluate-button">{{ testUser }}</span>
-          </div>
+          <div v-for="user in Object.values(resumeList)" :key="user.personalInfo.name" class="evaluate-seeker">
+          <span 
+            @click="handleShowEvaluateMenus(user)" 
+            :class="['evaluate-button', { 'active-button': currentUser === user }]">
+            {{ user.personalInfo.name }}
+        </span>
+      </div>
+
         </div>
         <div v-if="showEvaluateMenus" class="evaluate-menu">
-          <button  class="evaluate-button">지원서 보기</button>
-          <div class="resume">
-          
-          </div>
-          <button @click="showEvaluate" class="evaluate-button">면접자 평가</button>
-          <div v-show="showEvaluateForm" class="evaluate">
-            <label>{{ evaluateForm.q1 }}</label>
-            <label>{{ evaluateForm.q2 }}</label>
-            <label>{{ evaluateForm.q3 }}</label>
-            <label>{{ evaluateForm.q4 }}</label>
-            <label>{{ evaluateForm.q5 }}</label>
-            <label>{{ evaluateForm.q6 }}</label>
-            <label>{{ evaluateForm.q7 }}</label>
-            <label>{{ evaluateForm.q8 }}</label>
-            <label>{{ evaluateForm.q9 }}</label>
-            <label>{{ evaluateForm.q10 }}</label>
-          </div>
+          <button 
+            @click="handleShowResumeInfo" 
+            :class="['evaluate-button', { 'active-button': showResumeInfo }]">
+            지원서 보기</button>
+          <button 
+            @click="handleShowEvaluateForm" 
+            :class="['evaluate-button', { 'active-button': showEvaluateForm }]">
+            면접자 평가</button>
         </div>
+        <div v-if="showEvaluateMenus && showResumeInfo" class="resume">
+            {{ currentUserResume }}
+          </div>
+          <div v-if="showEvaluateMenus && showEvaluateForm" class="evaluate">
+            <div v-if="showEvaluateMenus && currentUser">
+              <h3>
+                  {{ currentUser.personalInfo.name }}의 평가
+                  (합계: {{ calculateTotalScore(currentUser.personalInfo.name) }})
+              </h3>
+              <div v-for="(question, index) in Object.entries(evaluateForm)" :key="index+1" class="evaluate-form-item">
+                <label v-if="question[1]">{{ question[1] }}</label>
+                <div v-if="question[1]" class="score-options">
+                  <div v-for="score in [1, 2, 3, 4, 5]" :key="score" class="score-option">
+                    <input
+                      type="radio"
+                      :value="score"
+                      v-model="currentUserScores[currentUser.personalInfo.name][index+1]"
+                    />
+                    <label>{{ score }}</label>
+                  </div>
+                </div>
+              </div>
+              <div class="comment-section">
+              <label for="comment">의견:</label>
+              <textarea
+                id="comment"
+                v-model="currentUserComments[currentUser.personalInfo.name]"
+                rows="4"
+                placeholder="의견을 입력해주세요"
+              ></textarea>
+            </div>
+              <button class="evaluate-submitbtn" @click="handleCreateEvaluate(currentUser)">평가 제출</button>
+            </div>
+          </div>
+
       </div>
     </div>
   </div>
@@ -93,84 +126,141 @@ import { OpenVidu } from "openvidu-browser";
 import UserVideo from "@/components/video-interview/UserVideo.vue";
 import { useToast } from "vue-toastification";
 
+const route = useRoute();
+const router = useRouter()
+const toast = useToast();
+
+const authStore = UseAuthStore();
+const videoInterviewStore = UseVideoInterviewStore();
+const interviewEvaluateStore = UseInterviewEvaluateStore();
+
 const OV = ref(null);
 const session = ref(null);
 let mainStreamManager = ref(null);
 const publisher = ref(null);
 const subscribers = ref([]);
-const authStore = UseAuthStore();
-const videoInterviewStore = UseVideoInterviewStore();
-const interviewEvaluateStore = UseInterviewEvaluateStore();
-const route = useRoute();
-const router = useRouter()
-const toast = useToast();
-const userName = ref("");
-const userType = ref("");
-const evaluateForm = ref({q1: "", q2: "", q3: "", q4: "", q5: "", q6: "", q7: "", q8: "", q9: "", q10: ""});
+
 const audioMuted = ref(false);
-const testUsers = ref(["박종성", "구은주", "서재은", "서시현"]);
 const showEvaluateMenus = ref(false);
 const showEvaluateForm = ref(false);
-const currentUser = ref(null);
-const handleClickSeeker = async (testUser) => {
-  currentUser.value = testUser;
-  if(showEvaluateMenus.value == false)showEvaluateMenus.value = true;
-  else( showEvaluateMenus.value = false)
-}
-const showEvaluate = () => {
-  showEvaluateForm.value = !showEvaluateForm.value;
-};
+const showResumeInfo = ref(false);
+const userName = ref("")
+const userType = ref("")
+const evaluateForm = ref({});
+
+const resumeList = ref({});
+const currentUser = ref({});
+const currentUserResume = ref("");
+const currentUserScores = ref({});
+const currentUserComments = ref({});
 
 onMounted(async() => {
   await joinSession(route.params.announceUUID, route.params.videoInterviewUUID);
-  await getInterviewForm(route.params.announceUUID, route.params.videoInterviewUUID)
+  if(userType.value == "ROLE_ESTIMATOR") {
+    await handleGetInterviewForm(route.params.announceUUID, route.params.videoInterviewUUID)
+    await handleReadAllResumeInfo(route.params.announceUUID, route.params.videoInterviewUUID)
+  }
 });
 
-const getInterviewForm = async (announceUUID, videoInterviewUUID) => {
-  try {
-    const response = await interviewEvaluateStore.searchFormforEstimator(announceUUID, videoInterviewUUID)
-    evaluateForm.value.q1 = response.result.q1;
-    evaluateForm.value.q2 = response.result.q2;
-    evaluateForm.value.q3 = response.result.q3;
-    evaluateForm.value.q4 = response.result.q4;
-    evaluateForm.value.q5 = response.result.q5;
-    evaluateForm.value.q6 = response.result.q6;
-    evaluateForm.value.q7 = response.result.q7;
-    evaluateForm.value.q8 = response.result.q8;
-    evaluateForm.value.q9 = response.result.q9;
-    evaluateForm.value.q10 = response.result.q10;
-  } catch (error) {
-    toast.error(error);
+const handleShowEvaluateMenus = async (user) => {
+  if(currentUser.value != user) {
+    showEvaluateMenus.value = true;
+  } else {
+    showEvaluateMenus.value = !showEvaluateMenus.value; 
+  }
+  if (!currentUserScores.value[user.personalInfo.name]) {
+    currentUserScores.value[user.personalInfo.name] = {};
+  }
+  if (!currentUserComments.value[user.personalInfo.name]) {
+      currentUserComments.value[user.personalInfo.name] = "";
+  }
+  currentUser.value = user;
+  currentUserResume.value = JSON.stringify(user, null, 2);
+}
+
+const handleShowEvaluateForm = () => {
+  if(showResumeInfo.value) {
+    showResumeInfo.value = false;
+    showEvaluateForm.value = true;
+  } else {
+    showEvaluateForm.value = !showEvaluateForm.value;
+  }
+};
+
+const handleShowResumeInfo = () => {
+  if(showEvaluateForm.value) {
+    showEvaluateForm.value = false;
+    showResumeInfo.value = true;
+  } else {
+    showResumeInfo.value = !showResumeInfo.value;
   }
 }
+
+const calculateTotalScore = (userName) => {
+  const scores = currentUserScores.value[userName];
+  return Object.values(scores).reduce((total, score) => total + (score || 0), 0);
+};
+
+const handleCreateEvaluate = async(user) => {
+  const userName = user.personalInfo.name;
+  const scores = currentUserScores.value[userName] || {};
+  const totalScore = calculateTotalScore(userName);
+  const comments = currentUserComments.value[userName] || "";
+  const requestBody = {
+    userEmail: user.personalInfo.email,
+    scores: scores,
+    totalScore: totalScore,
+    comments: comments,
+    announcementUUID: route.params.announceUUID,
+    videoInterviewUUID: route.params.videoInterviewUUID
+  };
+  console.log(requestBody);
+  const response = await interviewEvaluateStore.createEvaluate(requestBody);
+  if(response.success) { toast.success(`${userName} 지원자의 면접 평가가 등록되었습니다.`) } 
+  else { toast.error(`${userName} 지원자의 면접 평가가 등록에 실패했습니다.`) }
+};
+
+
+const handleGetInterviewForm = async (announceUUID, videoInterviewUUID) => {
+    const response = await interviewEvaluateStore.searchForm(announceUUID, videoInterviewUUID)
+    if(response.success) {
+      evaluateForm.value = response.result
+      toast.success("면접 평가항목을 불러오는데 성공했습니다.")
+    } else {
+      toast.error("면접 평가항목이 존재하지 않습니다.")
+    }
+}
+
+const handleReadAllResumeInfo = async(announceUUID, videoInterviewUUID) => {
+  const response = await interviewEvaluateStore.readAllResumeInfo(announceUUID, videoInterviewUUID)
+  if(response.success) {
+    resumeList.value = response.result.interviewEvaluateReadResumeInfoResMap
+    toast.success("지원자들의 지원서 정보를 불러오는데 성공했습니다.")
+  } else {
+    toast.error("지원자들의 지원서 정보를 불러오는데 실패했습니다.")
+  }
+}
+
 const handleToggleSubsAudio = (connection) => {
   if (session.value) {
     const subscriber = subscribers.value.find(sub => sub.stream.connection.connectionId === connection.connectionId);
     if (subscriber) {
       const isAudioEnabled = subscriber.stream.getMediaStream().getAudioTracks().some(track => track.enabled);
-      
-      subscriber.stream.getMediaStream().getAudioTracks().forEach(track => {
-        track.enabled = !isAudioEnabled;
-      });
-
+      subscriber.stream.getMediaStream().getAudioTracks().forEach(track => { track.enabled = !isAudioEnabled; });
       subscriber.audioMuted = !isAudioEnabled;
     }
   }
 };
 
-
 const handleTogglePubsAudio = () => {
   audioMuted.value = !audioMuted.value;
-  if (publisher.value) {
-    publisher.value.publishAudio(!audioMuted.value);
-  }
+  if (publisher.value) { publisher.value.publishAudio(!audioMuted.value); }
 };
 
 const handleSessionToken = async (announceUUID, videoInterviewUUID) => {
   try {
-    userName.value = authStore.name
-    userType.value = authStore.role
-    console.log(announceUUID, videoInterviewUUID, userName.value, userType.value)
+    userName.value = authStore.userInfo.name;
+    userType.value = authStore.userInfo.role;
     const requestBody = {
       announceUUID: announceUUID,
       videoInterviewUUID: videoInterviewUUID,
@@ -208,7 +298,7 @@ const joinSession = async (announceUUID, videoInterviewUUID) => {
     if (!token || typeof token !== "string") { throw new Error("유효하지 않은 세션 토큰입니다."); }
 
     console.log(`${videoInterviewUUID} Session에 접속중: ${token}`);
-    await session.value.connect(token, { clientData: userName.value });
+    await session.value.connect(token, { clientData: userName.value },);
     publisher.value = OV.value.initPublisher(undefined, {
       audioSource: undefined,
       videoSource: undefined,
@@ -343,25 +433,23 @@ button:hover {
 }
 
 .video-menu {
-  position: absolute; /* 버튼을 절대 위치로 설정 */
-  top: 5px; /* 비디오 상단에서의 위치 */
-  right: 5px; /* 비디오 오른쪽에서의 위치 */
-  background-color: rgba(0, 0, 0, 0.5); /* 배경색 */
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: rgba(0, 0, 0, 0.5); 
   color: white;
   padding: 5px 10px;
   border-radius: 5px;
   font-size: 18px;
   text-align: center;
-  cursor: pointer; /* 커서 스타일 */
-  z-index: 999; /* 버튼을 다른 요소 위로 */
+  cursor: pointer;
+  z-index: 999; 
 }
 
 .evaluate-container {
   position: relative;
   top: 0;
   right: 0;
-  /* -ms-overflow-style: none; */
-  /* scrollbar-width: none;  */
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -372,6 +460,10 @@ button:hover {
   overflow-y: scroll;
   background: white;
   padding: 18px;
+}
+
+.evaluate-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera*/
 }
 
 .evaluate-menu {
@@ -395,6 +487,12 @@ button:hover {
   transition: background-color 0.3s;
 }
 
+.active-button {
+  background-color: #007bff !important;
+  color: white !important;
+  border: 1px solid #007bff !important;
+}
+
 .button:hover {
   background-color: #ddd;
 }
@@ -408,15 +506,61 @@ button:hover {
   margin: 10px;
 }
 
-.evaluate-content {
+.evaluate {
   display: flex;
   flex-direction: column;
+  gap: 10px;
+}
+.evaluate-form-item{
+  margin: 10px;
 }
 
-.evaluate-container::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera*/
+.score-options {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  align-items: center;
+  justify-content: space-between;
 }
 
+.score-option {
+  display: flex;
+  flex-direction: row;
+}
+.score-option label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
 
+.score-option input[type="radio"] {
+  margin-right: 5px;
+}
 
+.evaluate-submitbtn{
+  width: 100%;
+  height: fit-content;
+  background-color: #f1f1f1;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: #000;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.comment-section {
+  margin: 20px 0;
+}
+
+.comment-section textarea {
+  margin: 20px 0;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  resize: none;
+}
 </style>

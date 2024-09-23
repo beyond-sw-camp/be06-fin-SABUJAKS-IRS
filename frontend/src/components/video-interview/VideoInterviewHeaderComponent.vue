@@ -11,11 +11,11 @@
 
 <style scoped>
 .header {
-  background-color: #f8f9fa; /* 배경색 */
-  color: #333; /* 글자색 */
-  padding: 20px; /* 안쪽 여백 */
-  text-align: center; /* 텍스트 정렬 */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  background-color: #f8f9fa; 
+  color: #333; 
+  padding: 20px; 
+  text-align: center; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   justify-content: space-between;

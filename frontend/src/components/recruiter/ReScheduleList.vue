@@ -1,72 +1,87 @@
 <script setup>
-import { defineProps } from 'vue';
+import {defineEmits, defineProps} from 'vue';
 
 // props를 정의합니다.
 const props = defineProps({
   title: {
     type: String,
-    required: true
-  },
-  reScheduleList: {
-    type: Array,
     required: false
   },
+  reSchedules: {
+    type: Array,
+    required: false,
+    default: () => [] // 기본값을 빈 배열로 설정
+  },
+  announcementIdx: {
+    type: Number,
+    required: false,
+  },
+  announcementUuid: {
+    type: String,
+    required: false,
+  }
 });
 
-// const emit = defineEmits([
-//     'openModal',
-//     'createVideoInterview'
-// ]);
+const emit = defineEmits(['interviewScheduleInfo']);
+console.log(props.announcementIdx);
+console.log(props.announcementUuid);
+// const announceIdx = ref(0);
 
-
-
+const handleRowClick = (schedule) => {
+  emit('interviewScheduleInfo', schedule, props.announcementIdx, props.announcementUuid);
+}
 </script>
 
 <template>
   <div id="content">
-    <!-- props.title을 직접 사용합니다 -->
     <h1>{{ props.title }}</h1>
-    <div class="col-12">
-    </div>
+    <div class="col-12"></div>
     <table class="review-table">
+      <tbody>
       <tr>
         <th>번호</th>
-        <th>기존면접일정</th>
-        <th>요청면접일정</th>
+        <th>기존면접일자</th>
+        <th>기존면접시간</th>
+        <th>요청면접일자</th>
         <th>요청 면접자</th>
         <th>조율 여부</th>
       </tr>
-      <tr>
-        <td>1</td>
-        <td>2024.09.24 - 2024.10.24</td>
-        <td>2024.09.24 - 2024.10.24</td>
-        <td>서시현</td>
-        <td>조율중</td>
+      <tr v-for="(schedule, index) in props.reSchedules" :key="schedule.idx" @click="handleRowClick(schedule)">
+        <td>{{ index + 1 }}</td>
+        <td>{{ schedule.interviewScheduleRes.interviewDate }}</td>
+        <td>{{ schedule.interviewScheduleRes.interviewStart }} ~ {{ schedule.interviewScheduleRes.interviewEnd }}</td>
+        <td>{{ schedule.interviewStart }} ~ {{ schedule.interviewEnd }}</td>
+        <td>{{ schedule.seekerInfoGetRes.name }}</td>
+        <td>{{ schedule.status ? '완료' : '조율중' }}</td>
       </tr>
+      </tbody>
     </table>
   </div>
-
 </template>
 
 <style scoped>
 .review-table th:nth-child(1) {
-  width: 10%; /* 비율 조정 */
+  width: 10%;
 }
 
 .review-table th:nth-child(2) {
-  width: 20%; /* 비율 조정 */
+  width: 20%;
 }
 
 .review-table th:nth-child(3) {
-  width: 20%; /* 비율 조정 */
+  width: 20%;
 }
 
 .review-table th:nth-child(4) {
-  width: 20%; /* 비율 조정 */
+  width: 25%;
 }
 
 .review-table th:nth-child(5) {
-  width: 10%; /* 비율 조정 */
+  width: 15%;
+}
+
+.review-table th:nth-child(6) {
+  width: 10%;
 }
 
 .interview-add {
@@ -79,5 +94,10 @@ const props = defineProps({
   color: white;
   padding: 10px;
   border-radius: 5px;
+}
+
+.review-table tr:hover {
+  background-color: #e6e6e6;
+  cursor: pointer;
 }
 </style>

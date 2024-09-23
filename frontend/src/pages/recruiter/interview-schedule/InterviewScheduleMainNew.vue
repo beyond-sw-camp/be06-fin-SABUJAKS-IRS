@@ -1,5 +1,5 @@
 <script setup>
-import {ref} from 'vue';
+import {onMounted, ref} from 'vue';
 import MainHeaderComponent from '../../../components/recruiter/MainHeaderComponent.vue';
 import MainSideBarComponent from '../../../components/recruiter/MainSideBarComponent.vue';
 import '@/assets/css/grid.css';
@@ -33,8 +33,18 @@ const team = ref(''); // 선택된 팀의 Idx 값을 저장
 const timeOptions = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
 const showCalendar = ref(true); // 캘린더 기본으로 표시
 const showInterviewerList = ref(false); // 후보자 목록은 기본적으로 숨김
-
+const announcements = ref([]);
+const interviewSchedules = ref([]);
+const announcementIdxInfo = ref(0);
+const announcementUuidInfo = ref("");
 const interviewType = ref(''); // 선택된 면접 유형 (대면 또는 온라인)
+const reqData = ref({});
+
+onMounted(async () => {
+  announcements.value = await interviewScheduleStore.readAllAnnouncement(careerBase.value);
+
+  console.log(announcements);
+})
 
 const handleCheckboxChange = (type) => {
   if (interviewType.value === type) {
@@ -44,9 +54,21 @@ const handleCheckboxChange = (type) => {
   }
 };
 
-const interviewScheduleLists = (announceIdx) => {
+// eslint-disable-next-line no-undef
+defineExpose({ reqData });
+
+const interviewScheduleLists = async (announcementIdx, announcementUuid) => {
   isInterviewScheduleList.value = true;
   isInterviewScheduleMain.value = false;
+
+  reqData.value = {
+    careerBase: careerBase.value,
+    announcementIdx: announcementIdx,
+  };
+
+  interviewSchedules.value = await interviewScheduleStore.readAllInterviewSchedule(reqData.value);
+  announcementIdxInfo.value = announcementIdx;
+  announcementUuidInfo.value = announcementUuid;
 }
 
 const createVideoInterview = () => {
@@ -121,83 +143,65 @@ const removeFilter = (filter) => {
 
 const submitForm = () => {
   // const selectedSpanValues = selectedFilters.value;
-  const selectedSpanValues = [1, 2];
-  const participantEmails = selectedEmails.value// 참가자 이메일
-  const selectedDate = interviewDate.value;
-  const selectedStartTime = startTime.value;
-  const selectedEndTime = endTime.value;
-  const selectedType = interviewType.value;
-  const selectedTeamIdx = team.value;
+  if (confirm("면접 일정을 등록하시겠습니까?")) {
+    const selectedSpanValues = [1, 2];
+    const participantEmails = selectedEmails.value// 참가자 이메일
+    const selectedDate = interviewDate.value;
+    const selectedStartTime = startTime.value;
+    const selectedEndTime = endTime.value;
+    const selectedType = interviewType.value;
+    const selectedTeamIdx = team.value;
 
-  if (!selectedSpanValues.length) {
-    alert('면접자를 선택해주세요.');
-    return;
-  }
-  if (!participantEmails || participantEmails.length === 0) {
-    alert('면접관 이메일을 입력해주세요.');
-    return;
-  }
-  if (!selectedDate) {
-    alert('날짜를 선택해주세요.');
-    return;
-  }
-  if (!selectedType) {
-    alert('면접 방식을 선택해주세요.');
-    return;
-  }
-  if (!selectedTeamIdx) {
-    alert('팀을 배정해주세요.');
-    return;
-  }
-  if (!selectedStartTime || !selectedEndTime) {
-    alert('면접 시간을 입력해주세요.');
-    return;
-  }
+    // 데이터 객체 생성
+    const interviewData = {
+      seekerList: selectedSpanValues,
+      estimatorList: participantEmails,
+      isOnline: selectedType,
+      interviewDate: selectedDate,
+      interviewStart: selectedStartTime,
+      interviewEnd: selectedEndTime,
+      careerBase: "신입",
+      teamIdx: selectedTeamIdx,
+      announcementIdx: announcementIdxInfo.value
+    };
 
-  // 데이터 객체 생성
-  const interviewData = {
-    seekerList: selectedSpanValues,
-    interviewerList: participantEmails,
-    isOnline: selectedType,
-    interviewDate: selectedDate,
-    interviewStart: selectedStartTime,
-    interviewEnd: selectedEndTime,
-    careerBase: "신입",
-    teamIdx: selectedTeamIdx,
-  };
+    // Store의 createInterviewSchedule 함수 호출
+    interviewScheduleStore.createInterviewSchedule(interviewData)
+        .then(() => {
+          if(confirm('면접 일정이 성공적으로 등록되었습니다.')) {
+            closeModal();
+            interviewScheduleLists(announcementIdxInfo, announcementUuidInfo);
+          }
+        })
+        .catch((error) => {
+          console.error('면접 일정 등록 중 오류 발생:', error);
+        });
+    }
 
-  // Store의 createInterviewSchedule 함수 호출
-  interviewScheduleStore.createInterviewSchedule(interviewData)
-      .then((response) => {
-        if (response === true) { // Return 값이 true일 때만 실행
-          alert('면접 일정이 성공적으로 등록되었습니다.');
-        } else {
-          alert('면접 일정 등록에 실패했습니다.');
-        }
-      })
-      .catch((error) => {
-        console.error('면접 일정 등록 중 오류 발생:', error);
-      });
 };
 </script>
 
 
 <template>
   <MainHeaderComponent/>
-  <div class="container">
+  <div class="container padding-0">
     <MainSideBarComponent/>
     <!-- InterviewScheduleMainNew에서 이벤트를 받아 모달을 제어 -->
     <InterviewScheduleMain
         v-if="isInterviewScheduleMain"
         @interviewScheduleList="interviewScheduleLists"
-        :title="careerBase">
+        :title="careerBase"
+        :announcements="announcements">
     </InterviewScheduleMain>
     <InterviewScheduleList
         v-if="isInterviewScheduleList"
         @openModal="openModal"
         @createVideoInterview="createVideoInterview"
         :title="'면접일정'"
-        :titleModal="setModalTitle">
+        :titleModal="setModalTitle"
+        :interviewSchedules="interviewSchedules"
+        :announcementIdx="announcementIdxInfo"
+        :announcementUuid="announcementUuidInfo">
     </InterviewScheduleList>
 
 
@@ -210,7 +214,7 @@ const submitForm = () => {
             <div class="form-group col-12 row">
               <div class="col-11">
                 <label for="applicant">후보자 <span class="required">*</span></label>
-                <input type="text" id="applicant" placeholder="후보자를 추가해주세요." disabled required>
+                <input type="text" id="applicant" placeholder="후보자를 추가해주세요." disabled>
               </div>
               <div class="col-1 add-button-section">
                 <button class="add-button" @click="addEmail">+</button>
@@ -224,7 +228,7 @@ const submitForm = () => {
             <div class="form-group col-12 row">
               <div class="col-11">
                 <label for="participants">면접 참가자</label>
-                <input type="text" id="participants" placeholder="이메일을 입력해 주세요." v-model="participantEmail" required>
+                <input type="text" id="participants" placeholder="이메일을 입력해 주세요." v-model="participantEmail">
               </div>
               <div class="col-1 add-button-section">
                 <button class="add-email" @click="addParticipantEmail">+</button>
@@ -237,10 +241,10 @@ const submitForm = () => {
             </div>
             <div class="form-group">
               <div class="col-12">
-                <div class="form-group col-12 row mb-0">
+                <div class="form-group col-12 row">
                   <div class="form-group col-5">
                     <label for="interview-date" class="subtitle">날짜 <span class="required">*</span></label>
-                    <input type="date" id="interview-date" v-model="interviewDate" required>
+                    <input type="date" id="interview-date" v-model="interviewDate">
                   </div>
                   <div class="form-group col-5 ml-auto mb-0">
                     <label for="interview-type" class="subtitle">방식 <span class="required">*</span></label>
@@ -261,7 +265,7 @@ const submitForm = () => {
                 <div class="form-group col-12">
                   <div class="form-group">
                     <label for="end-time" class="subtitle">팀 <span class="required">*</span></label>
-                    <select class="time-select interview-calender" v-model="team" required>
+                    <select class="time-select interview-calender" v-model="team">
                       <option value="">팀을 선택하세요</option>
                       <option v-for="selectTeam in teamList" :key="selectTeam.idx" :value="selectTeam.idx">
                         {{ selectTeam.name }}
@@ -272,14 +276,14 @@ const submitForm = () => {
                 <div class="col-12 row">
                   <div class="form-group col-5">
                     <label for="start-time" class="subtitle">시작시간 <span class="required">*</span></label>
-                    <select class="time-select interview-calender" v-model="startTime" required>
+                    <select class="time-select interview-calender" v-model="startTime">
                       <option value="">시간을 선택하세요</option>
                       <option v-for="time in timeOptions" :key="time" :value="time">{{ time }}</option>
                     </select>
                   </div>
                   <div class="form-group col-5 ml-auto">
                     <label for="end-time" class="subtitle">종료시간 <span class="required">*</span></label>
-                    <select class="time-select interview-calender" v-model="endTime" required>
+                    <select class="time-select interview-calender" v-model="endTime">
                       <option value="">시간을 선택하세요</option>
                       <option v-for="time in timeOptions" :key="time" :value="time">{{ time }}</option>
                     </select>
@@ -321,7 +325,6 @@ const submitForm = () => {
     </div>
   </div>
 </template>
-
 <script>
 import { defineComponent } from 'vue'
 import FullCalendar from '@fullcalendar/vue3'
@@ -369,7 +372,11 @@ export default defineComponent({
     async fetchInterviewSchedules() {
       const interviewScheduleStore = UseInterviewScheduleStore(); // 스토어 인스턴스 생성
       try {
-        const schedules = await interviewScheduleStore.readAllExpInterviewSchedule();
+        const reqData = {
+          careerBase: "전체",
+          announcementIdx: 3
+        }
+        const schedules = await interviewScheduleStore.readAllInterviewSchedule(reqData);
 
         if (!Array.isArray(schedules)) {
           console.error('Received schedules is not an array:', schedules);

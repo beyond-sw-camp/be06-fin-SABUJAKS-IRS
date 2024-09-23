@@ -3,7 +3,7 @@
       <ov-video :stream-manager="streamManager"/>
       <div>
         <p class="client-name">{{ clientData }}</p>
-        <button v-if="isSubscriber" @click="toggleAudio" class="sound-off">
+        <button v-if="isSubscriber" @click="handleToggleAudio" class="sound-off">
           <img :src="audioMuted ? require('@/assets/img/video-interview/sound-on-white.png') : require('@/assets/img/video-interview/sound-off-white.png')" alt="sound">
         </button>
       </div>
@@ -13,36 +13,50 @@
   <script setup>
   import { ref, onMounted, onUnmounted, computed, defineEmits, defineProps } from 'vue';
   import OvVideo from './OvVideo';
+
   const props = defineProps({
     streamManager: Object, 
     isSubscriber: Boolean,
     audioMuted: Boolean
   });
-  
-  const emit = defineEmits(['toggle-audio']);
-  
+  const emit = defineEmits(['handle-toggle-audio']);
+
   const isSpeaking = ref(false);
   
-  const getConnectionData = () => {
-    const { connection } = props.streamManager.stream;
-    return JSON.parse(connection.data);
-  };
+  onMounted(() => {
+    if (props.streamManager) {
+      const { streamManager } = props;
+      streamManager.on('publisherStartSpeaking', handleStartSpeaking);
+      streamManager.on('publisherStopSpeaking', handleStopSpeaking);
+      streamManager.on('streamAudioVolumeChange', handleAudioVolumeChange);
+      streamManager.updatePublisherSpeakingEventsOptions({ interval: 100, threshold: -50 });
+    }
+  });
+  
+  onUnmounted(() => {
+    if (props.streamManager) {
+      const { streamManager } = props;
+      streamManager.off('publisherStartSpeaking', handleStartSpeaking);
+      streamManager.off('publisherStopSpeaking', handleStopSpeaking);
+      streamManager.off('streamAudioVolumeChange', handleAudioVolumeChange);
+    }
+  });
   
   const clientData = computed(() => {
-    const { clientData } = getConnectionData();
+    const { connection } = props.streamManager.stream;
+    const { clientData } = JSON.parse(connection.data);
     return clientData || '면접관';
   });
   
-  const toggleAudio = () => {
+  const handleToggleAudio = () => {
     if (props.isSubscriber && props.streamManager) {
       const { stream } = props.streamManager;
       if (stream && stream.connection) {
         const { connection } = stream;
-        emit('toggle-audio', connection);
+        emit('handle-toggle-audio', connection);
       }
     }
   };
-  
   
   const handleStartSpeaking = (event) => {
     if (event.connection.connectionId === props.streamManager.stream.connection.connectionId) {
@@ -59,29 +73,6 @@
   const handleAudioVolumeChange = (event) => {
     isSpeaking.value = event.value.newValue > -70;
   };
-  
-  onMounted(() => {
-    if (props.streamManager) {
-      const { streamManager } = props;
-      streamManager.on('publisherStartSpeaking', handleStartSpeaking);
-      streamManager.on('publisherStopSpeaking', handleStopSpeaking);
-      streamManager.on('streamAudioVolumeChange', handleAudioVolumeChange);
-
-      streamManager.updatePublisherSpeakingEventsOptions({
-        interval: 100,
-        threshold: -50
-      });
-    }
-  });
-  
-  onUnmounted(() => {
-    if (props.streamManager) {
-      const { streamManager } = props;
-      streamManager.off('publisherStartSpeaking', handleStartSpeaking);
-      streamManager.off('publisherStopSpeaking', handleStopSpeaking);
-      streamManager.off('streamAudioVolumeChange', handleAudioVolumeChange);
-    }
-  });
   </script>
   
   <style scoped>

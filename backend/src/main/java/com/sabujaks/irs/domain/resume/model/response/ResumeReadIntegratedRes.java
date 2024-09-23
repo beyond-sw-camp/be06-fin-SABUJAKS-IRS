@@ -10,10 +10,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ResumeReadRes {
+public class ResumeReadIntegratedRes {
     private List<String> codes;
-    private String resumeTitle;
-    private LocalDateTime resumedAt;
     private PersonalInfoReadRes personalInfo; // 인적사항 1개
     private PreferentialEmpReadRes preferentialEmp; // 취업우대·병역 1개
     private List<EducationReadRes> educations; // 학력 n개

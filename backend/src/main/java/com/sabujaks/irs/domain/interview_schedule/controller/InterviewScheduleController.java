@@ -1,6 +1,7 @@
 package com.sabujaks.irs.domain.interview_schedule.controller;
 
 import com.sabujaks.irs.domain.interview_schedule.model.request.InterviewScheduleReq;
+import com.sabujaks.irs.domain.interview_schedule.model.request.InterviewScheduleUpdateReq;
 import com.sabujaks.irs.domain.interview_schedule.model.request.ReScheduleReq;
 import com.sabujaks.irs.domain.interview_schedule.model.response.InterviewScheduleRes;
 import com.sabujaks.irs.domain.interview_schedule.model.response.ReScheduleRes;
@@ -25,28 +26,38 @@ public class InterviewScheduleController {
     private final InterviewScheduleService interviewScheduleService;
     private final EmailSender emailSender;
 
-//    @PostMapping("/create")
-//    public ResponseEntity<BaseResponse<InterviewScheduleReq>> create (
-//        @AuthenticationPrincipal CustomUserDetails customUserDetails,
-//        @RequestBody InterviewScheduleReq dto) throws BaseException {
-//        InterviewScheduleRes response = interviewScheduleService.create(customUserDetails, dto);
-//        emailSender.sendEmail(response, dto.getEstimatorList());
-//        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_SCHEDULE_CREATE_SUCCESS, response));
-//    }
-
     @PostMapping("/create")
     public ResponseEntity<BaseResponse<InterviewScheduleReq>> create (
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestBody InterviewScheduleReq dto) throws BaseException {
-        InterviewScheduleRes response = interviewScheduleService.create(dto);
+        InterviewScheduleRes response = interviewScheduleService.create(customUserDetails, dto);
         emailSender.sendEmail(response, dto.getEstimatorList());
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_SCHEDULE_CREATE_SUCCESS, response));
     }
 
-    @GetMapping("/read-all/exp")
-    public ResponseEntity<BaseResponse<?>> readAllExp (){
-        List<InterviewScheduleRes> response = interviewScheduleService.readAllExp();
+    @GetMapping("/read-all")
+    public ResponseEntity<BaseResponse<?>> readAll (
+            @RequestParam String careerBase,
+            @RequestParam Long announcementIdx) throws BaseException {
+        List<InterviewScheduleRes> response = interviewScheduleService.readAll(careerBase, announcementIdx);
 
-        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_SCHEDULE_CREATE_SUCCESS, response));
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_SCHEDULE_READ_ALL_SUCCESS, response));
+    }
+
+    @GetMapping("/read")
+    public ResponseEntity<BaseResponse<?>> read (
+            @RequestParam Long interviewScheduleIdx) throws BaseException {
+        InterviewScheduleRes response = interviewScheduleService.read(interviewScheduleIdx);
+
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_SCHEDULE_READ_ALL_SUCCESS, response));
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity<BaseResponse<InterviewScheduleUpdateReq>> create (
+            @RequestBody InterviewScheduleUpdateReq dto) throws BaseException {
+        interviewScheduleService.update(dto);
+
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_SCHEDULE_UPDATE_SUCCESS));
     }
 
     // CustomUserDetail 추가하기

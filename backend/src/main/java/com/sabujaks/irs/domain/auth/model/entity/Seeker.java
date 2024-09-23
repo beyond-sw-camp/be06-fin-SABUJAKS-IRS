@@ -73,7 +73,4 @@ public class Seeker {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "seeker")
     private List<ReSchedule> reScheduleList;
 
-    @OneToMany(mappedBy = "seeker", fetch = FetchType.LAZY)
-    private List<InterviewEvaluate> interviewEvaluateList = new ArrayList<>();
-
 }

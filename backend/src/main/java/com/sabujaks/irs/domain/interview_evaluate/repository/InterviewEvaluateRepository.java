@@ -10,7 +10,8 @@ import java.util.Optional;
 
 @EnableJpaRepositories
 public interface InterviewEvaluateRepository extends JpaRepository<InterviewEvaluate, Long> {
-    @Query("SELECT ief FROM InterviewEvaluateForm ief WHERE ief.announcement.idx = :announceIdx")
-    Optional<InterviewEvaluateForm> findByAnnounceIdx(Long announceIdx);
+    @Query("SELECT ie FROM InterviewEvaluate ie WHERE ie.interviewParticipate.idx = :interviewParticipateIdx")
+    Optional<InterviewEvaluate> findByInterviewParticipateIdx(Long interviewParticipateIdx);
+
 }
 

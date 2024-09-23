@@ -23,4 +23,7 @@ public class Team {
 
     @OneToMany(mappedBy = "team")
     private List<InterviewParticipate> interviewParticipateList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "team")
+    private List<InterviewSchedule> interviewSchedule;
 }

@@ -13,16 +13,17 @@
 <style scoped>
 .sidebar {
   width: 200px;
-  height: 100%; /* 사이드바가 전체 높이를 차지하도록 */
+  height: 100%;
   background-color: #212b36;
   color: white;
   padding-top: 20px;
   box-sizing: border-box;
-  position: fixed; /* 사이드바를 고정하여 화면 왼쪽 끝까지 차지하도록 */
-  top: 100px; /* header 높이만큼 아래에 위치하도록 */
+  position: fixed;
+  top: 100px;
   left: 0;
   border-radius: 0;
-} 
+}
+
 .sidebar ul {
   list-style-type: none;
   padding: 0;
