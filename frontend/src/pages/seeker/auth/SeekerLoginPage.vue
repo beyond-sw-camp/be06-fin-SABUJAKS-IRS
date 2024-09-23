@@ -12,24 +12,32 @@
                     <input v-model="password" type="password" placeholder="비밀번호" size="16" title="비밀번호 입력" required="">
                 </section>
                 <button type="submit" class="login-submitbtn">로그인</button>
-                <a class="redirect-signup">회원가입</a>
+                <a href="/seeker/signup" class="redirect-signup">회원가입</a>
             </form>
-            <hr>
             <section class="social-section">
-                <ul>
-                    <li><a class="social-naver" @click="handleSocialLogin" href="http://localhost:8080/oauth2/authorization/kakao">네이버 로그인</a></li>
-                    <li><a class="social-kakao" @click="handleSocialLogin" href="http://localhost:8080/oauth2/authorization/kakao">카카오 로그인</a></li>
-                    <li><a class="social-google" @click="handleSocialLogin" href="http://localhost:8080/oauth2/authorization/kakao" >구글 로그인</a></li>
-                </ul>
+                <a class="social-button" @click="handleSocialLogin" href="http://localhost:8080/oauth2/authorization/kakao">
+                    <span class="social-kakao-logo"></span>
+                    <span class="social-label">카카오 로그인</span>
+                </a>
+                <a class="social-button" @click="handleSocialLogin" href="http://localhost:8080/oauth2/authorization/naver">
+                    <span class="social-naver-logo"></span>
+                    <span class="social-label">네이버 로그인</span>
+                </a>
+                <a class="social-button" @click="handleSocialLogin" href="http://localhost:8080/oauth2/authorization/google">
+                    <span class="social-google-logo"></span>
+                    <span class="social-label">구글 로그인</span>
+                </a>
             </section>
-            <p class="login-copyright">ⓒ SABUJAKS LLC. All Rights Reserved.</p>
         </div>
+
     </div>
+    <SeekerFooterComponent></SeekerFooterComponent>
 </div>
 </template>
 
 <script setup>
 import SeekerHeaderComponent from "@/components/seeker/SeekerHeaderComponent.vue";
+import SeekerFooterComponent from "@/components/seeker/SeekerFooterComponent.vue"
 import { ref } from "vue"
 import { UseAuthStore } from "@/stores/UseAuthStore"
 import { useToast } from "vue-toastification";
@@ -86,9 +94,9 @@ const handleSocialLogin = async() => {
 .login-section {
     display: flex;
     flex-direction: column;
-    width: 1030px;
+    width: 1000px;
     margin: 0 0;
-    padding: 0 120px;
+    padding: 60px;
     background: #fff;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -108,18 +116,18 @@ const handleSocialLogin = async() => {
 
 .login-form{
     border: 0 none;
-    margin: 0 auto;
+    margin: 0;
+    padding: 0;
     width: 100%;
     display: flex;
     flex-direction: column;
-    min-height: 270px
+    min-height: auto
 }
 
 .login-form input::-webkit-input-placeholder {
     font-weight: 400;
     color: #9e9e9e
 }
-
 
 .input-section {
     position: relative;
@@ -209,43 +217,44 @@ const handleSocialLogin = async() => {
     font-weight: 500;
     line-height: 22px;
     box-sizing: border-box;
+    text-decoration: none;
 }
 
 .social-section {
-    display: table;
-    width: auto;
-    margin: 0 auto 0;
-    padding-top: 20px;
+    margin-top: 12px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    width: 100%;
 }
 
-.social-section ul {
-    display: block;
-    list-style-type: disc;
-    margin-block-start: 1em;
-    margin-block-end: 1em;
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
-    padding-inline-start: 40px;
-    unicode-bidi: isolate;
-    padding: 0;
-    margin: 0;
-}
-
-.social-section li {
-    float: left;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: list-item;
-    text-align: -webkit-match-parent;
-    unicode-bidi: isolate;
-}
-
-.social-section li:nth-child(n+2) {
+.social-section a:nth-child(n+2) {
     margin-left: 20px;
 }
 
-.social-naver {
+.social-button{
+    flex: 1;
+    border: 0 none;
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    background-color: #212b36; ;
+    cursor: pointer;
+    width: auto;
+    height: auto;
+    align-items: center;
+    column-gap: 5px;
+    color: white;
+    font-size: 16px;
+    letter-spacing: 0px;
+    font-weight: 500;
+    line-height: 22px;
+    text-decoration: none;
+}
+
+.social-naver-logo {
     display: block;
     width: 32px;
     height: 32px;
@@ -255,14 +264,14 @@ const handleSocialLogin = async() => {
     font-size: 0px;
     letter-spacing: 0px;
     text-indent: -9999px;
-    background-image: url(http://localhost:3000/img/sns_naver_large.41b7343a.svg);
+    background-image: url(../../../assets/svg/sns_naver_large.svg);
     background-repeat: no-repeat;
     color: #6a6a6a;
     text-decoration: none;
     cursor: pointer;
 }
 
-.social-kakao {
+.social-kakao-logo {
     display: block;
     width: 32px;
     height: 32px;
@@ -272,14 +281,14 @@ const handleSocialLogin = async() => {
     font-size: 0px;
     letter-spacing: 0px;
     text-indent: -9999px;
-    background-image: url(http://localhost:3000/img/sns_kakao_large.40083307.svg);
+    background-image: url(../../../assets/svg/sns_kakao_large.svg);
     background-repeat: no-repeat;
     color: #6a6a6a;
     text-decoration: none;
     cursor: pointer;
 }
 
-.social-google {
+.social-google-logo {
     display: block;
     width: 32px;
     height: 32px;
@@ -289,9 +298,14 @@ const handleSocialLogin = async() => {
     font-size: 0px;
     letter-spacing: 0px;
     text-indent: -9999px;
-    background-image: url(http://localhost:3000/img/sns_google_large.72a153e9.svg);
+    background-image: url(../../../assets/svg/sns_google_large.svg);
     background-repeat: no-repeat;
     color: #6a6a6a;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.social-label {
     text-decoration: none;
     cursor: pointer;
 }
@@ -300,11 +314,4 @@ a:hover, button:hover {
     opacity: 70%;
 }
 
-.login-copyright {
-    font-size: 13px;
-    letter-spacing: 0px;
-    line-height: 24px;
-    font-weight: 400;
-    color: #9e9e9e
-}
 </style>

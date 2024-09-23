@@ -112,11 +112,13 @@
         </tbody>
       </table>
     </section>
+    <SeekerFooterComponent></SeekerFooterComponent>
   </div>
 </template>
 
 <script setup>
 import SeekerHeaderComponent from "@/components/seeker/SeekerHeaderComponent.vue";
+import SeekerFooterComponent from "@/components/seeker/SeekerFooterComponent.vue"
 </script>
 
 <style scoped>

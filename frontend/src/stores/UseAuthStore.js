@@ -44,6 +44,19 @@ export const UseAuthStore = defineStore('auth', {
                 return error.response.data
             }
         },
+        async signup(formData) {
+            try {
+                const response = await axios.post(
+                    `${backend}/auth/signup`, formData,
+                    {
+                        headers: { 'Content-Type': 'multipart/form-data' },
+                    }
+                );
+                return response.data;
+            } catch (error) {
+                return error.response.data;
+            }
+        },
         async getAuthorities(){
             try {
                 const response = await axios.get(
