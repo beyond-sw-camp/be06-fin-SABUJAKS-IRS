@@ -1,6 +1,6 @@
 <template>
     <MainHeaderComponent></MainHeaderComponent>
-    <div class="container">
+    <div class="container-detail">
         <MainSideBarComponent></MainSideBarComponent>
         <div id="content">
             <div class="resume-view-wrapper">
@@ -66,7 +66,7 @@
                                 <div class="info">
                                     <div class="item">
                                     <div class="label">학점</div>
-                                    <div class="value">{{ education.grade }}</div>
+                                    <div class="value">{{ education.grade }} / {{ education.totalGrade }}</div>
                                     </div>
                                 </div>
                                 <div class="info">
@@ -139,7 +139,7 @@
                                 <div class="content">
                                     <div class="content-header">
                                         <div class="name">{{ internsActivity.organization }}</div>
-                                        <div class="position position">{{ internsActivity.activityDiv }}</div>
+                                        <div class="position position3">{{ internsActivity.activityDiv }}</div>
                                     </div>
                                     <div class="content-body">
                                         {{ internsActivity.contents }}</div>
@@ -581,11 +581,7 @@ body {
     line-height: 1.9;
 }
 
-.table-hopework th {
-    width: 149px;
-}
-
-resume-view-wrapper {
+.resume-view-wrapper {
     position: relative;
     width: 100%;
     text-align: center;
@@ -654,10 +650,6 @@ body.resume-view-print .table {
 }
 
 body.resume-view-print .profile .container {
-    border: 1px solid #ddd;
-}
-
-body.resume-view-print .profile .summary {
     border: 1px solid #ddd;
 }
 
@@ -890,10 +882,6 @@ body.resume-preview .resume-subject {
     background-color: #F2F4F7;
 }
 
-.profile.searching .container {
-    padding-left: 170px;
-}
-
 .profile .container {
     overflow: hidden;
     position: relative;
@@ -1015,125 +1003,6 @@ body.resume-preview .resume-subject {
     font-size: 14px;
     letter-spacing: 0px;
     color: #000;
-}
-
-.profile .summary {
-    position: relative;
-    overflow: hidden;
-    height: 150px;
-    background-color: #fff;
-    font-size: 0;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
-
-.profile .summary.col-4 .item {
-    width: 235px;
-}
-
-.profile .summary.col-4 .item:first-child {
-    width: 233px;
-}
-
-.profile .summary.is-few {
-    height: auto;
-}
-
-.profile .summary.is-few .item {
-    height: auto;
-    padding: 27px 15px;
-}
-
-.profile .summary.is-few .item:after {
-    height: 50px;
-}
-
-.profile .summary .item {
-    float: left;
-    position: relative;
-    display: inline-block;
-    height: 150px;
-    padding: 27px 15px 0;
-    vertical-align: top;
-    text-align: center;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
-
-.profile .summary .item:after {
-    content: '';
-    display: block;
-    position: absolute;
-    left: 0;
-    top: 50%;
-    width: 1px;
-    height: 89px;
-    background-color: #edeef0;
-    -webkit-transform: translateY(-50%);
-    -moz-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
-    -o-transform: translateY(-50%);
-    transform: translateY(-50%);
-}
-
-.profile .summary .item:first-child:after {
-    display: none;
-}
-
-.profile .summary .item.item-intern .description,
-.profile .summary .item.item-certificate .description {
-    margin-bottom: 0;
-}
-
-.profile .summary .item.is-singleline div.header {
-    margin-bottom: 25px;
-}
-
-.profile .summary .item.newcomer .description {
-    color: #39f;
-}
-
-.profile .summary div.header {
-    margin-bottom: 7px;
-    font-size: 14px;
-    letter-spacing: 0px;
-    color: #888;
-    text-align: center;
-}
-
-.profile .summary .description {
-    margin-bottom: 5px;
-    font-size: 14px;
-    letter-spacing: 0px;
-    color: #000;
-    line-height: 1.6;
-}
-
-.profile .summary .description.ellipsis {
-    overflow: hidden;
-    white-space: nowrap;
-    -o-text-overflow: ellipsis;
-    text-overflow: ellipsis;
-}
-
-.profile .summary .description.etc {
-    padding-top: 2px;
-    font-size: 13px;
-    letter-spacing: 0px;
-    color: #888;
-}
-
-.profile .summary .options {
-    font-size: 0;
-}
-
-.profile .summary .options .option {
-    margin-bottom: 5px;
-    font-size: 13px;
-    letter-spacing: 0px;
-    color: #39f;
 }
 
 .table-attachments {
@@ -1347,86 +1216,6 @@ body.resume-preview .resume-subject {
     }
 }
 
-.resume-application {
-    overflow: hidden;
-    position: relative;
-    padding: 40px 0;
-    border-bottom: 1px solid #ddd;
-}
-
-.resume-application-title {
-    position: relative;
-    margin-bottom: 16px;
-    font-size: 16px;
-    letter-spacing: 0px;
-    color: #000;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    -webkit-line-clamp: 2;
-    line-height: 24px;
-}
-
-.resume-application-title .backdrop {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    background-color: #f2f4f7;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    -webkit-line-clamp: 2;
-}
-
-.resume-application-title .backdrop.nowrap {
-    overflow-y: scroll;
-}
-
-.resume-application-meta {
-    overflow: hidden;
-    position: relative;
-}
-
-.resume-application-meta .item {
-    height: 22px;
-    display: flex;
-    align-items: center;
-}
-
-.resume-application-meta .item+.item {
-    margin-top: 6px;
-}
-
-.resume-application-meta .label {
-    width: 52px;
-    font-size: 14px;
-    letter-spacing: 0px;
-    color: #666;
-}
-
-.resume-application-meta .value {
-    padding-left: 12px;
-    font-size: 14px;
-    letter-spacing: 0px;
-    color: #222;
-}
-
-.resume-application-meta .value:before {
-    content: '';
-    display: inline-block;
-    width: 1px;
-    height: 12px;
-    background-color: #D9DADB;
-    margin-right: 12px;
-}
-
-.resume-application-meta.email .item {
-    padding-left: 80px;
-}
-
 .sign {
     padding-top: 20px;
     text-align: center;
@@ -1443,165 +1232,6 @@ body.resume-preview .resume-subject {
     font-size: 14px;
     letter-spacing: 0px;
     color: #000;
-}
-
-.caution-company {
-    overflow: hidden;
-    position: relative;
-    margin-top: 60px;
-    padding-top: 45px;
-    border-top: 1px solid #ddd;
-}
-
-.caution-company .item {
-    position: relative;
-    padding-left: 10px;
-    margin-bottom: 12px;
-    font-size: 14px;
-    letter-spacing: 0px;
-    color: #888;
-}
-
-.caution-company .item:before {
-    content: '';
-    display: block;
-    position: absolute;
-    left: 0;
-    top: 10px;
-    width: 2px;
-    height: 2px;
-    background-color: #aaa;
-}
-
-.resume-view-print-company .resume-meta {
-    overflow: hidden;
-    position: relative;
-    margin-bottom: 8px;
-    padding-top: 3px;
-    font-size: 0;
-}
-
-.resume-view-print-company .resume-meta .item {
-    display: inline-block;
-    position: relative;
-    padding-left: 17px;
-    margin-left: 16px;
-    font-size: 14px;
-    letter-spacing: 0px;
-    color: #000;
-    vertical-align: top;
-}
-
-.resume-view-print-company .resume-meta .item:before {
-    content: '';
-    display: block;
-    position: absolute;
-    left: 0;
-    top: 4px;
-    width: 1px;
-    height: 12px;
-    background-color: #d3d3d3;
-}
-
-.resume-view-print-company .resume-meta .item:first-child {
-    padding-left: 0;
-    margin-left: 0;
-}
-
-.resume-view-print-company .resume-meta .item:first-child:before {
-    display: none;
-}
-
-.personality-test .container {
-    overflow: hidden;
-    position: relative;
-    width: 100%;
-    padding: 24px 39px 34px;
-    border: 1px solid #ddd;
-    background: #fff;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
-
-.personality-test h3.header {
-    margin-bottom: 13px;
-    font-size: 16px;
-    letter-spacing: 0px;
-    color: #000;
-}
-
-.personality-test table {
-    width: 100%;
-    margin-bottom: 26px;
-}
-
-.personality-test table th {
-    font-size: 12px;
-    letter-spacing: 0px;
-    color: #000;
-    text-align: center;
-    background-color: #f8f8f8;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
-
-.personality-test table td {
-    padding: 11px 0 15px;
-    font-size: 14px;
-    letter-spacing: 0px;
-    color: #000;
-    line-height: 1.9;
-    vertical-align: top;
-    text-align: center;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
-
-.personality-test table.col th {
-    height: 52px;
-    border-top: 1px solid #000;
-    border-bottom: 1px solid #edeef0;
-}
-
-.personality-test table.col td {
-    border-bottom: 1px solid #ddd;
-}
-
-.personality-test table.col td.job {
-    padding: 11px 15px 15px;
-    text-align: left;
-}
-
-.personality-test table.row {
-    border-top: 1px solid #000;
-}
-
-.personality-test table.row th {
-    padding-top: 16px;
-    border-bottom: 1px solid #ddd;
-    vertical-align: top;
-}
-
-.personality-test table.row td {
-    padding: 11px 20px 15px;
-    border-bottom: 1px solid #ddd;
-    text-align: left;
-}
-
-.personality-test .progress .bar {
-    height: 30px;
-    padding-top: 4px;
-    background-color: #002AFF;
-    color: #fff;
-    font-size: 14px;
-    letter-spacing: 0px;
-    text-align: center;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
 }
 
 .list {
@@ -1653,9 +1283,11 @@ body.resume-preview .resume-subject {
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
+
 ul.list-introduction {
-    list-style: none; /* li 요소의 기본 불릿 스타일을 없앰 */
+    list-style: none;
 }
+
 .list div.item:first-child {
     border-top: 0;
 }
@@ -1802,97 +1434,6 @@ ul.list-introduction {
     line-height: 1.8;
 }
 
-.list.list-career div.item {
-    padding-top: 21px;
-    padding-bottom: 17px;
-}
-
-.list.list-career>div.item {
-    min-height: 90px;
-}
-
-.list.list-career .content-header .is-private {
-    display: inline;
-    margin-left: 2px;
-    font-size: 14px;
-    letter-spacing: 0px;
-    color: #000;
-    vertical-align: baseline;
-}
-
-.list.list-career .content-header .position {
-    display: inline;
-    margin-left: 11px;
-    font-size: 12px;
-    letter-spacing: 0px;
-    color: #666;
-    vertical-align: baseline;
-}
-
-.list.list-career .content-body .description {
-    margin-bottom: 9px;
-}
-
-.list.list-career .info .item {
-    min-height: auto;
-    padding: 0 0 0 90px;
-    border-top: 0;
-}
-
-.list.list-career .info .label {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 80px;
-    font-size: 14px;
-    letter-spacing: 0px;
-    color: #666;
-}
-
-.list.list-career .info .label:after {
-    content: '';
-    display: block;
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 1px;
-    height: 12px;
-    background-color: #ddd;
-    -webkit-transform: translateY(12px);
-    -moz-transform: translateY(12px);
-    -ms-transform: translateY(12px);
-    -o-transform: translateY(12px);
-    transform: translateY(10px);
-}
-
-.list.list-career .info .value {
-    font-size: 14px;
-    letter-spacing: 0px;
-    color: #666;
-}
-
-.list.list-career div.career-description {
-    min-height: auto;
-    padding: 18px 40px 19px 200px;
-    border-color: #b2b2b2;
-}
-
-.list.list-career div.career-description div.header {
-    position: absolute;
-    left: 40px;
-    top: 21px;
-    font-size: 14px;
-    letter-spacing: 0px;
-    color: #000;
-}
-
-.list.list-career div.career-description .description {
-    font-size: 14px;
-    letter-spacing: 0px;
-    color: #000;
-    line-height: 1.8;
-}
-
 .list.list-intern div.item {
     padding-top: 21px;
     padding-bottom: 17px;
@@ -1905,22 +1446,6 @@ ul.list-introduction {
 .list.list-intern .content-header {
     margin-bottom: 4px;
 }
-
-/* .list.list-intern .position {
-    overflow: hidden;
-    display: inline-block;
-    height: 20px;
-    line-height: 18px;
-    vertical-align: -3px;
-    margin-left: 9px;
-    padding: 0 14px;
-    font-size: 12px;
-    letter-spacing: 0px;
-    border: 1px solid #000;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-} */
 
 .position {
     overflow: hidden;
@@ -1948,7 +1473,7 @@ ul.list-introduction {
     border-color: #abc675;
 }
 
-.list.list-intern .position.position {
+.list.list-intern .position.position3 {
     color: #3189ba;
     border-color: #7eb4d2;
 }
@@ -2044,139 +1569,6 @@ ul.list-introduction {
     margin-bottom: 0;
 }
 
-.list.list-language div.item {
-    padding-top: 17px;
-}
-
-.list.list-language .language {
-    position: absolute;
-    left: 39px;
-    top: 21px;
-    font-size: 16px;
-    letter-spacing: 0px;
-    font-weight: bold;
-    color: #000;
-}
-
-.list.list-language .content {
-    margin-bottom: 19px;
-}
-
-.list.list-language .content-header {
-    margin-bottom: 5px;
-}
-
-.list.list-portfolio {
-    overflow: hidden;
-    font-size: 0;
-}
-
-.list.list-portfolio div.item {
-    float: left;
-    overflow: hidden;
-    display: inline-block;
-    width: 50%;
-    height: 67px;
-    padding: 21px 0 0 61px;
-    vertical-align: top;
-    border-top: 0;
-    border-bottom: 1px solid #edeef0;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
-
-.list.list-portfolio div.item:last-child,
-.list.list-portfolio div.item:nth-last-child(2):nth-child(odd) {
-    border-bottom: 0;
-}
-
-.list.list-portfolio div.item i.icon.docx,
-.list.list-portfolio div.item i.icon.doc {
-    background-position: 0 -118px;
-}
-
-.list.list-portfolio div.item i.icon.pptx,
-.list.list-portfolio div.item i.icon.ppt {
-    background-position: 0 -164px;
-}
-
-.list.list-portfolio div.item i.icon.xlsx,
-.list.list-portfolio div.item i.icon.xls,
-.list.list-portfolio div.item i.icon.excel {
-    background-position: 0 -210px;
-}
-
-.list.list-portfolio div.item i.icon.pdf {
-    background-position: 0 -256px;
-}
-
-.list.list-portfolio div.item i.icon.hwp {
-    background-position: 0 -303px;
-}
-
-.list.list-portfolio div.item i.icon.zip {
-    background-position: 0 -528px;
-}
-
-.list.list-portfolio div.item i.icon.jpg,
-.list.list-portfolio div.item i.icon.jpeg {
-    background-position: 0 -623px;
-}
-
-.list.list-portfolio div.item i.icon.gif {
-    background-position: 0 -573px;
-}
-
-.list.list-portfolio div.item i.icon.psd {
-    background-position: 0 -673px;
-}
-
-.list.list-portfolio div.item i.icon.png {
-    background-position: 0 -723px;
-}
-
-.list.list-portfolio div.item i.icon.txt {
-    width: 13px;
-    background-position: -2px -773px;
-}
-
-.list.list-portfolio div.item i.icon.swf {
-    background-position: 0 -823px;
-}
-
-.list.list-portfolio div.item i.icon.ai {
-    background-position: 0 -873px;
-}
-
-.list.list-portfolio div.item i.icon.url {
-    background-position: 0 -973px;
-}
-
-.list.list-portfolio div.item i.icon.rtf {
-    background-position: 0 -1089px;
-}
-
-.list.list-portfolio div.item i.icon.gul {
-    background-position: 0 -1023px;
-}
-
-.list.list-portfolio div.item i.icon.alz {
-    width: 13px;
-    background-position: -2px -1155px;
-}
-
-.list.list-portfolio div.item .name {
-    overflow: hidden;
-    display: block;
-    font-size: 14px;
-    letter-spacing: 0px;
-    color: #000;
-    white-space: nowrap;
-    -o-text-overflow: ellipsis;
-    text-overflow: ellipsis;
-}
-
 .skip,
 .blind {
     position: absolute !important;
@@ -2198,23 +1590,5 @@ ul.list-introduction {
     transition: background-color 0.3s;
     font-weight: bold;
     /* 글자 볼드체 */
-}
-
-.pass-button {
-    background-color: #001f3f;
-    /* 어두운 네이비 색상 */
-}
-
-.pass-button:hover {
-    background-color: #001a33;
-    /* 호버 시 색상 변경 */
-}
-
-.fail-button {
-    background-color: #dc3545;
-}
-
-.fail-button:hover {
-    background-color: #c82333;
 }
 </style>
