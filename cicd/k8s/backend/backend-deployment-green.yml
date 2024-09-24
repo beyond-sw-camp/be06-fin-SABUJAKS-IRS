@@ -20,6 +20,9 @@ spec:
       containers:
         - name: backend-green
           image: sabujaks/backend:latest
+          envFrom:
+            - configMapRef:
+                name: backend-cm
           readinessProbe:
             httpGet:
               path: /test
