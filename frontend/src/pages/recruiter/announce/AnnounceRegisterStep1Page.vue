@@ -5,6 +5,7 @@ import MainSideBarComponent from '../../../components/recruiter/MainSideBarCompo
 import { ref, computed, onMounted, watch } from "vue";
 import { UseAnnouncementStore } from '@/stores/UseAnnouncementStore';
 import { UseAuthStore } from '@/stores/UseAuthStore';
+import { useRouter } from 'vue-router';
 
 export default {
   components: {
@@ -15,6 +16,7 @@ export default {
   setup() {
     const announcementStore = UseAnnouncementStore();
     const authStore = UseAuthStore();
+    const router = useRouter();
 
 
     // 1. 항목 추가 필드 상태 (true/false)
@@ -392,7 +394,7 @@ export default {
       announcementStore.formData.announcementStart = formatDateTime(announcementStore.formData.startDate, announcementStore.formData.startTimeRegi);
       announcementStore.formData.announcementEnd = formatDateTime(announcementStore.formData.endDate, announcementStore.formData.endTimeRegi);
 
-      announcementStore.createAnnouncement(selectedCategories, fields.value, fields2.value); // 스토어 저장 처리
+      announcementStore.createAnnouncement(selectedCategories, fields.value, fields2.value, router); // 스토어 저장 처리
     }
 
 

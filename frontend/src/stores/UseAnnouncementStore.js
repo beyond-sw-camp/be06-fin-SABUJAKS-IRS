@@ -125,7 +125,7 @@ export const UseAnnouncementStore = defineStore('announcement', {
 
 
         // formData를 백엔드로 전송하는 함수
-        async createAnnouncement(selectedCategories, fields, fields2) {
+        async createAnnouncement(selectedCategories, fields, fields2, router) {
             try {
                 const formDataCreate = new FormData();
 
@@ -229,17 +229,11 @@ export const UseAnnouncementStore = defineStore('announcement', {
                     AnnouncementCreateReq.selectForm = 0; // 파일이 없으면 0으로 설정
                 }
 
-                console.log("Raw formData before sending:", rawFormData);
-                console.log("Serialized AnnouncementCreateReq:", AnnouncementCreateReq);
+                console.log("저장할 데이터 ", AnnouncementCreateReq);
 
                 // JSON 직렬화에서 순환 참조가 제거된 데이터를 전송
                 const jsonBlob = new Blob([JSON.stringify(AnnouncementCreateReq)], { type: 'application/json' });
                 formDataCreate.append('dto', jsonBlob);
-
-                // 복사한 데이터 객체에서 순환 참조가 없는 데이터만 JSON으로 변환
-                // const cleanedData = JSON.parse(JSON.stringify(AnnouncementCreateReq));
-                // const jsonBlob = new Blob([JSON.stringify(cleanedData)], { type: 'application/json' });
-                // formDataCreate.append('dto', jsonBlob);
 
                 // 공고 이미지 있으면 url 추가
                 if (this.file) {
@@ -254,16 +248,28 @@ export const UseAnnouncementStore = defineStore('announcement', {
                         withCredentials: true
                     },
                 });
+                console.log("응답" + response.data.result);
 
                 if (response.status === 200) {
                     alert('데이터가 성공적으로 저장되었습니다.');
+
+                    // announcementIdx가 제대로 전달되는지 확인
+                    // console.log(response.data.result.announcementIdx);
+
+                    // 데이터를 성공적으로 저장 후 라우터로 페이지 이동
+                    router.push({
+                        name: 'AnnouncementCreateStep2',
+                        params: {
+                            announcementIdx: response.data.result.announcementIdx, // 응답에서 받은 announcementIdx
+                            title: AnnouncementCreateReq.title, // 저장한 공고 제목
+                        },
+                    });
                 }
             } catch (error) {
                 console.error('데이터 저장 실패:', error);
-                alert('데이터 저장 중 오류가 발생했습니다.');
+                alert('데이터 저장 중 오류가 발생했습니다.' + error.response.data.message);
             }
         },
 
-    },
-
+    }
 });

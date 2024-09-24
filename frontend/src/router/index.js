@@ -52,7 +52,7 @@ const router = createRouter({
         { path: '/recruiter/login', component: RecruiterLoginPage },
         { path: '/recruiter/signup', component: RecruiterSignupPage },
         { path: '/recruiter/announce', component: AnnounceMainPage, beforeEnter: requireRecruiterLogin },
-        { path: '/recruiter/announce/register-step2', component: AnnounceRegisterStep2Page, beforeEnter: requireRecruiterLogin },
+        { path: '/recruiter/announce/register-step2/:announcementIdx/:title', name: 'AnnouncementCreateStep2', component: AnnounceRegisterStep2Page, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/announce/register-step1', component: AnnounceRegisterStep1Page, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/interview-schedule/new', component: InterviewScheduleMainNew, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/interview-schedule/exp', component: InterviewScheduleMainExp, beforeEnter: requireRecruiterLogin },
