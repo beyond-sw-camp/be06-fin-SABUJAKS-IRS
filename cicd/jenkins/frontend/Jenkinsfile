@@ -55,7 +55,7 @@ pipeline {
                     def otherDeployment = isOdd ? 'frontend-deployment-green' : 'frontend-deployment-blue'
                     def newSelector = isOdd ? 'blue' : 'green'
                     def serviceName = 'frontend-svc'
-                    def deploymentName = deploymentFile.replace('frontend-deployment-', '').replace('.yml', '')
+                    def deploymentName = deploymentFile.replace('.yml', '')
 
                     // SSH 전송 플러그인 사용
                     sshPublisher(
@@ -94,26 +94,26 @@ pipeline {
             }
         }
     }
-    post {
-        success {
-            discordSend description: """
-            제목 : ${currentBuild.displayName}
-            결과 : ${currentBuild.result}
-            실행 시간 : ${currentBuild.duration / 1000}s
-            """,
-            link: env.BUILD_URL, result: currentBuild.currentResult,
-            title: "${env.JOB_NAME} : ${currentBuild.displayName} 성공",
-            webhookURL: "${env.Discord}"
-        }
-        failure {
-            discordSend description: """
-            제목 : ${currentBuild.displayName}
-            결과 : ${currentBuild.result}
-            실행 시간 : ${currentBuild.duration / 1000}s
-            """,
-            link: env.BUILD_URL, result: currentBuild.currentResult,
-            title: "${env.JOB_NAME} : ${currentBuild.displayName} 실패",
-            webhookURL: "${env.Discord}"
-        }
-    }
+//     post {
+//         success {
+//             discordSend description: """
+//             제목 : ${currentBuild.displayName}
+//             결과 : ${currentBuild.result}
+//             실행 시간 : ${currentBuild.duration / 1000}s
+//             """,
+//             link: env.BUILD_URL, result: currentBuild.currentResult,
+//             title: "${env.JOB_NAME} : ${currentBuild.displayName} 성공",
+//             webhookURL: "${env.Discord}"
+//         }
+//         failure {
+//             discordSend description: """
+//             제목 : ${currentBuild.displayName}
+//             결과 : ${currentBuild.result}
+//             실행 시간 : ${currentBuild.duration / 1000}s
+//             """,
+//             link: env.BUILD_URL, result: currentBuild.currentResult,
+//             title: "${env.JOB_NAME} : ${currentBuild.displayName} 실패",
+//             webhookURL: "${env.Discord}"
+//         }
+//     }
 }
