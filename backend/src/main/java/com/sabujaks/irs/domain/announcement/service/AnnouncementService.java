@@ -130,6 +130,13 @@ public class AnnouncementService {
             throw new BaseException(BaseResponseMessage.ANNOUNCEMENT_REGISTER_STEP_TWO_FAIL_NOT_FOUND);
         }
 
+        // 예외 처리) 해당 공고에 이미 커스텀폼이 있는지 확인
+        List<CustomForm> resultCustomForm = customFormRepository.findAllByAnnouncementIdx(dto.getAnnouncementIdx());
+        if(!resultCustomForm.isEmpty()) {
+            // 이미 폼이 등록된 공고면
+            throw new BaseException(BaseResponseMessage.ANNOUNCEMENT_REGISTER_STEP_TWO_FAIL_ALREADY);
+        }
+
         // 1. 리스트 길이만큼 커스텀 폼 엔티티 생성 후 저장
         List<String> formCodes = dto.getCode();
         for (String code : formCodes) {
