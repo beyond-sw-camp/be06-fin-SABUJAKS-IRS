@@ -14,7 +14,7 @@ public class CustomForm { //지원서 맞춤 양식
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false)
     private String code; // 맞춤 양식 코드
 
     @ManyToOne(fetch = FetchType.LAZY)
