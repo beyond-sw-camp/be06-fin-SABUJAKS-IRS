@@ -92,6 +92,26 @@ pipeline {
                     )
                 }
             }
+            post {
+                success {
+                    discordSend description: "빌드 결과",
+                        footer: """
+                        프론트엔드 ${deploymentFile} 버전 빌드가 성공했습니다.
+                        """,
+                        link: env.BUILD_ID, result: currentBuild.currentResult,
+                        title: "프론트엔드 젠킨스 Job",
+                        webhookURL: "https://discord.com/api/webhooks/1287941741076549704/UCt2iNEES7_AC0mT1bAdZyHx2_VBJcSR_BaE3v2-y8r8XwUp-0v0R1EwmgwoK_EfR57H"
+                }
+                failure {
+                    discordSend description: "빌드 결과",
+                        footer: """
+                        프론트엔드 ${deploymentFile} 버전 빌드에 실패했습니다.
+                        """,
+                        link: env.BUILD_ID, result: currentBuild.currentResult,
+                        title: "프론트엔드 젠킨스 Job",
+                        webhookURL: "https://discord.com/api/webhooks/1287941741076549704/UCt2iNEES7_AC0mT1bAdZyHx2_VBJcSR_BaE3v2-y8r8XwUp-0v0R1EwmgwoK_EfR57H"
+                }
+            }
         }
     }
 }
