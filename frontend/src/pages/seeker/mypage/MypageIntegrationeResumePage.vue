@@ -5,421 +5,338 @@
             <div class="container-i">
                 <!-- 사이드 바 -->
                 <SeekerSideBarComponent></SeekerSideBarComponent>
-
                 <!-- 메인 컨텐츠 -->
                 <div class="main-content">
                     <div class="header">
                         <h1>통합 지원서 관리</h1>
                         <button class="btn edit-profile">지원서 수정하기</button>
                     </div>
-
-                    <div class="content">
+                    <div id="content-detail">
                         <div class="resume-view-wrapper">
                             <div class="resume-view-container">
-                                <!-- <div class="resume-subject">침착한 인재입니다.</div> -->
                                 <div class="base profile image">
                                     <div class="container">
-                                        <div class="photo"><img name="user_photo"
-                                                src="@/assets/img/profile_photo_ex.png" style="width: 150px;">
+                                        <div v-if="showPersonalInfo" class="photo"><img name="user_photo" :src="resumeStore.resumeIntegrated.personalInfo.profileImg">
                                         </div>
-                                        <div class="info-container">
+                                        <div v-if="showPersonalInfo" class="info-container">
                                             <div class="info-general">
-                                                <div class="item name">사부작</div>
-                                                <div class="item sex">여</div>
-                                                <div class="item year">2000년 </div>
-                                                <div class="item age">(만 23세)</div>
+                                                <div class="item name">{{ resumeStore.resumeIntegrated.personalInfo.name }}</div>
+                                                <div class="item sex">{{ resumeStore.resumeIntegrated.personalInfo.gender }}</div>
+                                                <div class="item year">{{ resumeStore.resumeIntegrated.personalInfo.birth }}</div>
+                                                <div class="item age">(만 {{ calculateAge(resumeStore.resumeIntegrated.personalInfo.birth) }}세)</div>
                                             </div>
                                             <div class="info-detail">
                                                 <div class="item">
                                                     <div class="label">휴대폰</div>
-                                                    <div class="value">010-0000-0000</div>
+                                                    <div class="value">{{ resumeStore.resumeIntegrated.personalInfo.phone }}</div>
                                                 </div>
                                                 <div class="item">
                                                     <div class="label">Email</div>
                                                     <div class="value">
-                                                        <a href="mailto:eunjoo.nine@gmail.com">sabujaks@gmail.com</a>
+                                                        <a href="mailto:eunjoo.nine@gmail.com">{{ resumeStore.resumeIntegrated.personalInfo.email }}</a>
                                                     </div>
                                                 </div>
-
-
+                                                <div class="item-address">
+                                                    <div class="label">주소</div>
+                                                    <div class="value">{{ resumeStore.resumeIntegrated.personalInfo.address }}</div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="summary col-4f">
-
-                                        <div class="item ">
-                                            <div class="header">학력</div>
-                                            <div class="description ellipsis">
-                                                00대학교</div>
-                                            <div class="options">
-                                                <div class="option">대학교(4년)</div>
-                                                <div class="option">졸업</div>
-                                            </div>
-                                        </div>
-
-                                        <div class="item">
-                                            <div class="header">경력</div>
-                                            <div class="description ellipsis">
-                                                00시스템 </div>
-
-                                            <div class="options">
-                                                <div class="option">퇴사</div>
-                                                <div class="option">총 7개월</div>
-                                            </div>
-                                        </div>
-
-                                        <div class="item">
-                                            <div class="header">인턴·대외활동 / 해외경험</div>
-                                            <div class="description ellipsis">AI머신러닝 학습 동아리</div>
-                                            <div class="description ellipsis">안드로메다 해외경험</div>
-                                        </div>
-
-                                        <div class="item">
-                                            <div class="header">자격증 / 어학</div>
-                                            <div class="description ellipsis">정보처리기사</div>
-                                            <div class="description ellipsis">영어-회화가능</div>
                                         </div>
                                     </div>
                                 </div>
-                                <input type="hidden" id="hidAplctName" value="구은주">
 
-
-
-
-
-                                <div class="base education">
-                                    <h2 class="header">학력</h2>
+                                <div v-if="showEducation" class="base education">
+                                    <h2 class="header_title">학력</h2>
                                     <div class="list list-education">
+                                        <div class="item" v-for="(education, index) in resumeStore.resumeIntegrated.educations" :key="index">
+                                        <div class="date">
+                                            <div v-if="education.schoolDiv === '고등학교' && !education.qualificationExam" class="term"> ~ {{ education.graduatedAt }}</div>
+                                            <div v-if="education.schoolDiv === '고등학교' && education.qualificationExam" class="term"> ~ {{ education.passedAt }}</div>
+                                            <div v-if="education.schoolDiv !== '고등학교' && !education.qualificationExam" class="term">{{ education.enteredAt }} ~ {{ education.graduatedAt }}</div>
+                                            <div class="state">{{ education.status }}</div>
+                                        </div>
+                                        <div class="content">
+                                            <div class="content-header">
+                                            <div v-if="education.schoolDiv !== '대학원'" class="name">{{ education.schoolName }} ({{ education.graduationStatus }})</div>
+                                            <div v-else class="name">{{ education.schoolName }} ({{ education.degree }} {{ education.graduationStatus }})</div>
+                                            <div class="position position2">{{ education.schoolDiv }}</div>
+                                            <div class="line">{{ education.major }}</div>
+                                            </div>
+                                            <div v-if="education.schoolDiv !== '고등학교'" class="content-body">
+                                            <div class="info">
+                                                <div class="item">
+                                                <div class="label">전공명</div>
+                                                <div class="value">{{ education.majorName }} {{ education.transfer ? "(편입)" : "" }}</div>
+                                                </div>
+                                            </div>
+                                            <div class="info">
+                                                <div class="item">
+                                                <div class="label">학점</div>
+                                                <div class="value">{{ education.grade }} / {{ education.totalGrade }}</div>
+                                                </div>
+                                            </div>
+                                            <div class="info">
+                                                <div class="item">
+                                                <div class="label">{{ education.majorType}}</div>
+                                                <div class="value">{{ education.otherMajor }}</div>
+                                                </div>
+                                            </div>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-                                        <div class="item">
+                                <div v-if="showPersonalHistory" class="base career">
+                                    <h2 class="header_title">경력</h2>
+                                    <div class="list list-education">
+                                        <div class="item" v-for="(personalHistory, index) in resumeStore.resumeIntegrated.personalHistories" :key="index">
                                             <div class="date">
-                                                <div class="term">2020. 03 ~ 2024. 08</div>
-                                                <div class="state">졸업</div>
+                                                <div class="term">{{ personalHistory.enteredAt }} ~ {{ personalHistory.quitAt }}</div>
+                                                <div class="term-calculator">{{ calculateDuration(personalHistory.enteredAt, personalHistory.quitAt) }}</div>
                                             </div>
                                             <div class="content">
                                                 <div class="content-header">
                                                     <div class="name">
-                                                        00대학교</div>
-                                                    <div class="line">
-                                                        컴퓨터공학과
-                                                    </div>
+                                                        {{ personalHistory.companyName }} </div>
+                                                        <div v-if="personalHistory.empStatus" class="position position1">재직중</div>
                                                 </div>
                                                 <div class="content-body">
                                                     <div class="info">
                                                         <div class="item">
-                                                            <div class="label">학점</div>
-                                                            <div class="value">4.2 / 4.5</div>
+                                                            <div class="label">부서명</div>
+                                                            <div class="value">{{ personalHistory.deptName }} </div>
                                                         </div>
-
+                                                        <div class="item">
+                                                            <div class="label">직급/직책</div>
+                                                            <div class="value">{{ personalHistory.position }} </div>
+                                                        </div>
+                                                        <div class="item">
+                                                            <div class="label">담당직무</div>
+                                                            <div class="value">{{ personalHistory.job }} </div>
+                                                        </div>
+                                                        <div class="item">
+                                                            <div class="label">연봉</div>
+                                                            <div class="value">{{ personalHistory.salary }} </div>
+                                                        </div>
+                                                        <div class="item">
+                                                            <div class="label">담당업무</div>
+                                                            <div class="value">{{ personalHistory.work }} </div>
+                                                        </div>
                                                     </div>
                                                 </div>
+
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
 
-
-                                <div class="base career">
-                                    <div class="headers">
-                                        <h2 class="header">경력</h2>
-                                        <div class="term">
-                                        </div>
-                                    </div>
-                                    <div class="list list-career">
-                                        <div class="item">
-                                            <div class="date">
-                                                <div class="term">2024. 03 ~ 2024. 09</div>
-                                                <div class="term-calculator">7개월</div>
-                                            </div>
-                                            <div class="content">
-                                                <div class="content-header">
-                                                    <div class="name">
-                                                        00시스템 </div>
-
-                                                    <div class="is-private"></div>
-                                                    <div class="position">백엔드 플랫폼 개발부 </div>
-                                                </div>
-                                                <div class="content-body">
-                                                    <div class="description">
-                                                    </div>
-                                                    <div class="info">
-                                                        <div class="item">
-                                                            <div class="label">주요직무</div>
-                                                            <div class="value">SI개발 </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-
-
-                                <div class="base intern">
-                                    <h2 class="header">인턴·대외활동</h2>
+                                <div v-if="showInternsActivity" class="base intern">
+                                    <h2 class="header_title">인턴·대외활동</h2>
                                     <div class="list list-intern">
-                                        <div class="item">
+                                        <div class="item" v-for="(internsActivity, index) in resumeStore.resumeIntegrated.internsActivities" :key="index">
                                             <div class="date">
-                                                <div class="term">2023. 03 ~ 2024. 06</div>
-                                                <div class="term-calculator">1년 4개월</div>
+                                                <div class="term">{{ internsActivity.startAt }} ~ {{ internsActivity.endAt }}</div>
+                                                <div class="term-calculator">{{ calculateDuration(internsActivity.startAt, internsActivity.endAt) }}</div>
                                             </div>
 
                                             <div class="content">
                                                 <div class="content-header">
-                                                    <div class="name">AI머신러닝 학습 동아리</div>
-                                                    <div class="position position3">동아리</div>
+                                                    <div class="name">{{ internsActivity.organization }}</div>
+                                                    <div class="position position3">{{ internsActivity.activityDiv }}</div>
                                                 </div>
                                                 <div class="content-body">
-                                                    머신러닝에 대해 동아리 원들과 학습하는 동아리를 운영했었습니다. </div>
+                                                    {{ internsActivity.contents }}</div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
 
-                                <div class="base learn">
-                                    <h2 class="header">교육</h2>
+                                <div v-if="showTraining" class="base learn">
+                                    <h2 class="header_title">교육이수</h2>
                                     <div class="list list-learn">
-                                        <div class="item">
-                                            <div class="date">2024. 04 ~ 2024. 10</div>
+                                        <div class="item" v-for="(training, index) in resumeStore.resumeIntegrated.trainings" :key="index">
+                                            <div class="date">{{ training.startAt }} ~ {{ training.endAt }}</div>
                                             <div class="content">
                                                 <div class="content-header">
-                                                    <div class="name">한화시스템 부트캠프</div>
-                                                    <div class="agency">플레이데이터</div>
+                                                    <div class="name">{{ training.trainingName }}</div>
+                                                    <div class="agency">{{ training.organization }}</div>
                                                 </div>
                                                 <div class="content-body">
-                                                    백엔드 프론트엔드에 대해 공부했습니다. </div>
+                                                    {{ training.contents }}</div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
 
-                                <div class="base certificate">
-                                    <h2 class="header">자격증</h2>
+                                <div v-if="showCertification" class="base certificate">
+                                    <h2 class="header_title">자격증</h2>
                                     <div class="list list-certificate">
-                                        <div class="item pdf-page-break">
-                                            <div class="date">2023. 04</div>
+                                        <div class="item" v-for="(certification, index) in resumeStore.resumeIntegrated.certifications" :key="index">
+                                            <div class="date">{{ certification.takingAt }}</div>
                                             <div class="content">
                                                 <div class="content-header">
-                                                    <div class="name">정보처리기사</div>
-                                                    <div class="agency">한국산업인력공단</div>
+                                                    <div class="name">{{ certification.certName }}</div>
+                                                    <div class="agency">{{ certification.organization }}</div>
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
 
 
-                                <div class="base awards">
-                                    <h2 class="header">수상</h2>
+                                <div v-if="showAward" class="base awards">
+                                    <h2 class="header_title">수상</h2>
                                     <div class="list list-awards">
-                                        <div class="item">
+                                        <div class="item" v-for="(award, index) in resumeStore.resumeIntegrated.awards" :key="index">
                                             <div class="date">
-                                                2024년
+                                                {{ award.year }}
                                             </div>
                                             <div class="content">
                                                 <div class="content-header">
-                                                    <div class="name">웃음이 맑은 상</div>
-                                                    <div class="agency">00전자</div>
+                                                    <div class="name">{{ award.awardName }}</div>
+                                                    <div class="agency">{{ award.organization }}</div>
                                                 </div>
                                                 <div class="content-body">
-                                                    웃음이 맑아서 수여합니다. </div>
+                                                    {{ award.contents }}</div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
 
-                                <div class="base experience">
-                                    <h2 class="header">해외경험</h2>
+                                <div v-if="showStudyingAbroad" class="base experience">
+                                    <h2 class="header_title">해외경험</h2>
                                     <div class="list list-experience">
-                                        <div class="item pdf-page-break">
+                                        <div class="item" v-for="(studyingAbroad, index) in resumeStore.resumeIntegrated.studyingAbroads" :key="index">
                                             <div class="date">
-                                                <div class="term">2023. 08 ~ 2024. 03</div>
-                                                <div class="term-calculator">8개월</div>
+                                                <div class="term">{{ studyingAbroad.startAt }} ~ {{ studyingAbroad.endAt }}</div>
+                                                <div class="term-calculator">{{ calculateDuration(studyingAbroad.startAt, studyingAbroad.endAt) }}</div>
                                             </div>
                                             <div class="content">
                                                 <div class="content-header">
-                                                    <div class="name">안드로메다</div>
+                                                    <div class="name">{{ studyingAbroad.countryName }}</div>
                                                 </div>
                                                 <div class="content-body">
-                                                    어학연수 다녀왔습니다. </div>
+                                                    {{ studyingAbroad.contents }}</div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-
-                                <div class="base language">
-                                    <h2 class="header">어학</h2>
-                                    <div class="list list-language">
-                                        <div class="item pdf-page-break">
-                                            <div class="language">영어</div>
+                                <div v-if="showLanguage" class="base career">
+                                    <h2 class="header_title">어학</h2>
+                                    <div class="list list-education">
+                                        <div class="item" v-for="(language, index) in resumeStore.resumeIntegrated.languages" :key="index">
+                                            <div class="date">
+                                                <div class="term" style="font-weight: bold; font-size: 16px;">{{ language.languageName }}</div>
+                                            </div>
                                             <div class="content">
                                                 <div class="content-body">
-                                                    <p>회화 능력 : 일상회화 가능</p>
+                                                    <div class="info">
+                                                        <div v-if="language.testDiv === '공인시험'" class="item">
+                                                            <div class="label">공인시험</div>
+                                                            <div class="value">{{ language.officialTest }}</div>
+                                                        </div>
+                                                        <div v-if="language.testDiv === '공인시험' && language.selectScore !== '취득'" class="item">
+                                                            <div class="label">급수/점수</div>
+                                                            <div class="value">{{ language.score }}{{  language.selectScore }}</div>
+                                                        </div>
+                                                        <div v-if="language.testDiv === '공인시험' && language.selectScore === '취득'" class="item">
+                                                            <div class="label">{{ language.testDiv }}</div>
+                                                            <div class="value">{{ language.conversationLevel }}</div>
+                                                        </div>
+                                                        <div v-if="language.testDiv === '회화능력'" class="item">
+                                                            <div class="label">{{ language.testDiv }}</div>
+                                                            <div class="value">{{ language.conversationLevel }}</div>
+                                                        </div>
+                                                        <div v-if="language.testDiv === '공인시험'" class="item">
+                                                            <div class="label">취득년월</div>
+                                                            <div class="value">{{ language.takingAt }}</div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-
-
-                                <input data-val="true" data-val-required="ThreeLineStat 필드가 필요합니다." id="ThreeLineStat"
-                                    name="ThreeLineStat" type="hidden" value="False">
-                                <div class="base introduction">
-                                    <h2 class="header">자기소개서</h2>
+                                
+                                <div v-if="showCustomLetter" class="base introduction">
+                                    <h2 class="header_title">자기소개서</h2>
                                     <div id="SummaryAjax">
                                     </div>
                                     <ul class="list list-introduction">
-                                        <li class="item">
-                                            <div class="header">성장배경</div>
+                                        <li v-for="(customLetter, index) in resumeStore.resumeIntegrated.customLetters" :key="index" class="item">
+                                            <div class="header_title" style="font-weight: bold; margin-bottom: 10px;">{{ customLetter.title }} ({{ customLetter.charNum }}자)</div>
                                             <div class="content" id="pfl_original">
-                                                자애로운 어머니와 인정이 많으신 아버지 밑에서 자라... 침착한 사람으로 성장했습니다. </div>
-                                        </li>
-                                        <li class="item">
-                                            <div class="header">장단점</div>
-                                            <div class="content" id="pfl_original">
-                                                저는 수영을 잘합니다.<br>하지만 축구는 못합니다. </div>
+                                                {{ customLetter.contents }}
+                                            </div>
                                         </li>
                                     </ul>
                                 </div>
 
-
-
-                                <div class="base portfolio">
-                                    <h2 class="header">포트폴리오</h2>
+                                <div v-if="showPortfolio" class="base portfolio">
+                                    <h2 class="header_title">포트폴리오</h2>
                                     <table class="table table-attachments">
-                                        <caption><span class="skip">첨부파일</span></caption>
                                         <colgroup>
-                                            <col style="width:150px;">
-                                            <col style="width:320px;">
-                                            <col style="width:150px;">
+                                            <col style="width:100px;">
                                             <col style="width:320px;">
                                         </colgroup>
                                         <tbody>
-
-                                            <tr>
-                                                <th>포트폴리오</th>
+                                            <tr v-for="(portfolio, index) in resumeStore.resumeIntegrated.portfolios" :key="index" >
+                                                <th>{{ portfolio.portfolioDiv }}</th>
                                                 <td>
-                                                    <a href="http://dkfoejfkdjfwo/" target="_blank">
+                                                    <a :href="portfolio.portfolioUrl" target="_blank">
                                                         <i class="icon url" aria-hidden="true"></i>
-                                                        <div class="name">http://dkfoejfkdjfwo</div>
+                                                        <div class="name">{{ portfolio.portfolioUrl }}</div>
                                                     </a>
                                                 </td>
-                                                <th>포트폴리오</th>
-                                                <td colspan="3">
-                                                    <a
-                                                        href="https://file2.jobkorea.co.kr/Net/Mng/UserDown/ResumeAttach?idx=10233512">
-                                                        <i class="icon jpg" aria-hidden="true"></i>
-                                                        <div class="name">qkek.jpg</div>
-                                                    </a>
-                                                </td>
-
-                                            </tr>
-                                            <tr>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
 
-
-                                <div class="base jobpreference">
-                                    <h2 class="header">취업우대사항</h2>
+                                <div v-if="showPreferentialEmp" class="base jobpreference">
+                                    <h2 class="header_title">취업우대사항</h2>
                                     <table class="table table-special">
                                         <caption><span class="skip">취업우대사항</span></caption>
                                         <colgroup>
-                                            <col style="width:149px;">
-                                            <col style="width:165px;">
-                                            <col style="width:153px;">
+                                            <col style="width:180px;">
                                             <col style="width:160px;">
-                                            <col style="width:153px;">
+                                            <col style="width:180px;">
+                                            <col style="width:160px;">
+                                            <col style="width:180px;">
                                             <col style="width:160px;">
                                         </colgroup>
                                         <tbody>
                                             <tr>
                                                 <th>보훈대상 여부</th>
-                                                <td>보훈 대상자</td>
+                                                <td>{{ resumeStore.resumeIntegrated.preferentialEmp.veterans ? 'O' : 'X'}}</td>
                                                 <th>취업보호대상 여부</th>
-                                                <td>취업보호 대상자</td>
+                                                <td>{{ resumeStore.resumeIntegrated.preferentialEmp.protection ? 'O' : 'X'}}</td>
                                                 <th>고용지원금대상 여부</th>
-                                                <td>대상</td>
+                                                <td>{{ resumeStore.resumeIntegrated.preferentialEmp.subsidy ? 'O' : 'X'}}</td>
                                             </tr>
                                             <tr>
                                                 <th>병역사항</th>
-                                                <td colspan="3">
-                                                    [군필] 제대 </td>
-                                                <th>장애여부</th>
-                                                <td>00</td>
-
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-
-
-
-
-                                <div class="base hopework" id="js-hopeworkAnchor">
-                                    <h2 class="header">희망근무조건</h2>
-                                    <table class="table table-hopework">
-                                        <caption><span class="skip">희망근무조건</span></caption>
-                                        <tbody>
-                                            <tr>
-                                                <th scope="row">희망근무지</th>
-                                                <td>인천전지역, 서울전지역, 경기전지역</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">희망연봉</th>
-                                                <td>면접 후 결정</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">지원분야</th>
-                                                <td>
-                                                    <div class="content is-label">
-                                                        <div class="item">
-                                                            <div class="label">직무</div>
-                                                            <div class="value">
-                                                                <ul class="list-hopework">
-
-                                                                    <li>
-                                                                        <div class="item">백엔드개발자</div>
-
-                                                                    </li>
-
-                                                                </ul>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
+                                                <td v-if="resumeStore.resumeIntegrated.preferentialEmp.militaryClass === '군필'" colspan="3">
+                                                    {{ resumeStore.resumeIntegrated.preferentialEmp.military 
+                                                    ? resumeStore.resumeIntegrated.preferentialEmp.militaryClass : 'X'}}
+                                                    ({{ resumeStore.resumeIntegrated.preferentialEmp.militaryStart }} ~ {{ resumeStore.resumeIntegrated.preferentialEmp.militaryEnd }}) 
+                                                    [{{ resumeStore.resumeIntegrated.preferentialEmp.militaryRank }} / {{ resumeStore.resumeIntegrated.preferentialEmp.militaryType }}]
                                                 </td>
+                                                <td v-else colspan="3">
+                                                    {{ resumeStore.resumeIntegrated.preferentialEmp.military 
+                                                    ? resumeStore.resumeIntegrated.preferentialEmp.militaryClass : 'X'}} </td>
+                                                <th>장애여부</th>
+                                                <td>{{ resumeStore.resumeIntegrated.preferentialEmp.disability ? resumeStore.resumeIntegrated.preferentialEmp.disabilityDegree : 'X'}}</td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
-
-
-                                <div class="sign">
-                                    <div class="message">위의 모든 기재사항은 사실과 다름없음을 확인합니다.</div>
-
-                                    <div class="writer">작성자 : 사부작</div>
-                                    <div class="warning">
-                                        <div class="description">이 이력서는 2024년 09월 05일 (목)에 최종 수정된 이력서 입니다.<br>위조된 문서를
-                                            등록하여 취업활동에 이용 시 법적
-                                            책임을 지게 될 수 있습니다.<br>(주)IRS는 구직자가 등록 한 문서에 대해 보증하거나 별도의 책임을 지지 않으며<br>첨부된 문서를
-                                            신뢰하여 발생한 법적
-                                            분쟁에 책임을 지지 않습니다.<br>또한 구인/구직 목적 외 다른 목적으로 이용시 이력서 삭제 혹은 비공개 조치가 될 수 있습니다.
-                                        </div>
-                                    </div>
-                                </div>
-
                             </div>
                         </div>
                     </div>
@@ -432,6 +349,80 @@
 <script setup>
 import SeekerHeaderComponent from "@/components/seeker/SeekerHeaderComponent.vue";
 import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.vue";
+
+
+import { ref, onMounted } from 'vue';
+import { UseResumeStore } from '@/stores/UseResumeStore';
+
+const resumeStore = UseResumeStore();
+
+const showPersonalInfo = ref(false);
+const showEducation = ref(false);
+const showPersonalHistory = ref(false);
+const showPreferentialEmp = ref(false);
+const showInternsActivity = ref(false);
+const showTraining = ref(false);
+const showCertification = ref(false);
+const showStudyingAbroad = ref(false);
+const showLanguage = ref(false);
+const showPortfolio = ref(false);
+const showAward = ref(false);
+const showCustomLetter = ref(false);
+
+onMounted(async () => {
+    await resumeStore.readIntegrated();
+
+    showPersonalInfo.value = true;
+    showEducation.value = resumeStore.resumeIntegrated.codes.includes("resume_001");
+    showPersonalHistory.value = resumeStore.resumeIntegrated.codes.includes("resume_002");
+    showInternsActivity.value = resumeStore.resumeIntegrated.codes.includes("resume_003");
+    showTraining.value = resumeStore.resumeIntegrated.codes.includes("resume_004");
+    showCertification.value = resumeStore.resumeIntegrated.codes.includes("resume_005");
+    showAward.value = resumeStore.resumeIntegrated.codes.includes("resume_006");
+    showStudyingAbroad.value = resumeStore.resumeIntegrated.codes.includes("resume_007");
+    showLanguage.value = resumeStore.resumeIntegrated.codes.includes("resume_008");
+    showPortfolio.value = resumeStore.resumeIntegrated.codes.includes("resume_009");
+    showPreferentialEmp.value = resumeStore.resumeIntegrated.codes.includes("resume_010");
+    showCustomLetter.value = resumeStore.resumeIntegrated.codes.includes("resume_011");
+    
+});
+
+const calculateAge = (birthDate) => {
+    const birth = new Date(birthDate.replace(/\./g, '-')); // 문자열 변환
+    const today = new Date();
+    
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+
+    // 생일이 지나지 않았으면 나이를 하나 줄임
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+        age--;
+    }
+    
+    return age;
+};
+
+
+// 개월 수를 계산하고 년과 개월로 반환하는 메서드
+const calculateDuration = (enteredAt, quitAt) => {
+  const start = new Date(enteredAt.replace('.', '-') + '-01'); // "YYYY-MM-DD" 형식으로 변환
+  const end = new Date(quitAt.replace('.', '-') + '-01'); // "YYYY-MM-DD" 형식으로 변환
+
+  const yearDiff = end.getFullYear() - start.getFullYear();
+  const monthDiff = end.getMonth() - start.getMonth();
+
+  const totalMonths = yearDiff * 12 + monthDiff;
+
+  const years = Math.floor(totalMonths / 12);
+  const months = totalMonths % 12;
+
+  if(years == 0) {
+    return `${months}개월`;
+  }
+
+  return `${years}년 ${months}개월`;
+};
+
 </script>
 
 <style scoped>
@@ -466,10 +457,15 @@ import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.v
     background-color: rgba(255, 255, 255, 0);
     /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); */
     border-radius: 10px;
-    margin: 20px;
+    margin: 80px 20px;
     /* 수직, 수평 여백 추가 */
     gap: 20px;
     /* 사이드바와 메인 컨텐츠 사이의 간격 추가 */
+}
+
+.header_title {
+    margin-bottom: 10px;
+    margin-top: 30px;
 }
 
 .main-content {
@@ -484,11 +480,11 @@ import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.v
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
 .header h1 {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: bold;
 }
 
@@ -985,13 +981,6 @@ import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.v
     text-align: center
 }
 
-.resume-view-container .warning .description {
-    font-size: 12px;
-    letter-spacing: 0px;
-    color: #888;
-    line-height: 1.8;
-}
-
 .profile {
     overflow: hidden;
     position: relative;
@@ -1117,6 +1106,18 @@ import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.v
     color: #000;
 }
 
+.profile .info-detail .item-address {
+    position: relative;
+    display: inline-block;
+    width: 600px;
+    padding-left: 83px;
+    margin-bottom: 11px;
+    vertical-align: top;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
 .profile .summary {
     position: relative;
     overflow: hidden;
@@ -1190,17 +1191,8 @@ import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.v
     display: none;
 }
 
-.profile .summary .item.item-intern .description,
-.profile .summary .item.item-certificate .description {
-    margin-bottom: 0;
-}
-
 .profile .summary .item.is-singleline div.header {
     margin-bottom: 25px;
-}
-
-.profile .summary .item.newcomer .description {
-    color: #39f;
 }
 
 .profile .summary div.header {
@@ -1209,28 +1201,6 @@ import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.v
     letter-spacing: 0px;
     color: #888;
     text-align: center;
-}
-
-.profile .summary .description {
-    margin-bottom: 5px;
-    font-size: 14px;
-    letter-spacing: 0px;
-    color: #000;
-    line-height: 1.6;
-}
-
-.profile .summary .description.ellipsis {
-    overflow: hidden;
-    white-space: nowrap;
-    -o-text-overflow: ellipsis;
-    text-overflow: ellipsis;
-}
-
-.profile .summary .description.etc {
-    padding-top: 2px;
-    font-size: 13px;
-    letter-spacing: 0px;
-    color: #888;
 }
 
 .profile .summary .options {
@@ -1546,24 +1516,6 @@ import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.v
     padding-left: 80px;
 }
 
-.sign {
-    padding-top: 20px;
-    text-align: center;
-}
-
-.sign .message {
-    margin-bottom: 13px;
-    font-size: 22px;
-    letter-spacing: -0.5px;
-    color: #000;
-}
-
-.sign .writer {
-    font-size: 14px;
-    letter-spacing: 0px;
-    color: #000;
-}
-
 .caution-company {
     overflow: hidden;
     position: relative;
@@ -1746,6 +1698,10 @@ import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.v
     padding: 27px 38px 33px;
 }
 
+ul.list-introduction {
+    list-style: none;
+}
+
 .list.list-introduction div.header {
     font-weight: bold;
 }
@@ -1872,10 +1828,6 @@ import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.v
     color: #666;
 }
 
-.list.list-education div.item.no-description {
-    padding-top: 34px;
-}
-
 .list.list-education>div.item {
     min-height: 90px;
 }
@@ -1893,7 +1845,7 @@ import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.v
 .list.list-education .info .item {
     min-height: auto;
     margin-bottom: 7px;
-    padding: 0 0 0 73px;
+    padding: 0 0 0 90px;
     border-top: 0;
 }
 
@@ -1901,7 +1853,7 @@ import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.v
     position: absolute;
     left: 0;
     top: 0;
-    width: 61px;
+    width: 80px;
     font-size: 14px;
     letter-spacing: 0px;
     color: #666;
@@ -1958,13 +1910,9 @@ import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.v
     vertical-align: baseline;
 }
 
-.list.list-career .content-body .description {
-    margin-bottom: 9px;
-}
-
 .list.list-career .info .item {
     min-height: auto;
-    padding: 0 0 0 73px;
+    padding: 0 0 0 90px;
     border-top: 0;
 }
 
@@ -2000,28 +1948,6 @@ import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.v
     color: #666;
 }
 
-.list.list-career div.career-description {
-    min-height: auto;
-    padding: 18px 40px 19px 200px;
-    border-color: #b2b2b2;
-}
-
-.list.list-career div.career-description div.header {
-    position: absolute;
-    left: 40px;
-    top: 21px;
-    font-size: 14px;
-    letter-spacing: 0px;
-    color: #000;
-}
-
-.list.list-career div.career-description .description {
-    font-size: 14px;
-    letter-spacing: 0px;
-    color: #000;
-    line-height: 1.8;
-}
-
 .list.list-intern div.item {
     padding-top: 21px;
     padding-bottom: 17px;
@@ -2051,12 +1977,28 @@ import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.v
     box-sizing: border-box;
 }
 
-.list.list-intern .position.position1 {
+.position {
+    overflow: hidden;
+    display: inline-block;
+    height: 20px;
+    line-height: 18px;
+    vertical-align: -3px;
+    margin-left: 9px;
+    padding: 0 14px;
+    font-size: 12px;
+    letter-spacing: 0px;
+    border: 1px solid #000;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.list.list-education .position.position1 {
     color: #ff5b5b;
     border-color: #fa9899;
 }
 
-.list.list-intern .position.position2 {
+.list.list-education .position.position2 {
     color: #7ba71f;
     border-color: #abc675;
 }
@@ -2106,13 +2048,6 @@ import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.v
     font-size: 14px;
     letter-spacing: 0px;
     color: #000;
-}
-
-.list.list-certificate .item.etc .description {
-    font-size: 14px;
-    letter-spacing: 0px;
-    color: #000;
-    line-height: 1.8;
 }
 
 .list.list-certificate .date {
@@ -2200,130 +2135,6 @@ import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.v
     color: #000;
 }
 
-.list.list-portfolio {
-    overflow: hidden;
-    font-size: 0;
-}
-
-.list.list-portfolio div.item {
-    float: left;
-    overflow: hidden;
-    display: inline-block;
-    width: 50%;
-    height: 67px;
-    padding: 21px 0 0 61px;
-    vertical-align: top;
-    border-top: 0;
-    border-bottom: 1px solid #edeef0;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
-
-.list.list-portfolio div.item:last-child,
-.list.list-portfolio div.item:nth-last-child(2):nth-child(odd) {
-    border-bottom: 0;
-}
-
-.list.list-portfolio div.item i.icon {
-    overflow: hidden;
-    display: block;
-    position: absolute;
-    left: 40px;
-    top: 23px;
-    width: 16px;
-    height: 16px;
-    margin-right: 5px;
-    vertical-align: top;
-    /* background: url("/content/images/text_user/resume/view/sprite-icon-file.png") no-repeat; */
-}
-
-.list.list-portfolio div.item i.icon.docx,
-.list.list-portfolio div.item i.icon.doc {
-    background-position: 0 -118px;
-}
-
-.list.list-portfolio div.item i.icon.pptx,
-.list.list-portfolio div.item i.icon.ppt {
-    background-position: 0 -164px;
-}
-
-.list.list-portfolio div.item i.icon.xlsx,
-.list.list-portfolio div.item i.icon.xls,
-.list.list-portfolio div.item i.icon.excel {
-    background-position: 0 -210px;
-}
-
-.list.list-portfolio div.item i.icon.pdf {
-    background-position: 0 -256px;
-}
-
-.list.list-portfolio div.item i.icon.hwp {
-    background-position: 0 -303px;
-}
-
-.list.list-portfolio div.item i.icon.zip {
-    background-position: 0 -528px;
-}
-
-.list.list-portfolio div.item i.icon.jpg,
-.list.list-portfolio div.item i.icon.jpeg {
-    background-position: 0 -623px;
-}
-
-.list.list-portfolio div.item i.icon.gif {
-    background-position: 0 -573px;
-}
-
-.list.list-portfolio div.item i.icon.psd {
-    background-position: 0 -673px;
-}
-
-.list.list-portfolio div.item i.icon.png {
-    background-position: 0 -723px;
-}
-
-.list.list-portfolio div.item i.icon.txt {
-    width: 13px;
-    background-position: -2px -773px;
-}
-
-.list.list-portfolio div.item i.icon.swf {
-    background-position: 0 -823px;
-}
-
-.list.list-portfolio div.item i.icon.ai {
-    background-position: 0 -873px;
-}
-
-.list.list-portfolio div.item i.icon.url {
-    background-position: 0 -973px;
-}
-
-.list.list-portfolio div.item i.icon.rtf {
-    background-position: 0 -1089px;
-}
-
-.list.list-portfolio div.item i.icon.gul {
-    background-position: 0 -1023px;
-}
-
-.list.list-portfolio div.item i.icon.alz {
-    width: 13px;
-    background-position: -2px -1155px;
-}
-
-.list.list-portfolio div.item .name {
-    overflow: hidden;
-    display: block;
-    font-size: 14px;
-    letter-spacing: 0px;
-    color: #000;
-    white-space: nowrap;
-    -o-text-overflow: ellipsis;
-    text-overflow: ellipsis;
-}
-
 .skip,
 .blind {
     position: absolute !important;
@@ -2334,34 +2145,16 @@ import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.v
     margin: -1px;
 }
 
-#size-buttons button {
+.edit-profile {
+    background-color: #212b36;
     color: white;
+    padding: 10px 20px;
     border: none;
-    padding: 12px 20px;
-    /* 버튼 크기 키움 */
-    margin-right: 10px;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s;
-    font-weight: bold;
-    /* 글자 볼드체 */
 }
 
-.pass-button {
-    background-color: #001f3f;
-    /* 어두운 네이비 색상 */
-}
-
-.pass-button:hover {
-    background-color: #001a33;
-    /* 호버 시 색상 변경 */
-}
-
-.fail-button {
-    background-color: #dc3545;
-}
-
-.fail-button:hover {
-    background-color: #c82333;
+.edit-profile:hover {
+    background-color: #212b36;
 }
 </style>
