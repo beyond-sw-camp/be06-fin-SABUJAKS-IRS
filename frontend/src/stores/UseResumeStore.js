@@ -37,7 +37,8 @@ export const UseResumeStore = defineStore('resume', {
         resumeTitle: null,
         announcementIdx: 0,
 
-        resumeDetail: {}
+        resumeDetail: {},
+        resumeIntegrated: {}
     }),
     actions: {
         updateShowEducation(value) {
@@ -444,7 +445,17 @@ export const UseResumeStore = defineStore('resume', {
                 });
                 console.log(response);
                 return response.data;
-
+            } catch (error) {
+                alert(error.response.data.message);
+            }
+        },
+        async readIntegrated() {
+            try {
+                const response = await axios.get(`${backend}/resume/read/integrated`, {
+                    headers: { 'Content-Type': 'application/json', },
+                    withCredentials: true
+                });
+                this.resumeIntegrated = response.data.result;
             } catch (error) {
                 alert(error.response.data.message);
             }
@@ -463,27 +474,17 @@ export const UseResumeStore = defineStore('resume', {
         },
         async updateDocPassed(resumeIdx, docPassedValue) {
             try {
-                const response = await axios.patch(`${backend}/resume/update/docPassed/${resumeIdx}`,
-                    {
-                        docPassed: docPassedValue
-                    },
-                    {
+                const response = await axios.patch(`${backend}/resume/update/docPassed/${resumeIdx}`, { docPassed: docPassedValue }, {
                         headers: { 'Content-Type': 'application/json' },
-                        withCredentials: true
-                    }
+                        withCredentials: true }
                 );
                 // 합격/불합격 처리 성공
-
                 if (confirm(response.data.message)) {
                     location.reload();
                 }
-
             } catch (error) {
                 alert(error.response.data.message);
             }
         },
-
-
-
     },
 });
