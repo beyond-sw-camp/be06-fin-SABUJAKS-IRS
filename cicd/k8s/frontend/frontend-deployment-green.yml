@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment-green
+spec:
+  selector:
+    matchLabels:
+      type: frontend
+      deployment: green
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+  minReadySeconds: 10
+  template:
+    metadata:
+      labels:
+        type: frontend
+        deployment: green
+    spec:
+      containers:
+        - name: frontend-green
+          image: sabujaks/frontend:latest
+          volumeMounts:
+            - mountPath: /etc/nginx/conf.d  # mountsPath -> mountPath로 수정
+              name: config
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            successThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 20
+            periodSeconds: 10
+      volumes:
+        - name: config
+          configMap:
+            name: frontend-cm  # ConfigMap의 이름 수정
+            items:
+              - key: default_conf
+                path: default.conf  # /etc/nginx/conf.d/default.conf로 마운트됨
+      terminationGracePeriodSeconds: 0
