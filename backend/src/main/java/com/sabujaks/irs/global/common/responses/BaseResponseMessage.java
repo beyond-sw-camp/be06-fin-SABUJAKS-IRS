@@ -105,6 +105,7 @@ public enum BaseResponseMessage {
     ANNOUNCEMENT_SEARCH_SUCCESS(true, 3300, "공고 조회에 성공했습니다."),
     ANNOUNCEMENT_SEARCH_FAIL(false, 3301, "공고 조회에 실패했습니다."),
     ANNOUNCEMENT_SEARCH_FAIL_NOT_FOUND(false, 3302, "해당 공고를 찾을 수 없습니다."),
+    ANNOUNCEMENT_SEARCH_FAIL_INVALID_REQUEST(false, 3303, "해당 공고의 채용 담당자가 아닙니다."),
     // COMPANY 기업정보 관련 4000~4999
     COMPANY_INFO_SUCCESS(true, 4000, "기업 정보 등록에 성공했습니다."),
     COMPANY_INFO_SUCCESS_REGISTER(true, 4001, "기업 복리후생 조회에 성공했습니다."),
@@ -132,7 +133,10 @@ public enum BaseResponseMessage {
     // 인터뷰 평가 생성 6300
     INTERVIEW_EVALUATE_CREATE_SUCCESS(true, 6300, "해당 지원자의 인터뷰 평가를 생성하는데 성공했습니다."),
     INTERVIEW_EVALUATE_CREATE_FAIL_INVALID_FORM(false, 6302, "해당 공고의 인터뷰 평가 항목이 잘못되었습니다."),
-    INTERVIEW_EVALUATE_CREATE_FAIL_NOT_FOUND_SCHEDULE(false, 6301, "해당 면접관과 지원자의 인터뷰 스케줄 정보가 없습니다.");
+    INTERVIEW_EVALUATE_CREATE_FAIL_NOT_FOUND_SCHEDULE(false, 6301, "해당 면접관과 지원자의 인터뷰 스케줄 정보가 없습니다."),
+    // 인터뷰 평가 조회 6400
+    INTERVIEW_EVALUATE_READ_ALL_SUCCESS(true, 6400, "지원자들의 면접 평가 결과를 불러왔습니다."),
+    INTERVIEW_EVALUATE_READ_ALL_FAIL(true, 6401, "지원자들의 면접 평가 결과를 불러오는데 실패했습니다.");
 
     private Boolean success;
     private Integer code;
