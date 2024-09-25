@@ -16,17 +16,20 @@ import com.sabujaks.irs.domain.auth.repository.SeekerRepository;
 import com.sabujaks.irs.domain.interview_schedule.model.request.InterviewScheduleReq;
 import com.sabujaks.irs.domain.interview_schedule.model.request.InterviewScheduleUpdateReq;
 import com.sabujaks.irs.domain.interview_schedule.model.request.ReScheduleReq;
-import com.sabujaks.irs.domain.interview_schedule.model.response.InterviewParticipateReadRes;
 import com.sabujaks.irs.domain.interview_schedule.model.response.InterviewScheduleRes;
 import com.sabujaks.irs.domain.interview_schedule.model.response.ReScheduleRes;
 import com.sabujaks.irs.domain.interview_schedule.repository.InterviewParticipateRepository;
 import com.sabujaks.irs.domain.interview_schedule.repository.InterviewScheduleRepository;
 import com.sabujaks.irs.domain.interview_schedule.repository.ReScheduleRepository;
 import com.sabujaks.irs.domain.interview_schedule.repository.TeamRepository;
+import com.sabujaks.irs.domain.interview_schedule.repository.querydsl.InterviewScheduleDslRepository;
 import com.sabujaks.irs.global.common.exception.BaseException;
 import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
 import com.sabujaks.irs.global.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +41,7 @@ import java.util.*;
 public class InterviewScheduleService {
     private final PasswordEncoder passwordEncoder;
     private final InterviewScheduleRepository interviewScheduleRepository;
+    private final InterviewScheduleDslRepository interviewScheduleDslRepository;
     private final SeekerRepository seekerRepository;
     private final InterviewParticipateRepository interviewParticipateRepository;
     private final EstimatorRepository estimatorRepository;
@@ -149,25 +153,34 @@ public class InterviewScheduleService {
         return uuid;
     }
 
-    public List<InterviewScheduleRes> readAll(String careerBase, Long idx) throws BaseException {
-        Optional<List<InterviewSchedule>> result;
-        if(careerBase.equals("전체")) {
-            result = interviewScheduleRepository.findByAnnouncementIdx(idx);
+    public List<InterviewScheduleRes> readAll(String careerBase, Long idx, Integer page) throws BaseException {
+//        Optional<List<InterviewSchedule>> result;
+//        if(careerBase.equals("전체")) {
+//            result = interviewScheduleRepository.findByAnnouncementIdx(idx);
+//        } else {
+//            result = interviewScheduleRepository.findByCareerBaseAndAnnouncementIdx(careerBase, idx);
+//        }
+
+        Pageable pageable = PageRequest.of(page, 10); // 10개씩 가져오도록 설정
+        Page<InterviewSchedule> result;
+
+        if (careerBase.equals("전체")) {
+            result = interviewScheduleDslRepository.findByAnnouncementIdx(idx, pageable);
         } else {
-            result = interviewScheduleRepository.findByCareerBaseAndAnnouncementIdx(careerBase, idx);
+            result = interviewScheduleDslRepository.findByCareerBaseAndAnnouncementIdx(careerBase, idx, pageable);
         }
 
         List<InterviewScheduleRes> interviewScheduleList = new ArrayList<>();
 
         if(!result.isEmpty()) {
-            for (InterviewSchedule interviewSchedule : result.get()) {
+            for (InterviewSchedule interviewSchedule : result) {
                 List<SeekerInfoGetRes> seekerInfoGetResList = new ArrayList<>();
                 List<InterviewParticipate> participateResult = interviewParticipateRepository.findByInterviewScheduleIdx(interviewSchedule.getIdx()).orElseThrow(() ->
                         new BaseException(BaseResponseMessage.INTERVIEW_PARTICIPATE_NOT_FOUND));
 
                 for(InterviewParticipate interviewParticipate : participateResult) {
                     seekerInfoGetResList.add(SeekerInfoGetRes.builder()
-                            .idx(interviewParticipate.getIdx())
+                            .idx(interviewParticipate.getSeeker().getIdx())
                             .name(seekerRepository.findBySeekerIdx(interviewParticipate.getSeeker().getIdx()).get().getName())
                             .email(seekerRepository.findBySeekerIdx(interviewParticipate.getSeeker().getIdx()).get().getEmail())
                             .build());
@@ -244,6 +257,17 @@ public class InterviewScheduleService {
         }
     }
 
+    public Integer getTotalInterviewSchedule(String careerBase, Long idx){
+        Optional<List<InterviewSchedule>> result;
+        if(careerBase.equals("전체")) {
+            result = interviewScheduleRepository.findByAnnouncementIdx(idx);
+        } else {
+            result = interviewScheduleRepository.findByCareerBaseAndAnnouncementIdx(careerBase, idx);
+        }
+
+        return result.get().size();
+    }
+
     public ReScheduleRes createReSchedule(ReScheduleReq dto) throws BaseException {
 
         InterviewSchedule interviewSchedule = interviewScheduleRepository.findByInterviewScheduleIdx(dto.getInterviewScheduleIdx())
@@ -278,8 +302,14 @@ public class InterviewScheduleService {
                 .build();
     }
 
-    public List<ReScheduleRes> readAllReSchedule(Long announcementIdx) throws BaseException {
-        List<InterviewSchedule> result = interviewScheduleRepository.findByAnnouncementIdx(announcementIdx).orElseThrow(() -> new BaseException(BaseResponseMessage.INTERVIEW_SCHEDULE_NOT_FOUND));
+    public List<ReScheduleRes> readAllReSchedule(Long announcementIdx, Integer pageNum) throws BaseException {
+//        List<InterviewSchedule> result = interviewScheduleRepository.findByAnnouncementIdx(announcementIdx).orElseThrow(() -> new BaseException(BaseResponseMessage.INTERVIEW_SCHEDULE_NOT_FOUND));
+
+        System.out.println(announcementIdx);
+        System.out.println(pageNum);
+
+        Pageable pageable = PageRequest.of(pageNum, 10); // 10개씩 가져오도록 설정
+        Page<InterviewSchedule> result = interviewScheduleDslRepository.findByAnnouncementIdx(announcementIdx, pageable);
         List<ReScheduleRes> reScheduleResList = new ArrayList<>();
 
         for(InterviewSchedule interviewSchedule : result) {
@@ -287,12 +317,6 @@ public class InterviewScheduleService {
             if(reSchedule == null) {
                 continue;
             }
-            System.out.println("?????@?@?@?@?");
-            System.out.println(reSchedule.getIdx());
-            System.out.println(reSchedule.getInterviewStart());
-            System.out.println(reSchedule.getInterviewEnd());
-            System.out.println(reSchedule.getSeeker().getIdx());
-            System.out.println("?????@?@?@?@?");
             Seeker seeker = seekerRepository.findBySeekerIdx(reSchedule.getSeeker().getIdx()).get();
 
             if(reSchedule != null) {
@@ -319,5 +343,23 @@ public class InterviewScheduleService {
         }
 
         return reScheduleResList;
+    }
+
+    public Integer getTotalReSchedule(Long announcementIdx) throws BaseException {
+        List<InterviewSchedule> result = interviewScheduleRepository.findByAnnouncementIdx(announcementIdx).orElseThrow(() -> new BaseException(BaseResponseMessage.INTERVIEW_SCHEDULE_NOT_FOUND));
+        List<ReScheduleRes> reScheduleResList = new ArrayList<>();
+
+        for(InterviewSchedule interviewSchedule : result) {
+            ReSchedule reSchedule = reScheduleRepository.findByInterviewScheduleIdx(interviewSchedule.getIdx());
+            if(reSchedule == null) {
+                continue;
+            }
+
+            reScheduleResList.add(ReScheduleRes.builder()
+                    .idx(reSchedule.getIdx())
+                    .build());
+        }
+
+        return reScheduleResList.size();
     }
 }
