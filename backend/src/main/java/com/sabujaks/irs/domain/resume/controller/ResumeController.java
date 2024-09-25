@@ -131,4 +131,13 @@ public class ResumeController {
         ResumeUpdateDocPassedRes response = resumeService.updateDocPassed(customUserDetails, resumeIdx, dto);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.RESUME_UPDATE_SUCCESS_DOC_PASSED, response));
     }
+
+    // (지원자) 공고별 지원서 관리 목록
+    @GetMapping("/read-all")
+    public ResponseEntity<BaseResponse<ResumeReadAllRes>> readAll(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails) throws BaseException {
+
+        List<ResumeReadAllRes> response = resumeService.readAll(customUserDetails);
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.RESUME_READ_SUCCESS, response));
+    }
 }
