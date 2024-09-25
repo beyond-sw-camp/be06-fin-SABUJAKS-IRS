@@ -87,6 +87,8 @@ public enum BaseResponseMessage {
     RESUME_READ_FAIL_INTEGRATED(false, 2102, "통합 지원서를 등록하지 않았습니다. 먼저 등록해주세요." ),
     RESUME_READ_FAIL_RESUME(false, 2103, "해당 공고에 지원한 기록이 존재하지 않습니다." ),
     RESUME_READ_FAIL_RESUME_INFO(false, 2104, "해당 공고에 지원한 지원서가 존재하지 않습니다." ),
+    RESUME_READ_FAIL_RESUME_NOT_FOUND(false, 2105, "공고에 지원한 기록이 존재하지 않습니다." ),
+    RESUME_READ_FAIL_COMPANY_NOT_FOUND(false, 2106, "기업 조회에 실패하였습니다." ),
     RESUME_UPDATE_SUCCESS(true, 2200, "지원서 수정에 성공하였습니다." ),
     RESUME_UPDATE_SUCCESS_DOC_PASSED(true, 2201, "서류 합격/불합격 처리 완료되었습니다." ),
     RESUME_UPDATE_FAIL_DOC_PASSED(false, 2202, "서류 합격/불합격 처리에 실패하였습니다." ),
