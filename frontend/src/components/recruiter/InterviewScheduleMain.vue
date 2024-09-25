@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, defineEmits } from 'vue';
+import {defineProps, defineEmits, computed, ref} from 'vue';
 
 // props를 정의합니다.
 const props = defineProps({
@@ -13,16 +13,38 @@ const props = defineProps({
   },
   announcements: {
     type: Array,
-    required: false
+    required: false,
+    default: () => [] // 기본값 설정
+  },
+  totalAnnouncements: {
+    type: Number,
+    required: true
   }
 });
 
 const emit = defineEmits(['interviewScheduleList']);
 
+const postsPerPage = 10; // 페이지당 게시글 수
+const totalPages = computed(() => {
+  return props.totalAnnouncements ? Math.ceil(props.totalAnnouncements / postsPerPage) : 0;
+});
+
+// 페이지 버튼 클릭 시 호출되는 메서드
+const currentPage = ref(1); // 현재 페이지
+
+const handlePageClick = (pageNumber) => {
+  currentPage.value = pageNumber; // 페이지 번호 업데이트
+  emit('loadAnnouncementList', pageNumber);
+};
+
+const startNumberForPage = computed(() => {
+  return props.totalAnnouncements - (currentPage.value - 1) * postsPerPage;
+});
+
 // const announceIdx = ref(0);
 
 const handleRowClick = (announcementIdx, announcementUuid) => {
-  emit('interviewScheduleList', announcementIdx);
+  emit('interviewScheduleList', announcementIdx, announcementUuid);
   emit('announcementUuid', announcementUuid);
   emit('titleModal', props.careerBase);
 }
@@ -48,14 +70,20 @@ const formatDate = (datetime) => {
         <th>공고명</th>
       </tr>
       <!--      <tr @click="handleRowClick('경력')">-->
-      <tr v-for="(announcement, index) in props.announcements" :key="announcement.idx" @click="handleRowClick(announcement.idx, announcement.uuid)">
-        <td>{{ index + 1 }}</td>
+      <tr v-for="(announcement, index) in props.announcements" :key="announcement.idx"
+          @click="handleRowClick(announcement.idx, announcement.uuid)">
+        <td>{{ startNumberForPage - index }}</td>
         <td>{{ formatDate(announcement.announcementStart) }} - {{ formatDate(announcement.announcementEnd) }}</td>
         <td>{{ announcement.title }}</td>
       </tr>
       </tbody>
     </table>
+
+    <div id="size-buttons">
+      <button v-for="page in totalPages" :key="page" @click="handlePageClick(page)">{{ page }}</button>
+    </div>
   </div>
+
 
 </template>
 
