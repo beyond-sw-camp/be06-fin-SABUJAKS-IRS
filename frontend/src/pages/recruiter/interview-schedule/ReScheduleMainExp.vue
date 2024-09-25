@@ -18,30 +18,49 @@ const careerBase = ref("전체");
 const isModalOpen = ref(false);
 const modalTitle = ref('');
 const announcements = ref([]);
-const reSchedules = ref([]);
+const totalAnnouncements = ref(0);
+const interviewSchedules = ref([]);
+const totalReSchedules = ref(0);
 const announcementIdxInfo = ref(0);
 const announcementUuidInfo = ref("");
-const interviewSchedules = ref([]);
+const reSchedules = ref([]);
 const interviewScheduleDetail = ref([]);
 
+
+const reqData = ref({});
+const pageNum = ref(1);
+
 onMounted(async () => {
-  announcements.value = await interviewScheduleStore.readAllAnnouncement(careerBase.value);
+  announcements.value = await interviewScheduleStore.readAllAnnouncement(careerBase.value, pageNum.value);
+  totalAnnouncements.value = await interviewScheduleStore.getTotalAnnouncement(careerBase.value);
 
   console.log(announcements);
+  console.log(totalAnnouncements.value);
 })
 
-const interviewScheduleLists = async (announcementIdx) => {
+const loadAnnouncementList = async (btnNum) => {
+  announcements.value = await interviewScheduleStore.readAllAnnouncement(careerBase.value, btnNum);
+}
+
+const interviewScheduleLists = async (announcementIdx, announcementUuid) => {
   isInterviewScheduleList.value = true;
   isInterviewScheduleMain.value = false;
-  isReScheduleDetail.value = false;
 
-  reSchedules.value = await interviewScheduleStore.readAllReSchedule(announcementIdx);
+  reqData.value = {
+    careerBase: careerBase.value,
+    announcementIdx: announcementIdx,
+  };
+
+  reSchedules.value = await interviewScheduleStore.readAllReSchedule(reqData.value, pageNum.value);
+  totalReSchedules.value = await interviewScheduleStore.getTotalReSchedule(reqData.value);
+
   announcementIdxInfo.value = announcementIdx;
-}
-
-const announcementUuid = async (announcementUuid) => {
   announcementUuidInfo.value = announcementUuid;
 }
+
+// const announcementUuid = (announcementUuid) => {
+//   announcementUuidInfo.value = announcementUuid;
+// }
 
 const setModalTitle = (title) => {
   if (!isModalOpen.value) {  // 모달이 열려있지 않을 때만 실행
@@ -85,16 +104,19 @@ const updateData = async (updateData, updateInfo, pageUpdateData) => {
     <InterviewScheduleMain
         v-if="isInterviewScheduleMain"
         @interviewScheduleList="interviewScheduleLists"
-        @announcementUuid="announcementUuid"
+        @loadAnnouncementList="loadAnnouncementList"
         :title="careerBase"
-        :announcements="announcements">
+        :announcements="announcements"
+        :totalAnnouncements="totalAnnouncements">
     </InterviewScheduleMain>
+
     <ReScheduleList
         v-if="isInterviewScheduleList"
         @interviewScheduleInfo="interviewScheduleInfo"
         :title="'일정 조율 신청 내역'"
         :titleModal="setModalTitle"
         :reSchedules="reSchedules"
+        :totalReSchedules="totalReSchedules"
         :announcementIdx="announcementIdxInfo"
         :announcementUuid="announcementUuidInfo">
     </ReScheduleList>
