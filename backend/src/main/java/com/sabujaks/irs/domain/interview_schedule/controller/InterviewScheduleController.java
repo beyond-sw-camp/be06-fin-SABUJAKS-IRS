@@ -38,8 +38,18 @@ public class InterviewScheduleController {
     @GetMapping("/read-all")
     public ResponseEntity<BaseResponse<?>> readAll (
             @RequestParam String careerBase,
+            @RequestParam Long announcementIdx,
+            @RequestParam Integer pageNum) throws BaseException {
+        List<InterviewScheduleRes> response = interviewScheduleService.readAll(careerBase, announcementIdx, pageNum);
+
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_SCHEDULE_READ_ALL_SUCCESS, response));
+    }
+
+    @GetMapping("/read-all/count")
+    public ResponseEntity<BaseResponse<?>> getTotalInterviewSchedule (
+            @RequestParam String careerBase,
             @RequestParam Long announcementIdx) throws BaseException {
-        List<InterviewScheduleRes> response = interviewScheduleService.readAll(careerBase, announcementIdx);
+        Integer response = interviewScheduleService.getTotalInterviewSchedule(careerBase, announcementIdx);
 
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_SCHEDULE_READ_ALL_SUCCESS, response));
     }
@@ -72,8 +82,17 @@ public class InterviewScheduleController {
 
     @GetMapping("/read-all/re-schedule")
     public ResponseEntity<BaseResponse<?>> readAllReSchedule(
+            @RequestParam Long announcementIdx,
+            @RequestParam Integer pageNum) throws BaseException {
+        List<ReScheduleRes> response = interviewScheduleService.readAllReSchedule(announcementIdx, pageNum);
+
+        return ResponseEntity.ok(new BaseResponse<>(BaseResponseMessage.RESCHEDULE_SEARCH_ALL_SUCCESS, response));
+    }
+
+    @GetMapping("/read-all/count/re-schedule")
+    public ResponseEntity<BaseResponse<?>> getTotalReSchedule(
             @RequestParam Long announcementIdx) throws BaseException {
-        List<ReScheduleRes> response = interviewScheduleService.readAllReSchedule(announcementIdx);
+        Integer response = interviewScheduleService.getTotalReSchedule(announcementIdx);
 
         return ResponseEntity.ok(new BaseResponse<>(BaseResponseMessage.RESCHEDULE_SEARCH_ALL_SUCCESS, response));
     }
