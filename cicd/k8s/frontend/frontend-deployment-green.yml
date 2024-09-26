@@ -35,6 +35,8 @@ spec:
 #              scheme: HTTPS  # HTTP 대신 HTTPS
             initialDelaySeconds: 20
             periodSeconds: 10
+            successThreshold: 3
+            failureThreshold: 5
           livenessProbe:
             httpGet:
               path: /
@@ -44,6 +46,7 @@ spec:
 #              port: 443
             initialDelaySeconds: 20
             periodSeconds: 10
+            failureThreshold: 5
       volumes:
         - name: config
           configMap:
