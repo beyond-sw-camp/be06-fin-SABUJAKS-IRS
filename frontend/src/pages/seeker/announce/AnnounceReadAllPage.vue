@@ -2,7 +2,7 @@
   <div class="body-arp">
     <SeekerHeaderComponent></SeekerHeaderComponent>
     <section class="main-content">
-      <h2>채용</h2>
+      <h2>채용1</h2>
       <div class="filter-section">
         <div class="filter-item" data-filter="기업형태">
           <button class="dropdown-btn">기업형태</button>
