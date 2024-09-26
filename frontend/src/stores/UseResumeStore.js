@@ -38,7 +38,8 @@ export const UseResumeStore = defineStore('resume', {
         announcementIdx: 0,
 
         resumeDetail: {},
-        resumeIntegrated: {}
+        resumeIntegrated: {},
+        announceResumeList: []
     }),
     actions: {
         updateShowEducation(value) {
@@ -467,6 +468,20 @@ export const UseResumeStore = defineStore('resume', {
                     withCredentials: true
                 });
                 this.resumeDetail = response.data.result;
+
+            } catch (error) {
+                alert(error.response.data.message);
+            }
+        },
+        async readAll() {
+            try {
+                const response = await axios.get(`${backend}/resume/read-all`, {
+                    headers: { 'Content-Type': 'application/json' },
+                    withCredentials: true
+                });
+                this.announceResumeList = response.data.result;
+                // 공고에 지원한 기록이 존재하지 않으면 마이페이지 홈으로
+
 
             } catch (error) {
                 alert(error.response.data.message);
