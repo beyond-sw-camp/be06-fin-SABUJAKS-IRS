@@ -83,7 +83,7 @@ pipeline {
                                             kubectl apply -f /home/test/cicd/k8s/frontend/${deploymentFile}
                                             kubectl scale deployment ${deploymentName} --replicas=2
                                             kubectl patch service ${serviceName} -p '{"spec":{"selector":{"deployment":"${newSelector}","type":"frontend"}}}'
-                                            kubectl scale deployment ${otherDeployment} --replicas=0'
+                                            kubectl scale deployment ${otherDeployment} --replicas=0
                                         """
                                     )
                                 ]
