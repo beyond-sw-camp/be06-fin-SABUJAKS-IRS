@@ -14,34 +14,20 @@
 
                     <div class="content">
                         <!-- 지원서 항목 리스트 -->
-                        <div class="application-item">
-                            <div class="status">지원완료</div>
+                        <div v-for="(announceResume, index) in resumeStore.announceResumeList" :key="index" class="application-item">
+                            <div class="status">{{ checkAnnouncementStatus(announceResume.announcementStart, announceResume.announcementEnd) }}</div>
                             <div class="application-details">
-                                <div class="application-title">백엔드 서비스 부분 지원서</div>
-                                <div class="company-name">한화 시스템</div>
-                                <div class="date">2024.09.03</div>
+                                <div class="application-title">{{ announceResume.resumeTitle }}</div>
+                                <div class="company-name">{{ announceResume.announcementTitle }} / {{ announceResume.companyName }}</div>
+                                <div class="date">{{ formatDate(announceResume.resumedAt) }}</div>
                             </div>
                             <div class="application-actions">
-                                <button class="edit-btn">수정</button>
-                                <button class="delete-btn">삭제</button>
-                            </div>
-                        </div>
-
-                        <div class="application-item">
-                            <div class="status">미완성</div>
-                            <div class="application-details">
-                                <div class="application-title">지원서2</div>
-                                <div class="company-name">삼성전자</div>
-                                <div class="date">2024.09.03</div>
-                            </div>
-                            <div class="application-actions">
-                                <button class="edit-btn">수정</button>
-                                <button class="delete-btn">삭제</button>
+                                <button class="announce-btn">공고 보기</button>
+                                <router-link :to="`/seeker/resume/detail/${announceResume.resumeIdx}`"><button class="resume-btn">지원서 보기</button></router-link>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -50,6 +36,38 @@
 <script setup>
 import SeekerHeaderComponent from "@/components/seeker/SeekerHeaderComponent.vue";
 import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.vue";
+
+import { onMounted } from 'vue';
+import { UseResumeStore } from '@/stores/UseResumeStore';
+// import { useRoute } from 'vue-router';
+
+const resumeStore = UseResumeStore();
+// const route = useRoute();
+
+
+onMounted(async () => {
+    await resumeStore.readAll();
+    console.log(resumeStore.announceResumeList);
+});
+
+const formatDate = (dateString) => {
+    return dateString.split('T')[0];
+}
+
+    // 모집 상태를 확인하는 함수
+const checkAnnouncementStatus = (start, end) => {
+    const currentDate = new Date();
+    const announcementStart = new Date(start);
+    const announcementEnd = new Date(end);
+
+    if (currentDate >= announcementStart && currentDate <= announcementEnd) {
+        return '진행중';
+    } else if (currentDate > announcementEnd) {
+        return '마감';
+    } else {
+        return '시작 전';
+    }
+};
 </script>
 
 <style scoped>
@@ -115,7 +133,7 @@ import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.v
     background-color: rgba(255, 255, 255, 0);
     /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); */
     border-radius: 10px;
-    margin: 20px;
+    margin: 80px 20px;
     /* 수직, 수평 여백 추가 */
     gap: 20px;
     /* 사이드바와 메인 컨텐츠 사이의 간격 추가 */
@@ -210,6 +228,9 @@ nav ul li a {
     padding: 5px 10px;
     border-radius: 5px;
     margin-right: 20px;
+    width: 80px; /* 너비 고정 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
 }
 
 .application-details {
@@ -237,8 +258,8 @@ nav ul li a {
     gap: 10px;
 }
 
-.edit-btn,
-.delete-btn {
+.announce-btn,
+.resume-btn {
     padding: 8px 16px;
     border: none;
     border-radius: 5px;
@@ -246,22 +267,22 @@ nav ul li a {
     font-size: 14px;
 }
 
-.edit-btn {
+.announce-btn {
     background-color: #212b36;
     color: white;
 }
 
-.delete-btn {
+.resume-btn {
     background-color: white;
     color: #555;
     border: 1px solid #ddd;
 }
 
-.edit-btn:hover {
+.announce-btn:hover {
     background-color: #212b36;
 }
 
-.delete-btn:hover {
+.resume-btn:hover {
     background-color: #f2f2f2;
 }
 
@@ -287,7 +308,7 @@ nav ul li a {
     font-weight: bold;
 }
 
-.edit-profile {
+.announce-profile {
     background-color: #212b36;
     color: white;
     padding: 10px 20px;
@@ -296,7 +317,7 @@ nav ul li a {
     cursor: pointer;
 }
 
-.edit-profile:hover {
+.announce-profile:hover {
     background-color: #212b36;
 }
 
