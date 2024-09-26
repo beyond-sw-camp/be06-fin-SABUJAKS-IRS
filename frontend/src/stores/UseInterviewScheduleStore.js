@@ -21,7 +21,7 @@ export const UseInterviewScheduleStore = defineStore('reservation', {
             try{
                 const response = await axios.post(
                     // `api/interview-schedule/create`,
-                    `/api/api/interview-schedule/create`,
+                    `${backend}/interview-schedule/create`,
                     interviewData,
                     // 쿠키 포함
                     { withCredentials: true }
@@ -43,7 +43,7 @@ export const UseInterviewScheduleStore = defineStore('reservation', {
             try{
                 const response = await axios.get(
                     // `api/interview-schedule/create`,
-                    `/api/api/announcement/recruiter/read-all?` +
+                    `${backend}/announcement/recruiter/read-all?` +
                     `careerBase=${careerBase}` +
                     `&pageNum=${pageNum}`,
                     // 쿠키 포함
@@ -65,7 +65,7 @@ export const UseInterviewScheduleStore = defineStore('reservation', {
             try{
                 const response = await axios.get(
                     // `api/interview-schedule/create`,
-                    `/api/api/announcement/recruiter/read-all/count?careerBase=${careerBase}`,
+                    `${backend}/announcement/recruiter/read-all/count?careerBase=${careerBase}`,
                     // 쿠키 포함
                     { withCredentials: true }
                 );
@@ -84,7 +84,7 @@ export const UseInterviewScheduleStore = defineStore('reservation', {
             try{
                 const response = await axios.get(
                     // `api/interview-schedule/create`,
-                    `/api/api/interview-schedule/read-all?` +
+                    `${backend}/interview-schedule/read-all?` +
                     `careerBase=${reqData.careerBase}` +
                     `&announcementIdx=${reqData.announcementIdx}` +
                     `&pageNum=${pageNum}`,
@@ -106,7 +106,7 @@ export const UseInterviewScheduleStore = defineStore('reservation', {
             try{
                 const response = await axios.get(
                     // `api/interview-schedule/create`,
-                    `/api/api/interview-schedule/read-all/count?` +
+                    `${backend}/interview-schedule/read-all/count?` +
                     `careerBase=${reqData.careerBase}` +
                     `&announcementIdx=${reqData.announcementIdx}`,
                     // 쿠키 포함
@@ -124,7 +124,7 @@ export const UseInterviewScheduleStore = defineStore('reservation', {
         async getAvailableTimes(requestData) {
             try{
                 const response = await axios.post(
-                    `/api/api/interview-schedule/available-times`,
+                    `${backend}/interview-schedule/available-times`,
                     requestData
                 );
 
@@ -142,7 +142,7 @@ export const UseInterviewScheduleStore = defineStore('reservation', {
             console.log(scheduleData);
             try{
                 const response = await axios.post(
-                    `/api/api/interview-schedule/create/re-schedule`,
+                    `${backend}/interview-schedule/create/re-schedule`,
                     scheduleData
                 );
 
@@ -159,7 +159,7 @@ export const UseInterviewScheduleStore = defineStore('reservation', {
         async readAllReSchedule(announceIdx, pageNum) {
             try{
                 const reScheduleResponse = await axios.get(
-                    `/api/api/interview-schedule/read-all/re-schedule?` +
+                    `${backend}/interview-schedule/read-all/re-schedule?` +
                     `announcementIdx=${announceIdx.announcementIdx}` +
                     `&pageNum=${pageNum}` ,
                     {withCredentials: true}
@@ -178,7 +178,7 @@ export const UseInterviewScheduleStore = defineStore('reservation', {
             try{
                 const response = await axios.get(
                     // `api/interview-schedule/create`,
-                    `/api/api/interview-schedule/read-all/count/re-schedule?` +
+                    `${backend}/interview-schedule/read-all/count/re-schedule?` +
                     `&announcementIdx=${reqData.announcementIdx}`,
                     // 쿠키 포함
                     { withCredentials: true }
