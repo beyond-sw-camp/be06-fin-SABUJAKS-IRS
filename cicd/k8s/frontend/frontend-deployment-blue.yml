@@ -30,6 +30,7 @@ spec:
             httpGet:
               path: /
               port: 443
+              scheme: HTTPS  # HTTP 대신 HTTPS 사용
             initialDelaySeconds: 20
             periodSeconds: 10
             successThreshold: 3
