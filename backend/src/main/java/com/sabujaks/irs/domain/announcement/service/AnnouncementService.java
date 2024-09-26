@@ -9,6 +9,7 @@ import com.sabujaks.irs.domain.announcement.model.response.*;
 import com.sabujaks.irs.domain.announcement.repository.AnnouncementRepository;
 import com.sabujaks.irs.domain.announcement.repository.CustomFormRepository;
 import com.sabujaks.irs.domain.announcement.repository.CustomLetterFormRepository;
+import com.sabujaks.irs.domain.announcement.repository.querydsl.AnnouncementDslRepository;
 import com.sabujaks.irs.domain.auth.model.entity.Recruiter;
 import com.sabujaks.irs.domain.auth.model.response.RecruiterRes;
 import com.sabujaks.irs.domain.auth.repository.RecruiterRepository;
@@ -22,6 +23,9 @@ import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
 import com.sabujaks.irs.global.security.CustomUserDetails;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.sabujaks.irs.domain.company.model.entity.CompanyBenefits;
 
@@ -33,6 +37,7 @@ import java.util.stream.Collectors;
 public class AnnouncementService {
     private final RecruiterRepository recruiterRepository;
     private final AnnouncementRepository announcementRepository;
+    private final AnnouncementDslRepository announcementDslRepository;
     private final CustomFormRepository customFormRepository;
     private final CustomLetterFormRepository letterFormRepository;
     private final BaseInfoRepository baseInfoRepository;
@@ -73,12 +78,11 @@ public class AnnouncementService {
                         .build();
 
             } else { // 셀렉트 폼이 폴스면 = 파일url이 없으면 들어온 dto만 저장
-                System.out.println(dto.getJobCategoryList());
                 Announcement announcement = Announcement.builder()
                         .recruiter(resultRecruiter.get())
                         .selectForm(dto.getSelectForm())
                         .title(dto.getTitle())
-                        .jobCategory(dto.getJobCategoryList())
+                        .jobCategory(dto.getJobCategoryList().toString())
                         .jobTitle(dto.getJobTitle())
                         .recruitedNum(dto.getRecruitedNum())
                         .careerBase(dto.getCareerBase())
@@ -357,17 +361,27 @@ public class AnnouncementService {
         }
     }
 
-    public List<AnnouncementReadAllRes2> readAllAnnouncement(Long recruiterIdx, String careerBase) throws BaseException {
+    public List<AnnouncementReadAllRes2> readAllAnnouncement(Long recruiterIdx, String careerBase, Integer pageNum) throws BaseException {
+        // 페이지 요청 생성
+        Pageable pageable = PageRequest.of(pageNum, 10);
+
         Optional<Recruiter> recruiter = recruiterRepository.findByRecruiterIdx(recruiterIdx);
-        Optional<List<Announcement>> result;
+        Page<Announcement> result;
+
         if(careerBase.equals("전체")) {
-            result = announcementRepository.findByRecruiterIdx(recruiterIdx);
+            result = announcementDslRepository.findByRecruiterIdx(recruiterIdx, pageable);
         } else {
-            result = announcementRepository.findByRecruiterIdxAndCareerBase(recruiterIdx, careerBase);
+            result = announcementDslRepository.findByRecruiterIdxAndCareerBase(recruiterIdx, careerBase, pageable);
         }
+//        Optional<List<Announcement>> result;
+//        if(careerBase.equals("전체")) {
+//            result = announcementRepository.findByRecruiterIdx(recruiterIdx);
+//        } else {
+//            result = announcementRepository.findByRecruiterIdxAndCareerBase(recruiterIdx, careerBase);
+//        }
 
         List<AnnouncementReadAllRes2> announcementList = new ArrayList<>();
-        for(Announcement announcement : result.get()) {
+        for(Announcement announcement : result) {
             announcementList.add(AnnouncementReadAllRes2.builder()
                     .idx(announcement.getIdx())
                     .title(announcement.getTitle())
@@ -397,5 +411,16 @@ public class AnnouncementService {
         }
 
         return announcementList;
+    }
+
+    public Integer getTotalAnnouncement(Long recruiterIdx, String careerBase) {
+        Optional<List<Announcement>> result;
+        if(careerBase.equals("전체")) {
+            result = announcementRepository.findByRecruiterIdx(recruiterIdx);
+        } else {
+            result = announcementRepository.findByRecruiterIdxAndCareerBase(recruiterIdx, careerBase);
+        }
+
+        return result.get().size();
     }
 }

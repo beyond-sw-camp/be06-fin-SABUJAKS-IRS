@@ -1,5 +1,5 @@
 <script setup>
-import {defineEmits, defineProps} from 'vue';
+import {computed, defineEmits, defineProps, ref} from 'vue';
 
 // props를 정의합니다.
 const props = defineProps({
@@ -12,6 +12,10 @@ const props = defineProps({
     required: false,
     default: () => [] // 기본값을 빈 배열로 설정
   },
+  totalReSchedules: {
+    type: Number,
+    required: true
+  },
   announcementIdx: {
     type: Number,
     required: false,
@@ -23,9 +27,29 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['interviewScheduleInfo']);
-console.log(props.announcementIdx);
-console.log(props.announcementUuid);
-// const announceIdx = ref(0);
+
+const postsPerPage = 10; // 페이지당 게시글 수
+const totalPages = computed(() => {
+  return props.totalReSchedules ? Math.ceil(props.totalReSchedules / postsPerPage) : 0;
+});
+
+const currentPage = ref(1); // 현재 페이지
+
+const handlePageClick = (pageNumber) => {
+  currentPage.value = pageNumber;
+  emit('loadInterviewScheduleList', pageNumber);
+  window.scrollTo({top: 0});
+};
+
+// 각 페이지의 시작 번호 계산
+const startNumberForPage = computed(() => {
+  return props.totalReSchedules - (currentPage.value - 1) * postsPerPage;
+});
+
+// 현재 페이지에 맞는 면접 일정 slice
+const paginatedReSchedules = computed(() => {
+  return props.reSchedules;
+});
 
 const handleRowClick = (schedule) => {
   emit('interviewScheduleInfo', schedule, props.announcementIdx, props.announcementUuid);
@@ -46,8 +70,8 @@ const handleRowClick = (schedule) => {
         <th>요청 면접자</th>
         <th>조율 여부</th>
       </tr>
-      <tr v-for="(schedule, index) in props.reSchedules" :key="schedule.idx" @click="handleRowClick(schedule)">
-        <td>{{ index + 1 }}</td>
+      <tr v-for="(schedule, index) in paginatedReSchedules" :key="schedule.idx" @click="handleRowClick(schedule)">
+        <td>{{ startNumberForPage - index }}</td>
         <td>{{ schedule.interviewScheduleRes.interviewDate }}</td>
         <td>{{ schedule.interviewScheduleRes.interviewStart }} ~ {{ schedule.interviewScheduleRes.interviewEnd }}</td>
         <td>{{ schedule.interviewStart }} ~ {{ schedule.interviewEnd }}</td>
@@ -56,6 +80,10 @@ const handleRowClick = (schedule) => {
       </tr>
       </tbody>
     </table>
+
+    <div id="size-buttons">
+      <button v-for="page in totalPages" :key="page" @click="handlePageClick(page)">{{ page }}</button>
+    </div>
   </div>
 </template>
 

@@ -27,6 +27,7 @@ import InterviewScheduleMainExp from "@/pages/recruiter/interview-schedule/Inter
 import InterviewScheduleMain from '@/components/recruiter/InterviewScheduleMain.vue';
 import ReScheduleMainExp from "@/pages/recruiter/interview-schedule/ReScheduleMainExp.vue";
 import {UseAuthStore} from "@/stores/UseAuthStore";
+import CompanyInfoPage from "@/pages/recruiter/company/CompanyInfoPage.vue";
 
 const requireRecruiterLogin = async (to, from, next) => {
     const authStore = UseAuthStore();
@@ -67,6 +68,7 @@ const router = createRouter({
         { path: '/recruiter/resume', component: ResumeMainPage, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/resume/list', component: ResumeListPage, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/resume/detail/:resumeIdx', component: RecruiterResumeDetailPage, beforeEnter: requireRecruiterLogin },
+        { path: '/recruiter/mypage', component: CompanyInfoPage, beforeEnter: requireRecruiterLogin },
         { path: '/seeker/login', component: SeekerLoginPage },
         { path: '/seeker/signup', component: SeekerSignupPage },
         
