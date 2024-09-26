@@ -154,11 +154,11 @@ onMounted(() => {
   </div>
 </template>
 
-<style scoped>
+<style>
 .image-upload-container img {
   width: 100px;
   height: 100px;
-  border: 2px solid #212b36;
+  border: 1px solid #212b36;
 }
 
 .image-preview img{
@@ -199,5 +199,34 @@ onMounted(() => {
   position: absolute;
   top: 0;
   right: 0;
+}
+
+label {
+  display: block;
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+label .subtitle {
+  font-weight: 400 !important;
+}
+
+input[type="text"] {
+  width: calc(100% - 40px);
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.submit-button {
+  width: 100%;
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #232b16;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 </style>
