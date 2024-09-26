@@ -29,7 +29,7 @@ spec:
           readinessProbe:
             httpGet:
               path: /
-              port: 443
+              port: 80
 #              scheme: HTTPS  # HTTP 대신 HTTPS
             initialDelaySeconds: 20
             periodSeconds: 10
@@ -37,7 +37,7 @@ spec:
           livenessProbe:
             httpGet:
               path: /
-              port: 443
+              port: 80
 #              scheme: HTTPS  # HTTP 대신 HTTPS
             initialDelaySeconds: 20
             periodSeconds: 10
