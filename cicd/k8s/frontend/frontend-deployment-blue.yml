@@ -36,11 +36,11 @@ spec:
             initialDelaySeconds: 20
             periodSeconds: 10
           livenessProbe:
-#            httpGet:
-#              path: /
-#              port: 80
-            tcpSocket:
-              port: 443
+            httpGet:
+              path: /
+              port: 80
+#            tcpSocket:
+#              port: 443
 #              scheme: HTTPS  # HTTP 대신 HTTPS
             initialDelaySeconds: 20
             periodSeconds: 10
