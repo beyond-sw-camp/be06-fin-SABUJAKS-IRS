@@ -147,6 +147,7 @@ public class AuthService {
             Seeker seeker = seekerRepository.findBySeekerEmail(customUserDetails.getEmail())
             .orElseThrow(() -> new BaseException(BaseResponseMessage.AUTH_SEARCH_USER_INFO_FAIL));
             return UserInfoGetRes.builder()
+                    .nickName(seeker.getNickname())
                     .name(seeker.getName())
                     .email(seeker.getEmail())
                     .role(seeker.getRole())

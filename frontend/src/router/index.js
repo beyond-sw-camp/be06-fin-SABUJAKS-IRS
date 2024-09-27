@@ -46,13 +46,21 @@ const requireRecruiterLogin = async (to, from, next) => {
         next("/recruiter/login");
     }
 }
+const alreadyLogin = async (to, from, next) => {
+    const authStore = UseAuthStore();
+    if (!authStore.isLoggedIn) {
+        return next();
+    } else {
+        return next("/");
+    }
+}
 
 const router = createRouter({
     history: createWebHistory(),
     routes: [
         { path: '/', component: AnnounceReadAllPage },
-        { path: '/recruiter/login', component: RecruiterLoginPage },
-        { path: '/recruiter/signup', component: RecruiterSignupPage },
+        { path: '/recruiter/login', component: RecruiterLoginPage, beforeEnter: alreadyLogin },
+        { path: '/recruiter/signup', component: RecruiterSignupPage, beforeEnter: alreadyLogin },
         { path: '/recruiter/announce', component: AnnounceMainPage, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/announce/register-step2/:announcementIdx/:title', name: 'AnnouncementCreateStep2', component: AnnounceRegisterStep2Page, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/announce/register-step1', component: AnnounceRegisterStep1Page, beforeEnter: requireRecruiterLogin },
@@ -69,9 +77,9 @@ const router = createRouter({
         { path: '/recruiter/resume/list/:announcementIdx', component: ResumeListPage, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/resume/detail/:resumeIdx', component: RecruiterResumeDetailPage, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/mypage', component: CompanyInfoPage, beforeEnter: requireRecruiterLogin },
-        { path: '/seeker/login', component: SeekerLoginPage },
-        { path: '/seeker/signup', component: SeekerSignupPage },
-
+        { path: '/seeker/login', component: SeekerLoginPage, beforeEnter: alreadyLogin },
+        { path: '/seeker/signup', component: SeekerSignupPage, beforeEnter: alreadyLogin },
+        
         { path: '/seeker/announce', component: AnnounceReadAllPage },
         { path: '/seeker/announce/detail', component: AnnounceDetailPage },
         { path: '/seeker/mypage', component: MypageMainPage },
