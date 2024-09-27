@@ -72,6 +72,8 @@ export const UseAnnouncementStore = defineStore('announcement', {
             precautions: '',  // 유의사항 데이터
         },
 
+        announcements: [], // 공고 전체 조회 (채용담당자페이지 공고 메뉴)
+
     }),
     // persist: {},
     actions: {
@@ -120,6 +122,41 @@ export const UseAnnouncementStore = defineStore('announcement', {
             } catch (error) {
                 console.error('기업 복리후생 정보를 불러오지 못했습니다.', error);
                 throw new Error(error.response?.data?.message || '복리후생 정보 조회 실패');
+            }
+        },
+
+
+        // 공고 조회 함수 (채용담당자 페이지 - 공고 메뉴 클릭시)
+        async fetchAnnouncements() {
+            try {
+                const response = await axios.get(
+                    `${backend}/announcement/recruiter/read-all/resume`,
+                    {
+                        headers: { 'Content-Type': 'application/json' },
+                        withCredentials: true
+                    });
+                this.announcements = response.data.result; // 백엔드에서 가져온 데이터를 저장
+                console.log(this.announcements)
+            } catch (error) {
+                console.error('공고 목록을 불러오는 중 오류 발생:', error);
+            }
+        },
+
+
+        // 공고 상세 조회 함수 (채용담당자 페이지 - 공고 아이템 한개 클릭시)
+        async fetchAnnouncementDetail(announcementIdx) {
+            try {
+                const response = await axios.get(
+                    `${backend}/announcement/read-detail/see?announcementIdx=${announcementIdx}`,
+                    {
+                        headers: { 'Content-Type': 'application/json' },
+                    });
+                const announcement = response.data.result; // 백엔드에서 가져온 데이터를 저장
+                console.log(announcement)
+
+                return announcement;
+            } catch (error) {
+                console.error('공고 상세 조회 중 오류 발생:', error);
             }
         },
 

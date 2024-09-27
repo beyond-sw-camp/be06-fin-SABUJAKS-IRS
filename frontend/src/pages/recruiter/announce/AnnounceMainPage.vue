@@ -4,6 +4,7 @@
     <MainSideBarComponent></MainSideBarComponent>
     <div id="content">
       <h1>공고 관리</h1>
+      <button class="register-button" @click="goToRegisterPage">공고 등록</button>
       <table>
         <thead>
           <tr>
@@ -15,7 +16,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(announcement, index) in announcements" :key="announcement.announcementIdx">
+          <tr v-for="(announcement, index) in announcementStore.announcements" 
+              :key="announcement.announcementIdx" 
+              @click="goToDetailPage(announcement.announcementIdx)"
+              class="hoverable-row">
             <td>{{ index + 1 }}</td>
             <td>{{ formatDate(announcement.announcementStart) }} - {{ formatDate(announcement.announcementEnd) }}</td>
             <td>{{ announcement.announcementTitle }}</td>
@@ -31,25 +35,16 @@
 <script setup>
 import MainHeaderComponent from "@/components/recruiter/MainHeaderComponent.vue";
 import MainSideBarComponent from "@/components/recruiter/MainSideBarComponent.vue";
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
-import { backend } from '@/const';
+import { UseAnnouncementStore } from '@/stores/UseAnnouncementStore';
+import { useRouter } from 'vue-router';
+import { onMounted } from 'vue';
+// import axios from 'axios';
+// import { backend } from '@/const';
 
 // 공고 리스트 상태
-const announcements = ref([]);
-
-// 데이터 가져오는 함수
-const fetchAnnouncements = async () => {
-  try {
-    const response = await axios.get(`${backend}/announcement/recruiter/read-all/resume`, {
-      headers: { 'Content-Type': 'application/json' },
-      withCredentials: true
-    });
-    announcements.value = response.data.result; // 백엔드에서 가져온 데이터를 저장
-  } catch (error) {
-    console.error('공고 목록을 불러오는 중 오류 발생:', error);
-  }
-};
+// const announcements = ref([]);
+const announcementStore = UseAnnouncementStore();
+const router = useRouter();
 
 // 날짜 포맷 함수 (yyyy-mm-dd 형식으로 포맷팅)
 const formatDate = (dateString) => {
@@ -60,9 +55,19 @@ const formatDate = (dateString) => {
   return `${year}.${month}.${day}`;
 };
 
+// 공고 등록 페이지로 이동
+const goToRegisterPage = () => {
+  router.push('/recruiter/announce/register-step1');
+};
+
+// 공고 상세 페이지로 이동
+const goToDetailPage = (announcementIdx) => {
+  router.push(`/recruiter/announce/detail/${announcementIdx}`);
+};
+
 // 컴포넌트가 로드될 때 데이터를 가져옴
 onMounted(() => {
-  fetchAnnouncements();
+  announcementStore.fetchAnnouncements();
 });
 </script>
 
@@ -108,5 +113,29 @@ th, td {
 
 th {
   background-color: #f1f1f1;
+}
+
+/* 공고 등록 버튼 스타일 */
+.register-button {
+  background-color: #3a3f51;
+  color: white;
+  border-radius: 5px;
+  padding: 13px 10px;
+  margin-left: auto;
+  margin-bottom: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  /* transition: background-color 0.3s ease; */
+}
+
+/* 테이블 행 hover 시 색깔 변화 */
+.hoverable-row {
+  transition: background-color 0.3s ease;
+}
+
+.hoverable-row:hover {
+  background-color: #f6f6f6; /* 마우스 올렸을 때 약간 어둡게 변경 */
+  cursor: pointer;
 }
 </style>
