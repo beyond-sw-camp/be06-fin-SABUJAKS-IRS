@@ -9,86 +9,108 @@
                   <tr>
                     <th>번호</th>
                     <th>이름</th>
-                    <th>신입/경력</th>
-                    <th>결과</th>
-                    <th>비고 <input type="checkbox"></th>
+                    <th>지원서 제목</th>
+                    <th>지원 날짜</th>
+                    <th>서류 결과</th>
+                    <!-- <th>비고 <input type="checkbox"></th> -->
                   </tr>
-                  <tr onclick="location.href='./seeker_detail.html';">
-                    <td>1</td>
-                    <td><a class="applicant-name" data-pdf="./seeker1.pdf">서시현</a></td>
-                    <td>신입</td>
-                    <td>합격</td>
-                    <td><input type="checkbox"></td>
+                  <tr
+                        v-for="(resume, index) in resumeStore.resumeList"
+                        :key="index"
+                        @click="handleRowClick(resume)"
+                        style="cursor: pointer"
+                    >
+                    <td>{{ index + 1 }}</td>
+                        <td>{{ resume.seekerName }}</td>
+                        <td>{{ resume.resumeTitle }}</td>
+                        <td>{{ formatDate(resume.resumedAt) }}</td>
+                        <td v-if="resume.docPassed == null"></td>
+                        <td v-else>{{ resume.docPassed ? "합격" : "불합격" }}</td>
                   </tr>
                   </tbody>
               </table>
-              <div class="button-container">
+              <!-- <div class="button-container">
                   <button class="register-button">결과전송</button>
-              </div>
-              <div id="size-buttons">
+              </div> -->
+              <!-- <div id="size-buttons">
                   <button>1</button>
                   <button>2</button>
                   <button>3</button>
-              </div>
+              </div> -->
         </div>
     </div>
 </template>
 
 <script setup>
-// // 모달 관련 스크립트
-// var modal = document.getElementById("myModal");
-// var pdfPreview = document.getElementById("pdfPreview");
-// var closeBtn = document.getElementsByClassName("close")[0];
-
-// // 이름 클릭 시 모달 열기
-// document.querySelectorAll('.applicant-name').forEach(item => {
-//     item.addEventListener('click', event => {
-//         event.preventDefault();
-//         var pdfPath = item.getAttribute('data-pdf');
-//         pdfPreview.src = pdfPath;
-//         modal.style.display = "block";
-//     });
-// });
-
-// // 모달 닫기
-// closeBtn.onclick = function() {
-//     modal.style.display = "none";
-//     pdfPreview.src = ""; // PDF 미리보기 초기화
-// }
-
-// var dragItem = document.getElementById("draggableModal");
-// var modal = document.getElementById("myModal");
-// var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-
-// dragItem.onmousedown = dragMouseDown;
-
-// function dragMouseDown(e) {
-//     e = e || window.event;
-//     pos3 = e.clientX;
-//     pos4 = e.clientY;
-//     document.onmouseup = closeDragElement;
-//     document.onmousemove = elementDrag;
-// }
-
-// function elementDrag(e) {
-//     e = e || window.event;
-//     pos1 = pos3 - e.clientX;
-//     pos2 = pos4 - e.clientY;
-//     pos3 = e.clientX;
-//     pos4 = e.clientY;
-//     modal.style.top = (modal.offsetTop - pos2) + "px";
-//     modal.style.left = (modal.offsetLeft - pos1) + "px";
-// }
-
-// function closeDragElement() {
-//     document.onmouseup = null;
-//     document.onmousemove = null;
-// }
-
 import MainSideBarComponent from "@/components/recruiter/MainSideBarComponent.vue";
 import MainHeaderComponent from "@/components/recruiter/MainHeaderComponent.vue";
+import { onMounted } from 'vue';
+import { UseResumeStore } from '@/stores/UseResumeStore';
+import { useRoute, useRouter } from 'vue-router';
+
+const resumeStore = UseResumeStore();
+const route = useRoute();
+const router = useRouter();
+
+
+
+onMounted(async () => {
+    await resumeStore.readAllRecruiter(route.params.announcementIdx);
+    console.log(resumeStore.resumeList);
+});
+
+const formatDate = (dateString) => {
+    return dateString.split('T')[0];
+}
+
+const handleRowClick = (resume) => {
+    router.push(`/recruiter/resume/detail/${resume.resumeIdx}`);
+};
 </script>
 
-<style>
+<style scoped>
+
+.container {
+  width: 80%;
+  margin: 0 auto;
+}
+
+#content {
+  flex: 1;
+  margin-left: 200px; /* 사이드바 너비만큼 왼쪽 여백 추가 */
+  padding: 0 0 150px 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+#content table {
+  width: 100%; /* 테이블이 남은 공간을 여유롭게 차지하도록 */
+  border-collapse: collapse;
+}
+
+#content h1 {
+  font-size: 24px;
+  margin: 50px 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 40px;
+}
+
+table, th, td {
+  border: 1px solid #ddd;
+}
+
+th, td {
+  padding: 25px;
+  text-align: left;
+}
+
+th {
+  background-color: #f1f1f1;
+}
 
 </style>

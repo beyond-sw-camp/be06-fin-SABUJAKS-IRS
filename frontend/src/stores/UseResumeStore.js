@@ -39,7 +39,8 @@ export const UseResumeStore = defineStore('resume', {
 
         resumeDetail: {},
         resumeIntegrated: {},
-        announceResumeList: []
+        announceResumeList: [],
+        resumeList: [],
     }),
     actions: {
         updateShowEducation(value) {
@@ -490,13 +491,26 @@ export const UseResumeStore = defineStore('resume', {
         async updateDocPassed(resumeIdx, docPassedValue) {
             try {
                 const response = await axios.patch(`${backend}/resume/update/docPassed/${resumeIdx}`, { docPassed: docPassedValue }, {
-                        headers: { 'Content-Type': 'application/json' },
-                        withCredentials: true }
+                    headers: { 'Content-Type': 'application/json' },
+                    withCredentials: true
+                }
                 );
                 // 합격/불합격 처리 성공
                 if (confirm(response.data.message)) {
                     location.reload();
                 }
+            } catch (error) {
+                alert(error.response.data.message);
+            }
+        },
+        async readAllRecruiter(announcementIdx) {
+            try {
+                const response = await axios.get(`${backend}/resume/recruiter/read-all?announcementIdx=${announcementIdx}`, {
+                    headers: { 'Content-Type': 'application/json' },
+                    withCredentials: true
+                });
+                this.resumeList = response.data.result;
+
             } catch (error) {
                 alert(error.response.data.message);
             }
