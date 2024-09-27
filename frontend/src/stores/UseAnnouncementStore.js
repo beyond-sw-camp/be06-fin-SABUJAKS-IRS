@@ -73,7 +73,7 @@ export const UseAnnouncementStore = defineStore('announcement', {
         },
 
     }),
-    persist: {},
+    // persist: {},
     actions: {
         // 채용담당자 정보 조회
         async fetchManagerInfo() {
