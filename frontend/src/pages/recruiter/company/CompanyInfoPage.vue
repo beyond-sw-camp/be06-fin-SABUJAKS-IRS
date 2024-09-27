@@ -154,7 +154,7 @@ onMounted(() => {
   </div>
 </template>
 
-<style>
+<style scoped>
 .image-upload-container img {
   width: 100px;
   height: 100px;
@@ -185,22 +185,6 @@ onMounted(() => {
   border-radius: 4px;
 }
 
-.hidden {
-  display: none;
-}
-
-.image-preview {
-  position: relative;
-  display: inline-block;
-  margin: 10px;
-}
-
-.remove-image-btn {
-  position: absolute;
-  top: 0;
-  right: 0;
-}
-
 label {
   display: block;
   margin-bottom: 15px;
@@ -228,5 +212,23 @@ input[type="text"] {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+}
+</style>
+
+<style>
+.hidden {
+  display: none;
+}
+
+.image-preview {
+  position: relative;
+  display: inline-block;
+  margin: 10px;
+}
+
+.remove-image-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 </style>
