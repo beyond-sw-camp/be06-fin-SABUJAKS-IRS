@@ -33,6 +33,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         aToken.setPath("/");
         aToken.setMaxAge(60 * 60);
         response.addCookie(aToken);
-        getRedirectStrategy().sendRedirect(request, response, "http://localhost:3000/");
+        getRedirectStrategy().sendRedirect(request, response, "https://www.sabujaks-irs.kro.kr/");
     }
 }
