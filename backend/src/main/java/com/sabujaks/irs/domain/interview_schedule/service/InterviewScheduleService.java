@@ -30,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -154,14 +155,7 @@ public class InterviewScheduleService {
     }
 
     public List<InterviewScheduleRes> readAll(String careerBase, Long idx, Integer page) throws BaseException {
-//        Optional<List<InterviewSchedule>> result;
-//        if(careerBase.equals("전체")) {
-//            result = interviewScheduleRepository.findByAnnouncementIdx(idx);
-//        } else {
-//            result = interviewScheduleRepository.findByCareerBaseAndAnnouncementIdx(careerBase, idx);
-//        }
-
-        Pageable pageable = PageRequest.of(page, 10); // 10개씩 가져오도록 설정
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "idx"));
         Page<InterviewSchedule> result;
 
         if (careerBase.equals("전체")) {
@@ -303,12 +297,7 @@ public class InterviewScheduleService {
     }
 
     public List<ReScheduleRes> readAllReSchedule(Long announcementIdx, Integer pageNum) throws BaseException {
-//        List<InterviewSchedule> result = interviewScheduleRepository.findByAnnouncementIdx(announcementIdx).orElseThrow(() -> new BaseException(BaseResponseMessage.INTERVIEW_SCHEDULE_NOT_FOUND));
-
-        System.out.println(announcementIdx);
-        System.out.println(pageNum);
-
-        Pageable pageable = PageRequest.of(pageNum, 10); // 10개씩 가져오도록 설정
+        Pageable pageable = PageRequest.of(pageNum, 10, Sort.by(Sort.Direction.DESC, "idx"));
         Page<InterviewSchedule> result = interviewScheduleDslRepository.findByAnnouncementIdx(announcementIdx, pageable);
         List<ReScheduleRes> reScheduleResList = new ArrayList<>();
 
