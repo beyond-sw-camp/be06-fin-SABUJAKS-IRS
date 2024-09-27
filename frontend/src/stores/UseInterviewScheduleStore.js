@@ -121,6 +121,22 @@ export const UseInterviewScheduleStore = defineStore('reservation', {
             }
         },
 
+        async createVideoInterview(uuidData) {
+            try{
+                const response = await axios.post(
+                    `${backend}/video-interview/create`,
+                    uuidData
+                );
+
+                console.log(response.data.result);
+
+                return response.data.result;
+            } catch (error) {
+                console.error("Error: ", error);
+                return false;
+            }
+        },
+
         async getAvailableTimes(requestData) {
             try{
                 const response = await axios.post(
