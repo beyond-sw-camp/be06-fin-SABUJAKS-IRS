@@ -41,6 +41,7 @@ const announcementIdxInfo = ref(0);
 const announcementUuidInfo = ref("");
 const interviewType = ref(''); // 선택된 면접 유형 (대면 또는 온라인)
 const reqData = ref({});
+const uuidData = ref({});
 const pageNum = ref(1);
 
 onMounted(async () => {
@@ -88,8 +89,16 @@ const loadInterviewScheduleList = async (btnNumValue) => {
   interviewSchedules.value = response; // 데이터를 가져온 후 interviewSchedules에 값을 할당
 };
 
-const createVideoInterview = () => {
-
+const createVideoInterview = async (interviewScheduleUuid) => {
+  uuidData.value = {
+    announceUUID: announcementUuidInfo.value,
+    // videoInterviewUUID: interviewScheduleUuid,
+    params: { customSessionId: interviewScheduleUuid}
+  }
+  const response = await interviewScheduleStore.createVideoInterview(uuidData.value);
+  if (response !== 0 && response !== undefined) {
+    alert("면접방이 생성되었습니다.")
+  }
 }
 
 const setModalTitle = (title) => {
@@ -196,8 +205,13 @@ const submitForm = () => {
           console.error('면접 일정 등록 중 오류 발생:', error);
         });
   }
-
 };
+
+// 뒤로가기 버튼 클릭 시 컴포넌트 전환
+// const goBack = () => {
+//   isInterviewScheduleMain.value = true;
+//   isInterviewScheduleList.value = false;
+// };
 </script>
 
 
@@ -205,7 +219,7 @@ const submitForm = () => {
   <MainHeaderComponent/>
   <div class="container padding-0">
     <MainSideBarComponent/>
-    <!-- InterviewScheduleMainNew에서 이벤트를 받아 모달을 제어 -->
+
     <InterviewScheduleMain
         v-if="isInterviewScheduleMain"
         @interviewScheduleList="interviewScheduleLists"
