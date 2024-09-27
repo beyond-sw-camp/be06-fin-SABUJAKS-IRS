@@ -18,6 +18,7 @@ import com.sabujaks.irs.domain.interview_evaluate.repository.InterviewEvaluateFo
 import com.sabujaks.irs.domain.interview_evaluate.repository.InterviewEvaluateRepository;
 import com.sabujaks.irs.domain.interview_evaluate.repository.InterviewEvaluateResultRepository;
 import com.sabujaks.irs.domain.interview_schedule.model.entity.InterviewParticipate;
+import com.sabujaks.irs.domain.interview_schedule.model.entity.InterviewSchedule;
 import com.sabujaks.irs.domain.interview_schedule.repository.InterviewParticipateRepository;
 import com.sabujaks.irs.domain.interview_schedule.repository.InterviewScheduleRepository;
 import com.sabujaks.irs.domain.resume.model.entity.*;
@@ -39,9 +40,6 @@ public class InterviewEvaluateService {
     private final InterviewEvaluateFormRepository interviewEvaluateFormRepository;
     private final InterviewParticipateRepository interviewParticipateRepository;
     private final AnnouncementRepository announcementRepository;
-    private final SeekerRepository seekerRepository;
-    private final CustomFormRepository customFormRepository;
-    private final ResumeInfoRepository resumeInfoRepository;
     private final ResumeRepository resumeRepository;
     private final CustomResumeInfoRepository customResumeInfoRepository;
     private final PersonalInfoRepository personalInfoRepository;
@@ -57,10 +55,11 @@ public class InterviewEvaluateService {
     private final PortfolioRepository portfolioRepository;
     private final CustomLetterFormRepository customLetterFormRepository;
     private final InterviewEvaluateResultRepository interviewEvaluateResultRepository;
+    private final InterviewScheduleRepository interviewScheduleRepository;
 
     public InterviewEvaluateFormCreateRes createForm (CustomUserDetails customUserDetails, InterviewEvaluateFormCreateReq dto) throws BaseException {
         Announcement announcement = announcementRepository.findByAnnounceIdx(dto.getAnnounceIdx())
-        .orElseThrow(() -> new BaseException(BaseResponseMessage.ANNOUNCEMENT_SEARCH_FAIL));
+                .orElseThrow(() -> new BaseException(BaseResponseMessage.ANNOUNCEMENT_SEARCH_FAIL));
         if(!Objects.equals(announcement.getRecruiter().getEmail(), customUserDetails.getEmail())){
             throw new BaseException(BaseResponseMessage.INTERVIEW_EVALUATE_CREATE_FORM_FAIL_INVALID_REQUEST);
         }
@@ -105,7 +104,7 @@ public class InterviewEvaluateService {
     public InterviewEvaluateFormReadRes searchForm(CustomUserDetails customUserDetails, String announcementUUID, String interviewScheduleUUID) throws  BaseException {
         if(Objects.equals(customUserDetails.getRole(), "ROLE_RECRUITER")){
             InterviewEvaluateForm interviewEvaluateForm = interviewEvaluateFormRepository.findByAnnouncementUUID(announcementUUID)
-            .orElseThrow(() -> new BaseException(BaseResponseMessage.INTERVIEW_EVALUATE_SEARCH_FORM_FAIL_IS_NOT_EXIST));
+                    .orElseThrow(() -> new BaseException(BaseResponseMessage.INTERVIEW_EVALUATE_SEARCH_FORM_FAIL_IS_NOT_EXIST));
             if(!Objects.equals(interviewEvaluateForm.getAnnouncement().getRecruiter().getEmail(), customUserDetails.getEmail())){
                 throw new BaseException(BaseResponseMessage.INTERVIEW_EVALUATE_SEARCH_FORM_FAIL_INVALID_ACCESS);
             };
@@ -126,7 +125,7 @@ public class InterviewEvaluateService {
                 throw new BaseException(BaseResponseMessage.INTERVIEW_EVALUATE_SEARCH_FORM_FAIL_INVALID_ACCESS);
             }
             InterviewEvaluateForm interviewEvaluateForm = interviewEvaluateFormRepository.findByAnnouncementUUID(announcementUUID)
-            .orElseThrow(() -> new BaseException(BaseResponseMessage.INTERVIEW_EVALUATE_SEARCH_FORM_FAIL_IS_NOT_EXIST));
+                    .orElseThrow(() -> new BaseException(BaseResponseMessage.INTERVIEW_EVALUATE_SEARCH_FORM_FAIL_IS_NOT_EXIST));
             return InterviewEvaluateFormReadRes.builder()
                     .q1(interviewEvaluateForm.getQ1())
                     .q2(interviewEvaluateForm.getQ2())
@@ -147,15 +146,15 @@ public class InterviewEvaluateService {
     @Transactional
     public InterviewEvaluateReadAllResumeInfo readAllResumeInfo(CustomUserDetails customUserDetails,String announcementUUID, String interviewScheduleUUID) throws BaseException{
         List<InterviewParticipate> interviewParticipateList = interviewParticipateRepository
-        .findAllByEstimatorIdxAndInterviewScheduleUUID(customUserDetails.getIdx(), interviewScheduleUUID)
-        .orElseThrow(() -> new BaseException(BaseResponseMessage.INTERVIEW_EVALUATE_SEARCH_FORM_FAIL_INVALID_ACCESS));
+                .findAllByEstimatorIdxAndInterviewScheduleUUID(customUserDetails.getIdx(), interviewScheduleUUID)
+                .orElseThrow(() -> new BaseException(BaseResponseMessage.INTERVIEW_EVALUATE_SEARCH_FORM_FAIL_INVALID_ACCESS));
         Map<Long, InterviewEvaluateReadResumeInfoRes> interviewEvaluateReadResumeInfoResMap = new HashMap();
         for(InterviewParticipate interviewParticipate:interviewParticipateList){
             Seeker seeker = interviewParticipate.getSeeker();
             Announcement announcement = announcementRepository.findByAnnouncementUUID(announcementUUID)
-            .orElseThrow(() -> new BaseException(BaseResponseMessage.RESUME_REGISTER_FAIL_NOT_FOUND_ANNOUNCE));
+                    .orElseThrow(() -> new BaseException(BaseResponseMessage.RESUME_REGISTER_FAIL_NOT_FOUND_ANNOUNCE));
             Resume resume = resumeRepository.findByAnnouncementIdxAndSeekerIdx(announcement.getIdx(), seeker.getIdx())
-            .orElseThrow(()-> new BaseException(BaseResponseMessage.INTERVIEW_EVALUATE_SEARCH_RESUME_FAIL_NOT_FOUND));
+                    .orElseThrow(()-> new BaseException(BaseResponseMessage.INTERVIEW_EVALUATE_SEARCH_RESUME_FAIL_NOT_FOUND));
             List<CustomResumeInfo> customResumeInfoList = customResumeInfoRepository.findAllByResumeInfoIdx(resume.getResumeInfo().getIdx());
             InterviewEvaluateReadResumeInfoRes.InterviewEvaluateReadResumeInfoResBuilder responseBuilder = InterviewEvaluateReadResumeInfoRes.builder();
             Optional<PersonalInfo> resultPersonalInfo = personalInfoRepository.findByResumeInfoIdx(resume.getResumeInfo().getIdx());
@@ -384,10 +383,10 @@ public class InterviewEvaluateService {
     @Transactional
     public InterviewEvaluateCreateRes createEvaluate(CustomUserDetails customUserDetails, InterviewEvaluateCreateReq dto) throws BaseException{
         InterviewParticipate interviewParticipate = interviewParticipateRepository
-        .findBySeekerEmailAndEstimatorIdxAndInterviewScheduleUUID(dto.getUserEmail(), customUserDetails.getIdx(), dto.getVideoInterviewUUID())
-        .orElseThrow(() -> new BaseException(BaseResponseMessage.INTERVIEW_EVALUATE_CREATE_FAIL_NOT_FOUND_SCHEDULE));
+                .findBySeekerEmailAndEstimatorIdxAndInterviewScheduleUUID(dto.getUserEmail(), customUserDetails.getIdx(), dto.getVideoInterviewUUID())
+                .orElseThrow(() -> new BaseException(BaseResponseMessage.INTERVIEW_EVALUATE_CREATE_FAIL_NOT_FOUND_SCHEDULE));
         InterviewEvaluateForm interviewEvaluateForm = interviewEvaluateFormRepository.findByAnnouncementUUID(dto.getAnnouncementUUID())
-        .orElseThrow(() -> new BaseException(BaseResponseMessage.INTERVIEW_EVALUATE_CREATE_FAIL_INVALID_FORM));
+                .orElseThrow(() -> new BaseException(BaseResponseMessage.INTERVIEW_EVALUATE_CREATE_FAIL_INVALID_FORM));
         Optional<InterviewEvaluate> result = interviewEvaluateRepository.findByInterviewParticipateIdx(interviewParticipate.getIdx());
         if(result.isPresent()){
             InterviewEvaluate interviewEvaluate = result.get();
@@ -445,5 +444,34 @@ public class InterviewEvaluateService {
                     .idx(interviewEvaluate.getIdx())
                     .build();
         }
+    }
+
+    public InterviewEvaluateReadAllRes readAllEvaluate(CustomUserDetails customUserDetails, Long announceIdx) throws BaseException {
+        Announcement announcement = announcementRepository.findByAnnounceIdx(announceIdx)
+                .orElseThrow(() -> new BaseException(BaseResponseMessage.ANNOUNCEMENT_SEARCH_FAIL_NOT_FOUND));
+        if (!Objects.equals(announcement.getRecruiter().getEmail(), customUserDetails.getEmail())) {
+            throw new BaseException(BaseResponseMessage.ANNOUNCEMENT_SEARCH_FAIL_INVALID_REQUEST);
+        }
+        Map<Long, InterviewEvaluateReadRes> interviewEvaluateReadAllResMap = new HashMap<>();
+        List<InterviewSchedule> interviewScheduleList = interviewScheduleRepository.findByAnnouncementIdx(announceIdx)
+                .orElseThrow(() -> new BaseException(BaseResponseMessage.INTERVIEW_SCHEDULE_NOT_FOUND));
+        for(InterviewSchedule interviewSchedule : interviewScheduleList){
+            List<InterviewParticipate> interviewParticipateList = interviewParticipateRepository.findByInterviewScheduleIdx(interviewSchedule.getIdx())
+                    .orElseThrow(() -> new BaseException(BaseResponseMessage.INTERVIEW_PARTICIPATE_NOT_FOUND));
+            for(InterviewParticipate interviewParticipate : interviewParticipateList){
+                InterviewEvaluate interviewEvaluate = interviewEvaluateRepository.findByInterviewParticipateIdx(interviewParticipate.getIdx())
+                        .orElseThrow(() -> new BaseException(BaseResponseMessage.INTERVIEW_EVALUATE_READ_ALL_FAIL));
+                InterviewEvaluateReadRes interviewEvaluateReadRes = InterviewEvaluateReadRes.builder()
+                        .estimatorEmail(interviewParticipate.getEstimator().getEmail())
+                        .seekerName(interviewParticipate.getSeeker().getName())
+                        .totalScore(interviewEvaluate.getTotalScore())
+                        .comments(interviewEvaluate.getComments())
+                        .build();
+                interviewEvaluateReadAllResMap.put(interviewParticipate.getSeeker().getIdx(), interviewEvaluateReadRes);
+            }
+        }
+        return InterviewEvaluateReadAllRes.builder()
+                .interviewEvaluateReadResumeInfoResMap(interviewEvaluateReadAllResMap)
+                .build();
     }
 }

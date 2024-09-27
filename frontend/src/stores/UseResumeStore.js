@@ -37,7 +37,9 @@ export const UseResumeStore = defineStore('resume', {
         resumeTitle: null,
         announcementIdx: 0,
 
-        resumeDetail: {}
+        resumeDetail: {},
+        resumeIntegrated: {},
+        announceResumeList: []
     }),
     actions: {
         updateShowEducation(value) {
@@ -444,7 +446,17 @@ export const UseResumeStore = defineStore('resume', {
                 });
                 console.log(response);
                 return response.data;
-
+            } catch (error) {
+                alert(error.response.data.message);
+            }
+        },
+        async readIntegrated() {
+            try {
+                const response = await axios.get(`${backend}/resume/read/integrated`, {
+                    headers: { 'Content-Type': 'application/json', },
+                    withCredentials: true
+                });
+                this.resumeIntegrated = response.data.result;
             } catch (error) {
                 alert(error.response.data.message);
             }
@@ -461,29 +473,33 @@ export const UseResumeStore = defineStore('resume', {
                 alert(error.response.data.message);
             }
         },
-        async updateDocPassed(resumeIdx, docPassedValue) {
+        async readAll() {
             try {
-                const response = await axios.patch(`${backend}/resume/update/docPassed/${resumeIdx}`,
-                    {
-                        docPassed: docPassedValue
-                    },
-                    {
-                        headers: { 'Content-Type': 'application/json' },
-                        withCredentials: true
-                    }
-                );
-                // 합격/불합격 처리 성공
+                const response = await axios.get(`${backend}/resume/read-all`, {
+                    headers: { 'Content-Type': 'application/json' },
+                    withCredentials: true
+                });
+                this.announceResumeList = response.data.result;
+                // 공고에 지원한 기록이 존재하지 않으면 마이페이지 홈으로
 
-                if (confirm(response.data.message)) {
-                    location.reload();
-                }
 
             } catch (error) {
                 alert(error.response.data.message);
             }
         },
-
-
-
+        async updateDocPassed(resumeIdx, docPassedValue) {
+            try {
+                const response = await axios.patch(`${backend}/resume/update/docPassed/${resumeIdx}`, { docPassed: docPassedValue }, {
+                        headers: { 'Content-Type': 'application/json' },
+                        withCredentials: true }
+                );
+                // 합격/불합격 처리 성공
+                if (confirm(response.data.message)) {
+                    location.reload();
+                }
+            } catch (error) {
+                alert(error.response.data.message);
+            }
+        },
     },
 });

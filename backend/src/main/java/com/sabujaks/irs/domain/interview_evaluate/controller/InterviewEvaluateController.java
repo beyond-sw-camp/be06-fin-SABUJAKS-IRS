@@ -25,35 +25,49 @@ public class InterviewEvaluateController {
 
     @PostMapping("/create-form")
     public ResponseEntity<BaseResponse> createForm(
-        @AuthenticationPrincipal CustomUserDetails customUserDetails,
-        @RequestBody InterviewEvaluateFormCreateReq dto) throws BaseException {
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestBody InterviewEvaluateFormCreateReq dto) throws BaseException {
         InterviewEvaluateFormCreateRes response = interviewEvaluateService.createForm(customUserDetails, dto);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_EVALUATE_CREATE_FORM_SUCCESS, response));
     }
 
+//    @GetMapping("/read-all/form")
+//    public ResponseEntity<BaseResponse>readAllForm(
+//            @AuthenticationPrincipal CustomUserDetails customUserDetails) throws  BaseException {
+//        InterviewEvaluateFormReadAllRes response = interviewEvaluateService.readAllForm(customUserDetails);
+//    }
+
     @GetMapping("/search-form")
     public ResponseEntity<BaseResponse> searchForm(
-        @AuthenticationPrincipal CustomUserDetails customUserDetails,
-        @RequestParam String announcementUUID,
-        @RequestParam(required = false) String interviewScheduleUUID) throws BaseException {
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestParam String announcementUUID,
+            @RequestParam(required = false) String interviewScheduleUUID) throws BaseException {
         InterviewEvaluateFormReadRes response = interviewEvaluateService.searchForm(customUserDetails, announcementUUID, interviewScheduleUUID);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_EVALUATE_SEARCH_FORM_SUCCESS, response));
     }
 
     @GetMapping("/read-all/resume-info")
     public ResponseEntity<BaseResponse<InterviewEvaluateReadAllResumeInfo>> readAllResumeInfo(
-        @AuthenticationPrincipal CustomUserDetails customUserDetails,
-        @RequestParam String announcementUUID,
-        @RequestParam String interviewScheduleUUID) throws BaseException {
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestParam String announcementUUID,
+            @RequestParam String interviewScheduleUUID) throws BaseException {
         InterviewEvaluateReadAllResumeInfo response = interviewEvaluateService.readAllResumeInfo(customUserDetails, announcementUUID, interviewScheduleUUID);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_EVALUATE_SEARCH_RESUME_SUCCESS, response));
     }
 
     @PostMapping("/create-evaluate")
     public ResponseEntity<BaseResponse<InterviewEvaluateCreateRes>> createEvaluate(
-        @AuthenticationPrincipal CustomUserDetails customUserDetails,
-        @RequestBody InterviewEvaluateCreateReq dto) throws BaseException {
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestBody InterviewEvaluateCreateReq dto) throws BaseException {
         InterviewEvaluateCreateRes response = interviewEvaluateService.createEvaluate(customUserDetails, dto);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_EVALUATE_CREATE_SUCCESS, response));
+    }
+
+    @GetMapping("/read-all/evaluate")
+    public ResponseEntity<BaseResponse<InterviewEvaluateReadAllRes>> readAllEvaluate (
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestParam Long announceIdx)throws BaseException {
+        InterviewEvaluateReadAllRes response = interviewEvaluateService.readAllEvaluate(customUserDetails, announceIdx);
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_EVALUATE_READ_ALL_SUCCESS, response));
     }
 }

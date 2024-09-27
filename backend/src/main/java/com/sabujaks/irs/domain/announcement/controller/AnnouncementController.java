@@ -90,10 +90,31 @@ public class AnnouncementController {
     @GetMapping("/recruiter/read-all")
     public ResponseEntity<BaseResponse<AnnouncementReadAllRes>> readAllAnnouncement(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestParam String careerBase,
+            @RequestParam Integer pageNum) throws BaseException {
+        if (customUserDetails == null) throw new BaseException(BaseResponseMessage.AUTH_FAIL);
+        Long recruiterIdx = customUserDetails.getIdx();
+        List<AnnouncementReadAllRes2> response = announcementService.readAllAnnouncement(recruiterIdx, careerBase, pageNum);
+
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.ANNOUNCEMENT_READ_ALL_SUCCESS, response));
+    }
+
+    @GetMapping("/recruiter/read-all/count")
+    public ResponseEntity<BaseResponse<?>> getTotalAnnouncement(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestParam String careerBase) throws BaseException {
         if (customUserDetails == null) throw new BaseException(BaseResponseMessage.AUTH_FAIL);
         Long recruiterIdx = customUserDetails.getIdx();
-        List<AnnouncementReadAllRes2> response = announcementService.readAllAnnouncement(recruiterIdx, careerBase);
+        Integer response = announcementService.getTotalAnnouncement(recruiterIdx, careerBase);
+
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.ANNOUNCEMENT_READ_ALL_SUCCESS, response));
+    }
+
+    // (채용담당자) 등록한 공고 목록 조회
+    @GetMapping("/recruiter/read-all/resume")
+    public ResponseEntity<BaseResponse<AnnouncementReadAllRes>> readAllRecruiterAnnouncement (
+            @AuthenticationPrincipal CustomUserDetails customUserDetails) throws BaseException {
+        List<AnnouncementReadAllRes3> response = announcementService.readAllRecruiterAnnouncement(customUserDetails);
 
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.ANNOUNCEMENT_READ_ALL_SUCCESS, response));
     }

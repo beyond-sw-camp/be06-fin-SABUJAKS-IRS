@@ -8,37 +8,36 @@
                 <!-- 메인 컨텐츠 -->
                 <div class="main-content">
                     <div class="header">
-                        <h1>통합 지원서 관리</h1>
-                        <button class="btn edit-profile">지원서 수정하기</button>
+                        <h1>{{ resumeStore.resumeDetail.resumeTitle }}</h1>
                     </div>
                     <div id="content-detail">
                         <div class="resume-view-wrapper">
                             <div class="resume-view-container">
                                 <div class="base profile image">
                                     <div class="container">
-                                        <div v-if="showPersonalInfo" class="photo"><img name="user_photo" :src="resumeStore.resumeIntegrated.personalInfo.profileImg">
+                                        <div v-if="showPersonalInfo" class="photo"><img name="user_photo" :src="resumeStore.resumeDetail.personalInfo.profileImg">
                                         </div>
                                         <div v-if="showPersonalInfo" class="info-container">
                                             <div class="info-general">
-                                                <div class="item name">{{ resumeStore.resumeIntegrated.personalInfo.name }}</div>
-                                                <div class="item sex">{{ resumeStore.resumeIntegrated.personalInfo.gender }}</div>
-                                                <div class="item year">{{ resumeStore.resumeIntegrated.personalInfo.birth }}</div>
-                                                <div class="item age">(만 {{ calculateAge(resumeStore.resumeIntegrated.personalInfo.birth) }}세)</div>
+                                                <div class="item name">{{ resumeStore.resumeDetail.personalInfo.name }}</div>
+                                                <div class="item sex">{{ resumeStore.resumeDetail.personalInfo.gender }}</div>
+                                                <div class="item year">{{ resumeStore.resumeDetail.personalInfo.birth }}</div>
+                                                <div class="item age">(만 {{ calculateAge(resumeStore.resumeDetail.personalInfo.birth) }}세)</div>
                                             </div>
                                             <div class="info-detail">
                                                 <div class="item">
                                                     <div class="label">휴대폰</div>
-                                                    <div class="value">{{ resumeStore.resumeIntegrated.personalInfo.phone }}</div>
+                                                    <div class="value">{{ resumeStore.resumeDetail.personalInfo.phone }}</div>
                                                 </div>
                                                 <div class="item">
                                                     <div class="label">Email</div>
                                                     <div class="value">
-                                                        <a href="mailto:eunjoo.nine@gmail.com">{{ resumeStore.resumeIntegrated.personalInfo.email }}</a>
+                                                        <a href="mailto:eunjoo.nine@gmail.com">{{ resumeStore.resumeDetail.personalInfo.email }}</a>
                                                     </div>
                                                 </div>
                                                 <div class="item-address">
                                                     <div class="label">주소</div>
-                                                    <div class="value">{{ resumeStore.resumeIntegrated.personalInfo.address }}</div>
+                                                    <div class="value">{{ resumeStore.resumeDetail.personalInfo.address }}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -48,7 +47,7 @@
                                 <div v-if="showEducation" class="base education">
                                     <h2 class="header_title">학력</h2>
                                     <div class="list list-education">
-                                        <div class="item" v-for="(education, index) in resumeStore.resumeIntegrated.educations" :key="index">
+                                        <div class="item" v-for="(education, index) in resumeStore.resumeDetail.educations" :key="index">
                                         <div class="date">
                                             <div v-if="education.schoolDiv === '고등학교' && !education.qualificationExam" class="term"> ~ {{ education.graduatedAt }}</div>
                                             <div v-if="education.schoolDiv === '고등학교' && education.qualificationExam" class="term"> ~ {{ education.passedAt }}</div>
@@ -90,7 +89,7 @@
                                 <div v-if="showPersonalHistory" class="base career">
                                     <h2 class="header_title">경력</h2>
                                     <div class="list list-education">
-                                        <div class="item" v-for="(personalHistory, index) in resumeStore.resumeIntegrated.personalHistories" :key="index">
+                                        <div class="item" v-for="(personalHistory, index) in resumeStore.resumeDetail.personalHistories" :key="index">
                                             <div class="date">
                                                 <div class="term">{{ personalHistory.enteredAt }} ~ {{ personalHistory.quitAt }}</div>
                                                 <div class="term-calculator">{{ calculateDuration(personalHistory.enteredAt, personalHistory.quitAt) }}</div>
@@ -135,7 +134,7 @@
                                 <div v-if="showInternsActivity" class="base intern">
                                     <h2 class="header_title">인턴·대외활동</h2>
                                     <div class="list list-intern">
-                                        <div class="item" v-for="(internsActivity, index) in resumeStore.resumeIntegrated.internsActivities" :key="index">
+                                        <div class="item" v-for="(internsActivity, index) in resumeStore.resumeDetail.internsActivities" :key="index">
                                             <div class="date">
                                                 <div class="term">{{ internsActivity.startAt }} ~ {{ internsActivity.endAt }}</div>
                                                 <div class="term-calculator">{{ calculateDuration(internsActivity.startAt, internsActivity.endAt) }}</div>
@@ -157,7 +156,7 @@
                                 <div v-if="showTraining" class="base learn">
                                     <h2 class="header_title">교육이수</h2>
                                     <div class="list list-learn">
-                                        <div class="item" v-for="(training, index) in resumeStore.resumeIntegrated.trainings" :key="index">
+                                        <div class="item" v-for="(training, index) in resumeStore.resumeDetail.trainings" :key="index">
                                             <div class="date">{{ training.startAt }} ~ {{ training.endAt }}</div>
                                             <div class="content">
                                                 <div class="content-header">
@@ -175,7 +174,7 @@
                                 <div v-if="showCertification" class="base certificate">
                                     <h2 class="header_title">자격증</h2>
                                     <div class="list list-certificate">
-                                        <div class="item" v-for="(certification, index) in resumeStore.resumeIntegrated.certifications" :key="index">
+                                        <div class="item" v-for="(certification, index) in resumeStore.resumeDetail.certifications" :key="index">
                                             <div class="date">{{ certification.takingAt }}</div>
                                             <div class="content">
                                                 <div class="content-header">
@@ -191,7 +190,7 @@
                                 <div v-if="showAward" class="base awards">
                                     <h2 class="header_title">수상</h2>
                                     <div class="list list-awards">
-                                        <div class="item" v-for="(award, index) in resumeStore.resumeIntegrated.awards" :key="index">
+                                        <div class="item" v-for="(award, index) in resumeStore.resumeDetail.awards" :key="index">
                                             <div class="date">
                                                 {{ award.year }}
                                             </div>
@@ -211,7 +210,7 @@
                                 <div v-if="showStudyingAbroad" class="base experience">
                                     <h2 class="header_title">해외경험</h2>
                                     <div class="list list-experience">
-                                        <div class="item" v-for="(studyingAbroad, index) in resumeStore.resumeIntegrated.studyingAbroads" :key="index">
+                                        <div class="item" v-for="(studyingAbroad, index) in resumeStore.resumeDetail.studyingAbroads" :key="index">
                                             <div class="date">
                                                 <div class="term">{{ studyingAbroad.startAt }} ~ {{ studyingAbroad.endAt }}</div>
                                                 <div class="term-calculator">{{ calculateDuration(studyingAbroad.startAt, studyingAbroad.endAt) }}</div>
@@ -230,7 +229,7 @@
                                 <div v-if="showLanguage" class="base career">
                                     <h2 class="header_title">어학</h2>
                                     <div class="list list-education">
-                                        <div class="item" v-for="(language, index) in resumeStore.resumeIntegrated.languages" :key="index">
+                                        <div class="item" v-for="(language, index) in resumeStore.resumeDetail.languages" :key="index">
                                             <div class="date">
                                                 <div class="term" style="font-weight: bold; font-size: 16px;">{{ language.languageName }}</div>
                                             </div>
@@ -269,7 +268,7 @@
                                     <div id="SummaryAjax">
                                     </div>
                                     <ul class="list list-introduction">
-                                        <li v-for="(customLetter, index) in resumeStore.resumeIntegrated.customLetters" :key="index" class="item">
+                                        <li v-for="(customLetter, index) in resumeStore.resumeDetail.customLetters" :key="index" class="item">
                                             <div class="header_title" style="font-weight: bold; margin-bottom: 10px;">{{ customLetter.title }} ({{ customLetter.charNum }}자)</div>
                                             <div class="content" id="pfl_original">
                                                 {{ customLetter.contents }}
@@ -286,7 +285,7 @@
                                             <col style="width:320px;">
                                         </colgroup>
                                         <tbody>
-                                            <tr v-for="(portfolio, index) in resumeStore.resumeIntegrated.portfolios" :key="index" >
+                                            <tr v-for="(portfolio, index) in resumeStore.resumeDetail.portfolios" :key="index" >
                                                 <th>{{ portfolio.portfolioDiv }}</th>
                                                 <td>
                                                     <a :href="portfolio.portfolioUrl" target="_blank">
@@ -314,28 +313,42 @@
                                         <tbody>
                                             <tr>
                                                 <th>보훈대상 여부</th>
-                                                <td>{{ resumeStore.resumeIntegrated.preferentialEmp.veterans ? 'O' : 'X'}}</td>
+                                                <td>{{ resumeStore.resumeDetail.preferentialEmp.veterans ? 'O' : 'X'}}</td>
                                                 <th>취업보호대상 여부</th>
-                                                <td>{{ resumeStore.resumeIntegrated.preferentialEmp.protection ? 'O' : 'X'}}</td>
+                                                <td>{{ resumeStore.resumeDetail.preferentialEmp.protection ? 'O' : 'X'}}</td>
                                                 <th>고용지원금대상 여부</th>
-                                                <td>{{ resumeStore.resumeIntegrated.preferentialEmp.subsidy ? 'O' : 'X'}}</td>
+                                                <td>{{ resumeStore.resumeDetail.preferentialEmp.subsidy ? 'O' : 'X'}}</td>
                                             </tr>
                                             <tr>
                                                 <th>병역사항</th>
-                                                <td v-if="resumeStore.resumeIntegrated.preferentialEmp.militaryClass === '군필'" colspan="3">
-                                                    {{ resumeStore.resumeIntegrated.preferentialEmp.military 
-                                                    ? resumeStore.resumeIntegrated.preferentialEmp.militaryClass : 'X'}}
-                                                    ({{ resumeStore.resumeIntegrated.preferentialEmp.militaryStart }} ~ {{ resumeStore.resumeIntegrated.preferentialEmp.militaryEnd }}) 
-                                                    [{{ resumeStore.resumeIntegrated.preferentialEmp.militaryRank }} / {{ resumeStore.resumeIntegrated.preferentialEmp.militaryType }}]
+                                                <td v-if="resumeStore.resumeDetail.preferentialEmp.militaryClass === '군필'" colspan="3">
+                                                    {{ resumeStore.resumeDetail.preferentialEmp.military 
+                                                    ? resumeStore.resumeDetail.preferentialEmp.militaryClass : 'X'}}
+                                                    ({{ resumeStore.resumeDetail.preferentialEmp.militaryStart }} ~ {{ resumeStore.resumeDetail.preferentialEmp.militaryEnd }}) 
+                                                    [{{ resumeStore.resumeDetail.preferentialEmp.militaryRank }} / {{ resumeStore.resumeDetail.preferentialEmp.militaryType }}]
                                                 </td>
                                                 <td v-else colspan="3">
-                                                    {{ resumeStore.resumeIntegrated.preferentialEmp.military 
-                                                    ? resumeStore.resumeIntegrated.preferentialEmp.militaryClass : 'X'}} </td>
+                                                    {{ resumeStore.resumeDetail.preferentialEmp.military 
+                                                    ? resumeStore.resumeDetail.preferentialEmp.militaryClass : 'X'}} </td>
                                                 <th>장애여부</th>
-                                                <td>{{ resumeStore.resumeIntegrated.preferentialEmp.disability ? resumeStore.resumeIntegrated.preferentialEmp.disabilityDegree : 'X'}}</td>
+                                                <td>{{ resumeStore.resumeDetail.preferentialEmp.disability ? resumeStore.resumeDetail.preferentialEmp.disabilityDegree : 'X'}}</td>
                                             </tr>
                                         </tbody>
                                     </table>
+                                </div>
+
+                                <div v-if="showPersonalInfo" class="sign">
+                                    <div class="message">위의 모든 기재사항은 사실과 다름없음을 확인합니다.</div>
+
+                                    <div class="writer">작성자 : {{ resumeStore.resumeDetail.personalInfo.name }}</div>
+                                    <div class="warning">
+                                        <div class="description">이 지원서는 {{ formatDate(resumeStore.resumeDetail.resumedAt) }}에 제출된 지원서 입니다.<br>위조된 문서를 등록하여 취업활동에 이용
+                                            시 법적
+                                            책임을 지게 될 수 있습니다.<br>IRS는 구직자가 등록 한 문서에 대해 보증하거나 별도의 책임을 지지 않으며<br>첨부된 문서를 신뢰하여 발생한
+                                            법적
+                                            분쟁에 책임을 지지 않습니다.<br>또한 구인/구직 목적 외 다른 목적으로 이용시 이력서 삭제 혹은 비공개 조치가 될 수 있습니다.
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -353,8 +366,10 @@ import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.v
 
 import { ref, onMounted } from 'vue';
 import { UseResumeStore } from '@/stores/UseResumeStore';
+import { useRoute } from 'vue-router';
 
 const resumeStore = UseResumeStore();
+const route = useRoute();
 
 const showPersonalInfo = ref(false);
 const showEducation = ref(false);
@@ -370,20 +385,20 @@ const showAward = ref(false);
 const showCustomLetter = ref(false);
 
 onMounted(async () => {
-    await resumeStore.readIntegrated();
+    await resumeStore.read(route.params.resumeIdx);
 
     showPersonalInfo.value = true;
-    showEducation.value = resumeStore.resumeIntegrated.codes.includes("resume_001");
-    showPersonalHistory.value = resumeStore.resumeIntegrated.codes.includes("resume_002");
-    showInternsActivity.value = resumeStore.resumeIntegrated.codes.includes("resume_003");
-    showTraining.value = resumeStore.resumeIntegrated.codes.includes("resume_004");
-    showCertification.value = resumeStore.resumeIntegrated.codes.includes("resume_005");
-    showAward.value = resumeStore.resumeIntegrated.codes.includes("resume_006");
-    showStudyingAbroad.value = resumeStore.resumeIntegrated.codes.includes("resume_007");
-    showLanguage.value = resumeStore.resumeIntegrated.codes.includes("resume_008");
-    showPortfolio.value = resumeStore.resumeIntegrated.codes.includes("resume_009");
-    showPreferentialEmp.value = resumeStore.resumeIntegrated.codes.includes("resume_010");
-    showCustomLetter.value = resumeStore.resumeIntegrated.codes.includes("resume_011");
+    showEducation.value = resumeStore.resumeDetail.codes.includes("resume_001");
+    showPersonalHistory.value = resumeStore.resumeDetail.codes.includes("resume_002");
+    showInternsActivity.value = resumeStore.resumeDetail.codes.includes("resume_003");
+    showTraining.value = resumeStore.resumeDetail.codes.includes("resume_004");
+    showCertification.value = resumeStore.resumeDetail.codes.includes("resume_005");
+    showAward.value = resumeStore.resumeDetail.codes.includes("resume_006");
+    showStudyingAbroad.value = resumeStore.resumeDetail.codes.includes("resume_007");
+    showLanguage.value = resumeStore.resumeDetail.codes.includes("resume_008");
+    showPortfolio.value = resumeStore.resumeDetail.codes.includes("resume_009");
+    showPreferentialEmp.value = resumeStore.resumeDetail.codes.includes("resume_010");
+    showCustomLetter.value = resumeStore.resumeDetail.codes.includes("resume_011");
     
 });
 
@@ -421,6 +436,20 @@ const calculateDuration = (enteredAt, quitAt) => {
   }
 
   return `${years}년 ${months}개월`;
+};
+
+// 날짜를 'YYYY년 MM월 DD일 (요일)' 형식으로 변환하는 메서드
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1; // getMonth()는 0부터 시작하므로 +1 필요
+  const day = date.getDate();
+
+  const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
+  const dayOfWeek = weekDays[date.getDay()]; // getDay()로 요일 인덱스 얻음
+
+  return `${year}년 ${String(month).padStart(2, '0')}월 ${String(day).padStart(2, '0')}일 (${dayOfWeek})`;
 };
 
 </script>
@@ -981,6 +1010,13 @@ const calculateDuration = (enteredAt, quitAt) => {
     text-align: center
 }
 
+.resume-view-container .warning .description {
+    font-size: 12px;
+    letter-spacing: 0px;
+    color: #888;
+    line-height: 1.8;
+}
+
 .profile {
     overflow: hidden;
     position: relative;
@@ -1191,8 +1227,17 @@ const calculateDuration = (enteredAt, quitAt) => {
     display: none;
 }
 
+.profile .summary .item.item-intern .description,
+.profile .summary .item.item-certificate .description {
+    margin-bottom: 0;
+}
+
 .profile .summary .item.is-singleline div.header {
     margin-bottom: 25px;
+}
+
+.profile .summary .item.newcomer .description {
+    color: #39f;
 }
 
 .profile .summary div.header {
@@ -1201,6 +1246,28 @@ const calculateDuration = (enteredAt, quitAt) => {
     letter-spacing: 0px;
     color: #888;
     text-align: center;
+}
+
+.profile .summary .description {
+    margin-bottom: 5px;
+    font-size: 14px;
+    letter-spacing: 0px;
+    color: #000;
+    line-height: 1.6;
+}
+
+.profile .summary .description.ellipsis {
+    overflow: hidden;
+    white-space: nowrap;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+}
+
+.profile .summary .description.etc {
+    padding-top: 2px;
+    font-size: 13px;
+    letter-spacing: 0px;
+    color: #888;
 }
 
 .profile .summary .options {
@@ -1516,6 +1583,24 @@ const calculateDuration = (enteredAt, quitAt) => {
     padding-left: 80px;
 }
 
+.sign {
+    padding-top: 20px;
+    text-align: center;
+}
+
+.sign .message {
+    margin-bottom: 13px;
+    font-size: 22px;
+    letter-spacing: -0.5px;
+    color: #000;
+}
+
+.sign .writer {
+    font-size: 14px;
+    letter-spacing: 0px;
+    color: #000;
+}
+
 .caution-company {
     overflow: hidden;
     position: relative;
@@ -1828,6 +1913,10 @@ ul.list-introduction {
     color: #666;
 }
 
+.list.list-education div.item.no-description {
+    padding-top: 34px;
+}
+
 .list.list-education>div.item {
     min-height: 90px;
 }
@@ -1910,6 +1999,10 @@ ul.list-introduction {
     vertical-align: baseline;
 }
 
+.list.list-career .content-body .description {
+    margin-bottom: 9px;
+}
+
 .list.list-career .info .item {
     min-height: auto;
     padding: 0 0 0 90px;
@@ -1946,6 +2039,28 @@ ul.list-introduction {
     font-size: 14px;
     letter-spacing: 0px;
     color: #666;
+}
+
+.list.list-career div.career-description {
+    min-height: auto;
+    padding: 18px 40px 19px 200px;
+    border-color: #b2b2b2;
+}
+
+.list.list-career div.career-description div.header {
+    position: absolute;
+    left: 40px;
+    top: 21px;
+    font-size: 14px;
+    letter-spacing: 0px;
+    color: #000;
+}
+
+.list.list-career div.career-description .description {
+    font-size: 14px;
+    letter-spacing: 0px;
+    color: #000;
+    line-height: 1.8;
 }
 
 .list.list-intern div.item {
@@ -2050,6 +2165,13 @@ ul.list-introduction {
     color: #000;
 }
 
+.list.list-certificate .item.etc .description {
+    font-size: 14px;
+    letter-spacing: 0px;
+    color: #000;
+    line-height: 1.8;
+}
+
 .list.list-certificate .date {
     top: 23px;
 }
@@ -2143,18 +2265,5 @@ ul.list-introduction {
     height: 1px;
     clip: rect(0 0 0 0);
     margin: -1px;
-}
-
-.edit-profile {
-    background-color: #212b36;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.edit-profile:hover {
-    background-color: #212b36;
 }
 </style>

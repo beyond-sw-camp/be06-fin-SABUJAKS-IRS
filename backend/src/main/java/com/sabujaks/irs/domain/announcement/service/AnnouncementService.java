@@ -9,6 +9,7 @@ import com.sabujaks.irs.domain.announcement.model.response.*;
 import com.sabujaks.irs.domain.announcement.repository.AnnouncementRepository;
 import com.sabujaks.irs.domain.announcement.repository.CustomFormRepository;
 import com.sabujaks.irs.domain.announcement.repository.CustomLetterFormRepository;
+import com.sabujaks.irs.domain.announcement.repository.querydsl.AnnouncementDslRepository;
 import com.sabujaks.irs.domain.auth.model.entity.Recruiter;
 import com.sabujaks.irs.domain.auth.model.response.RecruiterRes;
 import com.sabujaks.irs.domain.auth.repository.RecruiterRepository;
@@ -17,11 +18,16 @@ import com.sabujaks.irs.domain.company.repository.CompanyBenefitsRepository;
 import com.sabujaks.irs.domain.company.repository.CompanyRepository;
 import com.sabujaks.irs.domain.data_init.entity.BaseInfo;
 import com.sabujaks.irs.domain.data_init.repository.BaseInfoRepository;
+import com.sabujaks.irs.domain.resume.repository.ResumeRepository;
 import com.sabujaks.irs.global.common.exception.BaseException;
 import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
 import com.sabujaks.irs.global.security.CustomUserDetails;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import com.sabujaks.irs.domain.company.model.entity.CompanyBenefits;
 
@@ -33,11 +39,13 @@ import java.util.stream.Collectors;
 public class AnnouncementService {
     private final RecruiterRepository recruiterRepository;
     private final AnnouncementRepository announcementRepository;
+    private final AnnouncementDslRepository announcementDslRepository;
     private final CustomFormRepository customFormRepository;
     private final CustomLetterFormRepository letterFormRepository;
     private final BaseInfoRepository baseInfoRepository;
     private final CompanyBenefitsRepository companyBenefitsRepository;
     private final CompanyRepository companyRepository;
+    private final ResumeRepository resumeRepository;
 
     /*******채용담당자 공고 등록 (step1)***********/
     @Transactional
@@ -73,12 +81,11 @@ public class AnnouncementService {
                         .build();
 
             } else { // 셀렉트 폼이 폴스면 = 파일url이 없으면 들어온 dto만 저장
-                System.out.println(dto.getJobCategoryList());
                 Announcement announcement = Announcement.builder()
                         .recruiter(resultRecruiter.get())
                         .selectForm(dto.getSelectForm())
                         .title(dto.getTitle())
-                        .jobCategory(dto.getJobCategoryList())
+                        .jobCategory(dto.getJobCategoryList().toString())
                         .jobTitle(dto.getJobTitle())
                         .recruitedNum(dto.getRecruitedNum())
                         .careerBase(dto.getCareerBase())
@@ -357,17 +364,20 @@ public class AnnouncementService {
         }
     }
 
-    public List<AnnouncementReadAllRes2> readAllAnnouncement(Long recruiterIdx, String careerBase) throws BaseException {
+    public List<AnnouncementReadAllRes2> readAllAnnouncement(Long recruiterIdx, String careerBase, Integer pageNum) throws BaseException {
+        Pageable pageable = PageRequest.of(pageNum, 10, Sort.by(Sort.Direction.DESC, "idx"));
+
         Optional<Recruiter> recruiter = recruiterRepository.findByRecruiterIdx(recruiterIdx);
-        Optional<List<Announcement>> result;
+        Page<Announcement> result;
+
         if(careerBase.equals("전체")) {
-            result = announcementRepository.findByRecruiterIdx(recruiterIdx);
+            result = announcementDslRepository.findByRecruiterIdx(recruiterIdx, pageable);
         } else {
-            result = announcementRepository.findByRecruiterIdxAndCareerBase(recruiterIdx, careerBase);
+            result = announcementDslRepository.findByRecruiterIdxAndCareerBase(recruiterIdx, careerBase, pageable);
         }
 
         List<AnnouncementReadAllRes2> announcementList = new ArrayList<>();
-        for(Announcement announcement : result.get()) {
+        for(Announcement announcement : result) {
             announcementList.add(AnnouncementReadAllRes2.builder()
                     .idx(announcement.getIdx())
                     .title(announcement.getTitle())
@@ -397,5 +407,49 @@ public class AnnouncementService {
         }
 
         return announcementList;
+    }
+
+    public Integer getTotalAnnouncement(Long recruiterIdx, String careerBase) {
+        Optional<List<Announcement>> result;
+        if(careerBase.equals("전체")) {
+            result = announcementRepository.findByRecruiterIdx(recruiterIdx);
+        } else {
+            result = announcementRepository.findByRecruiterIdxAndCareerBase(recruiterIdx, careerBase);
+        }
+
+        return result.get().size();
+    }
+
+    @Transactional
+    public List<AnnouncementReadAllRes3> readAllRecruiterAnnouncement(CustomUserDetails customUserDetails) throws BaseException {
+        Long recruiterIdx = customUserDetails.getIdx();
+        // 채용담당자 테이블 조회
+        Optional<Recruiter> resultRecruiter = recruiterRepository.findByRecruiterIdx(recruiterIdx);
+        if(resultRecruiter.isPresent()) {
+            // 공고 테이블 조회
+            Optional<List<Announcement>> resultAnnouncements = announcementRepository.findByRecruiterIdx(recruiterIdx);
+            if(resultAnnouncements.isPresent()) {
+                List<AnnouncementReadAllRes3> announcementReadAllRes3List = new ArrayList<>();
+                for(Announcement announcement : resultAnnouncements.get()) {
+                    // 공고에 지원한 지원자 수 조회
+                    AnnouncementReadAllRes3 announcementReadAllRes3 = AnnouncementReadAllRes3.builder()
+                            .announcementIdx(announcement.getIdx())
+                            .announcementTitle(announcement.getTitle())
+                            .announcementStart(announcement.getAnnouncementStart())
+                            .announcementEnd(announcement.getAnnouncementEnd())
+                            .careerBase(announcement.getCareerBase())
+                            .seekerNum(resumeRepository.countResumesByAnnouncementIdx(announcement.getIdx()))
+                            .build();
+                    announcementReadAllRes3List.add(announcementReadAllRes3);
+                }
+                return announcementReadAllRes3List;
+            } else {
+                throw new BaseException(BaseResponseMessage.ANNOUNCEMENT_SEARCH_FAIL);
+            }
+        } else {
+            throw new BaseException(BaseResponseMessage.RESUME_REGISTER_FAIL_NOT_FOUND_SEEKER);
+
+        }
+
     }
 }

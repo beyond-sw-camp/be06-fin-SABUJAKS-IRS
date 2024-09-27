@@ -2,28 +2,23 @@
 import {ref, onMounted} from "vue";
 import {useRouter} from 'vue-router';
 import {UseAuthStore} from "@/stores/UseAuthStore";
+import { useToast } from "vue-toastification";
 
 // 상태 및 라우터 설정
 const isLoggedIn = ref(false);
 const userName = ref("");
 const router = useRouter();
-const authStore = UseAuthStore();
+const authStore = UseAuthStore()
+const toast = useToast();
 
 // 로그인 상태 확인 함수
-const checkLoginStatus = () => {
-  try {
-    // sessionStorage에서 회원 정보를 가져옴
-    const storedUserInfo = sessionStorage.getItem('auth');
-    if (storedUserInfo) {
-      const user = JSON.parse(storedUserInfo); // 문자열을 객체로 변환
-      userName.value = user.userInfo.name; // name 값 셋팅
-      isLoggedIn.value = true; // 로그인 상태로 변경
-    } else {
-      console.error('회원 정보가 없습니다.');
+const checkLoginStatus = async() => {
+    if(!authStore.isLoggedIn || !authStore.userInfo.role == "ROLE_RECURITER"){
+      toast.error("로그인하지 않은 사용자는 접근할 수 없습니다.")
+      router.push('/recruiter/login')
     }
-  } catch (error) {
-    console.error('에러 발생:', error);
-  }
+    authStore.getUserInfo();
+    userName.value = authStore.userInfo.name; // name 값 셋팅
 };
 
 
@@ -36,21 +31,21 @@ const logout = () => {
 };
 
 // 컴포넌트 마운트 시 로그인 상태 확인
-onMounted(() => {
-  checkLoginStatus();
+onMounted(async() => {
+  await checkLoginStatus();
 });
 </script>
 
 <template>
   <header class="header">
     <div class="logo">
-      <img src="@/assets/img/irs_white.png" style="width: 150px;">
+      <img src="@/assets/img/irs_white.png" >
     </div>
-    <div class="user-info">
+    <div v-if="authStore.isLoggedIn" class="user-info">
       <!-- 로그인된 상태라면 사용자 이름 표시 -->
-      <div class="user-name" v-if="isLoggedIn">{{ userName }}</div>
+      <div class="user-name" >{{ userName }}</div>
       <!-- 로그인이 된 상태에서만 로그아웃 버튼 표시 -->
-      <button class="logout-button" @click="logout" v-if="isLoggedIn">Logout</button>
+      <button class="logout-button" @click="logout">Logout</button>
     </div>
   </header>
 </template>
@@ -83,6 +78,9 @@ header {
   color: white;
   font-size: 24px;
   font-weight: bold;
+}
+.logo img {
+  width: 150px;
 }
 
 .user-info {

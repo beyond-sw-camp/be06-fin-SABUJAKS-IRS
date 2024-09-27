@@ -23,28 +23,38 @@ const interviewDate = ref('');
 const startTime = ref('');
 const endTime = ref('');
 const teamList = [
-  { name: '1팀', idx: 1 },
-  { name: '2팀', idx: 2 },
-  { name: '3팀', idx: 3 },
-  { name: '4팀', idx: 4 },
-  { name: '5팀', idx: 5 }
+  {name: '1팀', idx: 1},
+  {name: '2팀', idx: 2},
+  {name: '3팀', idx: 3},
+  {name: '4팀', idx: 4},
+  {name: '5팀', idx: 5}
 ];
 const team = ref(''); // 선택된 팀의 Idx 값을 저장
 const timeOptions = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
 const showCalendar = ref(true); // 캘린더 기본으로 표시
 const showInterviewerList = ref(false); // 후보자 목록은 기본적으로 숨김
 const announcements = ref([]);
+const totalAnnouncements = ref(0);
 const interviewSchedules = ref([]);
+const totalInterviewSchedules = ref(0);
 const announcementIdxInfo = ref(0);
 const announcementUuidInfo = ref("");
 const interviewType = ref(''); // 선택된 면접 유형 (대면 또는 온라인)
 const reqData = ref({});
+const uuidData = ref({});
+const pageNum = ref(1);
 
 onMounted(async () => {
-  announcements.value = await interviewScheduleStore.readAllAnnouncement(careerBase.value);
+  announcements.value = await interviewScheduleStore.readAllAnnouncement(careerBase.value, pageNum.value);
+  totalAnnouncements.value = await interviewScheduleStore.getTotalAnnouncement(careerBase.value);
 
+  console.log(totalAnnouncements.value);
   console.log(announcements);
 })
+
+const loadAnnouncementList = async (btnNum) => {
+  announcements.value = await interviewScheduleStore.readAllAnnouncement(careerBase.value, btnNum);
+}
 
 const handleCheckboxChange = (type) => {
   if (interviewType.value === type) {
@@ -55,7 +65,7 @@ const handleCheckboxChange = (type) => {
 };
 
 // eslint-disable-next-line no-undef
-defineExpose({ reqData });
+defineExpose({reqData});
 
 const interviewScheduleLists = async (announcementIdx, announcementUuid) => {
   isInterviewScheduleList.value = true;
@@ -66,13 +76,29 @@ const interviewScheduleLists = async (announcementIdx, announcementUuid) => {
     announcementIdx: announcementIdx,
   };
 
-  interviewSchedules.value = await interviewScheduleStore.readAllInterviewSchedule(reqData.value);
+  interviewSchedules.value = await interviewScheduleStore.readAllInterviewSchedule(reqData.value, pageNum.value);
+  totalInterviewSchedules.value = await interviewScheduleStore.getTotalInterviewSchedule(reqData.value);
+
+  console.log(totalInterviewSchedules.value);
   announcementIdxInfo.value = announcementIdx;
   announcementUuidInfo.value = announcementUuid;
 }
 
-const createVideoInterview = () => {
+const loadInterviewScheduleList = async (btnNumValue) => {
+  const response = await interviewScheduleStore.readAllInterviewSchedule(reqData.value, btnNumValue);
+  interviewSchedules.value = response; // 데이터를 가져온 후 interviewSchedules에 값을 할당
+};
 
+const createVideoInterview = async (interviewScheduleUuid) => {
+  uuidData.value = {
+    announceUUID: announcementUuidInfo.value,
+    // videoInterviewUUID: interviewScheduleUuid,
+    params: { customSessionId: interviewScheduleUuid}
+  }
+  const response = await interviewScheduleStore.createVideoInterview(uuidData.value);
+  if (response !== 0 && response !== undefined) {
+    alert("면접방이 생성되었습니다.")
+  }
 }
 
 const setModalTitle = (title) => {
@@ -168,7 +194,7 @@ const submitForm = () => {
     // Store의 createInterviewSchedule 함수 호출
     interviewScheduleStore.createInterviewSchedule(interviewData)
         .then(() => {
-          if(confirm('면접 일정이 성공적으로 등록되었습니다.')) {
+          if (confirm('면접 일정이 성공적으로 등록되었습니다.')) {
             // 면접 일정 리스트 업데이트
 
             closeModal();
@@ -179,8 +205,13 @@ const submitForm = () => {
           console.error('면접 일정 등록 중 오류 발생:', error);
         });
   }
-
 };
+
+// 뒤로가기 버튼 클릭 시 컴포넌트 전환
+// const goBack = () => {
+//   isInterviewScheduleMain.value = true;
+//   isInterviewScheduleList.value = false;
+// };
 </script>
 
 
@@ -188,20 +219,24 @@ const submitForm = () => {
   <MainHeaderComponent/>
   <div class="container padding-0">
     <MainSideBarComponent/>
-    <!-- InterviewScheduleMainNew에서 이벤트를 받아 모달을 제어 -->
+
     <InterviewScheduleMain
         v-if="isInterviewScheduleMain"
         @interviewScheduleList="interviewScheduleLists"
+        @loadAnnouncementList="loadAnnouncementList"
         :title="careerBase"
-        :announcements="announcements">
+        :announcements="announcements"
+        :totalAnnouncements="totalAnnouncements">
     </InterviewScheduleMain>
     <InterviewScheduleList
         v-if="isInterviewScheduleList"
         @openModal="openModal"
         @createVideoInterview="createVideoInterview"
+        @loadInterviewScheduleList="loadInterviewScheduleList"
         :title="'면접일정'"
         :titleModal="setModalTitle"
         :interviewSchedules="interviewSchedules"
+        :totalInterviewSchedules="totalInterviewSchedules"
         :announcementIdx="announcementIdxInfo"
         :announcementUuid="announcementUuidInfo">
     </InterviewScheduleList>
@@ -328,12 +363,12 @@ const submitForm = () => {
   </div>
 </template>
 <script>
-import { defineComponent } from 'vue'
+import {defineComponent} from 'vue'
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
-import { createEventId } from './event-utils'
+import {createEventId} from './event-utils'
 
 export default defineComponent({
   components: {
@@ -378,7 +413,7 @@ export default defineComponent({
           careerBase: "전체",
           announcementIdx: 3
         }
-        const schedules = await interviewScheduleStore.readAllInterviewSchedule(reqData);
+        const schedules = await interviewScheduleStore.readAllInterviewSchedule(reqData, 1);
 
         if (!Array.isArray(schedules)) {
           console.error('Received schedules is not an array:', schedules);
@@ -429,7 +464,6 @@ export default defineComponent({
   }
 })
 </script>
-
 
 
 <style scoped>

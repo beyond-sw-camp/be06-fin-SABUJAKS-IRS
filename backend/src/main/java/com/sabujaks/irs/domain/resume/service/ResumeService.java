@@ -10,6 +10,8 @@ import com.sabujaks.irs.domain.auth.model.entity.Recruiter;
 import com.sabujaks.irs.domain.auth.model.entity.Seeker;
 import com.sabujaks.irs.domain.auth.repository.RecruiterRepository;
 import com.sabujaks.irs.domain.auth.repository.SeekerRepository;
+import com.sabujaks.irs.domain.company.model.entity.Company;
+import com.sabujaks.irs.domain.company.repository.CompanyRepository;
 import com.sabujaks.irs.domain.resume.model.entity.*;
 import com.sabujaks.irs.domain.resume.model.request.*;
 import com.sabujaks.irs.domain.resume.model.response.*;
@@ -48,6 +50,7 @@ public class ResumeService {
     private final CustomLetterFormRepository customLetterFormRepository;
     private final CustomFormRepository customFormRepository;
     private final RecruiterRepository recruiterRepository;
+    private final CompanyRepository companyRepository;
 
 
     @Transactional
@@ -1286,5 +1289,87 @@ public class ResumeService {
             throw new BaseException(BaseResponseMessage.RESUME_REGISTER_FAIL_NOT_FOUND_SEEKER);
         }
 
+    }
+
+    @Transactional
+    public List<ResumeReadAllRes> readAll(CustomUserDetails customUserDetails) throws BaseException {
+        Long seekerIdx = customUserDetails.getIdx();
+        // 지원자 테이블 조회
+        Optional<Seeker> resultSeeker = seekerRepository.findBySeekerIdx(seekerIdx);
+        if(resultSeeker.isPresent()) {
+            // 지원자 idx로 공고지원서 테이블 조회
+            List<Resume> resultResumes = resumeRepository.findAllBySeekerIdx(seekerIdx);
+            if(!resultResumes.isEmpty()) {
+                List<ResumeReadAllRes> resumeReadAllResList = new ArrayList<>();
+                for(Resume resume : resultResumes) {
+                    // 공고 idx로 테이블 조회
+                    Optional<Announcement> resultAnnouncement = announcementRepository.findByAnnounceIdx(resume.getAnnouncement().getIdx());
+                    if(resultAnnouncement.isPresent()) {
+                        // 공고 테이블의 채용담당자 idx로 기업명 조회
+                        Optional<Company> resultCompany = companyRepository.findByRecruiterIdx(resultAnnouncement.get().getRecruiter().getIdx());
+                        if(resultCompany.isPresent()) {
+                            ResumeReadAllRes resumeReadAllRes = ResumeReadAllRes.builder()
+                                    .resumeIdx(resume.getIdx())
+                                    .resumeTitle(resume.getResumeTitle())
+                                    .resumedAt(resume.getResumedAt())
+                                    .announcementIdx(resultAnnouncement.get().getIdx())
+                                    .announcementTitle(resultAnnouncement.get().getTitle())
+                                    .announcementStart(resultAnnouncement.get().getAnnouncementStart())
+                                    .announcementEnd(resultAnnouncement.get().getAnnouncementEnd())
+                                    .companyName(resultCompany.get().getName())
+                                    .build();
+                            resumeReadAllResList.add(resumeReadAllRes);
+                        } else {
+                            throw new BaseException(BaseResponseMessage.RESUME_READ_FAIL_COMPANY_NOT_FOUND);
+                        }
+                    } else {
+                        throw new BaseException(BaseResponseMessage.RESUME_REGISTER_FAIL_NOT_FOUND_ANNOUNCE);
+                    }
+                }
+                return resumeReadAllResList;
+            } else {
+                throw new BaseException(BaseResponseMessage.RESUME_READ_FAIL_RESUME_NOT_FOUND);
+            }
+        } else {
+            throw new BaseException(BaseResponseMessage.RESUME_REGISTER_FAIL_NOT_FOUND_SEEKER);
+        }
+    }
+
+    public List<ResumeReadAllRecruiterRes> readAllRecruiter(CustomUserDetails customUserDetails, Long announcementIdx) throws BaseException {
+        Long recruiterIdx = customUserDetails.getIdx();
+        // 채용담당자 테이블 조회
+        Optional<Recruiter> resultRecruiter = recruiterRepository.findByRecruiterIdx(recruiterIdx);
+        if(resultRecruiter.isPresent()) {
+            // 공고 테이블 조회 , 공고 idx가 채용담당자가 등록한 공고가 맞는지
+            Optional<Announcement> resultAnnouncement = announcementRepository.findByAnnounceIdx(announcementIdx);
+            if(resultAnnouncement.isPresent()) {
+                if(!resultAnnouncement.get().getRecruiter().getIdx().equals(recruiterIdx)) {
+                    throw new BaseException(BaseResponseMessage.ACCESS_DENIED);
+                }
+                // 공고지원서 테이블 조회
+                List<Resume> resultResumes = resumeRepository.findAllByAnnouncementIdx(announcementIdx);
+                if(!resultResumes.isEmpty()) {
+                    List<ResumeReadAllRecruiterRes> resumeReadAllRecruiterResList = new ArrayList<>();
+                    for(Resume resume : resultResumes) {
+                        // 지원자 테이블 조회
+                        ResumeReadAllRecruiterRes resumeReadAllRecruiterRes = ResumeReadAllRecruiterRes.builder()
+                                .resumeIdx(resume.getIdx())
+                                .resumeTitle(resume.getResumeTitle())
+                                .resumedAt(resume.getResumedAt())
+                                .docPassed(resume.getDocPassed())
+                                .seekerName(resume.getSeeker().getName())
+                                .build();
+                        resumeReadAllRecruiterResList.add(resumeReadAllRecruiterRes);
+                    }
+                    return resumeReadAllRecruiterResList;
+                } else {
+                    throw new BaseException(BaseResponseMessage.RESUME_READ_FAIL_RESUME);
+                }
+            } else {
+                throw new BaseException(BaseResponseMessage.RESUME_REGISTER_FAIL_NOT_FOUND_ANNOUNCE);
+            }
+        } else {
+            throw new BaseException(BaseResponseMessage.RESUME_REGISTER_FAIL_NOT_FOUND_SEEKER);
+        }
     }
 }

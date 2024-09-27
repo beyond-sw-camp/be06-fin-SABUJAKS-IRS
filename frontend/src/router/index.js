@@ -1,8 +1,8 @@
 import AnnounceMainPage from '@/pages/recruiter/announce/AnnounceMainPage.vue';
 import RecruiterLoginPage from '@/pages/recruiter/auth/RecruiterLoginPage.vue';
 import RecruiterSignupPage from '@/pages/recruiter/auth/RecruiterSignupPage.vue';
-import InterviewEvaluateMain from '@/pages/recruiter/interview-evaluate/InterviewEvaluateMain.vue';
-import ResumeDetailPage from '@/pages/recruiter/resume/ResumeDetailPage.vue';
+import InterviewEvaluateMain from '@/pages/recruiter/interview-evaluate/InterviewEvaluateFormMain.vue';
+import RecruiterResumeDetailPage from '@/pages/recruiter/resume/ResumeDetailPage.vue';
 import ResumeListPage from '@/pages/recruiter/resume/ResumeListPage.vue';
 import ResumeMainPage from '@/pages/recruiter/resume/ResumeMainPage.vue';
 import AnnounceDetailPage from '@/pages/seeker/announce/AnnounceDetailPage.vue';
@@ -15,6 +15,7 @@ import MypageNotificationPage from '@/pages/seeker/mypage/MypageNotificationPage
 import MypageSchedulePage from '@/pages/seeker/mypage/MypageSchedulePage.vue';
 import ResumeCreatePage from '@/pages/seeker/resume/ResumeCreatePage.vue';
 import ResumeSubmitPage from '@/pages/seeker/resume/ResumeSubmitPage.vue'
+import SeekerResumeDetailPage from '@/pages/seeker/resume/ResumeDetailPage.vue'
 import VideoInterviewMainPage from '@/pages/video-interview/VideoInterviewMainPage.vue';
 import VideoInterviewRoomPage from '@/pages/video-interview/VideoInterviewRoomPage.vue';
 import { createRouter, createWebHistory } from 'vue-router';
@@ -26,6 +27,7 @@ import InterviewScheduleMainExp from "@/pages/recruiter/interview-schedule/Inter
 import InterviewScheduleMain from '@/components/recruiter/InterviewScheduleMain.vue';
 import ReScheduleMainExp from "@/pages/recruiter/interview-schedule/ReScheduleMainExp.vue";
 import {UseAuthStore} from "@/stores/UseAuthStore";
+import CompanyInfoPage from "@/pages/recruiter/company/CompanyInfoPage.vue";
 
 const requireRecruiterLogin = async (to, from, next) => {
     const authStore = UseAuthStore();
@@ -65,7 +67,8 @@ const router = createRouter({
         { path: '/recruiter/interview-schedule', component: InterviewScheduleMain, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/resume', component: ResumeMainPage, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/resume/list', component: ResumeListPage, beforeEnter: requireRecruiterLogin },
-        { path: '/recruiter/resume/detail:resumeIdx', component: ResumeDetailPage, beforeEnter: requireRecruiterLogin },
+        { path: '/recruiter/resume/detail/:resumeIdx', component: RecruiterResumeDetailPage, beforeEnter: requireRecruiterLogin },
+        { path: '/recruiter/mypage', component: CompanyInfoPage, beforeEnter: requireRecruiterLogin },
         { path: '/seeker/login', component: SeekerLoginPage },
         { path: '/seeker/signup', component: SeekerSignupPage },
         
@@ -78,6 +81,7 @@ const router = createRouter({
         { path: '/seeker/mypage/notification', component: MypageNotificationPage },
         { path: '/seeker/resume/create', component: ResumeCreatePage },
         { path: '/seeker/resume/submit/:announcementIdx', component: ResumeSubmitPage },
+        { path: '/seeker/resume/detail/:resumeIdx', component: SeekerResumeDetailPage },
     ]
 })
 
