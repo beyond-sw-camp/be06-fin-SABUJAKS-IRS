@@ -23,8 +23,12 @@ const goAndReload = (path) => {
 <template>
   <div class="sidebar">
     <ul>
-      <li> 공고</li>
-      <li> 지원서</li>
+      <li @click="goAndReload('/recruiter/announce')">
+        공고
+      </li>
+      <li @click="goAndReload('/recruiter/resume')">
+        지원서
+      </li>
       <!-- 면접 메뉴 클릭 시 하위메뉴 표시 및 화살표 아이콘 변경 -->
       <li @click="toggleInterviewMenu" class="interview">
         면접
