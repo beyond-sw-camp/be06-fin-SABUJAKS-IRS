@@ -93,6 +93,7 @@ public enum BaseResponseMessage {
     RESUME_UPDATE_SUCCESS_DOC_PASSED(true, 2201, "서류 합격/불합격 처리 완료되었습니다." ),
     RESUME_UPDATE_FAIL_DOC_PASSED(false, 2202, "서류 합격/불합격 처리에 실패하였습니다." ),
     RESUME_UPDATE_FAIL_DOC_PASSED_ALREADY(false, 2202, "이미 처리되었습니다." ),
+    RESUME_READ_SUCCESS_RESUMED(true, 2300, "지원자 조회에 성공하였습니다." ),
 
 
     // ANNOUNCEMENT 3000~3999

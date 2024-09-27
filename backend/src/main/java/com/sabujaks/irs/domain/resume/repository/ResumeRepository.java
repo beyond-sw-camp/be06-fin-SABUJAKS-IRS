@@ -19,4 +19,7 @@ public interface ResumeRepository extends JpaRepository<Resume, Long> {
 
     @Query("SELECT COUNT(r) FROM Resume r WHERE r.announcement.idx = :announcementIdx")
     Long countResumesByAnnouncementIdx(Long announcementIdx);
+
+    @Query("SELECT r FROM Resume r WHERE r.announcement.idx = :announcementIdx")
+    List<Resume> findAllByAnnouncementIdx(Long announcementIdx);
 }
