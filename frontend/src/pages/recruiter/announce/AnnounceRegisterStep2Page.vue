@@ -100,7 +100,7 @@ const removeCoverLetterSection = (index) => {
 
 // 폼 저장 함수 호출
 const saveForm = () => {
-    customFormStore.saveForm(router.params.announcementIdx, selectedForms.value, coverLetterSections.value, router);
+    customFormStore.saveForm(router.params.announcementIdx, selectedForms.value, coverLetterSections.value);
 };
 </script>
 
