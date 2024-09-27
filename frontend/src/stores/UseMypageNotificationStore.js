@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import axios from "axios";
+import {backend} from "@/const";
 
 // 전역 저장소 생성
 export const UseMypageNotificationStore = defineStore('notification', {
@@ -12,7 +13,7 @@ export const UseMypageNotificationStore = defineStore('notification', {
             try{
                 const response = await axios.get(
                     // `api/interview-schedule/create`,
-                    `/api/api/alarm/read-all`,
+                    `${backend}/alarm/read-all`,
                     // 쿠키 포함
                     // { withCredentials: true }
                 );
@@ -32,7 +33,7 @@ export const UseMypageNotificationStore = defineStore('notification', {
             try{
                 const response = await axios.get(
                     // `api/interview-schedule/create`,
-                    `/api/api/alarm/update-status/${idx}`,
+                    `${backend}/alarm/update-status/${idx}`,
                     // 쿠키 포함
                     // { withCredentials: true }
                 );

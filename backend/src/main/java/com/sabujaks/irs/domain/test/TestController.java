@@ -19,7 +19,7 @@ import java.util.Collection;
 public class TestController {
     @GetMapping("/ex01")
     public ResponseEntity<String> ex01(){
-        return ResponseEntity.ok("ex01제발");
+        return ResponseEntity.ok("야호");
     }
 
     @GetMapping("/ex02")
