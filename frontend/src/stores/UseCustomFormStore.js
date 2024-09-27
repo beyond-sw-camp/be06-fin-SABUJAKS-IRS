@@ -8,7 +8,7 @@ export const UseCustomFormStore = defineStore('customform', {
     }),
     actions: {
         // 지원서 폼 저장 로직
-        async saveForm(announcementIdx, selectedForms, coverLetterSections, router) {
+        async saveForm(announcementIdx, selectedForms, coverLetterSections) {
             try {
                 const titleList = coverLetterSections.map((section) => section.title);
                 const chatLimitList = coverLetterSections.map((section) => section.characterLimit);
@@ -34,16 +34,16 @@ export const UseCustomFormStore = defineStore('customform', {
                 console.log("응답" + response.data.result);
 
                 if (response.status === 200) {
-                    alert('폼 저장이 완료되었습니다.');
+                    alert('폼 저장이 완료되었습니다. 공고 메뉴로 이동해 주세요.');
 
                     // 데이터를 성공적으로 저장 후 라우터로 페이지 이동
-                    router.push({
-                        path: `/recruiter/announce`,
-                    });
+                    // router.push({
+                    //     path: `/recruiter/announce`,
+                    // });
                 }
             } catch (error) {
                 console.error('폼 저장 실패:', error);
-                alert('폼 저장에 실패하였습니다. ' + error.response.data.message);
+                alert('폼 저장에 실패하였습니다. ' + error);
             }
 
         }
