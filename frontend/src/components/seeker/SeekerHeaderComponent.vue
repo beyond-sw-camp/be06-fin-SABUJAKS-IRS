@@ -1,6 +1,6 @@
 <template>
     <header class="header-cp">
-        <div v-if="getUserInfoResult && getUserInfoResult.role=='ROLE_SEEKER'" class="header-container">
+        <div v-if="authStore.isLoggedIn && authStore.userInfo.role=='ROLE_SEEKER'" class="header-container">
             <a href="/">
                 <img class="header-logo" src="../../assets/img/irs_white.png">
             </a>
@@ -8,21 +8,21 @@
                 <a href="#">내 공고 달력</a>
                 <a href="#">마이페이지</a>
                 <a href="#">알림</a>
-                <a >{{ getUserInfoResult.name }}</a>
+                <a >{{ displayName }}</a>
                 <a @click="handleLogout" class="logout-btn">로그아웃</a>
             </div>
         </div>
-        <div v-if="getUserInfoResult && getUserInfoResult.role=='ROLE_RECRUITER'" class="header-container">
+        <div v-if="authStore.isLoggedIn && authStore.userInfo.role=='ROLE_RECRUITER'" class="header-container">
             <a href="/">
                 <img class="header-logo" src="../../assets/img/irs_white.png">
             </a>
             <div class="header-right">
                 <a href="/recruiter">채용 관리</a>
-                <a >{{ getUserInfoResult.name }}</a>
+                <a >{{ displayName }}</a>
                 <a @click="handleLogout" class="logout-btn">로그아웃</a>
             </div>
         </div>
-        <div v-else class="header-container">
+        <div v-if="!authStore.isLoggedIn" class="header-container">
             <a href="/">
                 <img class="header-logo" src="../../assets/img/irs_white.png">
             </a>
@@ -42,18 +42,25 @@ import { useToast } from "vue-toastification";
 
 const authStore = UseAuthStore(); 
 const toast = useToast();
-
 const getUserInfoResult = ref({})
+const displayName = ref('')
 
 onMounted( async() => { 
-    if(authStore.isLoggedIn){ await handleGetUserInfo(); } 
+    if(authStore.isLoggedIn == true){
+        await handleGetUserInfo(); 
+    } 
 })
 
 const handleGetUserInfo = async() => {
-    if(!authStore.userInfo && authStore.isLoggedIn){
+    if(authStore.isLoggedIn && authStore.userInfo.email != null){
         const response = await authStore.getUserInfo();
         if(response.success){ 
-            getUserInfoResult.value = authStore.userInfo 
+            getUserInfoResult.value = authStore.userInfo
+            if(authStore.userInfo.name == null){
+                displayName.value = authStore.userInfo.nickName
+            } else {
+                displayName.value = authStore.userInfo.name
+            }
         }
         else { 
             toast.error("회원정보를 불러오는데 실패했습니다.")
@@ -73,7 +80,6 @@ const handleLogout = async() => {
         toast.error("로그아웃에 실패했습니다.");
     }
 }
-
 </script>
 
 <style scoped>

@@ -9,6 +9,7 @@ export const UseAuthStore = defineStore('auth', {
             email: '',
             name: '',
             role: '',
+            nickName: ''
         },
         isLoggedIn: false,
      }),
@@ -39,6 +40,11 @@ export const UseAuthStore = defineStore('auth', {
                         withCredentials: true
                     }
                 );
+                this.isLoggedIn = false
+                this.userInfo.email = '';
+                this.userInfo.name = '';
+                this.userInfo.role = '';
+                this.userInfo.nickName = '';
                 return response.data
             } catch (error) {
                 return error.response.data
@@ -80,8 +86,8 @@ export const UseAuthStore = defineStore('auth', {
                         withCredentials: true
                     }
                 );
-                const { email, name, role } = response.data.result;
-                this.userInfo = { email, name, role };
+                const { email, name, role, nickName } = response.data.result;
+                this.userInfo = { email, name, role, nickName };
                 return response.data
             } catch (error) {
                 return error.response.data

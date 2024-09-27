@@ -33,6 +33,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         aToken.setPath("/");
         aToken.setMaxAge(60 * 60);
         response.addCookie(aToken);
-        super.onAuthenticationSuccess(request, response, authentication);
+        getRedirectStrategy().sendRedirect(request, response, "http://localhost/test.html");
     }
 }
