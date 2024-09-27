@@ -26,7 +26,7 @@ import InterviewScheduleMainNew from "@/pages/recruiter/interview-schedule/Inter
 import InterviewScheduleMainExp from "@/pages/recruiter/interview-schedule/InterviewScheduleMainExp.vue";
 import InterviewScheduleMain from '@/components/recruiter/InterviewScheduleMain.vue';
 import ReScheduleMainExp from "@/pages/recruiter/interview-schedule/ReScheduleMainExp.vue";
-import {UseAuthStore} from "@/stores/UseAuthStore";
+import { UseAuthStore } from "@/stores/UseAuthStore";
 import CompanyInfoPage from "@/pages/recruiter/company/CompanyInfoPage.vue";
 
 const requireRecruiterLogin = async (to, from, next) => {
@@ -74,7 +74,7 @@ const router = createRouter({
         { path: '/recruiter/interview-schedule/reschedule', component: ReScheduleMainExp, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/interview-schedule', component: InterviewScheduleMain, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/resume', component: ResumeMainPage, beforeEnter: requireRecruiterLogin },
-        { path: '/recruiter/resume/list', component: ResumeListPage, beforeEnter: requireRecruiterLogin },
+        { path: '/recruiter/resume/list/:announcementIdx', component: ResumeListPage, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/resume/detail/:resumeIdx', component: RecruiterResumeDetailPage, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/mypage', component: CompanyInfoPage, beforeEnter: requireRecruiterLogin },
         { path: '/seeker/login', component: SeekerLoginPage, beforeEnter: alreadyLogin },

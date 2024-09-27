@@ -5,7 +5,20 @@
         <div id="content">
             <div class="resume-view-wrapper">
                 <div class="resume-view-container">
-                    <div class="resume-subject">{{ resumeStore.resumeDetail.resumeTitle }}</div>
+                    <div class="resume-subject">
+                        <div>
+                            {{ resumeStore.resumeDetail.resumeTitle }}
+                        </div>
+                        <div v-if="resumeStore.resumeDetail.docPassed == null" id="size-buttons">
+                            <button @click="updateDocPassed(1)" class="status success">합격</button>
+                            <button @click="updateDocPassed(0)" class="status failure">불합격</button>
+                        </div>
+                        <div v-else id="size-buttons" class="status-container">
+                            <div v-if="resumeStore.resumeDetail.docPassed" class="status success">서류 합격</div>
+                            <div v-else class="status failure">서류 불합격</div>
+                        </div>
+                    </div>
+                    
                     <div class="base profile image">
                         <div class="container">
                             <div v-if="showPersonalInfo" class="photo"><img name="user_photo" :src="resumeStore.resumeDetail.personalInfo.profileImg">
@@ -350,14 +363,14 @@
 
                 </div>
             </div>
-            <div v-if="resumeStore.resumeDetail.docPassed == null" id="size-buttons">
+            <!-- <div v-if="resumeStore.resumeDetail.docPassed == null" id="size-buttons">
                 <button @click="updateDocPassed(1)" class="success">합격</button>
                 <button @click="updateDocPassed(0)" class="failure">불합격</button>
             </div>
             <div v-else id="size-buttons" class="status-container">
                 <div v-if="resumeStore.resumeDetail.docPassed" class="status success">서류 합격</div>
                 <div v-else class="status failure">서류 불합격</div>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
@@ -466,7 +479,6 @@ const updateDocPassed = async (docPassedValue) => {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 20px 0;
     font-size: 18px; /* 폰트 크기 조정 */
 }
 
@@ -750,6 +762,8 @@ body.resume-preview .resume-page {
 }
 
 .resume-subject {
+    display: flex;
+    justify-content: space-between;
     margin-bottom: 24px;
     font-size: 40px;
     letter-spacing: -0.5px;
