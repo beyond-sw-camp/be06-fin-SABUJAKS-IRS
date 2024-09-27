@@ -109,4 +109,13 @@ public class AnnouncementController {
 
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.ANNOUNCEMENT_READ_ALL_SUCCESS, response));
     }
+
+    // (채용담당자) 등록한 공고 목록 조회
+    @GetMapping("/recruiter/read-all/resume")
+    public ResponseEntity<BaseResponse<AnnouncementReadAllRes>> readAllRecruiterAnnouncement (
+            @AuthenticationPrincipal CustomUserDetails customUserDetails) throws BaseException {
+        List<AnnouncementReadAllRes3> response = announcementService.readAllRecruiterAnnouncement(customUserDetails);
+
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.ANNOUNCEMENT_READ_ALL_SUCCESS, response));
+    }
 }
