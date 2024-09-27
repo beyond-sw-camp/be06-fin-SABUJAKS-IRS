@@ -1,4 +1,5 @@
 import AnnounceMainPage from '@/pages/recruiter/announce/AnnounceMainPage.vue';
+import AnnounceDetailRcrPage from '@/pages/recruiter/announce/AnnounceDetailPage.vue';
 import RecruiterLoginPage from '@/pages/recruiter/auth/RecruiterLoginPage.vue';
 import RecruiterSignupPage from '@/pages/recruiter/auth/RecruiterSignupPage.vue';
 import InterviewEvaluateMain from '@/pages/recruiter/interview-evaluate/InterviewEvaluateFormMain.vue';
@@ -62,6 +63,7 @@ const router = createRouter({
         { path: '/recruiter/login', component: RecruiterLoginPage, beforeEnter: alreadyLogin },
         { path: '/recruiter/signup', component: RecruiterSignupPage, beforeEnter: alreadyLogin },
         { path: '/recruiter/announce', component: AnnounceMainPage, beforeEnter: requireRecruiterLogin },
+        { path: '/recruiter/announce/detail/:announcementIdx', component: AnnounceDetailRcrPage, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/announce/register-step2/:announcementIdx/:title', name: 'AnnouncementCreateStep2', component: AnnounceRegisterStep2Page, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/announce/register-step1', component: AnnounceRegisterStep1Page, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/interview-schedule/new', component: InterviewScheduleMainNew, beforeEnter: requireRecruiterLogin },
