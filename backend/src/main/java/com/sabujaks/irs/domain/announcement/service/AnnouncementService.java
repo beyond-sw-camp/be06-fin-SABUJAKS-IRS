@@ -27,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import com.sabujaks.irs.domain.company.model.entity.CompanyBenefits;
 
@@ -364,8 +365,7 @@ public class AnnouncementService {
     }
 
     public List<AnnouncementReadAllRes2> readAllAnnouncement(Long recruiterIdx, String careerBase, Integer pageNum) throws BaseException {
-        // 페이지 요청 생성
-        Pageable pageable = PageRequest.of(pageNum, 10);
+        Pageable pageable = PageRequest.of(pageNum, 10, Sort.by(Sort.Direction.DESC, "idx"));
 
         Optional<Recruiter> recruiter = recruiterRepository.findByRecruiterIdx(recruiterIdx);
         Page<Announcement> result;
@@ -375,12 +375,6 @@ public class AnnouncementService {
         } else {
             result = announcementDslRepository.findByRecruiterIdxAndCareerBase(recruiterIdx, careerBase, pageable);
         }
-//        Optional<List<Announcement>> result;
-//        if(careerBase.equals("전체")) {
-//            result = announcementRepository.findByRecruiterIdx(recruiterIdx);
-//        } else {
-//            result = announcementRepository.findByRecruiterIdxAndCareerBase(recruiterIdx, careerBase);
-//        }
 
         List<AnnouncementReadAllRes2> announcementList = new ArrayList<>();
         for(Announcement announcement : result) {
