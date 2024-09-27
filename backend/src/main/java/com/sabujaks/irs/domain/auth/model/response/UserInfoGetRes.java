@@ -8,6 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class UserInfoGetRes {
+    private String nickName;
     private String email;
     private String name;
     private String role;

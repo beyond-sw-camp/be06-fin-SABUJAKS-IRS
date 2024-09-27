@@ -55,7 +55,6 @@ const handleLogin = async() => {
         password: password.value
     }
     const response = await authStore.login(requestBody)
-    console.log(authStore.isLoggedIn)
     if(response && authStore.isLoggedIn){
         router.push("/")
         toast.success("로그인에 성공했습니다.")
@@ -65,7 +64,14 @@ const handleLogin = async() => {
 }
 
 const handleSocialLogin = async() => {
-    authStore.isLoggedIn = true;
+    const response = await authStore.getUserInfo();
+    if(response){
+        authStore.isLoggedIn = true;
+        router.push("/")
+        toast.success("로그인에 성공했습니다.")
+    } else {
+        toast.error("소셜로그인에 실패했습니다.")
+    }
 }
 </script>
 
