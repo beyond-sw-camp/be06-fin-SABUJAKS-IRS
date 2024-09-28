@@ -1,13 +1,10 @@
 package com.sabujaks.irs.domain.interview_evaluate.service;
 
 import com.sabujaks.irs.domain.announcement.model.entity.Announcement;
-import com.sabujaks.irs.domain.announcement.model.entity.CustomForm;
 import com.sabujaks.irs.domain.announcement.model.entity.CustomLetterForm;
 import com.sabujaks.irs.domain.announcement.repository.AnnouncementRepository;
-import com.sabujaks.irs.domain.announcement.repository.CustomFormRepository;
 import com.sabujaks.irs.domain.announcement.repository.CustomLetterFormRepository;
 import com.sabujaks.irs.domain.auth.model.entity.Seeker;
-import com.sabujaks.irs.domain.auth.repository.SeekerRepository;
 import com.sabujaks.irs.domain.interview_evaluate.model.entity.InterviewEvaluate;
 import com.sabujaks.irs.domain.interview_evaluate.model.entity.InterviewEvaluateForm;
 import com.sabujaks.irs.domain.interview_evaluate.model.entity.InterviewEvaluateResult;
@@ -144,7 +141,7 @@ public class InterviewEvaluateService {
     }
 
     @Transactional
-    public InterviewEvaluateReadAllResumeInfo readAllResumeInfo(CustomUserDetails customUserDetails,String announcementUUID, String interviewScheduleUUID) throws BaseException{
+    public InterviewEvaluateReadAllResumeInfo readAllResumeInfo(CustomUserDetails customUserDetails, String announcementUUID, String interviewScheduleUUID) throws BaseException{
         List<InterviewParticipate> interviewParticipateList = interviewParticipateRepository
                 .findAllByEstimatorIdxAndInterviewScheduleUUID(customUserDetails.getIdx(), interviewScheduleUUID)
                 .orElseThrow(() -> new BaseException(BaseResponseMessage.INTERVIEW_EVALUATE_SEARCH_FORM_FAIL_INVALID_ACCESS));
