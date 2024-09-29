@@ -27,7 +27,9 @@ export const UseCompanyStore = defineStore('company', {
 
         companyBenefits: [], // 복리후생 카테고리 및 세부 항목 리스트 (조회 시 사용)
 
-        files: [], // 이미지 리스트
+        files: [], // 이미지 리스트 (등록에 사용)
+
+        imgUrlList: [], // 이미지 리스트 (유저없이 조회에 사용)
 
     }),
     // persist: {},
@@ -88,6 +90,26 @@ export const UseCompanyStore = defineStore('company', {
             } catch (error) {
                 console.error('기업 정보를 불러오지 못했습니다.', error);
                 throw new Error(error.response?.data?.message || '기업 정보 조회 실패');
+            }
+        },
+
+        // 기업 이미지 조회
+        async readCompanyImg(companyIdx) {
+            try {
+                const response = await axios.get(
+                    `${backend}/company/read-img?companyIdx=${companyIdx}`,
+                    {
+                        headers: { 'Content-Type': 'application/json' },
+                        // withCredentials: true
+                    }
+                );
+                const data = response.data;
+                console.log(data);
+                this.imgUrlList = data.result.imgUrlList;
+
+            } catch (error) {
+                console.error('기업 이미지를 불러오지 못했습니다.', error);
+                throw new Error(error.response?.data?.message || '기업 이미지 조회 실패');
             }
         },
 

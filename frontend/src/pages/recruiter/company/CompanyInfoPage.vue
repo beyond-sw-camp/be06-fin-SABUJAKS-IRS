@@ -165,7 +165,7 @@ onMounted(async () => {
         <div class="image-upload-container">
           <div>
             <input ref="imageUploadInput" id="image-upload" name="media" type="file" multiple
-              accept="image/png, image/jpeg, image/jpg" class="hidden" />
+              accept="image/png, image/jpeg, image/jpg" class="hidden" @change="handleImageUpload"/>
             <label for="image-upload" class="product-image-btn">
               <div class="flex flex-col">
                 <img src="@/assets/img/img_upload.png" style="width: 80px; height: 80px" />
@@ -293,7 +293,7 @@ onMounted(async () => {
       </div>
 
       <!-- 기업 정보 조회 섹션 -->
-      <div v-else id="readSections">
+      <div v-else id="readSections" style="margin: 100px 0;">
         <h1>{{ companyStore.companyInfo.name }} 기업 정보</h1>
         <div class="image-preview-container">
           <!-- 이미지 리스트를 보여줌 -->
