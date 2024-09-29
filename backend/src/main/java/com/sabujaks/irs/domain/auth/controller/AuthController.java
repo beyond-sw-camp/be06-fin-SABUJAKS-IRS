@@ -3,10 +3,7 @@ package com.sabujaks.irs.domain.auth.controller;
 import com.sabujaks.irs.domain.auth.model.request.AuthSignupReq;
 import com.sabujaks.irs.domain.auth.model.request.CompanyVerifyReq;
 import com.sabujaks.irs.domain.auth.model.request.PasswordEditReq;
-import com.sabujaks.irs.domain.auth.model.response.AuthSignupRes;
-import com.sabujaks.irs.domain.auth.model.response.CompanyVerifyRes;
-import com.sabujaks.irs.domain.auth.model.response.CrnApiRes;
-import com.sabujaks.irs.domain.auth.model.response.UserInfoGetRes;
+import com.sabujaks.irs.domain.auth.model.response.*;
 import com.sabujaks.irs.domain.auth.service.AuthService;
 import com.sabujaks.irs.domain.auth.service.CompanyVerifyService;
 import com.sabujaks.irs.domain.auth.service.EmailVerifyService;
@@ -83,5 +80,14 @@ public class AuthController {
         @AuthenticationPrincipal CustomUserDetails customUserDetails) throws BaseException {
         authService.inactiveUser(customUserDetails);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.AUTH_INACTIVE_USER_SUCCESS));
+    }
+
+
+    // (지원자) 회원정보 조회
+    @GetMapping("/seeker/read")
+    public ResponseEntity<BaseResponse<SeekerRes>> readSeeker(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails) throws BaseException {
+        SeekerRes response = authService.readSeeker(customUserDetails);
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.AUTH_SEARCH_USER_INFO_SUCCESS, response));
     }
 }
