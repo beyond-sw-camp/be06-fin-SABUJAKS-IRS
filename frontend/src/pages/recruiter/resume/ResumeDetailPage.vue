@@ -604,6 +604,7 @@ body {
     width: 940px;
     margin: 0 auto;
     padding-bottom: 75px;
+    padding-top: 150px;
     text-align: left;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;

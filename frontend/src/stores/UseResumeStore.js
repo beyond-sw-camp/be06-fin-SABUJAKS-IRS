@@ -485,7 +485,8 @@ export const UseResumeStore = defineStore('resume', {
 
 
             } catch (error) {
-                alert(error.response.data.message);
+                console.log(error.response.data.message);
+                alert('공고별 지원서 조회에 실패하였습니다.');
             }
         },
         async updateDocPassed(resumeIdx, docPassedValue) {
