@@ -12,7 +12,8 @@
     
             <div class="form-item">
                 <label for="year">수상연도</label>
-                <input type="text" id="year" v-model="year" placeholder="2023" class="small-input" />
+                <input type="text" id="year" v-model="year" placeholder="2023" maxlength="4" class="small-input"
+                @input="$event.target.value = $event.target.value.replace(/[^0-9]/g, '')" />
             </div>
     
             <div class="form-item contents-item">

@@ -93,7 +93,9 @@
                                         <div class="item" v-for="(personalHistory, index) in resumeStore.resumeIntegrated.personalHistories" :key="index">
                                             <div class="date">
                                                 <div class="term">{{ personalHistory.enteredAt }} ~ {{ personalHistory.quitAt }}</div>
-                                                <div class="term-calculator">{{ calculateDuration(personalHistory.enteredAt, personalHistory.quitAt) }}</div>
+                                                <div class="term-calculator">
+                                                    {{ personalHistory.enteredAt && personalHistory.quitAt ? calculateDuration(personalHistory.enteredAt, personalHistory.quitAt) : '' }}
+                                                </div>
                                             </div>
                                             <div class="content">
                                                 <div class="content-header">
@@ -138,7 +140,9 @@
                                         <div class="item" v-for="(internsActivity, index) in resumeStore.resumeIntegrated.internsActivities" :key="index">
                                             <div class="date">
                                                 <div class="term">{{ internsActivity.startAt }} ~ {{ internsActivity.endAt }}</div>
-                                                <div class="term-calculator">{{ calculateDuration(internsActivity.startAt, internsActivity.endAt) }}</div>
+                                                <div class="term-calculator">
+                                                    {{ internsActivity.start && internsActivity.endAt ? calculateDuration(internsActivity.startAt, internsActivity.endAt) : '' }}
+                                                </div>
                                             </div>
 
                                             <div class="content">
@@ -214,7 +218,9 @@
                                         <div class="item" v-for="(studyingAbroad, index) in resumeStore.resumeIntegrated.studyingAbroads" :key="index">
                                             <div class="date">
                                                 <div class="term">{{ studyingAbroad.startAt }} ~ {{ studyingAbroad.endAt }}</div>
-                                                <div class="term-calculator">{{ calculateDuration(studyingAbroad.startAt, studyingAbroad.endAt) }}</div>
+                                                <div class="term-calculator">
+                                                    {{ studyingAbroad.startAt && studyingAbroad.endAt ? calculateDuration(studyingAbroad.startAt, studyingAbroad.endAt) : '' }}
+                                                </div>
                                             </div>
                                             <div class="content">
                                                 <div class="content-header">
@@ -373,18 +379,19 @@ onMounted(async () => {
     await resumeStore.readIntegrated();
 
     showPersonalInfo.value = true;
-    showEducation.value = resumeStore.resumeIntegrated.codes.includes("resume_001");
-    showPersonalHistory.value = resumeStore.resumeIntegrated.codes.includes("resume_002");
-    showInternsActivity.value = resumeStore.resumeIntegrated.codes.includes("resume_003");
-    showTraining.value = resumeStore.resumeIntegrated.codes.includes("resume_004");
-    showCertification.value = resumeStore.resumeIntegrated.codes.includes("resume_005");
-    showAward.value = resumeStore.resumeIntegrated.codes.includes("resume_006");
-    showStudyingAbroad.value = resumeStore.resumeIntegrated.codes.includes("resume_007");
-    showLanguage.value = resumeStore.resumeIntegrated.codes.includes("resume_008");
-    showPortfolio.value = resumeStore.resumeIntegrated.codes.includes("resume_009");
-    showPreferentialEmp.value = resumeStore.resumeIntegrated.codes.includes("resume_010");
-    showCustomLetter.value = resumeStore.resumeIntegrated.codes.includes("resume_011");
-    
+    if(resumeStore.resumeIntegrated.codes) {
+        showEducation.value = resumeStore.resumeIntegrated.codes.includes("resume_001");
+        showPersonalHistory.value = resumeStore.resumeIntegrated.codes.includes("resume_002");
+        showInternsActivity.value = resumeStore.resumeIntegrated.codes.includes("resume_003");
+        showTraining.value = resumeStore.resumeIntegrated.codes.includes("resume_004");
+        showCertification.value = resumeStore.resumeIntegrated.codes.includes("resume_005");
+        showAward.value = resumeStore.resumeIntegrated.codes.includes("resume_006");
+        showStudyingAbroad.value = resumeStore.resumeIntegrated.codes.includes("resume_007");
+        showLanguage.value = resumeStore.resumeIntegrated.codes.includes("resume_008");
+        showPortfolio.value = resumeStore.resumeIntegrated.codes.includes("resume_009");
+        showPreferentialEmp.value = resumeStore.resumeIntegrated.codes.includes("resume_010");
+        showCustomLetter.value = resumeStore.resumeIntegrated.codes.includes("resume_011");
+    }
 });
 
 const calculateAge = (birthDate) => {

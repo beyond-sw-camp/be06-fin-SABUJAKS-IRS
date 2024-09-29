@@ -4,6 +4,7 @@
             <div class="form-item">
                 <label for="schoolDiv">학교구분 <span class="required">*</span></label>
                 <select id="schoolDiv" v-model="schoolDiv">
+                    <option disabled value="">선택해주세요</option>
                     <option value="고등학교">고등학교</option>
                     <option value="대학교(2,3년)">대학교(2,3년)</option>
                     <option value="대학교(4년)">대학교(4년)</option>
@@ -27,6 +28,7 @@
                         <div class="degree-select-container">
                             <label for="degree">학위</label>
                             <select id="degree" v-model="degree" class="small-select">
+                                <option disabled value="">선택</option>
                                 <option value="석사">석사</option>
                                 <option value="박사">박사</option>
                                 <option value="석박사">석박사</option>
@@ -40,17 +42,20 @@
             <!-- 고등학교 선택 시 -->
             <div v-if="schoolDiv === '고등학교'" class="form-item">
                 <label :for="qualificationExam ? 'passAt' : 'graduatedAt'">
-                    {{ qualificationExam ? "합격년월" : "졸업년월" }} <span class="required">*</span>
+                    {{ qualificationExam ? "합격년월" : "졸업년월" }}
                 </label>
                 <!-- 대입검정고시 o -->
-                <input v-if="qualificationExam" type="text" v-model="passedAt" class="small-input" placeholder="2016.03"/>
+                <input v-if="qualificationExam" type="text" v-model="passedAt" class="small-input" maxlength="7" placeholder="2016.03"
+                @input="$event.target.value = $event.target.value.replace(/[^0-9.]/g, '')"/>
                 <!-- 대입검정고시 x -->
-                <input v-else type="text" id="graduatedAt" v-model="graduatedAt" class="small-input" placeholder="2016.02"/>
+                <input v-else type="text" id="graduatedAt" v-model="graduatedAt" class="small-input" maxlength="7" placeholder="2016.02"
+                @input="$event.target.value = $event.target.value.replace(/[^0-9.]/g, '')"/>
             </div>
 
             <div v-if="schoolDiv === '고등학교' && !qualificationExam" class="form-item">
-                <label for="graduationStatus">졸업상태 <span class="required">*</span></label>
+                <label for="graduationStatus">졸업상태</label>
                 <select id="graduationStatus" v-model="graduationStatus">
+                    <option disabled value="">선택</option>
                     <option value="졸업">졸업</option>
                     <option value="졸업예정">졸업예정</option>
                     <option value="재학중">재학중</option>
@@ -70,20 +75,23 @@
             <div v-if="schoolDiv && schoolDiv !== '고등학교'" class="form-item">
                 <div class="form-grid-2">
                     <div class="form-item">
-                        <label for="enteredAt">입학년월 <span class="required">*</span></label>
-                        <input type="text" id="enteredAt" v-model="enteredAt" placeholder="2023.03" class="small-input" />
+                        <label for="enteredAt">입학년월</label>
+                        <input type="text" id="enteredAt" v-model="enteredAt" maxlength="7" placeholder="2023.03" class="small-input" 
+                        @input="$event.target.value = $event.target.value.replace(/[^0-9.]/g, '')" />
                     </div>
                     <div class="form-item">
-                        <label for="graduatedAt">졸업년월 <span class="required">*</span></label>
-                        <input type="text" id="graduatedAt" v-model="graduatedAt" placeholder="2023.03" class="small-input" />
+                        <label for="graduatedAt">졸업년월</label>
+                        <input type="text" id="graduatedAt" v-model="graduatedAt" maxlength="7" placeholder="2023.03" class="small-input" 
+                        @input="$event.target.value = $event.target.value.replace(/[^0-9.]/g, '')"/>
                     </div>
                 </div>
             </div>
 
 
             <div v-if="schoolDiv && schoolDiv !== '고등학교'" class="form-item">
-                <label for="graduationStatus">졸업 상태 <span class="required">*</span></label>
+                <label for="graduationStatus">졸업 상태</label>
                 <select id="graduationStatus" v-model="graduationStatus">
+                    <option disabled value="">선택</option>
                     <option value="졸업">졸업</option>
                     <option value="졸업예정">졸업예정</option>
                     <option value="재학중">재학중</option>
@@ -103,7 +111,7 @@
             </div>
 
             <div v-if="schoolDiv && schoolDiv !== '고등학교'" class="form-item major-item">
-                <label for="majorName">전공명 <span class="required">*</span></label>
+                <label for="majorName">전공명</label>
                 <input type="text" id="majorName" v-model="majorName" />
             </div>
 
@@ -111,11 +119,13 @@
                 <div class="form-grid-2">
                     <div class="form-item">
                         <label for="grade">학점</label>
-                        <input type="text" id="grade" v-model="grade" class="small-input" />
+                        <input type="text" id="grade" v-model="grade" class="small-input" 
+                        @input="$event.target.value = $event.target.value.replace(/[^0-9.]/g, '')"/>
                     </div>
                     <div class="form-item">
                         <label for="totalGrade">총점</label>
                         <select id="totalGrade" v-model="totalGrade" class="small-select">
+                            <option disabled value="">선택</option>
                             <option value="4.5">4.5</option>
                             <option value="4.3">4.3</option>
                             <option value="4.0">4.0</option>
@@ -130,6 +140,7 @@
                 <div class="form-item">
                     <label for="majorType">전공선택</label>
                     <select id="majorType" v-model="majorType">
+                        <option disabled value=''>선택</option>
                         <option value="부전공">부전공</option>
                         <option value="복수전공">복수전공</option>
                         <option value="이중전공">이중전공</option>
@@ -183,21 +194,21 @@ const props = defineProps({
 });
 
 const education = props.data || {
-    schoolDiv: null,
+    schoolDiv: '',
     schoolName: null,
     graduatedAt: null,
     passedAt: null,
-    graduationStatus: null,
+    graduationStatus: '',
     qualificationExam: false,
     enteredAt: null,
     transfer: false,
     grade: null,
-    totalGrade: null,
+    totalGrade: '',
     majorName: null,
-    majorType: null,
+    majorType: '',
     otherMajor: null,
     graduationWork: null,
-    degree: null
+    degree: ''
 };
 
 const schoolDiv = ref(education.schoolDiv);
@@ -256,6 +267,7 @@ watch(
 
 const toggleQualificationExam = () => {
     qualificationExam.value = !qualificationExam.value;
+    schoolName.value = '대입검정고시';
 };
 
 const toggleTransfer = () => {

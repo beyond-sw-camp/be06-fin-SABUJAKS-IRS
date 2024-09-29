@@ -4,11 +4,14 @@
     <div class="form-item">
         <label for="name">이름 <span class="required">*</span></label>
         <input type="text" id="name" v-model="name" />
+        <span>{{ nameError }}</span>
     </div>
 
     <div class="form-item">
         <label for="birth">생년월일 <span class="required">*</span></label>
-        <input type="text" id="birth" v-model="birth" placeholder="2000.10.04" />
+        <input type="text" id="birth" v-model="birth" maxlength="10" placeholder="2000.10.04"
+        @input="$event.target.value = $event.target.value.replace(/[^0-9.]/g, '')"
+        />
     </div>
 
     <div class="form-item">
@@ -16,6 +19,7 @@
             <div class="form-item">
                 <label for="gender">성별 <span class="required">*</span></label>
                 <select id="gender" v-model="gender">
+                <option disabled value="">선택</option>
                 <option value="남자">남자</option>
                 <option value="여자">여자</option>
                 </select>
@@ -30,16 +34,18 @@
 
     <div class="form-item">
         <label for="tel">전화번호</label>
-        <input type="text" id="tel" v-model="tel" />
+        <input type="text" id="tel" v-model="tel" @input="$event.target.value = $event.target.value.replace(/[^0-9\-]/g, '')" />
     </div>
 
     <div class="form-item">
         <label for="phone">휴대폰번호 <span class="required">*</span></label>
-        <input type="text" id="phone" v-model="phone" />
+        <input type="text" id="phone" v-model="phone" placeholder="010-1234-1234" 
+        @input="$event.target.value = $event.target.value.replace(/[^0-9\-]/g, '')"
+        />
     </div>
 
     <div class="form-item">
-        <label for="address">주소</label>
+        <label for="address">주소 <span class="required">*</span></label>
         <input
         type="text"
         id="address"
@@ -78,7 +84,7 @@ const props = defineProps({
 const personalInfo = props.data || {
   name: null,
   birth: null,
-  gender: null,
+  gender: '',
   email: null,
   phone: null,
   tel: null,

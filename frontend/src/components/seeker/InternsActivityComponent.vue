@@ -4,6 +4,7 @@
             <div class="form-item">
                 <label for="activityDiv">활동구분 <span class="required">*</span></label>
                 <select id="activityDiv" v-model="activityDiv">
+                    <option disabled value="">선택해주세요</option>
                     <option value="인턴">인턴</option>
                     <option value="아르바이트">아르바이트</option>
                     <option value="동아리">동아리</option>
@@ -21,11 +22,13 @@
             <div class="form-item form-grid-2">
                 <div class="form-item">
                 <label for="startAt">시작년월</label>
-                <input type="text" id="startAt" v-model="startAt" placeholder="2023.03" class="small-input" />
+                <input type="text" id="startAt" v-model="startAt" maxlength="7" placeholder="2023.03" class="small-input" 
+                @input="$event.target.value = $event.target.value.replace(/[^0-9.]/g, '')"/>
                 </div>
                 <div class="form-item">
                 <label for="endAt">종료년월</label>
-                <input type="text" id="endAt" v-model="endAt" placeholder="2023.03" class="small-input" />
+                <input type="text" id="endAt" v-model="endAt" maxlength="7" placeholder="2023.03" class="small-input"
+                @input="$event.target.value = $event.target.value.replace(/[^0-9.]/g, '')" />
                 </div>
             </div>
     
@@ -47,7 +50,7 @@ const props = defineProps({
 });
 
 const internsActivity = props.data || {
-    activityDiv: null,
+    activityDiv: '',
     organization: null,
     startAt: null,
     endAt: null,

@@ -5,6 +5,7 @@
         <div class="form-item">
           <label for="portfolioDiv">구분 <span class="required">*</span></label>
           <select id="portfolioDiv" v-model="portfolioDiv">
+            <option disabled value="">선택해주세요</option>
             <option value="이력서">이력서</option>
             <option value="포트폴리오">포트폴리오</option>
             <option value="증명서">증명서</option>
@@ -18,6 +19,7 @@
         <div class="form-item">
           <label for="portfolioType">선택 <span class="required">*</span></label>
           <select id="portfolioType" v-model="portfolioType">
+            <option disabled value="">선택해주세요</option>
             <option value="url">url 입력</option>
             <option value="파일">파일 선택</option>
           </select>
@@ -40,8 +42,8 @@
 <script setup>
 import { ref, defineEmits, watch } from 'vue';
 
-const portfolioDiv = ref(null);
-const portfolioType = ref(null);
+const portfolioDiv = ref('');
+const portfolioType = ref('');
 const portfolioUrl = ref(null);
 const portfolioFile = ref(null);
 
