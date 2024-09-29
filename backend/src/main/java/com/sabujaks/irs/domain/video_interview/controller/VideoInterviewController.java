@@ -1,5 +1,6 @@
 package com.sabujaks.irs.domain.video_interview.controller;
 
+import com.sabujaks.irs.domain.interview_schedule.model.request.InterviewScheduleReq;
 import com.sabujaks.irs.domain.video_interview.model.request.VideoInterviewCreateReq;
 import com.sabujaks.irs.domain.video_interview.model.request.VideoInterviewTokenGetReq;
 import com.sabujaks.irs.domain.video_interview.model.response.VideoInterviewCreateRes;
@@ -10,6 +11,7 @@ import com.sabujaks.irs.global.common.exception.BaseException;
 import com.sabujaks.irs.global.common.responses.BaseResponse;
 import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
 import com.sabujaks.irs.global.security.CustomUserDetails;
+import com.sabujaks.irs.global.utils.EmailSenderSeeker;
 import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,11 +28,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class VideoInterviewController {
     private final VideoInterviewService videoInterviewService;
+    private EmailSenderSeeker emailSenderSeeker;
 
     @PostMapping("/create")
     public ResponseEntity<BaseResponse<VideoInterviewCreateRes>> create(
-        @RequestBody VideoInterviewCreateReq dto) throws OpenViduJavaClientException, OpenViduHttpException, BaseException {
+        @RequestBody VideoInterviewCreateReq dto,
+        @RequestBody InterviewScheduleReq InterviewDto) throws OpenViduJavaClientException, OpenViduHttpException, BaseException {
         VideoInterviewCreateRes response = videoInterviewService.create(dto);
+//        emailSender.sendEmail(response);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.VIDEO_INTERVIEW_CREATE_SUCCESS, response));
     }
 

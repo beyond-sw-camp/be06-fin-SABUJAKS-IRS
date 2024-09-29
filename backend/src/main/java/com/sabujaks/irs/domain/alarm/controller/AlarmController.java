@@ -31,10 +31,10 @@ public class AlarmController {
     }
 
     @GetMapping("/read-all")
-    public ResponseEntity<BaseResponse<?>> readAll () throws BaseException {
+    public ResponseEntity<BaseResponse<?>> readAll (
+            @AuthenticationPrincipal CustomUserDetails customUserDetails) throws BaseException {
 
-        // user 테스트용
-        Long seekerIdx = 1L;
+        Long seekerIdx = customUserDetails.getIdx();
         List<AlarmRes> response = alarmService.readAll(seekerIdx);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.ALARM_SEARCH_SUCCESS, response));
     }

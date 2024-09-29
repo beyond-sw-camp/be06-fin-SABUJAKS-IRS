@@ -1,5 +1,6 @@
 package com.sabujaks.irs.domain.interview_schedule.controller;
 
+import com.sabujaks.irs.domain.auth.model.response.SeekerInfoGetRes;
 import com.sabujaks.irs.domain.interview_schedule.model.request.InterviewScheduleReq;
 import com.sabujaks.irs.domain.interview_schedule.model.request.InterviewScheduleUpdateReq;
 import com.sabujaks.irs.domain.interview_schedule.model.request.ReScheduleReq;
@@ -10,7 +11,7 @@ import com.sabujaks.irs.global.common.exception.BaseException;
 import com.sabujaks.irs.global.common.responses.BaseResponse;
 import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
 import com.sabujaks.irs.global.security.CustomUserDetails;
-import com.sabujaks.irs.global.utils.EmailSender;
+import com.sabujaks.irs.global.utils.EmailSenderSeeker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,14 +25,14 @@ import java.util.List;
 public class InterviewScheduleController {
 
     private final InterviewScheduleService interviewScheduleService;
-    private final EmailSender emailSender;
+    private final EmailSenderSeeker emailSenderSeeker;
 
     @PostMapping("/create")
     public ResponseEntity<BaseResponse<InterviewScheduleReq>> create (
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestBody InterviewScheduleReq dto) throws BaseException {
         InterviewScheduleRes response = interviewScheduleService.create(customUserDetails, dto);
-        emailSender.sendEmail(response, dto.getEstimatorList());
+        emailSenderSeeker.sendEmail(response, "인터뷰 일정 안내");
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_SCHEDULE_CREATE_SUCCESS, response));
     }
 
@@ -70,11 +71,11 @@ public class InterviewScheduleController {
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_SCHEDULE_UPDATE_SUCCESS));
     }
 
-    // CustomUserDetail 추가하기
     @PostMapping("/create/re-schedule")
     public ResponseEntity<BaseResponse<ReScheduleReq>> createReSchedule (
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestBody ReScheduleReq dto) throws BaseException {
-        ReScheduleRes response = interviewScheduleService.createReSchedule(dto);
+        ReScheduleRes response = interviewScheduleService.createReSchedule(customUserDetails, dto);
 
 //        emailSender.sendEmail(response, dto.getEstimatorList());
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.RESCHEDULE_CREATE_SUCCESS, response));
@@ -95,5 +96,13 @@ public class InterviewScheduleController {
         Integer response = interviewScheduleService.getTotalReSchedule(announcementIdx);
 
         return ResponseEntity.ok(new BaseResponse<>(BaseResponseMessage.RESCHEDULE_SEARCH_ALL_SUCCESS, response));
+    }
+
+    @GetMapping("/read-all/seeker")
+    public ResponseEntity<BaseResponse<?>> getSeekerList(
+            @RequestParam Long announcementIdx) throws BaseException {
+        List<SeekerInfoGetRes> response = interviewScheduleService.getSeekerList(announcementIdx);
+
+        return ResponseEntity.ok(new BaseResponse<>(BaseResponseMessage.AUTH_SEARCH_USER_INFO_SUCCESS, response));
     }
 }

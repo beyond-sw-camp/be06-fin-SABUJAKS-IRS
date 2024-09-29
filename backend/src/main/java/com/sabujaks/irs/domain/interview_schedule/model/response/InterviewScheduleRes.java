@@ -18,5 +18,6 @@ public class InterviewScheduleRes {
     private String interviewStart;
     private String interviewEnd;
     private String uuid;
+    private String careerBase;
     private Long teamIdx;
 }
