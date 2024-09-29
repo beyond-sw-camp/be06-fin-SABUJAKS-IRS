@@ -20,7 +20,7 @@
 import MainSideBarComponent from "@/components/recruiter/MainSideBarComponent.vue";
 import { onMounted, ref } from "vue";
 import MainHeaderComponent from "../../../components/recruiter/MainHeaderComponent.vue";
-import InterviewEvaluateFormMain from "@/components/recruiter/InterviewEvaluateFormMain.vue";
+import InterviewEvaluateFormMain from "@/components/recruiter/InterviewEvaluateForm.vue";
 import { UseInterviewScheduleStore } from '@/stores/UseInterviewScheduleStore';
 
 
