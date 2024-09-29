@@ -93,11 +93,11 @@ const loadInterviewScheduleList = async (btnNumValue) => {
   interviewSchedules.value = response; // 데이터를 가져온 후 interviewSchedules에 값을 할당
 };
 
-const createVideoInterview = async (interviewScheduleUuid) => {
+const createVideoInterview = async (interviewScheduleUuid, interviewScheduleInfo) => {
   uuidData.value = {
     announceUUID: announcementUuidInfo.value,
-    // videoInterviewUUID: interviewScheduleUuid,
-    params: {customSessionId: interviewScheduleUuid}
+    params: {customSessionId: interviewScheduleUuid},
+    interviewScheduleInfo: interviewScheduleInfo
   }
   const response = await interviewScheduleStore.createVideoInterview(uuidData.value);
   if (response !== 0 && response !== undefined) {

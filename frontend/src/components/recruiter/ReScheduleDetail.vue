@@ -138,7 +138,8 @@ const submitForm = () => {
     // 갱신해야할 데이터 객체
     const updateInterviewData = {
       interviewScheduleIdx: props.interviewScheduleDetail.idx,
-      seekerList: selectedSpanValues
+      seekerList: selectedSpanValues,
+      reScheduleIdx: props.reScheduleInfo.idx
     }
 
     const pageUpdateData = {

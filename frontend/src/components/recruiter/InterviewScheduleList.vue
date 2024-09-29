@@ -62,8 +62,8 @@ const handleRowClick = (type) => {
   emit('openModal', type);
 }
 
-const createVideoInterview = (uuid) => {
-  emit('createVideoInterview', uuid);
+const createVideoInterview = (uuid, interviewScheduleInfo) => {
+  emit('createVideoInterview', uuid, interviewScheduleInfo);
 }
 
 const formatDate = (datetime) => {
@@ -120,7 +120,7 @@ const handleScheduleClick = (schedule) => {
           </ul>
         </td>
         <td>
-          <button @click="createVideoInterview(schedule.uuid)">방 생성</button>
+          <button @click="createVideoInterview(schedule.uuid, schedule)">방 생성</button>
         </td>
       </tr>
       </tbody>
