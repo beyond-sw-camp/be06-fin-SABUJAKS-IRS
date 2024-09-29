@@ -2,28 +2,26 @@
   <div class="body-arp">
     <SeekerHeaderComponent></SeekerHeaderComponent>
     <section class="main-content">
-      <h2>채용22</h2>
+      <h2>채용</h2>
       <div class="filter-section">
         <div class="filter-item" data-filter="기업형태">
-          <button class="dropdown-btn">기업형태</button>
-          <div class="filter-dropdown" id="기업형태">
-            <label><input type="checkbox" value="대기업" /> 대기업</label>
-            <label><input type="checkbox" value="중소기업" /> 중소기업</label>
-            <label><input type="checkbox" value="공공기관/공기업" />
+          <button class="dropdown-btn" @click="toggleDropdown('기업형태')">기업형태</button>
+          <div class="filter-dropdown" v-if="dropdownOpen['기업형태']">
+            <label><input type="checkbox" value="대기업" v-model="selectedFilters" /> 대기업</label>
+            <label><input type="checkbox" value="중소기업" v-model="selectedFilters" /> 중소기업</label>
+            <label><input type="checkbox" value="공공기관/공기업" v-model="selectedFilters" />
               공공기관/공기업</label>
-            <label><input type="checkbox" value="외국계기업" /> 외국계기업</label>
-            <label><input type="checkbox" value="중견기업" /> 중견기업</label>
-            <label><input type="checkbox" value="비영리단체/협회/재단" />
+            <label><input type="checkbox" value="외국계기업" v-model="selectedFilters" /> 외국계기업</label>
+            <label><input type="checkbox" value="중견기업" v-model="selectedFilters" /> 중견기업</label>
+            <label><input type="checkbox" value="비영리단체/협회/재단" v-model="selectedFilters" />
               비영리단체/협회/재단</label>
           </div>
         </div>
         <div class="filter-item" data-filter="채용형태">
-          <button class="dropdown-btn">채용형태</button>
-          <div class="filter-dropdown" id="채용형태">
-            <label><input type="checkbox" value="신입" /> 신입</label>
-            <label><input type="checkbox" value="경력직" /> 경력직</label>
-            <label><input type="checkbox" value="인턴" /> 인턴</label>
-            <label><input type="checkbox" value="계약직" /> 계약직</label>
+          <button class="dropdown-btn" @click="toggleDropdown('채용형태')">채용형태</button>
+          <div class="filter-dropdown" v-if="dropdownOpen['채용형태']">
+            <label><input type="checkbox" value="신입" v-model="selectedFilters" /> 신입</label>
+            <label><input type="checkbox" value="경력" v-model="selectedFilters" /> 경력</label>
           </div>
         </div>
         <div class="filter-item" data-filter="모집직무">
@@ -53,61 +51,50 @@
           </div>
         </div>
         <div class="search-container">
-          <input type="text" id="search-input" placeholder="공고명, 기업, 직무 검색" />
-          <button id="search-btn">검색</button>
+          <!-- <input type="text" id="search-input" placeholder="공고명, 기업, 직무, 키워드 검색" />
+          <button id="search-btn">검색</button> -->
+          <input ref="searchInput" type="text" v-model="searchKeyword" placeholder="공고명, 기업, 직무, 키워드 검색"
+            @keyup.enter="handleSearch" />
+          <button @click="handleSearch">검색</button>
         </div>
       </div>
 
-      <!-- <div class="search-container">
-            <input type="text" id="search-input" placeholder="공고명, 기업, 직무 검색">
-            <button id="search-btn">검색</button>
-        </div> -->
-
       <div class="selected-filters">
-        <div id="selected-filters-list"></div>
-        <a href="#" id="reset-filters" class="reset-filters">초기화🔄️</a>
+        <div id="selected-filters-list">
+          <span v-for="filter in selectedFilters" :key="filter" @click="removeFilter(filter)">
+            {{ filter }} ✕
+          </span>
+        </div>
+        <a href="#" id="reset-filters" class="reset-filters" @click.prevent="resetFilters">초기화🔄️</a>
       </div>
 
       <div class="results-header">
-        <span>검색 결과 1556건</span>
+        <span>검색 결과 {{ announcementCount }}건</span>
         <span class="sort-by">최신순 ▼</span>
       </div>
 
       <table class="job-listing">
         <thead>
           <tr>
+            <th>번호</th>
             <th>기업명</th>
             <th>공고명</th>
+            <th>모집분야</th>
             <th>채용형태</th>
             <th>근무지역</th>
             <th>마감일</th>
-            <th>조회수</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>주식회사 더파운즈</td>
-            <td>[신입/경력] 더파운더즈/아누아 대규모 채용</td>
-            <td>신입</td>
-            <td>서울</td>
-            <td>~09.19</td>
-            <td>3385</td>
-          </tr>
-          <tr>
-            <td>빔산토리코리아</td>
-            <td>빔산토리코리아 서울지역 담당 주류영업</td>
-            <td>신입</td>
-            <td>서울</td>
-            <td>~09.04</td>
-            <td>830</td>
-          </tr>
-          <tr>
-            <td>현대자동차</td>
-            <td>[현대자동차] 9월 신입사원 채용</td>
-            <td>신입</td>
-            <td>서울 외</td>
-            <td>~09.14</td>
-            <td>9999+</td>
+          <tr v-for="(announcement, index) in announcementStore.announcements2" :key="announcement.announcementIdx"
+            @click="goToDetailPage(announcement.announcementIdx)" class="hoverable-row">
+            <td>{{ index + 1 }}</td>
+            <td>{{ announcement.companyName }}</td>
+            <td>{{ announcement.announcementTitle }}</td>
+            <td>{{ announcement.jobTitle }}</td>
+            <td>{{ announcement.careerBase }}</td>
+            <td>{{ announcement.region }}</td>
+            <td>~ {{ announcement.announcementEnd }}</td>
           </tr>
         </tbody>
       </table>
@@ -118,7 +105,167 @@
 
 <script setup>
 import SeekerHeaderComponent from "@/components/seeker/SeekerHeaderComponent.vue";
-import SeekerFooterComponent from "@/components/seeker/SeekerFooterComponent.vue"
+import SeekerFooterComponent from "@/components/seeker/SeekerFooterComponent.vue";
+import { useRouter } from 'vue-router';
+import { ref, onMounted, computed } from 'vue';
+import { UseAnnouncementStore } from "@/stores/UseAnnouncementStore";
+
+const router = useRouter();
+const announcementStore = UseAnnouncementStore();
+
+// announcements2 리스트의 길이 = 공고 수를 계산
+const announcementCount = computed(() => announcementStore.announcements2.length);
+
+// 검색 키워드와 선택된 필터 저장
+const searchKeyword = ref('');
+const selectedFilters = ref([]);
+
+// 드롭다운 상태 저장
+const dropdownOpen = ref({
+  '기업형태': false,
+  '채용형태': false,
+  // 다른 필터 항목들 추가 가능
+});
+
+// 드롭다운 열기/닫기 토글 함수
+const toggleDropdown = (filterName) => {
+  dropdownOpen.value[filterName] = !dropdownOpen.value[filterName];
+};
+
+// 필터 제거 함수
+const removeFilter = (filter) => {
+  selectedFilters.value = selectedFilters.value.filter((item) => item !== filter);
+};
+
+// 필터 초기화 함수
+const resetFilters = () => {
+  selectedFilters.value = [];
+};
+
+
+// 공고 검색 처리 함수
+const handleSearch = () => {
+  if (searchKeyword.value) {
+    announcementStore.searchAnnouncements(searchKeyword.value);
+  } else {
+    console.error("검색어를 입력하세요.");
+  }
+};
+
+
+// 필터 드롭다운 및 선택한 필터 업데이트 함수
+// const initializeFilters = () => {
+//   const filterItems = document.querySelectorAll(".filter-item");
+//   filterItems.forEach((item) => {
+//     item.addEventListener("click", function () {
+//       const filterName = this.getAttribute("data-filter");
+//       const dropdown = document.getElementById(filterName);
+
+//       // 다른 드롭다운이 열려 있으면 닫기
+//       document.querySelectorAll(".filter-dropdown").forEach((drop) => {
+//         if (drop !== dropdown) {
+//           drop.style.display = "none";
+//         }
+//       });
+
+//       // 클릭한 드롭다운을 토글
+//       if (dropdown.style.display === "block") {
+//         dropdown.style.display = "none";
+//       } else {
+//         dropdown.style.display = "block";
+//       }
+//     });
+//   });
+
+//   // 각 체크박스 이벤트
+//   const checkboxes = document.querySelectorAll('.filter-dropdown input[type="checkbox"]');
+//   checkboxes.forEach((checkbox) => {
+//     checkbox.addEventListener("change", function () {
+//       const filterValue = this.value;
+
+//       if (this.checked) {
+//         // 체크된 경우 배열에 추가
+//         selectedFilters.value.push(filterValue);
+//       } else {
+//         // 체크 해제된 경우 배열에서 제거
+//         selectedFilters.value = selectedFilters.value.filter((item) => item !== filterValue);
+//       }
+
+//       updateSelectedFilters();
+//     });
+//   });
+// };
+
+// 선택된 필터 항목을 화면에 표시
+// const updateSelectedFilters = () => {
+//   const selectedList = document.getElementById("selected-filters-list");
+//   selectedList.innerHTML = "";
+
+//   selectedFilters.value.forEach((filter) => {
+//     const filterSpan = document.createElement("span");
+//     filterSpan.textContent = filter + " ✕";
+//     filterSpan.style.cursor = "pointer";
+
+//     // 필터 항목을 클릭하면 해당 항목 해제
+//     filterSpan.addEventListener("click", () => {
+//       selectedFilters.value = selectedFilters.value.filter((item) => item !== filter);
+//       updateSelectedFilters();
+//       document.querySelector(`.filter-dropdown input[value="${filter}"]`).checked = false;
+//     });
+
+//     selectedList.appendChild(filterSpan);
+//   });
+// };
+
+// 초기화 버튼
+// const resetFilters = () => {
+//   selectedFilters.value = [];
+//   updateSelectedFilters();
+
+//   // 모든 체크박스 해제
+//   document.querySelectorAll('.filter-dropdown input[type="checkbox"]').forEach((checkbox) => {
+//     checkbox.checked = false;
+//   });
+// };
+
+// 검색 버튼 동작
+// const handleSearch = () => {
+//   const searchText = document.getElementById("search-input").value.toLowerCase();
+//   if (searchText) {
+//     alert("검색 기능 실행: " + searchText);
+//   } else {
+//     alert("검색어를 입력하세요.");
+//   }
+// };
+
+
+
+
+// 공고 상세 페이지로 이동
+const goToDetailPage = (announcementIdx) => {
+  router.push(`/seeker/announce/detail/${announcementIdx}`);
+};
+
+// 컴포넌트가 로드될 때 데이터를 가져옴
+onMounted(() => {
+  // initializeFilters();
+
+  // if (searchInput.value) {
+  //   searchInput.value.addEventListener('keyup', handleSearchInput);  // DOM 요소가 존재할 때만 이벤트 리스너 추가
+  // } else {
+  //   console.error('Search input element is not found');
+  // }
+
+  // // 초기화 버튼 클릭 이벤트
+  // document.getElementById("reset-filters").addEventListener("click", resetFilters);
+
+  // // 검색 버튼 클릭 이벤트
+  // document.getElementById("search-btn").addEventListener("click", handleSearch);
+
+  // 전체 공고 조회 함수
+  announcementStore.readAll();
+});
+
 </script>
 
 <style scoped>
@@ -126,6 +273,7 @@ import SeekerFooterComponent from "@/components/seeker/SeekerFooterComponent.vue
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+
 }
 
 .body-arp {
@@ -134,11 +282,13 @@ import SeekerFooterComponent from "@/components/seeker/SeekerFooterComponent.vue
   background-color: #F9FAFB;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0;
 }
 
-.header-arp {
-  background-color: #ffffff;
+/* .header-arp {
+  background-color: #F9FAFB;
   border-bottom: 1px solid #ddd;
   padding: 10px 0;
 }
@@ -158,7 +308,7 @@ import SeekerFooterComponent from "@/components/seeker/SeekerFooterComponent.vue
 
 .header-right {
   position: relative;
-  /* 부모 요소를 기준으로 드롭다운 위치 설정 */
+  // 부모 요소를 기준으로 드롭다운 위치 설정
 }
 
 .header-right a {
@@ -166,13 +316,13 @@ import SeekerFooterComponent from "@/components/seeker/SeekerFooterComponent.vue
   text-decoration: none;
   color: #666;
   font-size: 14px;
-}
+} */
 
 .main-content {
   max-width: 1200px;
-  margin: 100px auto;
+  margin: 60px auto;
   background-color: #fff;
-  padding: 20px;
+  padding: 50px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
@@ -339,6 +489,18 @@ h2 {
 
 .logout-btn:hover {
   /* background-color: #83a5ea; */
+}
+
+
+/* 테이블 행 hover 시 색깔 변화 */
+.hoverable-row {
+  transition: background-color 0.3s ease;
+}
+
+.hoverable-row:hover {
+  background-color: #f6f6f6;
+  /* 마우스 올렸을 때 약간 어둡게 변경 */
+  cursor: pointer;
 }
 </style>
 

@@ -74,6 +74,10 @@ export const UseAnnouncementStore = defineStore('announcement', {
 
         announcements: [], // 공고 전체 조회 (채용담당자페이지 공고 메뉴)
 
+        announcements2: [], // 공고 전체 조회 (지원자페이지 홈)
+
+        announcementDetail: {}, // 공고 상세 조회 (지원자페이지 공고 아이템 클릭시)
+
     }),
     // persist: {},
     actions: {
@@ -143,7 +147,7 @@ export const UseAnnouncementStore = defineStore('announcement', {
         },
 
 
-        // 공고 상세 조회 함수 (채용담당자 페이지 - 공고 아이템 한개 클릭시)
+        // 공고 상세 조회 함수 (채용담당자 페이지, 지원자 페이지 - 공고 아이템 한개 클릭시)
         async fetchAnnouncementDetail(announcementIdx) {
             try {
                 const response = await axios.get(
@@ -161,7 +165,7 @@ export const UseAnnouncementStore = defineStore('announcement', {
         },
 
 
-        // formData를 백엔드로 전송하는 함수
+        // 공고 등록 함수
         async createAnnouncement(selectedCategories, fields, fields2, router) {
             try {
                 const formDataCreate = new FormData();
@@ -305,6 +309,39 @@ export const UseAnnouncementStore = defineStore('announcement', {
             } catch (error) {
                 console.error('데이터 저장 실패:', error);
                 alert('데이터 저장 중 오류가 발생했습니다.' + error.response.data.message);
+            }
+        },
+
+
+        // 공고 전체 조회 함수 (지원자 페이지)
+        async readAll() {
+            try {
+                const response = await axios.get(
+                    `${backend}/announcement/read-all/see`,
+                    {
+                        headers: { 'Content-Type': 'application/json' },
+                        // withCredentials: true
+                    });
+                this.announcements2 = response.data.result; // 백엔드에서 가져온 데이터를 저장
+                console.log(this.announcements2)
+            } catch (error) {
+                console.error('공고 목록을 불러오는 중 오류 발생:', error);
+            }
+        },
+
+
+        // 공고명과 모집분야에서 키워드 검색
+        async searchAnnouncements(searchKeyword) {
+            try {
+              const response = await axios.get(`${backend}/search/keyword?keyword=${searchKeyword}`,
+                {
+                    headers: { 'Content-Type': 'application/json' },
+                    // withCredentials: true
+                });
+              this.announcements2.value = response.data.result;
+              console.log(this.announcements2)
+            } catch (error) {
+              console.error('검색 결과를 불러오지 못했습니다.', error);
             }
         },
 

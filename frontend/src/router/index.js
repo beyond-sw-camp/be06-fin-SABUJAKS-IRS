@@ -92,7 +92,7 @@ const router = createRouter({
         { path: '/seeker/signup', component: SeekerSignupPage, beforeEnter: alreadyLogin },
         
         { path: '/seeker/announce', component: AnnounceReadAllPage },
-        { path: '/seeker/announce/detail', component: AnnounceDetailPage },
+        { path: '/seeker/announce/detail/:announcementIdx', component: AnnounceDetailPage },
         { path: '/seeker/mypage', component: MypageMainPage },
         { path: '/seeker/mypage/schedule', component: MypageSchedulePage },
         { path: '/seeker/mypage/annouce-resume', component: MypageAnnouceResumePage },
