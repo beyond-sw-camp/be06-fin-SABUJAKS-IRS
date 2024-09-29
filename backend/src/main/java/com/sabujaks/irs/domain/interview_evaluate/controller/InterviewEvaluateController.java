@@ -70,4 +70,5 @@ public class InterviewEvaluateController {
         InterviewEvaluateReadAllRes response = interviewEvaluateService.readAllEvaluate(customUserDetails, announceIdx);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_EVALUATE_READ_ALL_SUCCESS, response));
     }
+
 }
