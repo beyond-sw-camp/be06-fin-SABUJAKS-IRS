@@ -37,6 +37,9 @@ const goAndReload = (path) => {
         </span>
       </li>
       <ul v-if="isInterviewMenuOpen" class="submenu">
+        <li @click="goAndReload('/recruiter/interview-evaluate/form')">
+          면접 평가표
+      </li>
         <li @click="goAndReload('/recruiter/interview-schedule/new')">
           신입
         </li>
@@ -46,10 +49,11 @@ const goAndReload = (path) => {
         <li @click="goAndReload('/recruiter/interview-schedule/reschedule')">
           일정조율
         </li>
-      </ul>
-      <li @click="goAndReload('/recruiter/interview-evaluate')">
-          면접 평가표
+        <li @click="goAndReload('/recruiter/interview-evaluate/result')">
+          면접 평가
       </li>
+      </ul>
+
       <li @click="goAndReload('/recruiter/mypage')">
         마이페이지
       </li>
