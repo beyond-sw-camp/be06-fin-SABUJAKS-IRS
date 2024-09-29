@@ -22,7 +22,7 @@
                                 <div class="date">{{ formatDate(announceResume.resumedAt) }}</div>
                             </div>
                             <div class="application-actions">
-                                <button class="announce-btn">공고 보기</button>
+                                <router-link :to="`/seeker/announce/detail/${announceResume.announcementIdx}`"><button class="announce-btn">공고 보기</button></router-link>
                                 <router-link :to="`/seeker/resume/detail/${announceResume.resumeIdx}`"><button class="resume-btn">지원서 보기</button></router-link>
                             </div>
                         </div>
@@ -39,10 +39,8 @@ import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.v
 
 import { onMounted } from 'vue';
 import { UseResumeStore } from '@/stores/UseResumeStore';
-// import { useRoute } from 'vue-router';
 
 const resumeStore = UseResumeStore();
-// const route = useRoute();
 
 
 onMounted(async () => {
@@ -54,7 +52,7 @@ const formatDate = (dateString) => {
     return dateString.split('T')[0];
 }
 
-    // 모집 상태를 확인하는 함수
+// 모집 상태를 확인하는 함수
 const checkAnnouncementStatus = (start, end) => {
     const currentDate = new Date();
     const announcementStart = new Date(start);
