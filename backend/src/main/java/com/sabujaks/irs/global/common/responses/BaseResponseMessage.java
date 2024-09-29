@@ -111,7 +111,7 @@ public enum BaseResponseMessage {
     ANNOUNCEMENT_SEARCH_FAIL_INVALID_REQUEST(false, 3303, "해당 공고의 채용 담당자가 아닙니다."),
     // COMPANY 기업정보 관련 4000~4999
     COMPANY_INFO_SUCCESS(true, 4000, "기업 정보 등록에 성공했습니다."),
-    COMPANY_INFO_SUCCESS_REGISTER(true, 4001, "기업 복리후생 조회에 성공했습니다."),
+    COMPANY_INFO_SUCCESS_REGISTER(true, 4001, "기업 필수정보 조회에 성공했습니다."),
     COMPANY_INFO_FAIL_NOT_RECRUITER(false, 4002, "채용담당자 유저가 아닙니다."),
     COMPANY_INFO_FAIL(false, 4003, "기업 정보 등록에 실패했습니다."),
     COMPANY_INFO_FAIL_NOT_REGISTER(false, 4004, "기업 정보를 등록하지 않았습니다. 먼저 등록해 주세요."),
@@ -139,7 +139,11 @@ public enum BaseResponseMessage {
     INTERVIEW_EVALUATE_CREATE_FAIL_NOT_FOUND_SCHEDULE(false, 6301, "해당 면접관과 지원자의 인터뷰 스케줄 정보가 없습니다."),
     // 인터뷰 평가 조회 6400
     INTERVIEW_EVALUATE_READ_ALL_SUCCESS(true, 6400, "지원자들의 면접 평가 결과를 불러왔습니다."),
-    INTERVIEW_EVALUATE_READ_ALL_FAIL(true, 6401, "지원자들의 면접 평가 결과를 불러오는데 실패했습니다.");
+    INTERVIEW_EVALUATE_READ_ALL_FAIL(true, 6401, "지원자들의 면접 평가 결과를 불러오는데 실패했습니다."),
+
+    // BASE_INFO 기준정보 관련 7000~7999
+    BASE_INFO_BENEFIT_CATEGORY_SEARCH_SUCCESS(true, 7000, "기준정보 중 복리후생 카테고리 조회에 성공했습니다.");
+
 
     private Boolean success;
     private Integer code;

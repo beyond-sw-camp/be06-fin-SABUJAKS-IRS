@@ -3,6 +3,7 @@ package com.sabujaks.irs.domain.company.controller;
 import com.sabujaks.irs.domain.announcement.model.request.CustomFormCreateReq;
 import com.sabujaks.irs.domain.company.model.request.CompanyCreateReq;
 import com.sabujaks.irs.domain.company.model.response.CompanyCreateRes;
+import com.sabujaks.irs.domain.company.model.response.CompanyReadRes;
 import com.sabujaks.irs.domain.company.service.CompanyService;
 import com.sabujaks.irs.global.common.exception.BaseException;
 import com.sabujaks.irs.global.common.responses.BaseResponse;
@@ -25,29 +26,29 @@ public class CompanyController {
     private final CompanyService companyService;
     private final CloudFileUpload cloudFileUpload;
 
+    // 기업 정보 조회
+    @GetMapping("/read")
+    public ResponseEntity<BaseResponse<CompanyReadRes>> read(
+        @AuthenticationPrincipal CustomUserDetails customUserDetail) throws BaseException {
+
+        CompanyReadRes response = companyService.readCompany(customUserDetail);
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.COMPANY_INFO_SUCCESS_REGISTER, response));
+    }
+
+
+    // 기업 정보 등록
     @PostMapping("/create")
-    public ResponseEntity<BaseResponse<CustomFormCreateReq>> createInfo(
-            @AuthenticationPrincipal CustomUserDetails customUserDetails,
-            @RequestPart CompanyCreateReq dto,
-            @RequestPart(required = false) MultipartFile[] files) throws BaseException {
+    public ResponseEntity<BaseResponse<CompanyCreateRes>> createInfo(
+        @AuthenticationPrincipal CustomUserDetails customUserDetails,
+        @RequestPart CompanyCreateReq dto,
+        @RequestPart(required = false) MultipartFile[] files) throws BaseException {
 
         if (customUserDetails == null) throw new BaseException(BaseResponseMessage.AUTH_FAIL);
         Long recruiterIdx = customUserDetails.getIdx();
-
-        // 파일 URL 리스트
-        List<String> fileUrlList = new ArrayList<String>();
-
-        // 파일 배열 처리
-        if (files != null && files.length > 0) {
-            for (MultipartFile file : files) {
-                if (!file.isEmpty()) {
-                    String fileUrl = cloudFileUpload.upload(file);
-                    fileUrlList.add(fileUrl);
-                }
-            }
-            companyService.saveCompanyImages(fileUrlList);
-        }
         CompanyCreateRes response = companyService.createCompany(recruiterIdx, dto);
+
+        List<String> fileUrlList = cloudFileUpload.multipleUpload(files);
+        companyService.saveCompanyImages(fileUrlList, response.getCompanyIdx());
 
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.COMPANY_INFO_SUCCESS, response));
     }
