@@ -20,7 +20,7 @@
                     </div>
                     
                     <div class="base profile image">
-                        <div class="container">
+                        <div class="container-p">
                             <div v-if="showPersonalInfo" class="photo"><img name="user_photo" :src="resumeStore.resumeDetail.personalInfo.profileImg">
                             </div>
                             <div v-if="showPersonalInfo" class="info-container">
@@ -668,7 +668,7 @@ body.resume-view-print .table {
     border-right: 1px solid #ddd;
 }
 
-body.resume-view-print .profile .container {
+body.resume-view-print .profile .container-p {
     border: 1px solid #ddd;
 }
 
@@ -897,13 +897,13 @@ body.resume-preview .resume-subject {
     position: relative;
 }
 
-.profile.image .container {
+.profile.image .container-p {
     height: 180px;
     padding-left: 170px;
     background-color: #F2F4F7;
 }
 
-.profile .container {
+.profile .container-p {
     overflow: hidden;
     position: relative;
     width: 940px;
@@ -1154,7 +1154,7 @@ body.resume-preview .resume-subject {
         display: none;
     }
 
-    .profile .container {
+    .profile .container-p {
         width: 100%;
     }
 
