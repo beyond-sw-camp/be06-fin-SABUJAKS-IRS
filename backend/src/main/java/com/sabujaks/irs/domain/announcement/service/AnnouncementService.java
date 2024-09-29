@@ -16,7 +16,7 @@ import com.sabujaks.irs.domain.auth.repository.RecruiterRepository;
 import com.sabujaks.irs.domain.company.model.entity.Company;
 import com.sabujaks.irs.domain.company.repository.CompanyBenefitsRepository;
 import com.sabujaks.irs.domain.company.repository.CompanyRepository;
-import com.sabujaks.irs.domain.data_init.entity.BaseInfo;
+import com.sabujaks.irs.domain.data_init.model.entity.BaseInfo;
 import com.sabujaks.irs.domain.data_init.repository.BaseInfoRepository;
 import com.sabujaks.irs.domain.resume.repository.ResumeRepository;
 import com.sabujaks.irs.global.common.exception.BaseException;

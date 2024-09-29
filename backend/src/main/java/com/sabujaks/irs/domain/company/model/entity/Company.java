@@ -24,7 +24,6 @@ public class Company {
     private String crn; // 사업자 등록 번호
     private String openedAt; // 개업일자
 
-    @Column(length = 20)
     private String industry; // 산업
 
     @Column(length = 30)

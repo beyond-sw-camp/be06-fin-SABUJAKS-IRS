@@ -1,12 +1,10 @@
 package com.sabujaks.irs.domain.data_init;
 
-import com.sabujaks.irs.domain.data_init.entity.BaseInfo;
+import com.sabujaks.irs.domain.data_init.model.entity.BaseInfo;
 import com.sabujaks.irs.domain.data_init.repository.BaseInfoRepository;
 import com.sabujaks.irs.domain.interview_schedule.model.entity.Team;
 import com.sabujaks.irs.domain.interview_schedule.repository.TeamRepository;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 //@Component
