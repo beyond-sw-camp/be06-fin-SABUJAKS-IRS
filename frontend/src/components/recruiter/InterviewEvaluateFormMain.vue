@@ -67,8 +67,10 @@
 <script setup>
 import {defineProps, defineEmits, computed, ref} from 'vue';
 import { UseInterviewEvaluateStore } from "@/stores/UseInterviewEvaluateStore";
+import { useToast } from 'vue-toastification';
 const interviewEvaluateStore = UseInterviewEvaluateStore();
 const isModalVisible = ref(false); // 모달 표시 여부를 관리하는 상태
+const toast = useToast();
 const announceIdx = ref()
 const q1 = ref('')
 const q2 = ref('')
@@ -143,7 +145,10 @@ const handleCreateForm = async() => {
         q9: q9.value,
         q10: q10.value,
     }
-    await interviewEvaluateStore.createForm(requestBody);
+    const response = await interviewEvaluateStore.createForm(requestBody);
+    if(response.success) {
+      toast.success("면접 평가표 등록에 성공했습니다.")
+    }
 }
 
 const formatDate = (datetime) => {

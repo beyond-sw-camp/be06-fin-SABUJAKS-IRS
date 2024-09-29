@@ -61,6 +61,20 @@ export const UseInterviewEvaluateStore = defineStore('interviewEvaluate', {
             } catch (error) {
                 return error.response.data
             }
+        },
+        async readAllEvaluate(announceIdx) {
+            try {
+                const response = await axios.get(
+                    `${backend}/interview-evaluate/read-all/evaluate?announceIdx=${announceIdx}`,
+                    {
+                        headers: { 'Content-Type': 'application/json', },
+                        withCredentials: true
+                    }
+                );
+                return response.data
+            } catch (error) {
+                return error.response.data
+            }
         }
     },
 });
