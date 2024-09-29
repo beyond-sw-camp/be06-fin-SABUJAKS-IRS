@@ -17,7 +17,7 @@ onMounted(async () => {
 
 <template>
   <MainHeaderComponent/>
-  <div class="container padding-0">
+  <div class="container">
     <MainSideBarComponent/>
     <div id="content">
       <h1>면접 일정 상세</h1>
