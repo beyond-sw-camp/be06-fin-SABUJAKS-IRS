@@ -69,6 +69,7 @@ public enum BaseResponseMessage {
 
     // MEMBER 1500
     MEMBER_NOT_FOUND(false, 1500, "회원을 찾을 수 없습니다."),
+    ESTIMATOR_NOT_FOUND(false, 1501, "면접관을 찾을 수 없습니다."),
 
     // TEAM 1600
     TEAM_NOT_FOUND(false, 1600, "팀을 찾을 수 없습니다."),
@@ -115,6 +116,7 @@ public enum BaseResponseMessage {
     COMPANY_INFO_FAIL_NOT_RECRUITER(false, 4002, "채용담당자 유저가 아닙니다."),
     COMPANY_INFO_FAIL(false, 4003, "기업 정보 등록에 실패했습니다."),
     COMPANY_INFO_FAIL_NOT_REGISTER(false, 4004, "기업 정보를 등록하지 않았습니다. 먼저 등록해 주세요."),
+    COMPANY_NOT_FOUND(false, 4005, "기업 정보를 찾을 수 없습니다."),
 
     // ALARM 5000~5999
     ALARM_REGISTER_SUCCESS(true, 5000, "알람 생성이 완료되었습니다."),

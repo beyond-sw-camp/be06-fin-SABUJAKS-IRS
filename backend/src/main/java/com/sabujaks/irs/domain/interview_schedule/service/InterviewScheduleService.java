@@ -7,6 +7,8 @@ import com.sabujaks.irs.domain.announcement.repository.AnnouncementRepository;
 import com.sabujaks.irs.domain.auth.model.entity.Seeker;
 import com.sabujaks.irs.domain.auth.model.response.EstimatorInfoGetRes;
 import com.sabujaks.irs.domain.auth.model.response.SeekerInfoGetRes;
+import com.sabujaks.irs.domain.company.model.entity.Company;
+import com.sabujaks.irs.domain.company.repository.CompanyRepository;
 import com.sabujaks.irs.domain.interview_schedule.model.entity.*;
 import com.sabujaks.irs.domain.auth.model.entity.Estimator;
 import com.sabujaks.irs.domain.auth.model.entity.Recruiter;
@@ -54,6 +56,7 @@ public class InterviewScheduleService {
     private final AlarmRepository alarmRepository;
     private final ReScheduleRepository reScheduleRepository;
     private final ResumeRepository resumeRepository;
+    private final CompanyRepository companyRepository;
 
     public InterviewScheduleRes create(CustomUserDetails customUserDetails, InterviewScheduleReq dto) throws BaseException {
         String uuid = uuidCheck(dto);
@@ -109,7 +112,6 @@ public class InterviewScheduleService {
             }
         }
 
-        System.out.println("@@@@@@@알람 등록 시작");
         // Alarm 저장 로직
         for(Long seekerIdx : dto.getSeekerList()) {
             Seeker seeker = seekerRepository.findBySeekerIdx(seekerIdx)
@@ -139,6 +141,8 @@ public class InterviewScheduleService {
                             .build());
         }
 
+        Company company = companyRepository.findByRecruiterIdx(customUserDetails.getIdx()).orElseThrow(() -> new BaseException(BaseResponseMessage.COMPANY_NOT_FOUND));
+
         return InterviewScheduleRes.builder()
                 .idx(interviewSchedule.getIdx())
                 .isOnline(interviewSchedule.getIsOnline())
@@ -148,6 +152,8 @@ public class InterviewScheduleService {
                 .uuid(interviewSchedule.getUuid())
                 .seekerList(seekerInfoGetResList)
                 .careerBase(interviewSchedule.getCareerBase())
+                .companyName(company.getName())
+                .announcementTitle(announcement.getTitle())
                 .build();
     }
 
@@ -175,7 +181,7 @@ public class InterviewScheduleService {
         return uuid;
     }
 
-    public List<InterviewScheduleRes> readAll(String careerBase, Long idx, Integer page) throws BaseException {
+    public List<InterviewScheduleRes> readAll(String careerBase, Long idx, Integer page, CustomUserDetails customUserDetails) throws BaseException {
         Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "idx"));
         Page<InterviewSchedule> result;
 
@@ -187,17 +193,30 @@ public class InterviewScheduleService {
 
         List<InterviewScheduleRes> interviewScheduleList = new ArrayList<>();
 
+        Company company = companyRepository.findByRecruiterIdx(customUserDetails.getIdx()).orElseThrow(() -> new BaseException(BaseResponseMessage.COMPANY_NOT_FOUND));
+        Announcement announcement = announcementRepository.findByAnnounceIdx(idx)
+                .orElseThrow(() -> new BaseException(BaseResponseMessage.ANNOUNCEMENT_SEARCH_FAIL));
+
         if(!result.isEmpty()) {
             for (InterviewSchedule interviewSchedule : result) {
                 List<SeekerInfoGetRes> seekerInfoGetResList = new ArrayList<>();
-                List<InterviewParticipate> participateResult = interviewParticipateRepository.findByInterviewScheduleIdx(interviewSchedule.getIdx()).orElseThrow(() ->
+                List<EstimatorInfoGetRes> estimatorInfoGetResList = new ArrayList<>();
+                List<InterviewParticipate> participateResult = interviewParticipateRepository.findByInterviewScheduleIdxAndStatus(interviewSchedule.getIdx(), true).orElseThrow(() ->
                         new BaseException(BaseResponseMessage.INTERVIEW_PARTICIPATE_NOT_FOUND));
 
                 for(InterviewParticipate interviewParticipate : participateResult) {
+                    Seeker seeker = seekerRepository.findBySeekerIdx(interviewParticipate.getSeeker().getIdx()).orElseThrow(()->new BaseException(BaseResponseMessage.MEMBER_NOT_FOUND));
+                    Estimator estimator = estimatorRepository.findByEstimatorIdx(interviewParticipate.getEstimator().getIdx()).orElseThrow(()->new BaseException(BaseResponseMessage.ESTIMATOR_NOT_FOUND));
                     seekerInfoGetResList.add(SeekerInfoGetRes.builder()
                             .idx(interviewParticipate.getSeeker().getIdx())
-                            .name(seekerRepository.findBySeekerIdx(interviewParticipate.getSeeker().getIdx()).get().getName())
-                            .email(seekerRepository.findBySeekerIdx(interviewParticipate.getSeeker().getIdx()).get().getEmail())
+                            .name(seeker.getName())
+                            .email(seeker.getEmail())
+                            .build());
+
+                    estimatorInfoGetResList.add(EstimatorInfoGetRes.builder()
+                            .idx(interviewParticipate.getEstimator().getIdx())
+                            .name(estimator.getName())
+                            .email(estimator.getEmail())
                             .build());
                 }
                 interviewScheduleList.add(InterviewScheduleRes.builder()
@@ -209,6 +228,10 @@ public class InterviewScheduleService {
                         .teamIdx(interviewSchedule.getTeam().getIdx())
                         .seekerList(seekerInfoGetResList)
                         .uuid(interviewSchedule.getUuid())
+                        .careerBase(interviewSchedule.getCareerBase())
+                        .estimatorList(estimatorInfoGetResList)
+                        .companyName(company.getName())
+                        .announcementTitle(announcement.getTitle())
                         .build());
             }
         }
@@ -220,7 +243,7 @@ public class InterviewScheduleService {
         InterviewSchedule result = interviewScheduleRepository.findByInterviewScheduleIdx(interviewScheduleIdx).orElseThrow(() ->
                 new BaseException(BaseResponseMessage.INTERVIEW_SCHEDULE_NOT_FOUND));
 
-        List<InterviewParticipate> participateResult = interviewParticipateRepository.findByInterviewScheduleIdx(interviewScheduleIdx).orElseThrow(() ->
+        List<InterviewParticipate> participateResult = interviewParticipateRepository.findByInterviewScheduleIdxAndStatus(interviewScheduleIdx, true).orElseThrow(() ->
                 new BaseException(BaseResponseMessage.INTERVIEW_PARTICIPATE_NOT_FOUND));
 
         List<EstimatorInfoGetRes> estimatorInfoGetResList = new ArrayList<>();
@@ -280,6 +303,12 @@ public class InterviewScheduleService {
                 interviewParticipateRepository.save(interviewParticipate);
             }
         }
+
+        ReSchedule reSchedule = reScheduleRepository.findByReScheduleIdx(dto.getReScheduleIdx())
+                .orElseThrow(() -> new BaseException(BaseResponseMessage.RESCHEDULE_NOT_FOUND));
+
+        reSchedule.setStatus(true);
+        reScheduleRepository.save(reSchedule);
     }
 
     public Integer getTotalInterviewSchedule(String careerBase, Long idx){
@@ -358,6 +387,7 @@ public class InterviewScheduleService {
                                 .email(seeker.getEmail())
                                 .name(seeker.getName())
                                 .build())
+                        .status(reSchedule.getStatus())
                         .build());
             }
         }
@@ -401,10 +431,6 @@ public class InterviewScheduleService {
                     }
                 }
             }
-        }
-
-        for(Long seekerIdx : interviewParticipateSeeker) {
-            System.out.println(seekerIdx);
         }
 
         // getResumeResult => 합격자들 resume

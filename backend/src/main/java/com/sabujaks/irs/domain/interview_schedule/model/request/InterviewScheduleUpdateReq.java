@@ -10,4 +10,5 @@ import java.util.List;
 public class InterviewScheduleUpdateReq {
     private Long interviewScheduleIdx;
     private List<Long> seekerList;
+    private Long reScheduleIdx;
 }

@@ -46,4 +46,7 @@ public interface InterviewScheduleRepository extends JpaRepository<InterviewSche
     @Query("SELECT is FROM InterviewSchedule is WHERE is.uuid = :interviewScheduleUUID")
     Optional<InterviewSchedule> findByInterviewScheduleUUID(String interviewScheduleUUID);
 
+    @Query("SELECT is FROM InterviewSchedule is WHERE is.uuid = :interviewScheduleUUID")
+    Optional<InterviewSchedule> findByUuid(String interviewScheduleUUID);
+
 }

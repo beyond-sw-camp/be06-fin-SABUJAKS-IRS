@@ -2,10 +2,7 @@ package com.sabujaks.irs.domain.interview_schedule.model.entity;
 
 import com.sabujaks.irs.domain.auth.model.entity.Seeker;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
@@ -25,6 +22,7 @@ public class ReSchedule {
     private String interviewEnd;
 
     @Column(nullable = false)
+    @Setter
     private Boolean status;
 
     @ManyToOne

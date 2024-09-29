@@ -42,9 +42,6 @@ public class AlarmController {
     // 알림 상태 업데이트
     @GetMapping("/update-status/{idx}")
     public ResponseEntity<BaseResponse<?>> updateStatus(@PathVariable Long idx) throws BaseException {
-
-        System.out.println(("????"));
-        // 예: alarmService.updateStatusToRead(idx);
         Boolean response = alarmService.updateStatus (idx);
 
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.ALARM_SEARCH_SUCCESS, response));
