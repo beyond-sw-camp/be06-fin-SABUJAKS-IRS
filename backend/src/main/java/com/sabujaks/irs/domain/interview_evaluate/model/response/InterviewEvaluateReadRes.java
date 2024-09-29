@@ -12,4 +12,6 @@ public class InterviewEvaluateReadRes {
     private Integer totalScore;
     private String comments;
     private String estimatorEmail;
+    private InterviewEvaluateFormReadRes interviewEvaluateFormReadRes;
+    private InterviewEvaluateResultReadRes interviewEvaluateResultReadRes;
 }
