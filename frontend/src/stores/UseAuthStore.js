@@ -93,5 +93,19 @@ export const UseAuthStore = defineStore('auth', {
                 return error.response.data
             }
         },
+        async readSeeker() {
+            try {
+                const response = await axios.get(
+                    `${backend}/auth/seeker/read`,
+                    { 
+                        headers: { 'Content-Type': 'application/json', },
+                        withCredentials: true
+                    }
+                );
+                return response.data;
+            } catch (error) {
+                return error.response.data;
+            }
+        },
     },
 });

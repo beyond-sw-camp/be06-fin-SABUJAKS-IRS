@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
 import { backend } from '@/const';
+import { useToast } from 'vue-toastification';
+
 
 export const UseResumeStore = defineStore('resume', {
     state: () => ({
@@ -265,8 +267,9 @@ export const UseResumeStore = defineStore('resume', {
                     },
                 });
                 // 지원서 등록 성공
-                console.log('서버 응답:', response.data);
-                alert(response.data.message);
+                const toast = useToast();
+                // console.log('서버 응답:', response.data);
+                toast.success(response.data.message);
                 router.push('/seeker/mypage/integration-resume');
             } catch (error) {
                 alert(error.response.data.message);
@@ -436,8 +439,9 @@ export const UseResumeStore = defineStore('resume', {
                     },
                 });
                 // 지원서 등록 성공
-                console.log('서버 응답:', response.data);
-                alert(response.data.message);
+                // console.log('서버 응답:', response.data);
+                const toast = useToast();
+                toast.success(response.data.message);
                 if(response.data.code === 2000) {
                     router.push(`/seeker/resume/detail/${response.data.result.resumeIdx}`);
                 }
@@ -461,7 +465,7 @@ export const UseResumeStore = defineStore('resume', {
                 alert(error.response.data.message);
             }
         },
-        async readIntegrated() {
+        async readIntegrated(router) {
             try {
                 const response = await axios.get(`${backend}/resume/read/integrated`, {
                     headers: { 'Content-Type': 'application/json', },
@@ -471,6 +475,9 @@ export const UseResumeStore = defineStore('resume', {
                 // console.log(response.data.result);
             } catch (error) {
                 alert(error.response.data.message);
+                if(error.response.data.code === 2102) {
+                    router.push('/seeker/resume/create');
+                }
             }
         },
         async read(resumeIdx) {

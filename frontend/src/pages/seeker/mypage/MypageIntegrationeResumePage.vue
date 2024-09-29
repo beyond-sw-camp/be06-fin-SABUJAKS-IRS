@@ -359,8 +359,11 @@ import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.v
 
 import { ref, onMounted } from 'vue';
 import { UseResumeStore } from '@/stores/UseResumeStore';
+import { useRouter } from 'vue-router';
+
 
 const resumeStore = UseResumeStore();
+const router = useRouter();
 
 const showPersonalInfo = ref(false);
 const showEducation = ref(false);
@@ -376,7 +379,7 @@ const showAward = ref(false);
 const showCustomLetter = ref(false);
 
 onMounted(async () => {
-    await resumeStore.readIntegrated();
+    await resumeStore.readIntegrated(router);
 
     showPersonalInfo.value = true;
     if(resumeStore.resumeIntegrated.codes) {
