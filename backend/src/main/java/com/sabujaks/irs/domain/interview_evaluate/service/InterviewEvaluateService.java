@@ -449,52 +449,62 @@ public class InterviewEvaluateService {
         if (!Objects.equals(announcement.getRecruiter().getEmail(), customUserDetails.getEmail())) {
             throw new BaseException(BaseResponseMessage.ANNOUNCEMENT_SEARCH_FAIL_INVALID_REQUEST);
         }
-        Map<Long, InterviewEvaluateReadRes> interviewEvaluateReadAllResMap = new HashMap<>();
         List<InterviewSchedule> interviewScheduleList = interviewScheduleRepository.findByAnnouncementIdx(announceIdx)
                 .orElseThrow(() -> new BaseException(BaseResponseMessage.INTERVIEW_SCHEDULE_NOT_FOUND));
+        Map<Long, List<InterviewEvaluateReadRes>> interviewEvaluateReadAllResMap = new HashMap<>();
         for(InterviewSchedule interviewSchedule : interviewScheduleList){
             List<InterviewParticipate> interviewParticipateList = interviewParticipateRepository.findByInterviewScheduleIdx(interviewSchedule.getIdx())
                     .orElseThrow(() -> new BaseException(BaseResponseMessage.INTERVIEW_PARTICIPATE_NOT_FOUND));
             for(InterviewParticipate interviewParticipate : interviewParticipateList){
-                InterviewEvaluate interviewEvaluate = interviewEvaluateRepository.findByInterviewParticipateIdx(interviewParticipate.getIdx())
+                List<InterviewEvaluate> interviewEvaluateList = interviewEvaluateRepository
+                        .findAllByInterviewParticipateIdxAndSeekerIdx(interviewParticipate.getIdx(), interviewParticipate.getSeeker().getIdx())
                         .orElseThrow(() -> new BaseException(BaseResponseMessage.INTERVIEW_EVALUATE_READ_ALL_FAIL));
-                InterviewEvaluateResultReadRes interviewEvaluateResultReadRes = InterviewEvaluateResultReadRes.builder()
-                        .r1(interviewEvaluate.getInterviewEvaluateResult().getR1())
-                        .r2(interviewEvaluate.getInterviewEvaluateResult().getR2())
-                        .r3(interviewEvaluate.getInterviewEvaluateResult().getR3())
-                        .r4(interviewEvaluate.getInterviewEvaluateResult().getR4())
-                        .r5(interviewEvaluate.getInterviewEvaluateResult().getR5())
-                        .r6(interviewEvaluate.getInterviewEvaluateResult().getR6())
-                        .r7(interviewEvaluate.getInterviewEvaluateResult().getR7())
-                        .r8(interviewEvaluate.getInterviewEvaluateResult().getR8())
-                        .r9(interviewEvaluate.getInterviewEvaluateResult().getR9())
-                        .r10(interviewEvaluate.getInterviewEvaluateResult().getR10())
-                        .build();
-                InterviewEvaluateFormReadRes interviewEvaluateFormReadRes = InterviewEvaluateFormReadRes.builder()
-                        .q1(interviewEvaluate.getInterviewEvaluateForm().getQ1())
-                        .q2(interviewEvaluate.getInterviewEvaluateForm().getQ2())
-                        .q3(interviewEvaluate.getInterviewEvaluateForm().getQ3())
-                        .q4(interviewEvaluate.getInterviewEvaluateForm().getQ4())
-                        .q5(interviewEvaluate.getInterviewEvaluateForm().getQ5())
-                        .q6(interviewEvaluate.getInterviewEvaluateForm().getQ6())
-                        .q7(interviewEvaluate.getInterviewEvaluateForm().getQ7())
-                        .q8(interviewEvaluate.getInterviewEvaluateForm().getQ8())
-                        .q9(interviewEvaluate.getInterviewEvaluateForm().getQ9())
-                        .q10(interviewEvaluate.getInterviewEvaluateForm().getQ10())
-                        .build();
-                InterviewEvaluateReadRes interviewEvaluateReadRes = InterviewEvaluateReadRes.builder()
-                        .estimatorEmail(interviewParticipate.getEstimator().getEmail())
-                        .seekerName(interviewParticipate.getSeeker().getName())
-                        .totalScore(interviewEvaluate.getTotalScore())
-                        .comments(interviewEvaluate.getComments())
-                        .interviewEvaluateResultReadRes(interviewEvaluateResultReadRes)
-                        .interviewEvaluateFormReadRes(interviewEvaluateFormReadRes)
-                        .build();
-                interviewEvaluateReadAllResMap.put(interviewParticipate.getSeeker().getIdx(), interviewEvaluateReadRes);
+                for(InterviewEvaluate interviewEvaluate : interviewEvaluateList){
+                    InterviewEvaluateResultReadRes interviewEvaluateResultReadRes = InterviewEvaluateResultReadRes.builder()
+                            .r1(interviewEvaluate.getInterviewEvaluateResult().getR1())
+                            .r2(interviewEvaluate.getInterviewEvaluateResult().getR2())
+                            .r3(interviewEvaluate.getInterviewEvaluateResult().getR3())
+                            .r4(interviewEvaluate.getInterviewEvaluateResult().getR4())
+                            .r5(interviewEvaluate.getInterviewEvaluateResult().getR5())
+                            .r6(interviewEvaluate.getInterviewEvaluateResult().getR6())
+                            .r7(interviewEvaluate.getInterviewEvaluateResult().getR7())
+                            .r8(interviewEvaluate.getInterviewEvaluateResult().getR8())
+                            .r9(interviewEvaluate.getInterviewEvaluateResult().getR9())
+                            .r10(interviewEvaluate.getInterviewEvaluateResult().getR10())
+                            .build();
+                    InterviewEvaluateFormReadRes interviewEvaluateFormReadRes = InterviewEvaluateFormReadRes.builder()
+                            .q1(interviewEvaluate.getInterviewEvaluateForm().getQ1())
+                            .q2(interviewEvaluate.getInterviewEvaluateForm().getQ2())
+                            .q3(interviewEvaluate.getInterviewEvaluateForm().getQ3())
+                            .q4(interviewEvaluate.getInterviewEvaluateForm().getQ4())
+                            .q5(interviewEvaluate.getInterviewEvaluateForm().getQ5())
+                            .q6(interviewEvaluate.getInterviewEvaluateForm().getQ6())
+                            .q7(interviewEvaluate.getInterviewEvaluateForm().getQ7())
+                            .q8(interviewEvaluate.getInterviewEvaluateForm().getQ8())
+                            .q9(interviewEvaluate.getInterviewEvaluateForm().getQ9())
+                            .q10(interviewEvaluate.getInterviewEvaluateForm().getQ10())
+                            .build();
+                    InterviewEvaluateReadRes interviewEvaluateReadRes = InterviewEvaluateReadRes.builder()
+                            .seekerName(interviewParticipate.getSeeker().getName())
+                            .seekerEmail(interviewParticipate.getSeeker().getEmail())
+                            .estimatorEmail(interviewParticipate.getEstimator().getEmail())
+                            .totalScore(interviewEvaluate.getTotalScore())
+                            .comments(interviewEvaluate.getComments())
+                            .interviewEvaluateResultReadRes(interviewEvaluateResultReadRes)
+                            .interviewEvaluateFormReadRes(interviewEvaluateFormReadRes)
+                            .build();
+                    if (interviewEvaluateReadAllResMap.containsKey(interviewParticipate.getSeeker().getIdx())) {
+                        interviewEvaluateReadAllResMap.get(interviewParticipate.getSeeker().getIdx()).add(interviewEvaluateReadRes);
+                    } else {
+                        List<InterviewEvaluateReadRes> interviewEvaluateReadResList = new ArrayList<>();
+                        interviewEvaluateReadResList.add(interviewEvaluateReadRes);
+                        interviewEvaluateReadAllResMap.put(interviewParticipate.getSeeker().getIdx(), interviewEvaluateReadResList);
+                    }
+                }
             }
         }
         return InterviewEvaluateReadAllRes.builder()
-                .interviewEvaluateReadResumeInfoResMap(interviewEvaluateReadAllResMap)
+                .interviewEvaluateReadAllResMap(interviewEvaluateReadAllResMap)
                 .build();
     }
 }
