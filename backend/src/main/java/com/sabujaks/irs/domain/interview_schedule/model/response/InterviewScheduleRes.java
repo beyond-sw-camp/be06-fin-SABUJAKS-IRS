@@ -20,4 +20,6 @@ public class InterviewScheduleRes {
     private String uuid;
     private String careerBase;
     private Long teamIdx;
+    private String companyName;
+    private String announcementTitle;
 }

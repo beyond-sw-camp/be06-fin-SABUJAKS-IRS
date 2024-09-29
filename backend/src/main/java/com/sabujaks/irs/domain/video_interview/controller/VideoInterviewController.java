@@ -27,15 +27,15 @@ import java.util.List;
 @RequestMapping("/api/video-interview")
 @RequiredArgsConstructor
 public class VideoInterviewController {
+
     private final VideoInterviewService videoInterviewService;
-    private EmailSenderSeeker emailSenderSeeker;
+    private final EmailSenderSeeker emailSenderSeeker;
 
     @PostMapping("/create")
     public ResponseEntity<BaseResponse<VideoInterviewCreateRes>> create(
-        @RequestBody VideoInterviewCreateReq dto,
-        @RequestBody InterviewScheduleReq InterviewDto) throws OpenViduJavaClientException, OpenViduHttpException, BaseException {
+        @RequestBody VideoInterviewCreateReq dto) throws OpenViduJavaClientException, OpenViduHttpException, BaseException {
         VideoInterviewCreateRes response = videoInterviewService.create(dto);
-//        emailSender.sendEmail(response);
+        emailSenderSeeker.sendConfirmInterviewScheduleEmail(response);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.VIDEO_INTERVIEW_CREATE_SUCCESS, response));
     }
 

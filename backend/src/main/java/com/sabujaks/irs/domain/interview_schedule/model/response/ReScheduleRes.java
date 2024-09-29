@@ -14,4 +14,5 @@ public class ReScheduleRes {
     private String interviewEnd;
     private InterviewScheduleRes interviewScheduleRes;
     private SeekerInfoGetRes seekerInfoGetRes;
+    private Boolean status;
 }

@@ -31,7 +31,7 @@ public class VideoInterviewService {
     private final VideoInterviewRepository videoInterviewRepository;
     private final InterviewScheduleRepository interviewScheduleRepository;
 
-    public VideoInterviewCreateRes create(VideoInterviewCreateReq dto) throws OpenViduJavaClientException, OpenViduHttpException {
+    public VideoInterviewCreateRes create(VideoInterviewCreateReq dto) throws OpenViduJavaClientException, OpenViduHttpException, BaseException {
         SessionProperties properties = SessionProperties.fromJson(dto.getParams()).build();
         Session session = openVidu.createSession(properties);
         VideoInterview videoInterviewRoom = VideoInterview.builder()
@@ -39,8 +39,10 @@ public class VideoInterviewService {
                 .videoInterviewRoomUUID(session.getSessionId())
                 .build();
         videoInterviewRepository.save(videoInterviewRoom);
+
         return VideoInterviewCreateRes.builder()
                 .idx(videoInterviewRoom.getIdx())
+                .interviewScheduleRes(dto.getInterviewScheduleInfo())
                 .build();
     }
 

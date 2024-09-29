@@ -9,4 +9,7 @@ import java.util.Optional;
 public interface EstimatorRepository extends JpaRepository<Estimator, Long> {
     @Query("SELECT e FROM Estimator e WHERE e.email = :estimatorEmail")
     Optional<Estimator> findByEstimatorEmail(String estimatorEmail);
+
+    @Query("SELECT e FROM Estimator e WHERE e.idx = :estimatorIdx")
+    Optional<Estimator> findByEstimatorIdx(Long estimatorIdx);
 }

@@ -32,16 +32,17 @@ public class InterviewScheduleController {
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestBody InterviewScheduleReq dto) throws BaseException {
         InterviewScheduleRes response = interviewScheduleService.create(customUserDetails, dto);
-        emailSenderSeeker.sendEmail(response, "인터뷰 일정 안내");
+        emailSenderSeeker.sendNotiInterviewScheduleEmail(response);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_SCHEDULE_CREATE_SUCCESS, response));
     }
 
     @GetMapping("/read-all")
     public ResponseEntity<BaseResponse<?>> readAll (
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestParam String careerBase,
             @RequestParam Long announcementIdx,
             @RequestParam Integer pageNum) throws BaseException {
-        List<InterviewScheduleRes> response = interviewScheduleService.readAll(careerBase, announcementIdx, pageNum);
+        List<InterviewScheduleRes> response = interviewScheduleService.readAll(careerBase, announcementIdx, pageNum, customUserDetails);
 
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_SCHEDULE_READ_ALL_SUCCESS, response));
     }
