@@ -232,7 +232,7 @@ const submitForm = async () => {
 
 <template>
   <MainHeaderComponent/>
-  <div class="container padding-0">
+  <div class="container">
     <MainSideBarComponent/>
 
     <InterviewScheduleMain
