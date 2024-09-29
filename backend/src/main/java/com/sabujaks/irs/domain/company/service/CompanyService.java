@@ -38,6 +38,23 @@ public class CompanyService {
     private final CompanyVerifyRepository companyVerifyRepository;
     private final AnnouncementService announcementService;
 
+    /*******기업 이미지 조회***********/
+    public CompanyReadRes readCompanyImg(Long companyIdx) throws BaseException {
+        // companyIdx를 기준으로 이미지 URL 리스트 조회
+        List<CompanyImg> companyImages = companyImgRepository.findByCompanyIdx(companyIdx);
+        List<String> imgUrlList = new ArrayList<>();
+
+        for (CompanyImg companyImg : companyImages) {
+            imgUrlList.add(companyImg.getUrl()); // 각 이미지 객체에서 URL을 추출하여 리스트에 추가
+        }
+
+        // 등록된 기업 이미지 반환
+        return CompanyReadRes.builder()
+                .companyIdx(companyIdx)
+                .imgUrlList(imgUrlList)
+                .build();
+    }
+
     /*******채용담당자 기업정보 조회 (마이페이지 입장 시)***********/
     public CompanyReadRes readCompany(CustomUserDetails customUserDetails) throws BaseException {
         Long recruiterIdx = customUserDetails.getIdx();
