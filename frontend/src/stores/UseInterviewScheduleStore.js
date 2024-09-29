@@ -23,8 +23,8 @@ export const UseInterviewScheduleStore = defineStore('reservation', {
                     // `api/interview-schedule/create`,
                     `${backend}/interview-schedule/create`,
                     interviewData,
-                    // 쿠키 포함
-                    { withCredentials: true }
+                    { headers: { 'Content-Type': 'application/json', },
+                        withCredentials: true}
                 );
 
                 console.log(response);
@@ -159,7 +159,8 @@ export const UseInterviewScheduleStore = defineStore('reservation', {
             try{
                 const response = await axios.post(
                     `${backend}/interview-schedule/create/re-schedule`,
-                    scheduleData
+                    scheduleData,
+                    {withCredentials: true}
                 );
 
                 console.log(response.data.result);
@@ -173,6 +174,7 @@ export const UseInterviewScheduleStore = defineStore('reservation', {
 
         //리스트업
         async readAllReSchedule(announceIdx, pageNum) {
+            pageNum = Number(pageNum)-1;
             try{
                 const reScheduleResponse = await axios.get(
                     `${backend}/interview-schedule/read-all/re-schedule?` +
@@ -236,6 +238,20 @@ export const UseInterviewScheduleStore = defineStore('reservation', {
                 );
 
                 return response.data.success;
+            } catch (error) {
+                console.error("Error: ", error);
+                return false;
+            }
+        },
+
+        async getSeeker(announcementIdx) {
+            try{
+                const response = await axios.get(
+                    `${backend}/interview-schedule/read-all/seeker?announcementIdx=${announcementIdx}`,
+                    {withCredentials: true}
+                );
+
+                return response.data.result;
             } catch (error) {
                 console.error("Error: ", error);
                 return false;

@@ -98,7 +98,7 @@ const updateData = async (updateData, updateInfo, pageUpdateData) => {
 
 <template>
   <MainHeaderComponent/>
-  <div class="container padding-0">
+  <div class="container">
     <MainSideBarComponent/>
     <!-- InterviewScheduleMainNew에서 이벤트를 받아 모달을 제어 -->
     <InterviewScheduleMain

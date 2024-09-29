@@ -31,13 +31,14 @@ import CompanyInfoPage from "@/pages/recruiter/company/CompanyInfoPage.vue";
 import InterviewEvaluateFormPage from '@/pages/recruiter/interview-evaluate/InterviewEvaluateFormPage.vue';
 import InterviewEvaluateResultPage from '@/pages/recruiter/interview-evaluate/InterviewEvaluateResultPage.vue';
 import InterveiwEvaluateResultDetailPage from '@/pages/recruiter/interview-evaluate/InterveiwEvaluateResultDetailPage.vue';
+import InterviewScheduleDetail from "@/pages/recruiter/interview-schedule/InterviewScheduleDetail.vue";
 
 const requireRecruiterLogin = async (to, from, next) => {
     const authStore = UseAuthStore();
     try {
         await authStore.getUserInfo();
-        const storedUserInfo = sessionStorage.getItem('auth');
-        if (storedUserInfo) {
+        const storedUserInfo = JSON.parse(sessionStorage.getItem('auth'));
+        if (storedUserInfo && storedUserInfo.userInfo.role === "ROLE_RECRUITER") {
             return next();
         } else {
             if (confirm("로그인이 필요합니다.")) {
@@ -70,6 +71,10 @@ const router = createRouter({
         { path: '/recruiter/announce/register-step1', component: AnnounceRegisterStep1Page, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/interview-schedule/new', component: InterviewScheduleMainNew, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/interview-schedule/exp', component: InterviewScheduleMainExp, beforeEnter: requireRecruiterLogin },
+        { path: '/recruiter/interview-schedule/detail/:idx',
+            component: InterviewScheduleDetail,
+            beforeEnter: requireRecruiterLogin
+        },
         { path: '/recruiter/interview-evaluate/form', component: InterviewEvaluateFormPage, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/interview-evaluate/result', component: InterviewEvaluateResultPage, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/interview-evaluate/result/:announcementIdx', component: InterveiwEvaluateResultDetailPage, beforeEnter: requireRecruiterLogin },

@@ -25,6 +25,9 @@ const props = defineProps({
 const emit = defineEmits(['interviewScheduleList']);
 
 const postsPerPage = 10; // 페이지당 게시글 수
+const isLoading = ref(false); // 로딩 상태
+const tempAnnouncements = ref([]); // 임시 데이터 저장소
+
 const totalPages = computed(() => {
   return props.totalAnnouncements ? Math.ceil(props.totalAnnouncements / postsPerPage) : 0;
 });
@@ -32,14 +35,23 @@ const totalPages = computed(() => {
 // 페이지 버튼 클릭 시 호출되는 메서드
 const currentPage = ref(1); // 현재 페이지
 
-const handlePageClick = (pageNumber) => {
+const handlePageClick = async (pageNumber) => {
+  isLoading.value = true; // 로딩 시작
   currentPage.value = pageNumber; // 페이지 번호 업데이트
+
+  // 임시 데이터 설정 (기존 데이터 유지)
+  tempAnnouncements.value = [...props.announcements];
+
   emit('loadAnnouncementList', pageNumber);
+
+  // 로딩 종료 후에 실제 데이터로 교체
+  tempAnnouncements.value = [...props.announcements];
+  isLoading.value = false; // 로딩 종료
 };
 
-const startNumberForPage = computed(() => {
-  return props.totalAnnouncements - (currentPage.value - 1) * postsPerPage;
-});
+// const startNumberForPage = computed(() => {
+//   return props.totalAnnouncements - (currentPage.value - 1) * postsPerPage;
+// });
 
 // const announceIdx = ref(0);
 
@@ -72,7 +84,7 @@ const formatDate = (datetime) => {
       <!--      <tr @click="handleRowClick('경력')">-->
       <tr v-for="(announcement, index) in props.announcements" :key="announcement.idx"
           @click="handleRowClick(announcement.idx, announcement.uuid)">
-        <td>{{ startNumberForPage - index }}</td>
+        <td>{{ props.totalAnnouncements - index }}</td>
         <td>{{ formatDate(announcement.announcementStart) }} - {{ formatDate(announcement.announcementEnd) }}</td>
         <td>{{ announcement.title }}</td>
       </tr>

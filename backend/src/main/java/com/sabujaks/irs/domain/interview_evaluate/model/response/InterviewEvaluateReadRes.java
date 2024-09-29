@@ -9,6 +9,7 @@ import lombok.*;
 @Builder
 public class InterviewEvaluateReadRes {
     private String seekerName;
+    private String seekerEmail;
     private Integer totalScore;
     private String comments;
     private String estimatorEmail;

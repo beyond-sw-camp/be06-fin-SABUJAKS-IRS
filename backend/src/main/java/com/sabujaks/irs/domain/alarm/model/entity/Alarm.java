@@ -41,7 +41,7 @@ public class Alarm {
     @JoinColumn(name = "seeker_idx")
     private Seeker seeker;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "interview_schedule_idx")
     private InterviewSchedule interviewSchedule;
 

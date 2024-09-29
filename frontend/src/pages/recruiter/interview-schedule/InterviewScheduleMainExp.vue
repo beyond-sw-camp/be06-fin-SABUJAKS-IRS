@@ -3,7 +3,7 @@ import {onMounted, ref} from 'vue';
 import MainHeaderComponent from '../../../components/recruiter/MainHeaderComponent.vue';
 import MainSideBarComponent from '../../../components/recruiter/MainSideBarComponent.vue';
 import '@/assets/css/grid.css';
-import { UseInterviewScheduleStore } from '@/stores/UseInterviewScheduleStore';
+import {UseInterviewScheduleStore} from '@/stores/UseInterviewScheduleStore';
 import InterviewScheduleMain from "../../../components/recruiter/InterviewScheduleMain.vue";
 import InterviewScheduleList from "@/components/recruiter/InterviewScheduleList.vue";
 
@@ -17,11 +17,12 @@ const modalTitle = ref('');
 const participantEmail = ref('');
 const selectedEmails = ref([]);
 const selectedFilters = ref([]);
-const interviewers = ref(['서시현', '구은주', '박종성', '서재은', '한별', '곽동현', '유송연', '강태성', '오규림', '송나경']);
+const interviewers = ref([]);
 const selectedInterviewers = ref([]);
 const interviewDate = ref('');
 const startTime = ref('');
 const endTime = ref('');
+const selectedIdxs = ref([]);
 const teamList = [
   {name: '1팀', idx: 1},
   {name: '2팀', idx: 2},
@@ -64,9 +65,6 @@ const handleCheckboxChange = (type) => {
   }
 };
 
-// eslint-disable-next-line no-undef
-defineExpose({reqData});
-
 const interviewScheduleLists = async (announcementIdx, announcementUuid) => {
   isInterviewScheduleList.value = true;
   isInterviewScheduleMain.value = false;
@@ -84,6 +82,12 @@ const interviewScheduleLists = async (announcementIdx, announcementUuid) => {
   announcementUuidInfo.value = announcementUuid;
 }
 
+// defineExpose로 reqData를 노출
+// eslint-disable-next-line no-undef
+defineExpose({
+  reqData,
+});
+
 const loadInterviewScheduleList = async (btnNumValue) => {
   const response = await interviewScheduleStore.readAllInterviewSchedule(reqData.value, btnNumValue);
   interviewSchedules.value = response; // 데이터를 가져온 후 interviewSchedules에 값을 할당
@@ -93,7 +97,7 @@ const createVideoInterview = async (interviewScheduleUuid) => {
   uuidData.value = {
     announceUUID: announcementUuidInfo.value,
     // videoInterviewUUID: interviewScheduleUuid,
-    params: { customSessionId: interviewScheduleUuid}
+    params: {customSessionId: interviewScheduleUuid}
   }
   const response = await interviewScheduleStore.createVideoInterview(uuidData.value);
   if (response !== 0 && response !== undefined) {
@@ -107,10 +111,19 @@ const setModalTitle = (title) => {
   }
 }
 
-// 모달 열기 함수에서 무한 호출 방지
-const openModal = () => {
+const openModal = async () => {
   if (!isModalOpen.value) {  // 모달이 열려있지 않을 때만 실행
     isModalOpen.value = true;
+
+    const response = await interviewScheduleStore.getSeeker(announcementIdxInfo.value);
+
+    // response가 배열일 경우
+    if (response !== 0 && response !== undefined) {
+      response.forEach((seeker) => {
+        interviewers.value.push({name: seeker.name, idx: seeker.idx});
+      });
+    }
+
   }
 };
 
@@ -155,8 +168,14 @@ const addEmail = () => {
 };
 
 const selectInterviewers = () => {
+
+  selectedIdxs.value = interviewers.value
+      .filter(interviewer => selectedInterviewers.value.includes(interviewer.name))
+      .map(interviewer => interviewer.idx);
+
   // 후보자 선택 후 캘린더를 다시 보여줌
   selectedFilters.value = [...selectedInterviewers.value]; // 선택한 면접자 필터 업데이트
+  console.log(selectedIdxs.value);
   showInterviewerList.value = false;
   showCalendar.value = true; // 캘린더 다시 표시
 };
@@ -167,10 +186,10 @@ const removeFilter = (filter) => {
   selectedInterviewers.value = selectedInterviewers.value.filter(item => item !== filter); // 체크박스 해제
 };
 
-const submitForm = () => {
+const submitForm = async () => {
   // const selectedSpanValues = selectedFilters.value;
   if (confirm("면접 일정을 등록하시겠습니까?")) {
-    const selectedSpanValues = [1, 2];
+    const selectedIdxValues = selectedIdxs.value;
     const participantEmails = selectedEmails.value// 참가자 이메일
     const selectedDate = interviewDate.value;
     const selectedStartTime = startTime.value;
@@ -180,7 +199,7 @@ const submitForm = () => {
 
     // 데이터 객체 생성
     const interviewData = {
-      seekerList: selectedSpanValues,
+      seekerList: selectedIdxValues,
       estimatorList: participantEmails,
       isOnline: selectedType,
       interviewDate: selectedDate,
@@ -191,12 +210,13 @@ const submitForm = () => {
       announcementIdx: announcementIdxInfo.value
     };
 
+    console.log(interviewData);
+
     // Store의 createInterviewSchedule 함수 호출
-    interviewScheduleStore.createInterviewSchedule(interviewData)
+    await interviewScheduleStore.createInterviewSchedule(interviewData)
         .then(() => {
           if (confirm('면접 일정이 성공적으로 등록되었습니다.')) {
             // 면접 일정 리스트 업데이트
-
             closeModal();
             interviewScheduleLists(announcementIdxInfo, announcementUuidInfo);
           }
@@ -204,20 +224,15 @@ const submitForm = () => {
         .catch((error) => {
           console.error('면접 일정 등록 중 오류 발생:', error);
         });
+
   }
 };
-
-// 뒤로가기 버튼 클릭 시 컴포넌트 전환
-// const goBack = () => {
-//   isInterviewScheduleMain.value = true;
-//   isInterviewScheduleList.value = false;
-// };
 </script>
 
 
 <template>
   <MainHeaderComponent/>
-  <div class="container padding-0">
+  <div class="container">
     <MainSideBarComponent/>
 
     <InterviewScheduleMain
@@ -228,6 +243,7 @@ const submitForm = () => {
         :announcements="announcements"
         :totalAnnouncements="totalAnnouncements">
     </InterviewScheduleMain>
+
     <InterviewScheduleList
         v-if="isInterviewScheduleList"
         @openModal="openModal"
@@ -251,7 +267,7 @@ const submitForm = () => {
             <div class="form-group col-12 row">
               <div class="col-11">
                 <label for="applicant">후보자 <span class="required">*</span></label>
-                <input type="text" id="applicant" placeholder="후보자를 추가해주세요." disabled>
+                <input type="text" id="applicant" placeholder="+ 버튼을 눌러 후보자를 추가해주세요." disabled>
               </div>
               <div class="col-1 add-button-section">
                 <button class="add-button" @click="addEmail">+</button>
@@ -264,8 +280,8 @@ const submitForm = () => {
             </div>
             <div class="form-group col-12 row">
               <div class="col-11">
-                <label for="participants">면접 참가자</label>
-                <input type="text" id="participants" placeholder="이메일을 입력해 주세요." v-model="participantEmail">
+                <label for="participants">면접관 추가</label>
+                <input type="text" id="participants" placeholder="이메일을 입력 후 + 버튼을 눌러주세요." v-model="participantEmail">
               </div>
               <div class="col-1 add-button-section">
                 <button class="add-email" @click="addParticipantEmail">+</button>
@@ -333,22 +349,25 @@ const submitForm = () => {
             </div>
           </div>
           <div class="modal-right col-5 margin-auto">
-            <div class='demo-app calendar' v-if="showCalendar">
-              <div class='demo-app-main'>
-                <FullCalendar
-                    class='demo-app-calendar'
-                    :options='calendarOptions'
-                >
-                </FullCalendar>
-              </div>
-            </div>
+            <!--            <div class='demo-app calendar' v-if="showCalendar">-->
+            <!--              <div class='demo-app-main'>-->
+            <!--                <FullCalendar-->
+            <!--                    class='demo-app-calendar'-->
+            <!--                    :options='calendarOptions'-->
+            <!--                >-->
+            <!--                </FullCalendar>-->
+            <!--              </div>-->
+            <!--            </div>-->
             <!-- 후보자 목록 -->
             <div v-if="showInterviewerList" id="interviewer">
               <div id="interviewers-list">
                 <h3>면접자 목록</h3>
                 <form id="nameForm">
-                  <label v-for="name in interviewers" :key="name">
-                    <input type="checkbox" :value="name" v-model="selectedInterviewers"> {{ name }}
+                  <label v-for="interviewer in interviewers" :key="interviewer.idx">
+                    <input type="checkbox" :value="interviewer.name" v-model="selectedInterviewers"> {{
+                      interviewer.name
+                    }}
+                    <input type="hidden" :value="interviewer.idx">
                   </label><br>
                 </form>
               </div>
@@ -362,108 +381,127 @@ const submitForm = () => {
     </div>
   </div>
 </template>
-<script>
-import {defineComponent} from 'vue'
-import FullCalendar from '@fullcalendar/vue3'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import timeGridPlugin from '@fullcalendar/timegrid'
-import interactionPlugin from '@fullcalendar/interaction'
-import {createEventId} from './event-utils'
+<!--<script>-->
+<!--import {defineComponent, getCurrentInstance, watch} from 'vue'-->
+<!--import FullCalendar from '@fullcalendar/vue3'-->
+<!--import dayGridPlugin from '@fullcalendar/daygrid'-->
+<!--import timeGridPlugin from '@fullcalendar/timegrid'-->
+<!--import interactionPlugin from '@fullcalendar/interaction'-->
+<!--import {createEventId} from './event-utils'-->
 
-export default defineComponent({
-  components: {
-    FullCalendar,
-  },
-  data() {
-    return {
-      calendarOptions: {
-        plugins: [
-          dayGridPlugin,
-          timeGridPlugin,
-          interactionPlugin // needed for dateClick
-        ],
-        locale: 'ko',
-        headerToolbar: {
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,dayGridWeek,dayGridDay'
-        },
-        events: [],
-        initialView: 'dayGridMonth',
-        editable: true,
-        selectable: true,
-        selectMirror: true,
-        dayMaxEvents: true,
-        weekends: true,
-        select: this.handleDateSelect,
-        eventClick: this.handleEventClick,
-        eventsSet: this.handleEvents
-      },
-      currentEvents: [],
-    }
-  },
-  mounted() {
-    this.fetchInterviewSchedules();
-  },
-  methods: {
-    async fetchInterviewSchedules() {
-      const interviewScheduleStore = UseInterviewScheduleStore(); // 스토어 인스턴스 생성
-      try {
-        const reqData = {
-          careerBase: "전체",
-          announcementIdx: 3
-        }
-        const schedules = await interviewScheduleStore.readAllInterviewSchedule(reqData, 1);
+<!--export default defineComponent({-->
+<!--  setup() {-->
+<!--    const instance = getCurrentInstance();-->
+<!--    const reqData = instance?.setupState?.reqData;-->
+<!--    const isModalOpen = instance?.setupState?.isModalOpen;-->
 
-        if (!Array.isArray(schedules)) {
-          console.error('Received schedules is not an array:', schedules);
-          return;
-        }
+<!--    // isModalOpen이 변경될 때마다 실행-->
+<!--    watch(isModalOpen, (newVal) => {-->
+<!--      if (newVal) {-->
+<!--        // 모달이 열릴 때 reqData 값을 출력-->
+<!--        console.log("reqData:", reqData.value);-->
+<!--      }-->
+<!--    });-->
 
-        this.currentEvents = [];
+<!--    return {-->
+<!--      reqData,-->
+<!--      isModalOpen,-->
+<!--    };-->
+<!--  },-->
+<!--  components: {-->
+<!--    FullCalendar,-->
+<!--  },-->
+<!--  data() {-->
+<!--    return {-->
+<!--      calendarOptions: {-->
+<!--        plugins: [-->
+<!--          dayGridPlugin,-->
+<!--          timeGridPlugin,-->
+<!--          interactionPlugin // needed for dateClick-->
+<!--        ],-->
+<!--        locale: 'ko',-->
+<!--        headerToolbar: {-->
+<!--          left: 'prev,next today',-->
+<!--          center: 'title',-->
+<!--          right: 'dayGridMonth,dayGridWeek,dayGridDay'-->
+<!--        },-->
+<!--        events: [],-->
+<!--        initialView: 'dayGridMonth',-->
+<!--        editable: true,-->
+<!--        selectable: true,-->
+<!--        selectMirror: true,-->
+<!--        dayMaxEvents: true,-->
+<!--        weekends: true,-->
+<!--        select: this.handleDateSelect,-->
+<!--        eventClick: this.handleEventClick,-->
+<!--        eventsSet: this.handleEvents-->
+<!--      },-->
+<!--      currentEvents: [],-->
+<!--    }-->
+<!--  },-->
+<!--  mounted() {-->
+<!--    this.fetchInterviewSchedules();-->
+<!--  },-->
+<!--  methods: {-->
+<!--    async fetchInterviewSchedules() {-->
+<!--      const interviewScheduleStore = UseInterviewScheduleStore(); // 스토어 인스턴스 생성-->
+<!--      try {-->
+<!--        const reqData = this.$setup.reqData;-->
+<!--        console.log("reqdata: "+ reqData);-->
+<!--        const schedules = await interviewScheduleStore.readAllCalendarInterviewSchedule(reqData.value);-->
 
-        for (const schedule of schedules) {
-          this.currentEvents.push({
-            title: schedule.isOnline ? '온라인 면접' : '대면 면접',
-            start: schedule.interviewDate + "T" + schedule.interviewStart + ":00",
-            end: schedule.interviewDate + "T" + schedule.interviewEnd + ":00",
-            allDay: false
-          });
-        }
+<!--        console.log("@@@@"+schedules);-->
 
-        this.calendarOptions.events = this.currentEvents;
+<!--        if (!Array.isArray(schedules)) {-->
+<!--          console.error('Received schedules is not an array:', schedules);-->
+<!--          return;-->
+<!--        }-->
 
-      } catch (error) {
-        console.error('Error fetching interview schedules:', error);
-      }
-    },
+<!--        this.currentEvents = [];-->
 
-    handleWeekendsToggle() {
-      this.calendarOptions.weekends = !this.calendarOptions.weekends;
-    },
-    handleDateSelect(selectInfo) {
-      let title = prompt('새로운 일정을 등록해주세요.')
-      let calendarApi = selectInfo.view.calendar
+<!--        for (const schedule of schedules) {-->
+<!--          this.currentEvents.push({-->
+<!--            title: schedule.isOnline ? '온라인 면접' : '대면 면접',-->
+<!--            start: schedule.interviewDate + "T" + schedule.interviewStart + ":00",-->
+<!--            end: schedule.interviewDate + "T" + schedule.interviewEnd + ":00",-->
+<!--            allDay: false-->
+<!--          });-->
+<!--        }-->
 
-      calendarApi.unselect()
+<!--        this.calendarOptions.events = this.currentEvents;-->
 
-      if (title) {
-        calendarApi.addEvent({
-          id: createEventId(),
-          title,
-          start: selectInfo.startStr,
-          end: selectInfo.endStr,
-          allDay: selectInfo.allDay
-        })
-      }
-    },
+<!--      } catch (error) {-->
+<!--        console.error('Error fetching interview schedules:', error);-->
+<!--      }-->
+<!--    },-->
 
-    handleEvents(events) {
-      this.currentEvents = events
-    },
-  }
-})
-</script>
+<!--    handleWeekendsToggle() {-->
+<!--      this.calendarOptions.weekends = !this.calendarOptions.weekends;-->
+<!--    },-->
+<!--    handleDateSelect(events) {-->
+<!--      // let title = prompt('새로운 일정을 등록해주세요.')-->
+<!--      // let calendarApi = selectInfo.view.calendar-->
+<!--      //-->
+<!--      // calendarApi.unselect()-->
+<!--      //-->
+<!--      // if (title) {-->
+<!--      //   calendarApi.addEvent({-->
+<!--      //     id: createEventId(),-->
+<!--      //     title,-->
+<!--      //     start: selectInfo.startStr,-->
+<!--      //     end: selectInfo.endStr,-->
+<!--      //     allDay: selectInfo.allDay-->
+<!--      //   })-->
+<!--      // }-->
+<!--      this.currentEvents = events-->
+<!--    },-->
+
+<!--    handleEvents(events) {-->
+<!--      this.currentEvents = events-->
+<!--    },-->
+<!--  }-->
+<!--})-->
+<!--</script>-->
 
 
 <style scoped>
@@ -491,6 +529,7 @@ export default defineComponent({
 
 .modal-section {
   height: 90%;
+  overflow-y: scroll;
 }
 
 .close {

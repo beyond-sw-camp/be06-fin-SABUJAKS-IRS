@@ -5,6 +5,7 @@ import com.sabujaks.irs.domain.auth.model.entity.Seeker;
 import com.sabujaks.irs.domain.auth.model.request.AuthSignupReq;
 import com.sabujaks.irs.domain.auth.model.request.PasswordEditReq;
 import com.sabujaks.irs.domain.auth.model.response.AuthSignupRes;
+import com.sabujaks.irs.domain.auth.model.response.SeekerRes;
 import com.sabujaks.irs.domain.auth.model.response.UserInfoGetRes;
 import com.sabujaks.irs.domain.auth.repository.*;
 import com.sabujaks.irs.domain.auth.model.entity.Estimator;
@@ -229,6 +230,28 @@ public class AuthService {
             }
         } else {
             throw new BaseException(BaseResponseMessage.AUTH_INACTIVE_USER_FAIL);
+        }
+    }
+
+    public SeekerRes readSeeker(CustomUserDetails customUserDetails) throws BaseException {
+        Optional<Seeker> result = seekerRepository.findBySeekerIdx(customUserDetails.getIdx());
+        if(result.isPresent()) {
+            Seeker seeker = result.get();
+            return SeekerRes.builder()
+                    .email(seeker.getEmail())
+                    .name(seeker.getName())
+                    .nickname(seeker.getNickname())
+                    .gender(seeker.getGender())
+                    .birth(seeker.getBirth())
+                    .phoneNumber(seeker.getPhoneNumber())
+                    .address(seeker.getAddress())
+                    .socialType(seeker.getSocialType())
+                    .profileImage(seeker.getProfileImage())
+                    .createdAt(seeker.getCreatedAt())
+                    .updatedAt(seeker.getUpdatedAt())
+                    .build();
+        } else {
+            throw new BaseException(BaseResponseMessage.AUTH_SEARCH_USER_INFO_FAIL);
         }
     }
 }

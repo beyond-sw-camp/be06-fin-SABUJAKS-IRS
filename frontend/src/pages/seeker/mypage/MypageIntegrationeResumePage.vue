@@ -16,7 +16,7 @@
                             <div class="resume-view-container">
                                 <div class="base profile image">
                                     <div class="container-p">
-                                        <div v-if="showPersonalInfo" class="photo"><img name="user_photo" :src="resumeStore.resumeIntegrated.personalInfo.profileImg">
+                                        <div v-if="showPersonalInfo" class="photo"><img name="user_photo" :src="resumeStore.resumeIntegrated.personalInfo.profileImg ? resumeStore.resumeIntegrated.personalInfo.profileImg : ''">
                                         </div>
                                         <div v-if="showPersonalInfo" class="info-container">
                                             <div class="info-general">
@@ -359,8 +359,11 @@ import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.v
 
 import { ref, onMounted } from 'vue';
 import { UseResumeStore } from '@/stores/UseResumeStore';
+import { useRouter } from 'vue-router';
+
 
 const resumeStore = UseResumeStore();
+const router = useRouter();
 
 const showPersonalInfo = ref(false);
 const showEducation = ref(false);
@@ -376,7 +379,7 @@ const showAward = ref(false);
 const showCustomLetter = ref(false);
 
 onMounted(async () => {
-    await resumeStore.readIntegrated();
+    await resumeStore.readIntegrated(router);
 
     showPersonalInfo.value = true;
     if(resumeStore.resumeIntegrated.codes) {

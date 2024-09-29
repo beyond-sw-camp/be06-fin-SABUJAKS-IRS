@@ -15,7 +15,7 @@ export const UseMypageNotificationStore = defineStore('notification', {
                     // `api/interview-schedule/create`,
                     `${backend}/alarm/read-all`,
                     // 쿠키 포함
-                    // { withCredentials: true }
+                    { withCredentials: true }
                 );
 
                 console.log(response.data.result);
@@ -48,28 +48,5 @@ export const UseMypageNotificationStore = defineStore('notification', {
             }
         },
 
-        // async getReservationDetail() {
-        //     const response = await axios.get(
-        //         `api/reservation/reservation-list?`,{ // 쿠키 포함
-        //             withCredentials: true
-        //         }
-        //     );
-        //
-        //     console.log(response);
-        //
-        //     this.reservationList = response.data.result;
-        // },
-
-        // async getTimeList(floor, section) {
-        //     const response = await axios.get(
-        //         `api/reservation/time-list?floor=${floor}&section=${section}`,
-        //     );
-        //
-        //     console.log(response);
-        //
-        //     this.reservationTimeList = response.data.result;
-        //
-        //     return response.data.result;
-        // },
     }
 });

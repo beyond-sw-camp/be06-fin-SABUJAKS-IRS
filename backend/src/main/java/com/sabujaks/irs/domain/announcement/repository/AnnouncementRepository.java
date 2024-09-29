@@ -19,4 +19,7 @@ public interface AnnouncementRepository extends JpaRepository<Announcement, Long
 
     @Query("SELECT a FROM Announcement a WHERE a.recruiter.idx = :recruiterIdx")
     Optional<List<Announcement>> findByRecruiterIdx(Long recruiterIdx);
+
+    @Query("SELECT a FROM Announcement a WHERE a.title LIKE %:keyword% OR a.jobTitle LIKE %:keyword1%")
+    Optional<List<Announcement>> findAllByTitleContainingOrjobTitleContaining(String keyword, String keyword1);
 }
