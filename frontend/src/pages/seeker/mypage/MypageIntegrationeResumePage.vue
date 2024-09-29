@@ -15,7 +15,7 @@
                         <div class="resume-view-wrapper">
                             <div class="resume-view-container">
                                 <div class="base profile image">
-                                    <div class="container">
+                                    <div class="container-p">
                                         <div v-if="showPersonalInfo" class="photo"><img name="user_photo" :src="resumeStore.resumeIntegrated.personalInfo.profileImg">
                                         </div>
                                         <div v-if="showPersonalInfo" class="info-container">
@@ -717,7 +717,7 @@ const calculateDuration = (enteredAt, quitAt) => {
     border-right: 1px solid #ddd;
 }
 
-.body-i.resume-view-print .profile .container {
+.body-i.resume-view-print .profile .container-p {
     border: 1px solid #ddd;
 }
 
@@ -993,16 +993,16 @@ const calculateDuration = (enteredAt, quitAt) => {
     position: relative;
 }
 
-.profile.image .container {
+.profile.image .container-p {
     height: 180px;
     padding-left: 170px;
 }
 
-.profile.searching .container {
+.profile.searching .container-p {
     padding-left: 170px;
 }
 
-.profile .container {
+.profile .container-p {
     overflow: hidden;
     position: relative;
     width: 940px;
@@ -1360,7 +1360,7 @@ const calculateDuration = (enteredAt, quitAt) => {
         display: none;
     }
 
-    .profile .container {
+    .profile .container-p {
         width: 100%;
     }
 
@@ -1590,7 +1590,7 @@ const calculateDuration = (enteredAt, quitAt) => {
     display: none;
 }
 
-.personality-test .container {
+.personality-test .container-p {
     overflow: hidden;
     position: relative;
     width: 100%;
