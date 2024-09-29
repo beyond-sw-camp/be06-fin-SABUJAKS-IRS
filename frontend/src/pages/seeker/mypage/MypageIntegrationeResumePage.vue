@@ -16,7 +16,7 @@
                             <div class="resume-view-container">
                                 <div class="base profile image">
                                     <div class="container-p">
-                                        <div v-if="showPersonalInfo" class="photo"><img name="user_photo" :src="resumeStore.resumeIntegrated.personalInfo.profileImg">
+                                        <div v-if="showPersonalInfo" class="photo"><img name="user_photo" :src="resumeStore.resumeIntegrated.personalInfo.profileImg ? resumeStore.resumeIntegrated.personalInfo.profileImg : ''">
                                         </div>
                                         <div v-if="showPersonalInfo" class="info-container">
                                             <div class="info-general">
