@@ -42,6 +42,9 @@ spring:
           connectiontimeout: 5000
           timeout: 5000
           writetimeout: 5000
+          starttls.enable: true
+          pool: true
+          pool.size: 5
   security:
     oauth2:
       client:

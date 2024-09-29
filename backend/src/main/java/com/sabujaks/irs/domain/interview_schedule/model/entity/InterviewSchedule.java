@@ -1,5 +1,6 @@
 package com.sabujaks.irs.domain.interview_schedule.model.entity;
 
+import com.sabujaks.irs.domain.alarm.model.entity.Alarm;
 import com.sabujaks.irs.domain.announcement.model.entity.Announcement;
 import com.sabujaks.irs.domain.auth.model.entity.Recruiter;
 import com.sabujaks.irs.domain.interview_evaluate.model.entity.InterviewEvaluate;
@@ -50,6 +51,9 @@ public class InterviewSchedule {
 
     @OneToMany(mappedBy = "interviewSchedule")
     private List<InterviewParticipate> interviewParticipateList;
+
+    @OneToMany(mappedBy = "interviewSchedule")
+    private List<Alarm> alarm;
 
     @OneToMany(mappedBy = "interviewSchedule")
     private List<ReSchedule> reScheduleList;
