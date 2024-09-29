@@ -1,5 +1,6 @@
 <script setup>
 import {defineProps, defineEmits, computed, ref} from 'vue';
+import router from "@/router";
 
 const props = defineProps({
   title: {
@@ -35,21 +36,26 @@ const totalPages = computed(() => {
 });
 
 const currentPage = ref(1); // 현재 페이지
+const isLoading = ref(false); // 로딩 상태
 
-const handlePageClick = (pageNumber) => {
-  currentPage.value = pageNumber;
-  emit('loadInterviewScheduleList', pageNumber);
+const handlePageClick = async (pageNumber) => {
+  isLoading.value = true; // 로딩 시작
+  currentPage.value = pageNumber; // 페이지 번호 업데이트
+
+  emit('loadAnnouncementList', pageNumber);
   window.scrollTo({top: 0});
+  isLoading.value = false; // 로딩 종료
 };
 
 // 각 페이지의 시작 번호 계산
 const startNumberForPage = computed(() => {
-  return props.totalInterviewSchedules - (currentPage.value - 1) * postsPerPage;
+  return isLoading.value ? '-' : props.totalInterviewSchedules - (currentPage.value - 1) * postsPerPage;
 });
 
 // 현재 페이지에 맞는 면접 일정 slice
 const paginatedInterviewSchedules = computed(() => {
-  return props.interviewSchedules;
+  const start = (currentPage.value - 1) * postsPerPage;
+  return props.interviewSchedules.slice(start, start + postsPerPage);
 });
 
 const handleRowClick = (type) => {
@@ -76,6 +82,10 @@ const getUniqueSeekers = (seekerList) => {
   return Array.from(uniqueSeekers.values());
 }
 
+const handleScheduleClick = (schedule) => {
+  console.log(schedule);
+  router.push(`/recruiter/interview-schedule/detail/${schedule.idx}`);
+}
 </script>
 
 <template>
@@ -96,7 +106,8 @@ const getUniqueSeekers = (seekerList) => {
         <th>참가자</th>
         <th>면접방생성</th>
       </tr>
-      <tr v-for="(schedule, index) in paginatedInterviewSchedules" :key="schedule.uuid">
+      <tr v-for="(schedule, index) in paginatedInterviewSchedules" :key="schedule.uuid"
+          @click="handleScheduleClick(schedule)">
         <td>{{ startNumberForPage - index }}</td>
         <td>{{ formatDate(schedule.interviewDate) }}</td>
         <td>{{ schedule.interviewStart }} - {{ schedule.interviewEnd }}</td>
@@ -156,5 +167,10 @@ const getUniqueSeekers = (seekerList) => {
   color: white;
   padding: 10px;
   border-radius: 5px;
+}
+
+.review-table tr:hover {
+  background-color: #e6e6e6;
+  cursor: pointer;
 }
 </style>
