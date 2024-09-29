@@ -35,6 +35,14 @@ public class CompanyController {
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.COMPANY_INFO_SUCCESS_REGISTER, response));
     }
 
+    // 기업 이미지 조회
+    @GetMapping("/read-img")
+    public ResponseEntity<BaseResponse<CompanyReadRes>> readImg(Long companyIdx) throws BaseException {
+
+        CompanyReadRes response = companyService.readCompanyImg(companyIdx);
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.COMPANY_INFO_SUCCESS_REGISTER, response));
+    }
+
 
     // 기업 정보 등록
     @PostMapping("/create")
