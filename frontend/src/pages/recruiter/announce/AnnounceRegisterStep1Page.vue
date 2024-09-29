@@ -483,6 +483,7 @@ export default {
               </div>
             </div>
           </div>
+          <p>이미지 업로드는 *필수*값을 꼭 입력해 주시고, 템플릿 작성은 모든 값을 입력해 주세요.</p>
         </div>
 
         <hr style="border: 0.5px solid #abadb8; margin: 30px 0;">
@@ -874,6 +875,7 @@ export default {
                     {{ step }}
                   </button>
                 </div>
+                <p> 면접 횟수와 맞춰 클릭 해 주세요.</p>
               </div>
             </div>
 

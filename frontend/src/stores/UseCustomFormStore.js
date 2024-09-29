@@ -36,10 +36,8 @@ export const UseCustomFormStore = defineStore('customform', {
                 if (response.status === 200) {
                     alert('폼 저장이 완료되었습니다. 공고 메뉴로 이동해 주세요.');
 
-                    // 데이터를 성공적으로 저장 후 라우터로 페이지 이동
-                    // router.push({
-                    //     path: `/recruiter/announce`,
-                    // });
+                    // router를 통해 특정 경로로 리다이렉트
+                    // router.push('/recruiter/mypage');
                 }
             } catch (error) {
                 console.error('폼 저장 실패:', error);
