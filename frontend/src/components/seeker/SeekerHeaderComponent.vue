@@ -6,7 +6,7 @@
             </a>
             <div class="header-right">
                 <a href="#">내 공고 달력</a>
-                <a href="#">마이페이지</a>
+                <a href="#" @click="goAndReload('/seeker/mypage')">마이페이지</a>
                 <a href="#">알림</a>
                 <a >{{ displayName }}</a>
                 <a @click="handleLogout" class="logout-btn">로그아웃</a>
@@ -37,8 +37,16 @@
 <script setup>
 import { UseAuthStore } from "../../stores/UseAuthStore"
 import { ref, onMounted } from "vue";
-// import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
+import {useRouter} from 'vue-router';
+const router = useRouter();
+
+const goAndReload = (path) => {
+  router.replace(path).then(() => {
+    window.location.reload();
+  });
+};
+
 
 const authStore = UseAuthStore(); 
 const toast = useToast();
