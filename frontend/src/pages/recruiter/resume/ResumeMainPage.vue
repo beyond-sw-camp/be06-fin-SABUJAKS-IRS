@@ -13,23 +13,25 @@
                   <th>신입/경력</th>
                   <th>지원자수</th>
                 </tr>
-                <tr class="announce" onclick="location.href='./seeker_list.html';">
-                  <td>1</td>
-                  <td>2024.09.24 - 2024.10.24</td>
-                  <td>백엔드 엔지니어 신입공채</td>
-                  <td>신입</td>
-                  <td>24</td>
-                </tr>
+                <tr
+                    v-for="(announcement, index) in announcementStore.announcements"
+                    :key="index"
+                    @click="handleRowClick(announcement)"
+                    style="cursor: pointer"
+                >
+                <td>{{ index + 1 }}</td>
+                <td>{{ formatDate(announcement.announcementStart) }} - {{ formatDate(announcement.announcementEnd) }}</td>
+                <td>{{ announcement.announcementTitle }}</td>
+                <td>{{ announcement.careerBase }}</td>
+                <td>{{ announcement.seekerNum }}</td>
+              </tr>
                 </tbody>
             </table>
-            <div class="button-container">
-                <button class="register-button">등록</button>
-            </div>
-            <div id="size-buttons">
+            <!-- <div id="size-buttons">
                 <button>1</button>
                 <button>2</button>
                 <button>3</button>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
@@ -37,6 +39,29 @@
 <script setup>
 import MainHeaderComponent from "@/components/recruiter/MainHeaderComponent.vue";
 import MainSideBarComponent from "@/components/recruiter/MainSideBarComponent.vue";
+import { UseAnnouncementStore } from '@/stores/UseAnnouncementStore';
+import { useRouter } from 'vue-router';
+import { onMounted } from 'vue';
+
+const announcementStore = UseAnnouncementStore();
+const router = useRouter();
+
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = (`0${date.getMonth() + 1}`).slice(-2); // 두 자리수로 유지
+  const day = (`0${date.getDate()}`).slice(-2);
+  return `${year}.${month}.${day}`;
+};
+
+// 컴포넌트가 로드될 때 데이터를 가져옴
+onMounted(() => {
+  announcementStore.fetchAnnouncements();
+});
+
+const handleRowClick = (announcement) => {
+    router.push(`/recruiter/resume/list/${announcement.announcementIdx}`);
+};
 </script>
 
 <style>
@@ -48,7 +73,6 @@ import MainSideBarComponent from "@/components/recruiter/MainSideBarComponent.vu
 #content {
   flex: 1;
   margin-left: 200px; /* 사이드바 너비만큼 왼쪽 여백 추가 */
-  padding: 150px 0;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
