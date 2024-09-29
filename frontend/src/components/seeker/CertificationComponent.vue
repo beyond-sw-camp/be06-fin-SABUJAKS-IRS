@@ -12,7 +12,8 @@
     
             <div class="form-item">
                 <label for="takingAt">취득월</label>
-                <input type="text" id="takingAt" v-model="takingAt" placeholder="2023.03" class="small-input" />
+                <input type="text" id="takingAt" v-model="takingAt" maxlength="7" placeholder="2023.03" class="small-input" 
+                @input="$event.target.value = $event.target.value.replace(/[^0-9.]/g, '')"/>
                 </div>     
         </div>
     </div>

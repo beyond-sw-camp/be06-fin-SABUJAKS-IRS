@@ -13,11 +13,13 @@
             <div class="form-item form-grid-2">
                 <div class="form-item">
                 <label for="startAt">시작년월</label>
-                <input type="text" id="startAt" v-model="startAt" placeholder="2023.03" class="small-input" />
+                <input type="text" id="startAt" v-model="startAt" maxlength="7" placeholder="2023.03" class="small-input" 
+                @input="$event.target.value = $event.target.value.replace(/[^0-9.]/g, '')"/>
                 </div>
                 <div class="form-item">
                 <label for="endAt">종료년월</label>
-                <input type="text" id="endAt" v-model="endAt" placeholder="2023.03" class="small-input" />
+                <input type="text" id="endAt" v-model="endAt" maxlength="7" placeholder="2023.03" class="small-input" 
+                @input="$event.target.value = $event.target.value.replace(/[^0-9.]/g, '')"/>
                 </div>
             </div>
     

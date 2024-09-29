@@ -21,7 +21,7 @@
         <div class="disability-status">
           <label for="disability">장애</label>
           <select id="disability" v-model="disabilityDegree">
-            <option disabled value="">장애 등급</option>
+            <option disabled value="">선택해주세요</option>
             <option value="중증">중증</option>
             <option value="경증">경증</option>
             <option value="1급">1급</option>
@@ -41,7 +41,7 @@
         <div class="military-class">
           <label for="militaryClass">병역</label>
           <select id="militaryClass" v-model="militaryClass" @change="handleMilitaryClassChange">
-            <option disabled value="">병역</option>
+            <option disabled value="">선택해주세요</option>
             <option value="군필">군필</option>
             <option value="미필">미필</option>
             <option value="면제">면제</option>
@@ -53,18 +53,20 @@
       <div v-if="militaryClass === '군필'" class="additional-fields">
         <div class="additional-field">
           <label for="militaryStart">입대일</label>
-          <input id="militaryStart" v-model="militaryStart" type="text" placeholder="2019.10" />
+          <input id="militaryStart" v-model="militaryStart" maxlength="7" type="text" placeholder="2019.10"
+          @input="$event.target.value = $event.target.value.replace(/[^0-9.]/g, '')" />
         </div>
 
         <div class="additional-field">
           <label for="militaryEnd">제대일</label>
-          <input id="militaryEnd" v-model="militaryEnd" type="text" placeholder="2021.10" />
+          <input id="militaryEnd" v-model="militaryEnd" maxlength="7" type="text" placeholder="2021.10"
+          @input="$event.target.value = $event.target.value.replace(/[^0-9.]/g, '')" />
         </div>
 
         <div class="additional-field">
           <label for="militaryType">군별</label>
           <select id="militaryType" v-model="militaryType">
-            <option disabled value="">군별</option>
+            <option disabled value="">선택해주세요</option>
             <option value="육군">육군</option>
             <option value="해군">해군</option>
             <option value="공군">공군</option>
@@ -79,7 +81,7 @@
         <div class="additional-field">
           <label for="militaryRank">제대 계급</label>
           <select id="militaryRank" v-model="militaryRank">
-            <option disabled value="">제대 계급</option>
+            <option disabled value="">선택해주세요</option>
             <option value="이병">이병</option>
             <option value="일병">일병</option>
             <option value="상병">상병</option>
@@ -123,12 +125,12 @@ const preferentialEmp = props.data || {
     subsidy: false,
     disability: false,
     military: false,
-    disabilityDegree: null,
-    militaryClass: null,
+    disabilityDegree: '',
+    militaryClass: '',
     militaryStart: null,
     militaryEnd: null,
-    militaryRank: null,
-    militaryType: null
+    militaryRank: '',
+    militaryType: ''
 };
 
 const selectedOptions = ref([]);

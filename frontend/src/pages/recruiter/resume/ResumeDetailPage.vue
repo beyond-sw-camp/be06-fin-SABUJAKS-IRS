@@ -100,7 +100,9 @@
                             <div class="item" v-for="(personalHistory, index) in resumeStore.resumeDetail.personalHistories" :key="index">
                                 <div class="date">
                                     <div class="term">{{ personalHistory.enteredAt }} ~ {{ personalHistory.quitAt }}</div>
-                                    <div class="term-calculator">{{ calculateDuration(personalHistory.enteredAt, personalHistory.quitAt) }}</div>
+                                    <div class="term-calculator">
+                                        {{ personalHistory.enteredAt && personalHistory.quitAt ? calculateDuration(personalHistory.enteredAt, personalHistory.quitAt) : '' }}
+                                    </div>
                                 </div>
                                 <div class="content">
                                     <div class="content-header">
@@ -146,7 +148,9 @@
                             <div class="item" v-for="(internsActivity, index) in resumeStore.resumeDetail.internsActivities" :key="index">
                                 <div class="date">
                                     <div class="term">{{ internsActivity.startAt }} ~ {{ internsActivity.endAt }}</div>
-                                    <div class="term-calculator">{{ calculateDuration(internsActivity.startAt, internsActivity.endAt) }}</div>
+                                    <div class="term-calculator">
+                                        {{ internsActivity.startAt && internsActivity.endAt ? calculateDuration(internsActivity.startAt, internsActivity.endAt) : '' }}
+                                    </div>
                                 </div>
 
                                 <div class="content">
@@ -223,7 +227,9 @@
                             <div class="item" v-for="(studyingAbroad, index) in resumeStore.resumeDetail.studyingAbroads" :key="index">
                                 <div class="date">
                                     <div class="term">{{ studyingAbroad.startAt }} ~ {{ studyingAbroad.endAt }}</div>
-                                    <div class="term-calculator">{{ calculateDuration(studyingAbroad.startAt, studyingAbroad.endAt) }}</div>
+                                    <div class="term-calculator">
+                                        {{ studyingAbroad.startAt && studyingAbroad.endAt ? calculateDuration(studyingAbroad.startAt, studyingAbroad.endAt) : '' }}
+                                    </div>
                                 </div>
                                 <div class="content">
                                     <div class="content-header">

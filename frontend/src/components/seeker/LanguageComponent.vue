@@ -5,6 +5,7 @@
           <div class="form-item">
             <label for="testDiv">구분 <span class="required">*</span></label>
             <select id="testDiv" v-model="testDiv">
+              <option disabled value="">선택</option>
               <option value="회화능력">회화능력</option>
               <option value="공인시험">공인시험</option>
             </select>
@@ -14,6 +15,7 @@
             <label for="languageName">외국어명 <span class="required">*</span></label>
             <div v-if="!isDirectInput">
               <select id="languageName" v-model="languageName" @change="checkCustomLanguage">
+                <option disabled value="">선택해주세요</option>
                 <option value="영어">영어</option>
                 <option value="일본어">일본어</option>
                 <option value="중국어">중국어</option>
@@ -55,8 +57,9 @@
         </div>
   
         <div v-if="testDiv !== '공인시험'" class="form-item">
-          <label for="conversationLevel">회화능력 <span class="required">*</span></label>
+          <label for="conversationLevel">회화능력</label>
           <select id="conversationLevel" v-model="conversationLevel">
+            <option disabled value="">선택해주세요</option>
             <option value="일상 회화 가능">일상 회화 가능</option>
             <option value="비즈니스 회화 가능">비즈니스 회화 가능</option>
             <option value="원어민 수준">원어민 수준</option>
@@ -65,19 +68,20 @@
   
         <!-- 공인시험 선택 시 -->
         <div v-if="testDiv === '공인시험'" class="form-item">
-          <label for="officialTest">공인시험 <span class="required">*</span></label>
+          <label for="officialTest">공인시험</label>
           <input type="text" id="officialTest" v-model="officialTest" />
         </div>
   
         <div class="form-grid-2">
           <div v-if="testDiv === '공인시험' && selectScore !== '취득'" class="form-item">
-            <label for="score">급수/점수 <span class="required">*</span></label>
+            <label for="score">급수/점수</label>
             <input type="text" id="score" v-model="score" class="small-input" />
           </div>
   
           <div v-if="testDiv === '공인시험'" class="form-item">
-            <label for="selectScore">선택 <span class="required">*</span></label>
+            <label for="selectScore">선택</label>
             <select id="selectScore" v-model="selectScore">
+              <option disabled value="">선택</option>
               <option value="점">점</option>
               <option value="급">급</option>
               <option value="취득">취득</option>
@@ -87,7 +91,8 @@
   
         <div v-if="testDiv === '공인시험'" class="form-item">
           <label for="takingAt">취득년월</label>
-          <input type="text" id="takingAt" v-model="takingAt" class="small-input" />
+          <input type="text" id="takingAt" v-model="takingAt" maxlength="7" placeholder="2023.03" class="small-input" 
+          @input="$event.target.value = $event.target.value.replace(/[^0-9.]/g, '')"/>
         </div>
       </div>
     </div>
@@ -103,12 +108,12 @@ const props = defineProps({
 });
 
 const language = props.data || {
-    testDiv: null,
-    languageName: null,
-    conversationLevel: null,
+    testDiv: '',
+    languageName: '',
+    conversationLevel: '',
     officialTest: null,
     score: null,
-    selectScore: false,
+    selectScore: '',
     takingAt: null
 };
 

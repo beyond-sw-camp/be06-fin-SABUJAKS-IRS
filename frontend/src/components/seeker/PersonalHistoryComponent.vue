@@ -7,7 +7,7 @@
           <input type="text" id="companyName" v-model="companyName" />
         </div>
         <div class="form-item">
-          <label for="deptName">부서명 <span class="required">*</span></label>
+          <label for="deptName">부서명</label>
           <input type="text" id="deptName" v-model="deptName" />
         </div>
 
@@ -15,11 +15,13 @@
         <div class="form-item form-grid-2">
           <div class="form-item">
             <label for="enteredAt">입사년월 <span class="required">*</span></label>
-            <input type="text" id="enteredAt" v-model="enteredAt" placeholder="2023.03" class="small-input" />
+            <input type="text" id="enteredAt" v-model="enteredAt" maxlength="7" placeholder="2023.03" class="small-input" 
+            @input="$event.target.value = $event.target.value.replace(/[^0-9.]/g, '')"/>
           </div>
           <div class="form-item">
-            <label for="quitAt">퇴사년월 <span class="required">*</span></label>
-            <input type="text" id="quitAt" v-model="quitAt" placeholder="2023.03" class="small-input" />
+            <label for="quitAt">퇴사년월</label>
+            <input type="text" id="quitAt" v-model="quitAt" maxlength="7" placeholder="2023.03" class="small-input"
+            @input="$event.target.value = $event.target.value.replace(/[^0-9.]/g, '')" />
           </div>
         </div>
 
@@ -33,6 +35,7 @@
         <div class="form-item">
           <label for="position">직급/직책</label>
           <select id="position" v-model="position">
+            <option disabled value="">선택해주세요</option>
             <optgroup label="직급">
                 <option value="사원">사원</option>
                 <option value="주임/계장">주임/계장</option>
@@ -83,13 +86,16 @@
         </div>
         <div v-if="salaryVisible" class="form-item">
           <label for="salary">연봉</label>
-          <input type="text" id="salary" v-model="salary" class="small-input" />
+          <div>
+            <input type="text" id="salary" v-model="salary" class="small-input" @input="$event.target.value = $event.target.value.replace(/[^0-9]/g, '')" /> 만원
+
+          </div>
         </div>
 
         
         <!-- 졸업 논문/작품 클릭 시 -->
         <div v-if="workVisible" class="form-item work-item">
-            <label for="work">담당업무 <span class="required">*</span></label>
+            <label for="work">담당업무</label>
             <textarea id="work" v-model="work" class="expandable-textarea" rows="3" placeholder="담당하신 업무와 성과에 대해 간단명료하게 적어주세요."></textarea>
         </div>
 
@@ -129,7 +135,7 @@ const personalHistory = props.data || {
     enteredAt: null,
     quitAt: null,
     empStatus: false,
-    position: null,
+    position: '',
     job: null,
     work: null,
     salary: null

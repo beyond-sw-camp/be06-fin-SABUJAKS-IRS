@@ -109,7 +109,7 @@ export const UseResumeStore = defineStore('resume', {
         updateFile(file) {
             this.file = file;
         },
-        async createResume() {
+        async createResume(router) {
             try {
                 const formData = new FormData();
                 // 학력
@@ -265,13 +265,17 @@ export const UseResumeStore = defineStore('resume', {
                     },
                 });
                 // 지원서 등록 성공
-                alert(response.data.message);
                 console.log('서버 응답:', response.data);
+                alert(response.data.message);
+                router.push('/seeker/mypage/integration-resume');
             } catch (error) {
                 alert(error.response.data.message);
+                if(error.response.data.code === 2003) {
+                    router.push('/seeker/mypage/integration-resume');
+                }
             }
         },
-        async submitResume(announcementIdx, resumeTitle) {
+        async submitResume(router, announcementIdx, resumeTitle) {
             try {
                 const formData = new FormData();
                 // 학력
@@ -432,11 +436,17 @@ export const UseResumeStore = defineStore('resume', {
                     },
                 });
                 // 지원서 등록 성공
-                alert(response.data.message);
                 console.log('서버 응답:', response.data);
+                alert(response.data.message);
+                if(response.data.code === 2000) {
+                    router.push(`/seeker/resume/detail/${response.data.result.resumeIdx}`);
+                }
             } catch (error) {
                 console.log(error);
                 alert(error.response.data.message);
+                if(error.response.data.code === 2007) {
+                    router.push('/seeker/mypage/annouce-resume');
+                }
             }
         },
         async readSubmitInfo(announcementIdx) {
@@ -458,6 +468,7 @@ export const UseResumeStore = defineStore('resume', {
                     withCredentials: true
                 });
                 this.resumeIntegrated = response.data.result;
+                // console.log(response.data.result);
             } catch (error) {
                 alert(error.response.data.message);
             }
