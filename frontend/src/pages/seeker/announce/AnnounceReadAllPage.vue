@@ -77,31 +77,40 @@
         <span class="sort-by">최신순 ▼</span>
       </div>
 
-      <table class="job-listing">
-        <thead>
-          <tr>
-            <th>번호</th>
-            <th>기업명</th>
-            <th>공고명</th>
-            <th>모집분야</th>
-            <th>채용형태</th>
-            <th>근무지역</th>
-            <th>마감일</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(announcement, index) in announcementStore.announcements2" :key="announcement.announcementIdx"
-            @click="goToDetailPage(announcement.announcementIdx)" class="hoverable-row">
-            <td>{{ index + 1 }}</td>
-            <td>{{ announcement.companyName }}</td>
-            <td>{{ announcement.announcementTitle }}</td>
-            <td>{{ announcement.jobTitle }}</td>
-            <td>{{ announcement.careerBase }}</td>
-            <td>{{ announcement.region }}</td>
-            <td>~ {{ announcement.announcementEnd }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="main_product" id="section_banner">
+        <div class="cont_product prd_platinum">
+          <div class="inner_cont">
+            <ul class="prd_list plus" id="_platinumPlus">
+              <li class="option" v-for="(announcement) in announcementStore.announcements2" :key="announcement.announcementIdx"
+                  @click="goToDetailPage(announcement.announcementIdx)">
+                <a class="link_box track_event" rel="sponsored, nofollow">
+                <span class="logo">
+                    <img
+                        src="../../../assets/img/main/company_logo1.png"
+                        class="img" alt=" 애경그룹 AK PLAZA" loading="lazy">
+                </span>
+                  <span class="c_name"> {{ announcement.companyName }} </span>
+                  <span class="title"> {{ announcement.companyName }} <br> {{ announcement.announcementTitle }} </span>
+                  <span class="title_ex"> {{ announcement.companyName }} <br> {{ announcement.announcementTitle }} </span>
+                  <span class="bg">
+                    <img
+                        src="../../../assets/img/main/company_card1_596x258.jpg"
+                        alt=" 애경그룹 AK PLAZA 2025 신입사원 공개채용 " loading="lazy">
+                </span>
+                  <span class="bg_ex">
+                    <img
+                        src="../../../assets/img/main/company_card1_600x1120.jpg"
+                        alt=" 애경그룹 AK PLAZA 2025 신입사원 공개채용 " loading="lazy">
+                </span>
+                  <span class="cont">AK PLAZA는 애경그룹의 일원으로<br>고객 곁에서 사랑과 존경의 가치를 <br>실천합니다. 고객의 니즈를 만족시키고<br>높은 가치를 제공하는 유통 서비스를
+                    <br>개척해 나가겠습니다.
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </section>
     <SeekerFooterComponent></SeekerFooterComponent>
   </div>

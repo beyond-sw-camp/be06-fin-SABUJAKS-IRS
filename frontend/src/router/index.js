@@ -108,22 +108,6 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     let link;
 
-    // /recruiter/announce/register 페이지에만 CSS 추가
-    // if (to.path === '/recruiter/announce/register-step1') {
-    //     if (!document.querySelector('link[href="/css/AnnounceRegisterStep1Page.css"]')) {
-    //         link = document.createElement('link');
-    //         link.rel = 'stylesheet';
-    //         link.href = '/css/AnnounceRegisterStep1Page.css'; // 절대 경로로 변경
-    //         document.head.appendChild(link);
-    //     }
-    // } else {
-    //     // 다른 페이지로 이동하면 해당 CSS 파일 제거
-    //     const existingLink = document.querySelector('link[href="/css/AnnounceRegisterStep1Page.css"]');
-    //     if (existingLink) {
-    //         document.head.removeChild(existingLink);
-    //     }
-    // }
-
     if (to.path === '/recruiter/announce/register-step1') {
         if (!document.querySelector('link[href="/css/AnnounceRegisterStep1Page.css"]')) {
             link = document.createElement('link');
@@ -150,6 +134,38 @@ router.beforeEach((to, from, next) => {
     } else {
         // 다른 페이지로 이동하면 해당 CSS 파일 제거
         const existingLink = document.querySelector('link[href="/css/AnnounceRegisterStep2Page.css"]');
+        if (existingLink) {
+            document.head.removeChild(existingLink);
+        }
+    }
+
+    // / 페이지에만 CSS 추가
+    if (to.path === '/') {
+        if (!document.querySelector('link[href="/css/AnnounceReadAllPage.css"]')) {
+            link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = '/css/AnnounceReadAllPage.css'; // 절대 경로로 변경
+            document.head.appendChild(link);
+        }
+    } else {
+        // 다른 페이지로 이동하면 해당 CSS 파일 제거
+        const existingLink = document.querySelector('link[href="/css/AnnounceReadAllPage.css"]');
+        if (existingLink) {
+            document.head.removeChild(existingLink);
+        }
+    }
+
+    // / 페이지에만 CSS 추가
+    if (to.path === '/seeker/announce') {
+        if (!document.querySelector('link[href="/css/AnnounceReadAllPage.css"]')) {
+            link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = '/css/AnnounceReadAllPage.css'; // 절대 경로로 변경
+            document.head.appendChild(link);
+        }
+    } else {
+        // 다른 페이지로 이동하면 해당 CSS 파일 제거
+        const existingLink = document.querySelector('link[href="/css/AnnounceReadAllPage.css"]');
         if (existingLink) {
             document.head.removeChild(existingLink);
         }
