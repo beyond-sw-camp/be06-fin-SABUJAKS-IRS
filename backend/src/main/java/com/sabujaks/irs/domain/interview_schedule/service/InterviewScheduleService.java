@@ -20,6 +20,7 @@ import com.sabujaks.irs.domain.interview_schedule.model.request.InterviewSchedul
 import com.sabujaks.irs.domain.interview_schedule.model.request.ReScheduleReq;
 import com.sabujaks.irs.domain.interview_schedule.model.response.InterviewScheduleRes;
 import com.sabujaks.irs.domain.interview_schedule.model.response.ReScheduleRes;
+import com.sabujaks.irs.domain.interview_schedule.model.response.TimeInfoRes;
 import com.sabujaks.irs.domain.interview_schedule.repository.InterviewParticipateRepository;
 import com.sabujaks.irs.domain.interview_schedule.repository.InterviewScheduleRepository;
 import com.sabujaks.irs.domain.interview_schedule.repository.ReScheduleRepository;
@@ -108,6 +109,7 @@ public class InterviewScheduleService {
                 InterviewParticipate interviewParticipate = interviewParticipateRepository.save(InterviewParticipate.builder()
                         .seeker(seekerRepository.findBySeekerIdx(seekerIdx).orElseThrow(() -> new BaseException(BaseResponseMessage.MEMBER_NOT_FOUND)))
                         .estimator(estimator)
+                        .status(true)
                         .team(team)
                         .interviewSchedule(interviewSchedule)
                         .build());
@@ -454,5 +456,20 @@ public class InterviewScheduleService {
         }
 
         return seekerInfoGetResList;
+    }
+
+    public List<TimeInfoRes> getAvailableTimes(String interviewDate, Long teamIdx, Long announcementIdx) {
+
+        Optional<List<InterviewSchedule>> interviewScheduleList = interviewScheduleRepository.findByInterviewDateAndTeamIdxAndAnnouncementIdx(interviewDate, teamIdx, announcementIdx);
+
+        List<TimeInfoRes> timeInfoResList = new ArrayList<>();
+
+        for(InterviewSchedule interviewSchedule : interviewScheduleList.get()) {
+            timeInfoResList.add(TimeInfoRes.builder()
+                    .interviewStart(interviewSchedule.getInterviewStart())
+                    .interviewEnd(interviewSchedule.getInterviewEnd())
+                    .build());
+        }
+        return timeInfoResList;
     }
 }

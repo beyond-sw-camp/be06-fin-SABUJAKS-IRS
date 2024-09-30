@@ -6,6 +6,7 @@ import com.sabujaks.irs.domain.interview_schedule.model.request.InterviewSchedul
 import com.sabujaks.irs.domain.interview_schedule.model.request.ReScheduleReq;
 import com.sabujaks.irs.domain.interview_schedule.model.response.InterviewScheduleRes;
 import com.sabujaks.irs.domain.interview_schedule.model.response.ReScheduleRes;
+import com.sabujaks.irs.domain.interview_schedule.model.response.TimeInfoRes;
 import com.sabujaks.irs.domain.interview_schedule.service.InterviewScheduleService;
 import com.sabujaks.irs.global.common.exception.BaseException;
 import com.sabujaks.irs.global.common.responses.BaseResponse;
@@ -105,5 +106,16 @@ public class InterviewScheduleController {
         List<SeekerInfoGetRes> response = interviewScheduleService.getSeekerList(announcementIdx);
 
         return ResponseEntity.ok(new BaseResponse<>(BaseResponseMessage.AUTH_SEARCH_USER_INFO_SUCCESS, response));
+    }
+
+    @GetMapping("/available-times")
+    public ResponseEntity<BaseResponse<?>> getAvailableTimes(
+            @RequestParam String interviewDate,
+            @RequestParam Long teamIdx,
+            @RequestParam Long announcementIdx) throws BaseException {
+
+        List<TimeInfoRes> response = interviewScheduleService.getAvailableTimes(interviewDate, teamIdx, announcementIdx);
+
+        return ResponseEntity.ok(new BaseResponse<>(BaseResponseMessage.INTERVIEW_SCHEDULE_AVAILABLE_TIMES_READ_SUCCESS, response));
     }
 }

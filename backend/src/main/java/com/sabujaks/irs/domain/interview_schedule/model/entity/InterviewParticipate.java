@@ -19,7 +19,7 @@ public class InterviewParticipate {
     private Long idx;
 
     @Setter
-    private Boolean status = true;
+    private Boolean status;
 
     @OneToMany(mappedBy = "interviewParticipate")
     private List<InterviewEvaluate> interviewEvaluateList;
