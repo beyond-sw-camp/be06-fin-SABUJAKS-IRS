@@ -66,7 +66,7 @@ public enum BaseResponseMessage {
     VIDEO_INTERVIEW_SEARCH_ALL_FAIL(false, 1402, "화상 면접방 목록 조회에 실패했습니다."),
     VIDEO_INTERVIEW_JOIN_SUCCESS(true, 1403, "화상 면접방에 참가했습니다."),
     VIDEO_INTERVIEW_JOIN_FAIL(false, 1404, "화상 면접방 참가에 실패했습니다."),
-
+    VIDEO_INTERVIEW_JOIN_FAIL_NOT_TIME(false, 1405, "참여 시간대가 아닙니다. 참여 시간을 맞춘뒤 접속해주세요."),
     // MEMBER 1500
     MEMBER_NOT_FOUND(false, 1500, "회원을 찾을 수 없습니다."),
     ESTIMATOR_NOT_FOUND(false, 1501, "면접관을 찾을 수 없습니다."),
