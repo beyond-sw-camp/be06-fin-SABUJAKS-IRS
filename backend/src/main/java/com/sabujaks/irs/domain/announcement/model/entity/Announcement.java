@@ -2,7 +2,7 @@ package com.sabujaks.irs.domain.announcement.model.entity;
 
 import com.sabujaks.irs.domain.auth.model.entity.Recruiter;
 import com.sabujaks.irs.domain.interview_evaluate.model.entity.InterviewEvaluateForm;
-import com.sabujaks.irs.domain.interview_evaluate.model.entity.TotalProcess;
+import com.sabujaks.irs.domain.total_process.model.entity.TotalProcess;
 import jakarta.persistence.*;
 import lombok.*;
 
