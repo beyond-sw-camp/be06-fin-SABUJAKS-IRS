@@ -403,7 +403,6 @@ public class InterviewEvaluateService {
             interviewEvaluateResultRepository.save(interviewEvaluateResult);
             InterviewEvaluate newInterviewEvaluate = InterviewEvaluate.builder()
                     .idx(interviewEvaluate.getIdx())
-                    .status(dto.getStatus())
                     .totalScore(dto.getTotalScore())
                     .comments(dto.getComments())
                     .interviewEvaluateForm(interviewEvaluateForm)
@@ -429,7 +428,6 @@ public class InterviewEvaluateService {
                     .build();
             interviewEvaluateResultRepository.save(interviewEvaluateResult);
             InterviewEvaluate interviewEvaluate = InterviewEvaluate.builder()
-                    .status(dto.getStatus())
                     .totalScore(dto.getTotalScore())
                     .comments(dto.getComments())
                     .interviewEvaluateForm(interviewEvaluateForm)
@@ -443,14 +441,14 @@ public class InterviewEvaluateService {
         }
     }
 
-    public InterviewEvaluateReadAllRes readAllEvaluate(CustomUserDetails customUserDetails, Long announceIdx) throws BaseException {
+    public InterviewEvaluateReadAllRes readAllEvaluate(CustomUserDetails customUserDetails, Long announceIdx, Integer interviewNum) throws BaseException {
         Announcement announcement = announcementRepository.findByAnnounceIdx(announceIdx)
                 .orElseThrow(() -> new BaseException(BaseResponseMessage.ANNOUNCEMENT_SEARCH_FAIL_NOT_FOUND));
         if (!Objects.equals(announcement.getRecruiter().getEmail(), customUserDetails.getEmail())) {
             throw new BaseException(BaseResponseMessage.ANNOUNCEMENT_SEARCH_FAIL_INVALID_REQUEST);
         }
-        List<InterviewSchedule> interviewScheduleList = interviewScheduleRepository.findByAnnouncementIdx(announceIdx)
-                .orElseThrow(() -> new BaseException(BaseResponseMessage.INTERVIEW_SCHEDULE_NOT_FOUND));
+        List<InterviewSchedule> interviewScheduleList = interviewScheduleRepository.findAllByAnnouncementIdxAndInterviewNum(announceIdx, interviewNum)
+        .orElseThrow(() -> new BaseException(BaseResponseMessage.INTERVIEW_SCHEDULE_NOT_FOUND));
         Map<Long, List<InterviewEvaluateReadRes>> interviewEvaluateReadAllResMap = new HashMap<>();
         for(InterviewSchedule interviewSchedule : interviewScheduleList){
             List<InterviewParticipate> interviewParticipateList = interviewParticipateRepository.findByInterviewScheduleIdx(interviewSchedule.getIdx())

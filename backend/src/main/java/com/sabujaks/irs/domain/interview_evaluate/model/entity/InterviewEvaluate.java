@@ -17,7 +17,6 @@ public class InterviewEvaluate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
-    private Boolean status;
     private Integer totalScore;
     private String comments;
 
