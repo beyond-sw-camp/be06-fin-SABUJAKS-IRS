@@ -63,8 +63,9 @@ public class InterviewEvaluateController {
     @GetMapping("/read-all/evaluate")
     public ResponseEntity<BaseResponse<InterviewEvaluateReadAllRes>> readAllEvaluate (
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestParam Integer interviewNum,
             @RequestParam Long announceIdx)throws BaseException {
-        InterviewEvaluateReadAllRes response = interviewEvaluateService.readAllEvaluate(customUserDetails, announceIdx);
+        InterviewEvaluateReadAllRes response = interviewEvaluateService.readAllEvaluate(customUserDetails, announceIdx, interviewNum);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_EVALUATE_READ_ALL_SUCCESS, response));
     }
 
