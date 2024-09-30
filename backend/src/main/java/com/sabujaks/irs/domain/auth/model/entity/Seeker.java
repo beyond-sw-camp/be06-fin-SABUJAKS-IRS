@@ -3,6 +3,7 @@ package com.sabujaks.irs.domain.auth.model.entity;
 import com.sabujaks.irs.domain.alarm.model.entity.Alarm;
 import com.sabujaks.irs.domain.interview_evaluate.model.entity.InterviewEvaluate;
 import com.sabujaks.irs.domain.interview_evaluate.model.entity.InterviewEvaluateForm;
+import com.sabujaks.irs.domain.interview_evaluate.model.entity.TotalProcess;
 import com.sabujaks.irs.domain.interview_schedule.model.entity.InterviewParticipate;
 import com.sabujaks.irs.domain.interview_schedule.model.entity.InterviewSchedule;
 import com.sabujaks.irs.domain.interview_schedule.model.entity.ReSchedule;
@@ -73,4 +74,6 @@ public class Seeker {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "seeker")
     private List<ReSchedule> reScheduleList;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "seeker")
+    private List<TotalProcess> totalProcessList;
 }
