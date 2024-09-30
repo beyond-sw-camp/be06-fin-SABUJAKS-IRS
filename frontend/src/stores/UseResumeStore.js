@@ -507,17 +507,22 @@ export const UseResumeStore = defineStore('resume', {
                 alert('공고별 지원서 조회에 실패하였습니다.');
             }
         },
-        async updateDocPassed(resumeIdx, docPassedValue) {
+        async updateDocPassed(docPassedValue) {
             try {
-                const response = await axios.patch(`${backend}/resume/update/docPassed/${resumeIdx}`, { docPassed: docPassedValue }, {
+                const response = await axios.post(`${backend}/total-process/create`, { 
+                    isPass: docPassedValue,
+                    announcementIdx: this.resumeDetail.announcementIdx,
+                    seekerIdx: this.resumeDetail.seekerIdx,
+                    interviewNum: 0
+                }, 
+                {
                     headers: { 'Content-Type': 'application/json' },
                     withCredentials: true
                 }
                 );
                 // 합격/불합격 처리 성공
-                if (confirm(response.data.message)) {
-                    location.reload();
-                }
+                alert(response.data.message);
+                location.reload();
             } catch (error) {
                 alert(error.response.data.message);
             }
