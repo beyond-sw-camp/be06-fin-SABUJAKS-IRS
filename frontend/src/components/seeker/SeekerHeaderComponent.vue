@@ -92,53 +92,54 @@ const handleLogout = async() => {
 
 <style scoped>
 * {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 .header-cp {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    background-color: #212b36;
-    border-bottom: 1px solid #ddd;
-    z-index: 999;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100px;
+  background-color: #212b36;
+  border-bottom: 1px solid #ddd;
+  z-index: 999;
 }
 
 .header-container {
-    max-width: 1200px;
-    height: 60px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  max-width: 1200px;
+  height: 100%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .header-container h1 {
-    font-size: 24px;
-    color: #333;
+  font-size: 24px;
+  color: #333;
 }
 
 .header-logo {
-    color: white;
-    font-size: 24px;
-    font-weight: bold;
-    width: 80px;
+  color: white;
+  font-size: 30px;
+  font-weight: bold;
+  width: 100px;
 }
 
 .header-right {
-    display: flex;
+  display: flex;
 }
 
 .header-right a {
-    margin-left: 20px;
-    cursor: pointer;
-    text-decoration: none;
-    color: #e6e6e6;
-    font-size: 14px;
+  margin-left: 20px;
+  cursor: pointer;
+  text-decoration: none;
+  color: #e6e6e6;
+  font-size: 15px;
 }
 
 .header-right a:hover {
-    opacity: 70%;
+  opacity: 70%;
 }
 </style>

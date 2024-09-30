@@ -90,7 +90,6 @@ const handleSocialLogin = async() => {
     max-width: 1000px;
     margin: 100px auto;
     background-color: #fff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     justify-content: center;
     display: flex;
     align-items: center;
