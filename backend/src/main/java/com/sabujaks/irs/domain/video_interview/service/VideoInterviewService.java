@@ -124,30 +124,24 @@ public class VideoInterviewService {
             for (GrantedAuthority authority : authorities) {
                 String authorityStr = authority.getAuthority();
                 String[] parts = authorityStr.split("\\|");
-                if (parts.length == 6) {
-                    String role = parts[0];
-                    System.out.println(role);
-                    String id1 = parts[1];
-                    System.out.println(id1);
-                    String id2 = parts[2];
-                    System.out.println(id2);
+                String role = parts[0];
+                String id1 = parts[1];
+                String id2 = parts[2];
+                if(parts.length == 6 && Objects.equals(role, "ROLE_SEEKER") && Objects.equals(id1, dto.getAnnounceUUID()) && Objects.equals(id2, dto.getVideoInterviewUUID())){
                     String date = parts[3];
-                    System.out.println(date);
                     String startTime = parts[4];
-                    System.out.println(startTime);
                     String endTime = parts[5];
-                    System.out.println(endTime);
-                    if(Objects.equals(id1, dto.getAnnounceUUID()) && Objects.equals(id2, dto.getVideoInterviewUUID())){
-                        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
-                        LocalDateTime startDateTime = LocalDateTime.parse(date + " " + startTime, dateFormatter);
-                        LocalDateTime endDateTime = LocalDateTime.parse(date + " " + endTime, dateFormatter);
-                        LocalDateTime startDateTimeWithBuffer = startDateTime.minusMinutes(3);
-                        if (currentTime.isAfter(startDateTimeWithBuffer) && currentTime.isBefore(endDateTime)) {
-                            System.out.println("권한이 유효합니다: " + role);
-                            return true;
-                        }
+                    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
+                    LocalDateTime startDateTime = LocalDateTime.parse(date + " " + startTime, dateFormatter);
+                    LocalDateTime endDateTime = LocalDateTime.parse(date + " " + endTime, dateFormatter);
+                    LocalDateTime startDateTimeWithBuffer = startDateTime.minusMinutes(3);
+                    if (currentTime.isAfter(startDateTimeWithBuffer) && currentTime.isBefore(endDateTime)) {
+                        System.out.println("권한이 유효합니다: " + role);
+                        return true;
                     }
-
+                }
+                if(parts.length == 3 && Objects.equals(role, "ROLE_ESTIMATOR") && Objects.equals(id1, dto.getAnnounceUUID()) && Objects.equals(id2, dto.getVideoInterviewUUID())){
+                        return true;
                 }
             }
             return false;

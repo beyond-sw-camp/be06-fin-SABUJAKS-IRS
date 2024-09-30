@@ -77,11 +77,11 @@ const router = createRouter({
         },
         { path: '/recruiter/interview-evaluate/form', component: InterviewEvaluateFormPage, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/interview-evaluate/result', component: InterviewEvaluateResultPage, beforeEnter: requireRecruiterLogin },
-        { path: '/recruiter/interview-evaluate/result/:announcementIdx', component: InterveiwEvaluateResultDetailPage, beforeEnter: requireRecruiterLogin },
+        { path: '/recruiter/interview-evaluate/result/:announcementIdx/:interviewNum', component: InterveiwEvaluateResultDetailPage, beforeEnter: requireRecruiterLogin },
 
         { path: '/video-interview/:announceUUID', component: VideoInterviewMainPage, },
         { path: '/video-interview/:announceUUID/:videoInterviewUUID', component: VideoInterviewRoomPage },
-
+            
         { path: '/recruiter/interview-schedule/reschedule', component: ReScheduleMainExp, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/interview-schedule', component: InterviewScheduleMain, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/resume', component: ResumeMainPage, beforeEnter: requireRecruiterLogin },

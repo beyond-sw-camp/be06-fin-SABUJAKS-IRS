@@ -13,14 +13,16 @@
           <th>번호</th>
           <th>공고기간</th>
           <th>공고명</th>
-          <th>조회</th>
+          <th>1차 조회</th>
+          <th>2차 조회</th>
         </tr>
         <!--      <tr @click="handleRowClick('경력')">-->
         <tr v-for="(announcement, index) in announcements" :key="announcement.idx">
           <td>{{ startNumberForPage - index }}</td>
           <td>{{ formatDate(announcement.announcementStart) }} - {{ formatDate(announcement.announcementEnd) }}</td>
           <td>{{ announcement.title }}</td>
-          <td><button @click="handleSearchButton(announcement.idx)" class="searchbtn">조회</button></td>       
+          <td><button @click="handleSearchButton(announcement.idx, 1)" class="searchbtn">1차 조회</button></td>
+          <td><button @click="handleSearchButton(announcement.idx, 2)" class="searchbtn">2차 조회</button></td>          
         </tr>
         </tbody>
       </table>
@@ -73,9 +75,10 @@ const formatDate = (datetime) => {
   const day = date.getDate().toString().padStart(2, '0');
   return `${year}-${month}-${day}`;
 }
-const handleSearchButton = async (announcementIdx) => {
-  router.push(`/recruiter/interview-evaluate/result/${announcementIdx}`);
+const handleSearchButton = async (announcementIdx, interviewNum) => {
+    router.push(`/recruiter/interview-evaluate/result/${announcementIdx}/${interviewNum}`);
 }
+
 </script> 
 <style>
 .wrapper {
