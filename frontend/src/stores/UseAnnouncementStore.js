@@ -333,17 +333,38 @@ export const UseAnnouncementStore = defineStore('announcement', {
         // 공고명과 모집분야에서 키워드 검색
         async searchAnnouncements(searchKeyword) {
             try {
-              const response = await axios.get(`${backend}/search/keyword?keyword=${searchKeyword}`,
-                {
-                    headers: { 'Content-Type': 'application/json' },
-                    // withCredentials: true
-                });
-              this.announcements2.value = response.data.result;
-              console.log(this.announcements2)
+                const response = await axios.get(`${backend}/search/keyword?keyword=${searchKeyword}`,
+                    {
+                        headers: { 'Content-Type': 'application/json' },
+                        // withCredentials: true
+                    });
+                this.announcements2 = response.data.result;
+                console.log(this.announcements2)
             } catch (error) {
-              console.error('검색 결과를 불러오지 못했습니다.', error);
+                console.error('검색 결과를 불러오지 못했습니다.', error);
             }
         },
 
+        // 전체 공고에서 필터 검색
+        async filterAnnouncementsByFilters(selectedFilters) {
+            try {
+                const dto = {
+                    filters: selectedFilters // selectedFilters를 JSON 형식으로 감싸서 보냄
+                };
+                
+                // const response = await axios.post(`${backend}/search/filter`, dto,
+                //     {
+                //         headers: { 'Content-Type': 'application/json' },
+                //         // withCredentials: true
+                //     });
+
+                // this.announcements2 = response.data.result;
+                // console.log(this.announcements2)
+
+                return console.log(dto);
+            } catch (error) {
+                console.error('검색 결과를 불러오지 못했습니다.', error);
+            }
+        },
     }
 });

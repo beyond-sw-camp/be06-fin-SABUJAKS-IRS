@@ -4,70 +4,74 @@
     <section class="main-content">
       <h2>채용</h2>
       <div class="filter-section">
+        <!-- 기업형태 필터 -->
         <div class="filter-item" data-filter="기업형태">
           <button class="dropdown-btn" @click="toggleDropdown('기업형태')">기업형태</button>
-          <div class="filter-dropdown" v-if="dropdownOpen['기업형태']">
-            <label><input type="checkbox" value="대기업" v-model="selectedFilters" /> 대기업</label>
-            <label><input type="checkbox" value="중소기업" v-model="selectedFilters" /> 중소기업</label>
-            <label><input type="checkbox" value="공공기관/공기업" v-model="selectedFilters" />
+          <div class="filter-dropdown" v-show="dropdownOpen['기업형태']">
+            <label><input type="checkbox" value="대기업" @change="updateFilters('기업형태', '대기업')" /> 대기업</label>
+            <label><input type="checkbox" value="중소기업" @change="updateFilters('기업형태', '중소기업')" /> 중소기업</label>
+            <label><input type="checkbox" value="공공기관/공기업" @change="updateFilters('기업형태', '공공기관/공기업')" />
               공공기관/공기업</label>
-            <label><input type="checkbox" value="외국계기업" v-model="selectedFilters" /> 외국계기업</label>
-            <label><input type="checkbox" value="중견기업" v-model="selectedFilters" /> 중견기업</label>
-            <label><input type="checkbox" value="비영리단체/협회/재단" v-model="selectedFilters" />
+            <label><input type="checkbox" value="외국계기업" @change="updateFilters('기업형태', '외국계기업')" /> 외국계기업</label>
+            <label><input type="checkbox" value="중견기업" @change="updateFilters('기업형태', '중견기업')" /> 중견기업</label>
+            <label><input type="checkbox" value="비영리단체/협회/재단" @change="updateFilters('기업형태', '비영리단체/협회/재단')" />
               비영리단체/협회/재단</label>
+            <label><input type="checkbox" value="벤처기업" @change="updateFilters('기업형태', '벤처기업')" /> 벤처기업</label>
           </div>
         </div>
+        <!-- 채용형태 필터 -->
         <div class="filter-item" data-filter="채용형태">
           <button class="dropdown-btn" @click="toggleDropdown('채용형태')">채용형태</button>
-          <div class="filter-dropdown" v-if="dropdownOpen['채용형태']">
-            <label><input type="checkbox" value="신입" v-model="selectedFilters" /> 신입</label>
-            <label><input type="checkbox" value="경력" v-model="selectedFilters" /> 경력</label>
+          <div class="filter-dropdown" v-show="dropdownOpen['채용형태']">
+            <label><input type="checkbox" value="신입" @change="updateFilters('채용형태', '신입')" /> 신입</label>
+            <label><input type="checkbox" value="경력" @change="updateFilters('채용형태', '경력')" /> 경력</label>
           </div>
         </div>
+        <!-- 모집직무 필터 -->
         <div class="filter-item" data-filter="모집직무">
-          <button class="dropdown-btn">모집직무</button>
-          <div class="filter-dropdown" id="모집직무">
-            <label><input type="checkbox" value="영업/고객상담" />
-              영업/고객상담</label>
-            <label><input type="checkbox" value="경영/사무" /> 경영/사무</label>
-            <label><input type="checkbox" value="마케팅/광고/홍보" />
+          <button class="dropdown-btn" @click="toggleDropdown('모집직무')">모집직무</button>
+          <div class="filter-dropdown" v-show="dropdownOpen['모집직무']">
+            <label><input type="checkbox" value="영업/고객상담" @change="updateFilters('모집직무', '영업/고객상담')" /> 영업/고객상담</label>
+            <label><input type="checkbox" value="경영/사무" @change="updateFilters('모집직무', '경영/사무')" /> 경영/사무</label>
+            <label><input type="checkbox" value="마케팅/광고/홍보" @change="updateFilters('모집직무', '마케팅/광고/홍보')" />
               마케팅/광고/홍보</label>
-            <label><input type="checkbox" value="생산/제조" /> 생산/제조</label>
-            <label><input type="checkbox" value="연구개발/설계" />
-              연구개발/설계</label>
-            <label><input type="checkbox" value="IT/인터넷" /> IT/인터넷</label>
+            <label><input type="checkbox" value="생산/제조" @change="updateFilters('모집직무', '생산/제조')" /> 생산/제조</label>
+            <label><input type="checkbox" value="연구개발/설계" @change="updateFilters('모집직무', '연구개발/설계')" /> 연구개발/설계</label>
+            <label><input type="checkbox" value="IT/인터넷" @change="updateFilters('모집직무', 'IT/인터넷')" /> IT/인터넷</label>
           </div>
         </div>
+        <!-- 근무지역 필터 -->
         <div class="filter-item" data-filter="근무지역">
-          <button class="dropdown-btn">근무지역</button>
-          <div class="filter-dropdown" id="근무지역">
-            <label><input type="checkbox" value="지역 제한없음" /> 지역
-              제한없음</label>
-            <label><input type="checkbox" value="서울" /> 서울</label>
-            <label><input type="checkbox" value="부산" /> 부산</label>
-            <label><input type="checkbox" value="대구" /> 대구</label>
-            <label><input type="checkbox" value="인천" /> 인천</label>
-            <label><input type="checkbox" value="광주" /> 광주</label>
+          <button class="dropdown-btn" @click="toggleDropdown('근무지역')">근무지역</button>
+          <div class="filter-dropdown" v-show="dropdownOpen['근무지역']">
+            <label><input type="checkbox" value="지역 제한없음" @change="updateFilters('근무지역', '지역 제한없음')" /> 지역 제한없음</label>
+            <label><input type="checkbox" value="서울" @change="updateFilters('근무지역', '서울')" /> 서울</label>
+            <label><input type="checkbox" value="부산" @change="updateFilters('근무지역', '부산')" /> 부산</label>
+            <label><input type="checkbox" value="대구" @change="updateFilters('근무지역', '대구')" /> 대구</label>
+            <label><input type="checkbox" value="인천" @change="updateFilters('근무지역', '인천')" /> 인천</label>
+            <label><input type="checkbox" value="광주" @change="updateFilters('근무지역', '광주')" /> 광주</label>
           </div>
         </div>
         <div class="search-container">
           <!-- <input type="text" id="search-input" placeholder="공고명, 기업, 직무, 키워드 검색" />
           <button id="search-btn">검색</button> -->
-          <input ref="searchInput" type="text" v-model="searchKeyword" placeholder="공고명, 기업, 직무, 키워드 검색"
-            @keyup.enter="handleSearch" />
-          <button @click="handleSearch">검색</button>
+          <input ref="searchInput" type="text" v-model="searchKeyword" placeholder="공고명, 모집분야 키워드 *토글초기화*"
+            @keyup.enter="handleSearch" class="search-input" />
+          <button @click="handleSearch" class="search-btn">검색</button>
         </div>
       </div>
 
+      <!-- 선택된 필터들 -->
       <div class="selected-filters">
         <div id="selected-filters-list">
-          <span v-for="filter in selectedFilters" :key="filter" @click="removeFilter(filter)">
-            {{ filter }} ✕
+          <span v-for="filter in selectedFilters" :key="filter.name + filter.value" @click="removeFilter(filter)">
+            {{ filter.name }}: {{ filter.value }} ✕
           </span>
         </div>
         <a href="#" id="reset-filters" class="reset-filters" @click.prevent="resetFilters">초기화🔄️</a>
       </div>
 
+      <!-- 검색 결과 -->
       <div class="results-header">
         <span>검색 결과 {{ announcementCount }}건</span>
         <span class="sort-by">최신순 ▼</span>
@@ -107,7 +111,7 @@
 import SeekerHeaderComponent from "@/components/seeker/SeekerHeaderComponent.vue";
 import SeekerFooterComponent from "@/components/seeker/SeekerFooterComponent.vue";
 import { useRouter } from 'vue-router';
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import { UseAnnouncementStore } from "@/stores/UseAnnouncementStore";
 
 const router = useRouter();
@@ -124,6 +128,8 @@ const selectedFilters = ref([]);
 const dropdownOpen = ref({
   '기업형태': false,
   '채용형태': false,
+  '모집직무': false,
+  '근무지역': false
   // 다른 필터 항목들 추가 가능
 });
 
@@ -132,9 +138,25 @@ const toggleDropdown = (filterName) => {
   dropdownOpen.value[filterName] = !dropdownOpen.value[filterName];
 };
 
+// 필터 업데이트 함수 (드롭다운 이름과 필터 값 함께 저장)
+const updateFilters = (filterName, filterValue) => {
+  const exists = selectedFilters.value.find(f => f.name === filterName && f.value === filterValue);
+
+  if (!exists) {
+    selectedFilters.value.push({ name: filterName, value: filterValue });
+  } else {
+    selectedFilters.value = selectedFilters.value.filter(f => !(f.name === filterName && f.value === filterValue));
+  }
+};
+
+// // 필터 제거 함수
+// const removeFilter = (filter) => {
+//   selectedFilters.value = selectedFilters.value.filter(f => f !== filter);
+// };
+
 // 필터 제거 함수
 const removeFilter = (filter) => {
-  selectedFilters.value = selectedFilters.value.filter((item) => item !== filter);
+  selectedFilters.value = selectedFilters.value.filter(item => !(item.name === filter.name && item.value === filter.value));
 };
 
 // 필터 초기화 함수
@@ -143,14 +165,33 @@ const resetFilters = () => {
 };
 
 
-// 공고 검색 처리 함수
+// 검색 또는 필터링 처리
 const handleSearch = () => {
   if (searchKeyword.value) {
     announcementStore.searchAnnouncements(searchKeyword.value);
+  } else if (selectedFilters.value.length > 0) {
+    announcementStore.filterAnnouncementsByFilters(selectedFilters.value);
   } else {
-    console.error("검색어를 입력하세요.");
+    console.error("검색어 또는 필터를 선택하세요.");
   }
 };
+
+// watch로 선택된 필터가 변경되었을 때 자동으로 백엔드에 요청
+watch(selectedFilters, (newFilters) => {
+  if (!searchKeyword.value && newFilters.length) {
+    handleSearch();
+  }
+});
+
+
+// // 공고 검색 처리 함수
+// const handleSearch = () => {
+//   if (searchKeyword.value) {
+//     announcementStore.searchAnnouncements(searchKeyword.value);
+//   } else {
+//     console.error("검색어를 입력하세요.");
+//   }
+// };
 
 
 // 필터 드롭다운 및 선택한 필터 업데이트 함수
@@ -287,36 +328,50 @@ onMounted(() => {
   padding: 0;
 }
 
-/* .header-arp {
-  background-color: #F9FAFB;
-  border-bottom: 1px solid #ddd;
-  padding: 10px 0;
-}
-
-.header-container {
-  max-width: 1200px;
-  margin: 0 auto;
+.search-container {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
-.header-container h1 {
-  font-size: 24px;
-  color: #333;
+.search-input {
+  width: 300px;
+  padding: 10px;
+  border-radius: 25px;
+  border: 1px solid #ccc;
+  outline: none;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.header-right {
-  position: relative;
-  // 부모 요소를 기준으로 드롭다운 위치 설정
+.search-input:focus {
+  border-color: #212b36;
+  box-shadow: 0 6px 10px rgba(0, 123, 255, 0.2);
 }
 
-.header-right a {
-  margin-left: 20px;
-  text-decoration: none;
-  color: #666;
-  font-size: 14px;
-} */
+.search-btn {
+  padding: 10px 20px;
+  margin-left: 10px;
+  border: none;
+  border-radius: 25px;
+  background-color: #212b36;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.search-btn:hover {
+  background-color: #0056b3;
+  box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3);
+}
+
+.search-btn:focus {
+  outline: none;
+}
 
 .main-content {
   max-width: 1200px;
@@ -348,6 +403,7 @@ h2 {
 
 .dropdown-btn {
   padding: 8px 15px;
+  width: 130px;
   border: 1px solid #ffffff;
   background-color: #cbdaea;
   cursor: pointer;
@@ -355,7 +411,7 @@ h2 {
 }
 
 .filter-dropdown {
-  display: none;
+  /* display: none; */
   position: absolute;
   top: 40px;
   left: 0;
@@ -503,129 +559,3 @@ h2 {
   cursor: pointer;
 }
 </style>
-
-// 필터 아이템을 클릭했을 때 드롭다운을 토글하는 함수
-document.querySelectorAll(".filter-item").forEach((item) => {
-item.addEventListener("click", function () {
-const filterName = this.getAttribute("data-filter");
-const dropdown = document.getElementById(filterName);
-
-// 다른 드롭다운이 열려 있으면 닫기
-document.querySelectorAll(".filter-dropdown").forEach((drop) => {
-if (drop !== dropdown) {
-drop.style.display = "none";
-}
-});
-
-// 클릭한 드롭다운을 토글
-if (dropdown.style.display === "block") {
-dropdown.style.display = "none";
-} else {
-dropdown.style.display = "block";
-}
-});
-});
-
-// 선택한 필터 항목을 저장하는 배열
-let selectedFilters = [];
-
-// 각 체크박스를 클릭했을 때 선택한 항목을 업데이트
-document
-.querySelectorAll('.filter-dropdown input[type="checkbox"]')
-.forEach((checkbox) => {
-checkbox.addEventListener("change", function () {
-const filterValue = this.value;
-
-if (this.checked) {
-// 체크된 경우 배열에 추가
-selectedFilters.push(filterValue);
-} else {
-// 체크 해제된 경우 배열에서 제거
-selectedFilters = selectedFilters.filter(
-(item) => item !== filterValue
-);
-}
-
-// 선택한 필터 항목 업데이트
-updateSelectedFilters();
-});
-});
-
-// 선택된 필터 항목을 화면에 표시하는 함수
-function updateSelectedFilters() {
-const selectedList = document.getElementById("selected-filters-list");
-selectedList.innerHTML = "";
-
-selectedFilters.forEach((filter) => {
-const filterSpan = document.createElement("span");
-filterSpan.textContent = filter + " ✕";
-filterSpan.style.marginRight = "10px";
-filterSpan.style.cursor = "pointer";
-
-// 필터 항목을 클릭하면 해당 항목을 해제
-filterSpan.addEventListener("click", function () {
-selectedFilters = selectedFilters.filter((item) => item !== filter);
-updateSelectedFilters();
-
-// 해당 체크박스도 해제
-document.querySelector(
-`.filter-dropdown input[value="${filter}"]`
-).checked = false;
-});
-
-selectedList.appendChild(filterSpan);
-});
-}
-
-// 초기화 버튼 클릭 시 모든 선택을 초기화
-document.getElementById("reset-filters").addEventListener("click", function () {
-selectedFilters = [];
-updateSelectedFilters();
-
-// 모든 체크박스 해제
-document
-.querySelectorAll('.filter-dropdown input[type="checkbox"]')
-.forEach((checkbox) => {
-checkbox.checked = false;
-});
-});
-
-// 검색 버튼 클릭 시 동작하는 함수
-document.getElementById("search-btn").addEventListener("click", function () {
-const searchText = document
-.getElementById("search-input")
-.value.toLowerCase();
-
-// 검색어에 맞는 결과를 필터링하거나 화면에 보여줄 로직 작성
-console.log("검색어:", searchText);
-
-// 예시: 검색된 텍스트와 일치하는 항목을 처리 (이 부분은 실제 검색 로직에 맞게 구현하기)
-// 선택된 검색할 토글 단어를 가져와서 검색하는 기능 추가, 현재는 검색창에 입력한 글자를 검색하는 느낌
-if (searchText) {
-alert("검색 기능 실행: " + searchText);
-} else {
-alert("검색어를 입력하세요.");
-}
-});
-
-// 드롭다운 토글 버튼과 메뉴 가져오기
-var dropdownToggle = document.getElementById("dropdown-toggle");
-var dropdownMenu = document.getElementById("dropdown-menu");
-
-// '로그인 한 회원 ▼' 클릭 시 드롭다운 메뉴 토글
-dropdownToggle.onclick = function (event) {
-event.preventDefault(); // 링크 기본 동작 방지
-// 드롭다운 메뉴가 보이는지 여부에 따라 display 설정
-if (dropdownMenu.style.display === "block") {
-dropdownMenu.style.display = "none";
-} else {
-dropdownMenu.style.display = "block";
-}
-};
-
-// 페이지 다른 곳 클릭 시 드롭다운 메뉴 닫기
-window.onclick = function (event) {
-if (!event.target.matches("#dropdown-toggle")) {
-dropdownMenu.style.display = "none";
-}
-};
