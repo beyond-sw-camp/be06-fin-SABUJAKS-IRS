@@ -41,6 +41,9 @@ public class InterviewSchedule {
     @Column(nullable = false)
     private String careerBase;
 
+    @Column(nullable = false)
+    private Integer interviewNum;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recruiter_idx")
     private Recruiter recruiter;
