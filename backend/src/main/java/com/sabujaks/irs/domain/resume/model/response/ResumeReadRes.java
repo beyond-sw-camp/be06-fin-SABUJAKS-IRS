@@ -15,6 +15,8 @@ public class ResumeReadRes {
     private String resumeTitle;
     private LocalDateTime resumedAt;
     private Boolean docPassed;
+    private Long seekerIdx;
+    private Long announcementIdx;
     private PersonalInfoReadRes personalInfo; // 인적사항 1개
     private PreferentialEmpReadRes preferentialEmp; // 취업우대·병역 1개
     private List<EducationReadRes> educations; // 학력 n개

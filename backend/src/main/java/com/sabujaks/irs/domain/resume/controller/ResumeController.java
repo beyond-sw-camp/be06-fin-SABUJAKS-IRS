@@ -121,6 +121,7 @@ public class ResumeController {
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.RESUME_READ_SUCCESS, response));
     }
 
+    // 삭제 필요
     // (채용담당자) 서류 결과 업데이트
     @PatchMapping("/update/docPassed/{resumeIdx}")
     public ResponseEntity<BaseResponse<ResumeUpdateDocPassedRes>> updateDocPassed(

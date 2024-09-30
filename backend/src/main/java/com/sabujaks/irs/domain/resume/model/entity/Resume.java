@@ -31,6 +31,7 @@ public class Resume {
     @CreationTimestamp
     private LocalDateTime resumedAt;
 
+    // 삭제 필요
     private Boolean docPassed;
 
     // 지원정보 테이블과 n:1
@@ -48,6 +49,7 @@ public class Resume {
     @JoinColumn(name = "seeker_idx")
     private Seeker seeker;
 
+    // 삭제 필요
     public Boolean updateDocPassed(Boolean docPassed) {
         if (this.docPassed == null) {
             this.docPassed = docPassed;
