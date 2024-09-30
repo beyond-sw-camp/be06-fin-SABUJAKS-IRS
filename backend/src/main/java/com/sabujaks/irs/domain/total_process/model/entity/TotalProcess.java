@@ -1,4 +1,4 @@
-package com.sabujaks.irs.domain.interview_evaluate.model.entity;
+package com.sabujaks.irs.domain.total_process.model.entity;
 
 import com.sabujaks.irs.domain.announcement.model.entity.Announcement;
 import com.sabujaks.irs.domain.auth.model.entity.Seeker;
