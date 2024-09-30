@@ -236,17 +236,19 @@ onMounted(async () => {
   const response = await resumeStore.readSubmitInfo(route.params.announcementIdx);
 
   showPersonalInfo.value = true;
-  showEducation.value = response.result.codes.includes("resume_001");
-  showPersonalHistory.value = response.result.codes.includes("resume_002");
-  showInternsActivity.value = response.result.codes.includes("resume_003");
-  showTraining.value = response.result.codes.includes("resume_004");
-  showCertification.value = response.result.codes.includes("resume_005");
-  showAward.value = response.result.codes.includes("resume_006");
-  showStudyingAbroad.value = response.result.codes.includes("resume_007");
-  showLanguage.value = response.result.codes.includes("resume_008");
-  showPortfolio.value = response.result.codes.includes("resume_009");
-  showPreferentialEmp.value = response.result.codes.includes("resume_010");
-  showCustomLetter.value = response.result.codes.includes("resume_011");
+  if(resumeStore.resumeIntegrated.codes) {
+    showEducation.value = response.result.codes.includes("resume_001");
+    showPersonalHistory.value = response.result.codes.includes("resume_002");
+    showInternsActivity.value = response.result.codes.includes("resume_003");
+    showTraining.value = response.result.codes.includes("resume_004");
+    showCertification.value = response.result.codes.includes("resume_005");
+    showAward.value = response.result.codes.includes("resume_006");
+    showStudyingAbroad.value = response.result.codes.includes("resume_007");
+    showLanguage.value = response.result.codes.includes("resume_008");
+    showPortfolio.value = response.result.codes.includes("resume_009");
+    showPreferentialEmp.value = response.result.codes.includes("resume_010");
+    showCustomLetter.value = response.result.codes.includes("resume_011");
+  }
   // 자기소개서 (맞춤)
   if(showCustomLetter.value) {
     customLetterActivities.value = response.result.customLetterForms.map((customLetterForm, index) => ({
