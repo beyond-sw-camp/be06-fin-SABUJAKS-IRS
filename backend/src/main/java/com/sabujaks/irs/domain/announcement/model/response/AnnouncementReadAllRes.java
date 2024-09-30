@@ -15,5 +15,6 @@ public class AnnouncementReadAllRes {
     private String careerBase; // 신입경력
     private String region; // 근무지역
     private String announcementEnd; // 마감일
+    private String companyInfo; // 기업소개
     // 조회수
 }
