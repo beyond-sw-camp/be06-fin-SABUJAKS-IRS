@@ -16,6 +16,8 @@ import com.sabujaks.irs.domain.resume.model.entity.*;
 import com.sabujaks.irs.domain.resume.model.request.*;
 import com.sabujaks.irs.domain.resume.model.response.*;
 import com.sabujaks.irs.domain.resume.repository.*;
+import com.sabujaks.irs.domain.total_process.model.entity.TotalProcess;
+import com.sabujaks.irs.domain.total_process.repository.TotalProcessRepository;
 import com.sabujaks.irs.global.common.exception.BaseException;
 import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
 import com.sabujaks.irs.global.security.CustomUserDetails;
@@ -51,6 +53,7 @@ public class ResumeService {
     private final CustomFormRepository customFormRepository;
     private final RecruiterRepository recruiterRepository;
     private final CompanyRepository companyRepository;
+    private final TotalProcessRepository totalProcessRepository;
 
 
     @Transactional
@@ -1007,7 +1010,17 @@ public class ResumeService {
 
             responseBuilder.resumeTitle(resultResume.get().getResumeTitle());
             responseBuilder.resumedAt(resultResume.get().getResumedAt());
-            responseBuilder.docPassed(resultResume.get().getDocPassed());
+            responseBuilder.seekerIdx(resultResume.get().getSeeker().getIdx());
+            responseBuilder.announcementIdx(resultResume.get().getAnnouncement().getIdx());
+            // total_process 테이블에서 조회하기
+            Optional<TotalProcess> resultTotalProcess = totalProcessRepository.findByAnnouncementIdxAndSeekerIdx(
+                    resultResume.get().getAnnouncement().getIdx(), resultResume.get().getSeeker().getIdx()
+            );
+            if(resultTotalProcess.isPresent()) {
+                responseBuilder.docPassed(resultTotalProcess.get().getResumeResult());
+            } else {
+                responseBuilder.docPassed(null);
+            }
             // 지원정보 테이블 조회
             Optional<ResumeInfo> resultResumeInfo = resumeInfoRepository.findByResumeInfoIdx(resultResume.get().getResumeInfo().getIdx());
             if(resultResumeInfo.isPresent()) {
@@ -1256,6 +1269,7 @@ public class ResumeService {
 
     }
 
+    // 삭제 필요
     @Transactional
     public ResumeUpdateDocPassedRes updateDocPassed(
         CustomUserDetails customUserDetails,
