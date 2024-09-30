@@ -474,7 +474,7 @@ const formatDate = (dateString) => {
 };
 
 const updateDocPassed = async (docPassedValue) => {
-    await resumeStore.updateDocPassed(route.params.resumeIdx, docPassedValue);
+    await resumeStore.updateDocPassed(docPassedValue);
 };
 
 </script>
