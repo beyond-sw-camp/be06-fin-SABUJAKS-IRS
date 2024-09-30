@@ -5,6 +5,7 @@ import com.sabujaks.irs.domain.announcement.model.entity.CustomLetterForm;
 import com.sabujaks.irs.domain.announcement.repository.AnnouncementRepository;
 import com.sabujaks.irs.domain.announcement.repository.CustomLetterFormRepository;
 import com.sabujaks.irs.domain.auth.model.entity.Seeker;
+import com.sabujaks.irs.domain.auth.repository.SeekerRepository;
 import com.sabujaks.irs.domain.interview_evaluate.model.entity.InterviewEvaluate;
 import com.sabujaks.irs.domain.interview_evaluate.model.entity.InterviewEvaluateForm;
 import com.sabujaks.irs.domain.interview_evaluate.model.entity.InterviewEvaluateResult;
@@ -33,6 +34,7 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class InterviewEvaluateService {
+    private final SeekerRepository seekerRepository;
     private final InterviewEvaluateRepository interviewEvaluateRepository;
     private final InterviewEvaluateFormRepository interviewEvaluateFormRepository;
     private final InterviewParticipateRepository interviewParticipateRepository;
@@ -403,7 +405,6 @@ public class InterviewEvaluateService {
             interviewEvaluateResultRepository.save(interviewEvaluateResult);
             InterviewEvaluate newInterviewEvaluate = InterviewEvaluate.builder()
                     .idx(interviewEvaluate.getIdx())
-                    .status(dto.getStatus())
                     .totalScore(dto.getTotalScore())
                     .comments(dto.getComments())
                     .interviewEvaluateForm(interviewEvaluateForm)
@@ -429,7 +430,6 @@ public class InterviewEvaluateService {
                     .build();
             interviewEvaluateResultRepository.save(interviewEvaluateResult);
             InterviewEvaluate interviewEvaluate = InterviewEvaluate.builder()
-                    .status(dto.getStatus())
                     .totalScore(dto.getTotalScore())
                     .comments(dto.getComments())
                     .interviewEvaluateForm(interviewEvaluateForm)
@@ -443,14 +443,14 @@ public class InterviewEvaluateService {
         }
     }
 
-    public InterviewEvaluateReadAllRes readAllEvaluate(CustomUserDetails customUserDetails, Long announceIdx) throws BaseException {
-        Announcement announcement = announcementRepository.findByAnnounceIdx(announceIdx)
-                .orElseThrow(() -> new BaseException(BaseResponseMessage.ANNOUNCEMENT_SEARCH_FAIL_NOT_FOUND));
+    public InterviewEvaluateReadAllRes readAllEvaluate(CustomUserDetails customUserDetails, Long announcementIdx, Integer interviewNum) throws BaseException {
+        Announcement announcement = announcementRepository.findByAnnounceIdx(announcementIdx)
+        .orElseThrow(() -> new BaseException(BaseResponseMessage.ANNOUNCEMENT_SEARCH_FAIL_NOT_FOUND));
         if (!Objects.equals(announcement.getRecruiter().getEmail(), customUserDetails.getEmail())) {
             throw new BaseException(BaseResponseMessage.ANNOUNCEMENT_SEARCH_FAIL_INVALID_REQUEST);
         }
-        List<InterviewSchedule> interviewScheduleList = interviewScheduleRepository.findByAnnouncementIdx(announceIdx)
-                .orElseThrow(() -> new BaseException(BaseResponseMessage.INTERVIEW_SCHEDULE_NOT_FOUND));
+        List<InterviewSchedule> interviewScheduleList = interviewScheduleRepository.findAllByAnnouncementIdxAndInterviewNum(announcementIdx, interviewNum)
+        .orElseThrow(() -> new BaseException(BaseResponseMessage.INTERVIEW_SCHEDULE_NOT_FOUND));
         Map<Long, List<InterviewEvaluateReadRes>> interviewEvaluateReadAllResMap = new HashMap<>();
         for(InterviewSchedule interviewSchedule : interviewScheduleList){
             List<InterviewParticipate> interviewParticipateList = interviewParticipateRepository.findByInterviewScheduleIdx(interviewSchedule.getIdx())
@@ -507,4 +507,6 @@ public class InterviewEvaluateService {
                 .interviewEvaluateReadAllResMap(interviewEvaluateReadAllResMap)
                 .build();
     }
+
+
 }

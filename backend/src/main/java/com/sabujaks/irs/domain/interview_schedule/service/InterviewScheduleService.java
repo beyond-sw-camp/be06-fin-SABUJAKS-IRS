@@ -37,6 +37,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -58,6 +59,7 @@ public class InterviewScheduleService {
     private final ResumeRepository resumeRepository;
     private final CompanyRepository companyRepository;
 
+    @Transactional
     public InterviewScheduleRes create(CustomUserDetails customUserDetails, InterviewScheduleReq dto) throws BaseException {
         String uuid = uuidCheck(dto);
         Recruiter recruiter = recruiterRepository.findByRecruiterIdx(customUserDetails.getIdx())
@@ -74,6 +76,7 @@ public class InterviewScheduleService {
                 .interviewDate(dto.getInterviewDate())
                 .interviewStart(dto.getInterviewStart())
                 .interviewEnd(dto.getInterviewEnd())
+                .interviewNum(dto.getInterviewNum())
                 .uuid(uuid)
                 .careerBase(dto.getCareerBase())
                 .recruiter(recruiter)
@@ -149,6 +152,7 @@ public class InterviewScheduleService {
                 .interviewDate(interviewSchedule.getInterviewDate())
                 .interviewEnd(interviewSchedule.getInterviewEnd())
                 .interviewStart(interviewSchedule.getInterviewStart())
+                .interviewNum(interviewSchedule.getInterviewNum())
                 .uuid(interviewSchedule.getUuid())
                 .seekerList(seekerInfoGetResList)
                 .careerBase(interviewSchedule.getCareerBase())

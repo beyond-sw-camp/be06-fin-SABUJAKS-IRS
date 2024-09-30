@@ -49,7 +49,7 @@ const goAndReload = (path) => {
         <li @click="goAndReload('/recruiter/interview-evaluate/form')">
           면접 평가표
         </li>
-        <li @click="goAndReload('/recruiter/interview-evaluate')">
+        <li @click="goAndReload('/recruiter/interview-evaluate/result')">
         면접 평가
       </li>
       </ul>

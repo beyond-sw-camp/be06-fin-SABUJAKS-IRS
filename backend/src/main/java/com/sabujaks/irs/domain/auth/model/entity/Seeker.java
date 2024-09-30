@@ -1,10 +1,8 @@
 package com.sabujaks.irs.domain.auth.model.entity;
 
 import com.sabujaks.irs.domain.alarm.model.entity.Alarm;
-import com.sabujaks.irs.domain.interview_evaluate.model.entity.InterviewEvaluate;
-import com.sabujaks.irs.domain.interview_evaluate.model.entity.InterviewEvaluateForm;
+import com.sabujaks.irs.domain.total_process.model.entity.TotalProcess;
 import com.sabujaks.irs.domain.interview_schedule.model.entity.InterviewParticipate;
-import com.sabujaks.irs.domain.interview_schedule.model.entity.InterviewSchedule;
 import com.sabujaks.irs.domain.interview_schedule.model.entity.ReSchedule;
 import com.sabujaks.irs.domain.resume.model.entity.Resume;
 import com.sabujaks.irs.domain.resume.model.entity.ResumeInfo;
@@ -17,7 +15,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 // 지원자 엔티티
 @Entity
@@ -73,4 +70,6 @@ public class Seeker {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "seeker")
     private List<ReSchedule> reScheduleList;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "seeker")
+    private List<TotalProcess> totalProcessList;
 }

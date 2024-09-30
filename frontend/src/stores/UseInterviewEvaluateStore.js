@@ -62,10 +62,10 @@ export const UseInterviewEvaluateStore = defineStore('interviewEvaluate', {
                 return error.response.data
             }
         },
-        async readAllEvaluate(announceIdx) {
+        async readAllEvaluate(announceIdx, interviewNum) {
             try {
                 const response = await axios.get(
-                    `${backend}/interview-evaluate/read-all/evaluate?announceIdx=${announceIdx}`,
+                    `${backend}/interview-evaluate/read-all/evaluate?interviewNum=${interviewNum}&announceIdx=${announceIdx}`,
                     {
                         headers: { 'Content-Type': 'application/json', },
                         withCredentials: true

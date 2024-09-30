@@ -89,31 +89,40 @@
         <span class="sort-by">최신순 ▼</span>
       </div>
 
-      <table class="job-listing">
-        <thead>
-          <tr>
-            <th>번호</th>
-            <th>기업명</th>
-            <th>공고명</th>
-            <th>모집분야</th>
-            <th>채용형태</th>
-            <th>근무지역</th>
-            <th>마감일</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(announcement, index) in announcementStore.announcements2" :key="announcement.announcementIdx"
-            @click="goToDetailPage(announcement.announcementIdx)" class="hoverable-row">
-            <td>{{ index + 1 }}</td>
-            <td>{{ announcement.companyName }}</td>
-            <td>{{ announcement.announcementTitle }}</td>
-            <td>{{ announcement.jobTitle }}</td>
-            <td>{{ announcement.careerBase }}</td>
-            <td>{{ announcement.region }}</td>
-            <td>~ {{ announcement.announcementEnd }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="main_product" id="section_banner">
+        <div class="cont_product prd_platinum">
+          <div class="inner_cont">
+            <ul class="prd_list plus" id="_platinumPlus">
+              <li class="option" v-for="(announcement) in announcementStore.announcements2" :key="announcement.announcementIdx"
+                  @click="goToDetailPage(announcement.announcementIdx)">
+                <a class="link_box track_event" rel="sponsored, nofollow">
+                <span class="logo">
+                    <img
+                        src="../../../assets/img/main/company_logo1.png"
+                        class="img" alt=" 애경그룹 AK PLAZA" loading="lazy">
+                </span>
+                  <span class="c_name"> {{ announcement.companyName }} </span>
+                  <span class="title"> {{ announcement.companyName }} <br> {{ announcement.announcementTitle }} </span>
+                  <span class="title_ex"> {{ announcement.companyName }} <br> {{ announcement.announcementTitle }} </span>
+                  <span class="bg">
+                    <img
+                        src="../../../assets/img/main/company_card1_596x258.jpg"
+                        alt=" 애경그룹 AK PLAZA 2025 신입사원 공개채용 " loading="lazy">
+                </span>
+                  <span class="bg_ex">
+                    <img
+                        src="../../../assets/img/main/company_card1_600x1120.jpg"
+                        alt=" 애경그룹 AK PLAZA 2025 신입사원 공개채용 " loading="lazy">
+                </span>
+                  <span class="cont">AK PLAZA는 애경그룹의 일원으로<br>고객 곁에서 사랑과 존경의 가치를 <br>실천합니다. 고객의 니즈를 만족시키고<br>높은 가치를 제공하는 유통 서비스를
+                    <br>개척해 나가겠습니다.
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </section>
     <SeekerFooterComponent></SeekerFooterComponent>
   </div>
@@ -615,4 +624,128 @@ h2 {
   /* 마우스 올렸을 때 약간 어둡게 변경 */
   cursor: pointer;
 }
+
+/* 상품 공통 */
+.main_product .btn_scrap {display:flex;position:absolute;right:24px;z-index:3;width:24px;height:24px;flex-flow:row nowrap;justify-content:center;align-content:center;align-items:center}
+.main_product .btn_scrap .ic path {stroke:#6b768b}
+.main_product .btn_scrap.on .ic path {fill:#fff15c;stroke:#ad9100}
+.main_product .logo {display:grid;position:relative;align-items:center;align-self:start;justify-self:center;grid-area:logo}
+.main_product .logo img {position:absolute;top:50%;left:50%;max-width:100%;max-height:100%;transform:translate(-50%, -50%);object-fit:contain}
+.main_product .logo .text {display:block;overflow:hidden;width:100%;color:#2d2d2d;font-size:12px;font-weight:700;line-height:20px;text-align:center;text-overflow:ellipsis;white-space:nowrap}
+.main_product .logo.left {justify-self:start}
+.main_product .logo.left img {left:0;transform:translateY(-50%)}
+.main_product .c_name {display:block;overflow:hidden;max-width:100%;font-size:14px;font-weight:700;line-height:20px;text-overflow:ellipsis;white-space:nowrap;grid-area:c_name}
+.main_product .title,
+.main_product .title_ex {display:-webkit-box;overflow:hidden;max-height:44px;font-size:15px;line-height:22px;text-overflow:ellipsis;word-wrap:break-word;-webkit-line-clamp:2;-webkit-box-orient:vertical;grid-area:title}
+.main_product .date {display:block;padding-right:28px;color:#67738e;font-size:12px;line-height:20px;white-space:nowrap;justify-self:end;align-self:end;grid-area:date}
+.main_product .date.noscrap {padding-right:0}
+.main_product .date .soon {color:#ff5656}
+.main_product .tags {display:flex;flex-flow:row wrap;justify-content:start;align-items:start;gap:8px;grid-area:tags}
+.main_product .tags span {padding:2px 6px;border-radius:12px;color:#373f57;font-size:13px;line-height:20px;white-space:nowrap;background:#eff5ff}
+.main_product .badge {display:grid;padding:2px 8px;border-radius:4px;background:#eff5ff;grid-template-columns:14px 1fr;gap:2px;justify-content:start;align-items:center;justify-self:start;align-self:end;grid-area:badge}
+.main_product .badge svg {width:14px;height:14px}
+.main_product .badge span {overflow:hidden;max-width:100%;color:#475067;font-size:12px;line-height:20px;text-overflow:ellipsis;white-space:nowrap}
+
+/*사용*/
+.main_product .banner_list,
+.main_product .prd_list {display:grid;width:100%;gap:20px;grid-template-columns:repeat(4, 1fr)}
+.main_product .banner_list li,
+.main_product .prd_list li {position:relative;z-index:1}
+.main_product .banner_list li a,
+.main_product .prd_list li a {display:grid;position:absolute;z-index:1;padding:23px;width:100%;height:100%;border-width:1px;border-style:solid;border-color:#d7dce5;border-radius:16px;box-sizing:border-box;color:#292e41;background-color:#fff;align-content:start}
+.main_product .prd_list li:hover {z-index:2}
+.main_product .prd_list li:hover a {box-shadow:0 4px 10px 0 rgba(14, 12, 31, 0.10)}
+.main_product .prd_list li.option:hover a {box-shadow:0 4px 20px 0 rgba(14, 12, 31, 0.15)}
+.main_product .prd_list li:not(.option):hover a {border-color:#2d67ff}
+.main_product .prd_list.plus li a {border-color:#2d67ff}
+.main_product .prd_list.plus li:not(.option):hover a {padding:22px;border-width:2px}
+.main_product .prd_list li.option a:before {position:absolute;top:-1px;right:-1px;left:-1px;height:16px;border-width:3px 1px 0 1px;border-style:solid;border-color:inherit;border-radius:16px 16px 0 0;box-sizing:border-box;content:""}
+.main_product .prd_list li.option:hover a:before {display:none}
+
+.main_product .prd_platinum .prd_list {grid-auto-rows:270px}
+.main_product .prd_platinum .prd_list li.option:hover {height:442px}
+.main_product .prd_platinum .prd_list .logo .text {font-size:18px;line-height:26px}
+.main_product .prd_platinum .prd_list li.option .title_ex {display:none;font-size:18px;line-height:26px}
+.main_product .prd_platinum .prd_list:not(.plus) li a {grid-template-columns:1fr auto;gap:0 8px;grid-template-areas:"logo logo" "c_name c_name" "title title" "badge date";grid-template-rows:64px 32px 52px 72px}
+.main_product .prd_platinum .prd_list:not(.plus) li.option a {border-color:#2d67ff}
+.main_product .prd_platinum .prd_list:not(.plus) li.option:hover a {grid-template-areas:"logo logo" "c_name c_name" "title title" "bg_ex bg_ex" "tags tags" "badge date";grid-template-rows:64px 32px 78px 128px 56px 32px}
+.main_product .prd_platinum .prd_list:not(.plus) .btn_scrap {bottom:24px}
+.main_product .prd_platinum .prd_list:not(.plus) .logo {width:160px;height:40px}
+.main_product .prd_platinum .prd_list:not(.plus) .c_name {font-size:16px;line-height:24px}
+.main_product .prd_platinum .prd_list:not(.plus) .title {max-height:52px;font-size:18px;line-height:26px}
+.main_product .prd_platinum .prd_list:not(.plus) .bg_ex {display:none;width:96px;height:96px;border-radius:96px;grid-area:bg_ex;justify-self:end;align-self:center}
+.main_product .prd_platinum .prd_list:not(.plus) .bg_ex img {width:96px;height:96px;border-radius:96px}
+.main_product .prd_platinum .prd_list:not(.plus) .tags {display:none}
+.main_product .prd_platinum .prd_list:not(.plus) li.option:hover .bg_ex {display:block}
+.main_product .prd_platinum .prd_list:not(.plus) li.option:hover .tags {display:flex;align-self:end}
+.main_product .prd_platinum .prd_list:not(.plus) li.option:hover .title {display:none}
+.main_product .prd_platinum .prd_list:not(.plus) li.option:hover .title_ex {display:-webkit-box;max-height:78px;-webkit-line-clamp:3}
+.main_product .prd_platinum .prd_list:not(.plus) li.option:hover .date {padding-bottom:0}
+
+.main_product .prd_platinum .prd_list.plus li a {padding:15px 23px;border-color:#d7dce5;grid-template-rows:56px 52px 130px;grid-template-areas:"logo logo" "title title" "badge date";grid-template-columns:1fr auto}
+.main_product .prd_platinum .prd_list.plus li:hover a {padding:14px 22px;border-color:#2d67ff;box-shadow:0 4px 20px 0 rgba(14, 12, 31, 0.15); cursor:pointer;}
+.main_product .prd_platinum .prd_list.plus li.option a:before {border-color:transparent;background-clip:content-box, border-box;background-origin:border-box}
+.main_product .prd_platinum .prd_list.plus li.option:nth-child(1) a:before,
+.main_product .prd_platinum .prd_list.plus li.option:nth-child(4n+4) a:before {background-image:linear-gradient(#fff, #fff), linear-gradient(to right, #9f02ff 0%,  #2d67ff 100%)}
+.main_product .prd_platinum .prd_list.plus li.option:nth-child(2) a:before,
+.main_product .prd_platinum .prd_list.plus li.option:nth-child(4n+5) a:before {background-image:linear-gradient(#fff, #fff), linear-gradient(to right, #2d67ff 0%,  #02c6ff 100%)}
+.main_product .prd_platinum .prd_list.plus li.option:nth-child(3) a:before,
+.main_product .prd_platinum .prd_list.plus li.option:nth-child(4n+6) a:before {background-image:linear-gradient(#fff, #fff), linear-gradient(to right, #02c6ff 0%,  #00be4c 100%)}
+.main_product .prd_platinum .prd_list.plus li.option:nth-child(4) a:before,
+.main_product .prd_platinum .prd_list.plus li.option:nth-child(4n+7) a:before {background-image:linear-gradient(#fff, #fff), linear-gradient(to right, #00be4c 0%,  #ffe15f 100%)}
+.main_product .prd_platinum .prd_list.plus li.expanded {grid-row:1 / span 2}
+.main_product .prd_platinum .prd_list.plus li.option:hover a,
+.main_product .prd_platinum .prd_list.plus li.expanded a {padding:24px; height:560px;border:0}
+.main_product .prd_platinum .prd_list.plus li.expanded a {box-shadow:none}
+.main_product .prd_platinum .prd_list.plus .btn_scrap {right:20px;bottom:18px;z-index:2}
+.main_product .prd_platinum .prd_list.plus .btn_scrap:not(.on) .ic path {stroke:#fff}
+.main_product .prd_platinum .prd_list.plus .logo {width:160px;height:40px}
+.main_product .prd_platinum .prd_list.plus .date {z-index:1;padding:2px 32px 2px 8px;border-radius:4px;color:#fff;line-height:24px;background:rgba(0,0,0,0.6);transform:translateX(8px);align-self:end}
+.main_product .prd_platinum .prd_list.plus .date.noscrap {padding-right:8px}
+.main_product .prd_platinum .prd_list.plus .date .soon {color:#fff}
+.main_product .prd_platinum .prd_list.plus .title {max-height:52px;font-size:18px;line-height:26px}
+.main_product .prd_platinum .prd_list.plus .bg {overflow:hidden;position:absolute;bottom:0;left:0;width:298px;height:129px}
+.main_product .prd_platinum .prd_list.plus .bg img {position:absolute;top:0;left:43%;width:260px;height:129px;border-radius:0 0 16px 16px;transform:translateX(-50%)}
+.main_product .prd_platinum .prd_list.plus .badge {z-index:1;border-radius:12px;background:rgba(0,0,0,0.6);transform:translateX(-8px);gap:4px}
+.main_product .prd_platinum .prd_list.plus .badge span {color:#fff}
+.main_product .prd_platinum .prd_list.plus .c_name,
+.main_product .prd_platinum .prd_list.plus .bg_ex,
+.main_product .prd_platinum .prd_list.plus .cont {display:none}
+.main_product .prd_platinum .prd_list.plus li:hover .bg {width:296px;height:128px}
+
+.main_product .prd_platinum .prd_list.plus li.expanded a,
+.main_product .prd_platinum .prd_list.plus li.option:hover a {padding:16px;grid-template-rows:72px 112px 32px 100px 140px 70px;grid-template-areas:"date" "logo" "c_name" "title" "cont" "badge"}
+.main_product .prd_platinum .prd_list.plus li.expanded .bg,
+.main_product .prd_platinum .prd_list.plus li.option:hover .logo,
+.main_product .prd_platinum .prd_list.plus li.option:hover .bg {display:none}
+.main_product .prd_platinum .prd_list.plus li.expanded .btn_scrap,
+.main_product .prd_platinum .prd_list.plus li.option:hover .btn_scrap {top:16px;right:16px}
+.main_product .prd_platinum .prd_list.plus li.expanded .btn_scrap .ic path,
+.main_product .prd_platinum .prd_list.plus li.option:hover .btn_scrap:not(.on) .ic path {stroke:#fff}
+.main_product .prd_platinum .prd_list.plus li.expanded .btn_scrap.on .ic path,
+.main_product .prd_platinum .prd_list.plus li.option:hover .btn_scrap.on .ic path {fill:#fff15c;stroke:#ad9100}
+.main_product .prd_platinum .prd_list.plus li.expanded .date,
+.main_product .prd_platinum .prd_list.plus li.option:hover .date {z-index:2;padding:0 32px 0;background:none;transform:none;align-self:start}
+.main_product .prd_platinum .prd_list.plus li.expanded .logo,
+.main_product .prd_platinum .prd_list.plus li.option:hover .logo {display:grid;position:relative;z-index:2;padding:20px 10px;width:76px;height:56px;border-radius:96px;background:#fff;align-self:start;justify-self:center;grid-area:logo}
+.main_product .prd_platinum .prd_list.plus li.expanded .logo img,
+.main_product .prd_platinum .prd_list.plus li.option:hover .logo img {position:absolute;top:50%;left:50%;max-width:76px;max-height:56px;transform:translate(-50%, -50%);object-fit:contain}
+.main_product .prd_platinum .prd_list.plus li.expanded .logo .text,
+.main_product .prd_platinum .prd_list.plus li.option:hover .logo .text {font-size:12px;line-height:200px}
+.main_product .prd_platinum .prd_list.plus li.expanded .c_name,
+.main_product .prd_platinum .prd_list.plus li.option:hover .c_name {display:block;overflow:hidden;z-index:2;max-width:100%;color:#fff;font-size:16px;font-weight:700;line-height:24px;text-overflow:ellipsis;white-space:nowrap;justify-self:center}
+.main_product .prd_platinum .prd_list.plus li.expanded .title,
+.main_product .prd_platinum .prd_list.plus li.option:hover .title {display:none}
+.main_product .prd_platinum .prd_list.plus li.expanded .title_ex,
+.main_product .prd_platinum .prd_list.plus li.option:hover .title_ex {display:-webkit-box;z-index:2;max-height:52px;color:#fff;font-size:18px;font-weight:700;line-height:26px;text-align:center;-webkit-line-clamp:2}
+.main_product .prd_platinum .prd_list.plus li.expanded .cont,
+.main_product .prd_platinum .prd_list.plus li.option:hover .cont {display:-webkit-box;overflow:hidden;z-index:2;margin:0 8px;max-height:140px;color:#fff;font-size:14px;line-height:20px;text-align:center;text-overflow:ellipsis;word-wrap:break-word;-webkit-line-clamp:7;-webkit-box-orient:vertical;grid-area:cont}
+.main_product .prd_platinum .prd_list.plus li.expanded .badge,
+.main_product .prd_platinum .prd_list.plus li.option:hover .badge {transform:translateX(0)}
+.main_product .prd_platinum .prd_list.plus li.expanded .bg_ex,
+.main_product .prd_platinum .prd_list.plus li.option:hover .bg_ex {display:block;position:absolute;bottom:0;left:0;width:260px;height:560px;border-radius:16px}
+.main_product .prd_platinum .prd_list.plus li.expanded .bg_ex:after,
+.main_product .prd_platinum .prd_list.plus li.option:hover .bg_ex:after {display:block;position:absolute;bottom:0;left:0;width:260px;height:560px;border-radius:16px;background:linear-gradient(to bottom, rgba(79,128,255,0.24), rgba(0,24,152,0.6));content:""}
+.main_product .prd_platinum .prd_list.plus li.expanded .bg_ex img,
+.main_product .prd_platinum .prd_list.plus li.option:hover .bg_ex img {width:100%;height:100%;border-radius:16px}
 </style>

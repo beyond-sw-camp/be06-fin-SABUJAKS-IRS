@@ -66,7 +66,7 @@ public enum BaseResponseMessage {
     VIDEO_INTERVIEW_SEARCH_ALL_FAIL(false, 1402, "화상 면접방 목록 조회에 실패했습니다."),
     VIDEO_INTERVIEW_JOIN_SUCCESS(true, 1403, "화상 면접방에 참가했습니다."),
     VIDEO_INTERVIEW_JOIN_FAIL(false, 1404, "화상 면접방 참가에 실패했습니다."),
-
+    VIDEO_INTERVIEW_JOIN_FAIL_NOT_TIME(false, 1405, "참여 시간대가 아닙니다. 참여 시간을 맞춘뒤 접속해주세요."),
     // MEMBER 1500
     MEMBER_NOT_FOUND(false, 1500, "회원을 찾을 수 없습니다."),
     ESTIMATOR_NOT_FOUND(false, 1501, "면접관을 찾을 수 없습니다."),
@@ -144,8 +144,10 @@ public enum BaseResponseMessage {
     INTERVIEW_EVALUATE_READ_ALL_FAIL(true, 6401, "지원자들의 면접 평가 결과를 불러오는데 실패했습니다."),
 
     // BASE_INFO 기준정보 관련 7000~7999
-    BASE_INFO_BENEFIT_CATEGORY_SEARCH_SUCCESS(true, 7000, "기준정보 중 복리후생 카테고리 조회에 성공했습니다.");
+    BASE_INFO_BENEFIT_CATEGORY_SEARCH_SUCCESS(true, 7000, "기준정보 중 복리후생 카테고리 조회에 성공했습니다."),
 
+    TOTAL_PROCESS_CREATE_SUCCESS(true, 8000, "통합 지원 프로세스 생성에 성공했습니다."),
+    TOTAL_PROCESS_CREATE_FAIL(true, 8001, "통합 지원 프로세스 생성에 실패했습니다.");
 
     private Boolean success;
     private Integer code;

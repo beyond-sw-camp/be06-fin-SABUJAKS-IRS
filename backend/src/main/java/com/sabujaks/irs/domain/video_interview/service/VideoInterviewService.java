@@ -17,12 +17,14 @@ import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
 import com.sabujaks.irs.global.security.CustomUserDetails;
 import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -81,9 +83,14 @@ public class VideoInterviewService {
     }
 
     public VideoInterviewTokenGetRes sessionToken(VideoInterviewTokenGetReq dto, CustomUserDetails userDetails) throws BaseException, OpenViduJavaClientException, OpenViduHttpException {
+        boolean result = checkUserAuthorities(userDetails, dto);
+        if(!result){
+            throw new BaseException(BaseResponseMessage.VIDEO_INTERVIEW_JOIN_FAIL_NOT_TIME);
+        }
         Session session = openVidu.getActiveSession(dto.getVideoInterviewUUID());
         if (session == null) { throw new BaseException(BaseResponseMessage.VIDEO_INTERVIEW_JOIN_FAIL);}
         ConnectionProperties properties = ConnectionProperties.fromJson(dto.getParams()).build();
+
         try{
             Connection connection = session.createConnection(properties);
             return VideoInterviewTokenGetRes.builder()
@@ -106,5 +113,38 @@ public class VideoInterviewService {
         }
     }
 
+
+        public boolean checkUserAuthorities(CustomUserDetails userDetails, VideoInterviewTokenGetReq dto) {
+            // 현재 시스템 시간
+            LocalDateTime currentTime = LocalDateTime.now();
+
+            // 권한 스트링 형식: "ROLE_SEEKER|id1|id2|날짜|시작시간|종료시간"
+            Collection< ? extends GrantedAuthority> authorities = userDetails.getVideoInterviewAuthorities();
+
+            for (GrantedAuthority authority : authorities) {
+                String authorityStr = authority.getAuthority();
+                String[] parts = authorityStr.split("\\|");
+                String role = parts[0];
+                String id1 = parts[1];
+                String id2 = parts[2];
+                if(parts.length == 6 && Objects.equals(role, "ROLE_SEEKER") && Objects.equals(id1, dto.getAnnounceUUID()) && Objects.equals(id2, dto.getVideoInterviewUUID())){
+                    String date = parts[3];
+                    String startTime = parts[4];
+                    String endTime = parts[5];
+                    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
+                    LocalDateTime startDateTime = LocalDateTime.parse(date + " " + startTime, dateFormatter);
+                    LocalDateTime endDateTime = LocalDateTime.parse(date + " " + endTime, dateFormatter);
+                    LocalDateTime startDateTimeWithBuffer = startDateTime.minusMinutes(3);
+                    if (currentTime.isAfter(startDateTimeWithBuffer) && currentTime.isBefore(endDateTime)) {
+                        System.out.println("권한이 유효합니다: " + role);
+                        return true;
+                    }
+                }
+                if(parts.length == 3 && Objects.equals(role, "ROLE_ESTIMATOR") && Objects.equals(id1, dto.getAnnounceUUID()) && Objects.equals(id2, dto.getVideoInterviewUUID())){
+                        return true;
+                }
+            }
+            return false;
+        }
 }
 
