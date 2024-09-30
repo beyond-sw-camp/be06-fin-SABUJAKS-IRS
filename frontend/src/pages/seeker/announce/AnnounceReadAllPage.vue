@@ -5,7 +5,7 @@
       <h2>채용</h2>
       <div class="filter-section">
         <!-- 기업형태 필터 -->
-        <div class="filter-item" data-filter="기업형태">
+        <!-- <div class="filter-item" data-filter="기업형태">
           <button class="dropdown-btn" @click="toggleDropdown('기업형태')">기업형태</button>
           <div class="filter-dropdown" v-show="dropdownOpen['기업형태']">
             <label><input type="checkbox" value="대기업" @change="updateFilters('기업형태', '대기업')" /> 대기업</label>
@@ -18,44 +18,55 @@
               비영리단체/협회/재단</label>
             <label><input type="checkbox" value="벤처기업" @change="updateFilters('기업형태', '벤처기업')" /> 벤처기업</label>
           </div>
-        </div>
+        </div> -->
         <!-- 채용형태 필터 -->
         <div class="filter-item" data-filter="채용형태">
           <button class="dropdown-btn" @click="toggleDropdown('채용형태')">채용형태</button>
           <div class="filter-dropdown" v-show="dropdownOpen['채용형태']">
-            <label><input type="checkbox" value="신입" @change="updateFilters('채용형태', '신입')" /> 신입</label>
-            <label><input type="checkbox" value="경력" @change="updateFilters('채용형태', '경력')" /> 경력</label>
+            <label><input type="checkbox" value="신입" v-model="checkedFilters['채용형태']" @change="updateFilters('채용형태', '신입')" />
+            신입</label>
+            <label><input type="checkbox" value="경력" v-model="checkedFilters['채용형태']"
+                @change="updateFilters('채용형태', '경력')" /> 경력</label>
           </div>
         </div>
         <!-- 모집직무 필터 -->
         <div class="filter-item" data-filter="모집직무">
           <button class="dropdown-btn" @click="toggleDropdown('모집직무')">모집직무</button>
           <div class="filter-dropdown" v-show="dropdownOpen['모집직무']">
-            <label><input type="checkbox" value="영업/고객상담" @change="updateFilters('모집직무', '영업/고객상담')" /> 영업/고객상담</label>
-            <label><input type="checkbox" value="경영/사무" @change="updateFilters('모집직무', '경영/사무')" /> 경영/사무</label>
-            <label><input type="checkbox" value="마케팅/광고/홍보" @change="updateFilters('모집직무', '마케팅/광고/홍보')" />
-              마케팅/광고/홍보</label>
-            <label><input type="checkbox" value="생산/제조" @change="updateFilters('모집직무', '생산/제조')" /> 생산/제조</label>
-            <label><input type="checkbox" value="연구개발/설계" @change="updateFilters('모집직무', '연구개발/설계')" /> 연구개발/설계</label>
-            <label><input type="checkbox" value="IT/인터넷" @change="updateFilters('모집직무', 'IT/인터넷')" /> IT/인터넷</label>
+            <!-- 큰 카테고리 이름을 동적으로 렌더링 -->
+            <div v-for="category in categoryData" :key="category">
+              <label>
+                <input type="checkbox" :value="category" v-model="checkedFilters['모집직무']"
+                  @change="updateFilters('모집직무', category)" />
+                {{ category }}
+              </label>
+            </div>
           </div>
         </div>
         <!-- 근무지역 필터 -->
         <div class="filter-item" data-filter="근무지역">
           <button class="dropdown-btn" @click="toggleDropdown('근무지역')">근무지역</button>
           <div class="filter-dropdown" v-show="dropdownOpen['근무지역']">
-            <label><input type="checkbox" value="지역 제한없음" @change="updateFilters('근무지역', '지역 제한없음')" /> 지역 제한없음</label>
-            <label><input type="checkbox" value="서울" @change="updateFilters('근무지역', '서울')" /> 서울</label>
-            <label><input type="checkbox" value="부산" @change="updateFilters('근무지역', '부산')" /> 부산</label>
-            <label><input type="checkbox" value="대구" @change="updateFilters('근무지역', '대구')" /> 대구</label>
-            <label><input type="checkbox" value="인천" @change="updateFilters('근무지역', '인천')" /> 인천</label>
-            <label><input type="checkbox" value="광주" @change="updateFilters('근무지역', '광주')" /> 광주</label>
+            <label><input type="checkbox" value="해외지역" v-model="checkedFilters['근무지역']"
+                @change="updateFilters('근무지역', '해외지역')" /> 해외지역</label>
+            <label><input type="checkbox" value="재택근무 가능" v-model="checkedFilters['근무지역']"
+                @change="updateFilters('근무지역', '재택근무 가능')" /> 재택근무 가능</label>
+            <label><input type="checkbox" value="서울" v-model="checkedFilters['근무지역']"
+                @change="updateFilters('근무지역', '서울')" /> 서울</label>
+            <label><input type="checkbox" value="부산" v-model="checkedFilters['근무지역']"
+                @change="updateFilters('근무지역', '부산')" /> 부산</label>
+            <label><input type="checkbox" value="대구" v-model="checkedFilters['근무지역']"
+                @change="updateFilters('근무지역', '대구')" /> 대구</label>
+            <label><input type="checkbox" value="인천" v-model="checkedFilters['근무지역']"
+                @change="updateFilters('근무지역', '인천')" /> 인천</label>
+            <label><input type="checkbox" value="광주" v-model="checkedFilters['근무지역']"
+                @change="updateFilters('근무지역', '광주')" /> 광주</label>
           </div>
         </div>
         <div class="search-container">
           <!-- <input type="text" id="search-input" placeholder="공고명, 기업, 직무, 키워드 검색" />
           <button id="search-btn">검색</button> -->
-          <input ref="searchInput" type="text" v-model="searchKeyword" placeholder="공고명, 모집분야 키워드 *토글초기화*"
+          <input ref="searchInput" type="text" v-model="searchKeyword" placeholder="공고명&모집분야 키워드 검색"
             @keyup.enter="handleSearch" class="search-input" />
           <button @click="handleSearch" class="search-btn">검색</button>
         </div>
@@ -68,7 +79,8 @@
             {{ filter.name }}: {{ filter.value }} ✕
           </span>
         </div>
-        <a href="#" id="reset-filters" class="reset-filters" @click.prevent="resetFilters">초기화🔄️</a>
+        <a href="#" id="reset-filters" class="reset-filters" @click.prevent="resetFilters"> 필터 초기화🔄️</a>
+        <p> 키워드로 검색 시, 토글을 초기화 해주세요. 카테고리당 하나의 필터만 추가하세요.</p>
       </div>
 
       <!-- 검색 결과 -->
@@ -124,6 +136,14 @@ const announcementCount = computed(() => announcementStore.announcements2.length
 const searchKeyword = ref('');
 const selectedFilters = ref([]);
 
+// 체크박스의 선택 상태 저장
+const checkedFilters = ref({
+  '기업형태': [],
+  '채용형태': [],
+  '모집직무': [],
+  '근무지역': []
+});
+
 // 드롭다운 상태 저장
 const dropdownOpen = ref({
   '기업형태': false,
@@ -132,6 +152,40 @@ const dropdownOpen = ref({
   '근무지역': false
   // 다른 필터 항목들 추가 가능
 });
+
+const categoryData = ref([
+  "기획·전략",
+  "교육",
+  "고객상담·TM",
+  "IT·개발",
+  "마케팅",
+  "영업",
+  "인사",
+  "재무·회계",
+  "법무",
+  "홍보·PR",
+  "디자인",
+  "생산·제조",
+  "연구개발(R&D)",
+  "물류",
+  "구매",
+  "건설·토목",
+  "의료",
+  "연구",
+  "법무·특허",
+  "서비스",
+  "비서·총무",
+  "전략기획",
+  "엔지니어",
+  "유통·판매",
+  "리스크관리",
+  "품질관리",
+  "공공행정",
+  "광고·미디어",
+  "항공",
+  "호텔·외식"
+]);
+
 
 // 드롭다운 열기/닫기 토글 함수
 const toggleDropdown = (filterName) => {
@@ -149,19 +203,22 @@ const updateFilters = (filterName, filterValue) => {
   }
 };
 
-// // 필터 제거 함수
-// const removeFilter = (filter) => {
-//   selectedFilters.value = selectedFilters.value.filter(f => f !== filter);
-// };
 
 // 필터 제거 함수
 const removeFilter = (filter) => {
+  // 선택된 필터 리스트에서 제거
   selectedFilters.value = selectedFilters.value.filter(item => !(item.name === filter.name && item.value === filter.value));
+
+  // 체크박스 상태도 해제
+  checkedFilters.value[filter.name] = checkedFilters.value[filter.name].filter(f => f !== filter.value);
 };
 
 // 필터 초기화 함수
 const resetFilters = () => {
   selectedFilters.value = [];
+  Object.keys(checkedFilters.value).forEach(key => {
+      checkedFilters.value[key] = [];
+  });
 };
 
 
