@@ -257,5 +257,23 @@ export const UseInterviewScheduleStore = defineStore('reservation', {
                 return false;
             }
         },
+
+        // 시간정보
+        async getAvailableTime(newDate, newTeam, announcementIdx) {
+            console.log(newDate, newTeam, announcementIdx);
+            try {
+                const response = await axios.get(
+                    `${backend}/interview-schedule/available-times?` +
+                    `interviewDate=${newDate}&teamIdx=${newTeam}&announcementIdx=${announcementIdx}`,
+                    {withCredentials: true}
+                )
+
+                console.log("시간정보: ", response.data);
+
+                return response.data.result;
+            } catch (error) {
+                console.log("시간 가져오기 실패: ", error);
+            }
+        }
     }
 });

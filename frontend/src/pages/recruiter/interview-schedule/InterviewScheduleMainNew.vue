@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref} from 'vue';
+import {onMounted, ref, watch} from 'vue';
 import MainHeaderComponent from '../../../components/recruiter/MainHeaderComponent.vue';
 import MainSideBarComponent from '../../../components/recruiter/MainSideBarComponent.vue';
 import '@/assets/css/grid.css';
@@ -31,7 +31,9 @@ const teamList = [
   {name: '5팀', idx: 5}
 ];
 const team = ref(''); // 선택된 팀의 Idx 값을 저장
-const timeOptions = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
+const startTimeOptions = ref([]);
+const endTimeOptions = ref([]);
+const bookedTimes = ref([]);
 const showCalendar = ref(true); // 캘린더 기본으로 표시
 const showInterviewerList = ref(false); // 후보자 목록은 기본적으로 숨김
 const announcements = ref([]);
@@ -41,6 +43,7 @@ const totalInterviewSchedules = ref(0);
 const announcementIdxInfo = ref(0);
 const announcementUuidInfo = ref("");
 const interviewType = ref(''); // 선택된 면접 유형 (대면 또는 온라인)
+const interviewNum = ref(0); // 인터뷰 차수
 const reqData = ref({});
 const uuidData = ref({});
 const pageNum = ref(1);
@@ -64,6 +67,15 @@ const handleCheckboxChange = (type) => {
     interviewType.value = type; // 새 타입을 선택
   }
 };
+
+const handleInterviewNumCheckboxChange = (num) => {
+  if (interviewNum.value === num) {
+    interviewNum.value = 0; // 이미 선택된 경우 해제
+  } else {
+    interviewNum.value = num; // 새 타입 선택
+  }
+};
+
 
 const interviewScheduleLists = async (announcementIdx, announcementUuid) => {
   isInterviewScheduleList.value = true;
@@ -195,6 +207,7 @@ const submitForm = async () => {
     const selectedStartTime = startTime.value;
     const selectedEndTime = endTime.value;
     const selectedType = interviewType.value;
+    const selectedNum = interviewNum.value;
     const selectedTeamIdx = team.value;
 
     // 데이터 객체 생성
@@ -207,10 +220,9 @@ const submitForm = async () => {
       interviewEnd: selectedEndTime,
       careerBase: "신입",
       teamIdx: selectedTeamIdx,
+      interviewNum: selectedNum,
       announcementIdx: announcementIdxInfo.value
     };
-
-    console.log(interviewData);
 
     // Store의 createInterviewSchedule 함수 호출
     await interviewScheduleStore.createInterviewSchedule(interviewData)
@@ -227,6 +239,89 @@ const submitForm = async () => {
 
   }
 };
+
+// 전체 시간대를 생성하는 함수 (30분 단위)
+const generateTimeSlots = (start, end, interval) => {
+  const times = [];
+  let current = new Date(`1970-01-01T${start}:00`);
+  const endTime = new Date(`1970-01-01T${end}:00`);
+
+  console.log(current);
+  console.log(endTime);
+
+  while (current <= endTime) {
+    times.push(current.toTimeString().slice(0, 5)); // HH:mm 형식으로 변환
+    current.setMinutes(current.getMinutes() + interval);
+  }
+
+  console.log("times: ", times);
+
+  return times;
+};
+//
+// // 예약된 시간에 따라 시작 시간 옵션 설정
+// const setStartTimeOptions = () => {
+//   if (bookedTimes.value.length === 0) {
+//     startTimeOptions.value = generateTimeSlots('09:00', '18:00', 30); // 전체 시간대
+//
+//     console.log("startTimeOptions-length==0: ", startTimeOptions.value);
+//   } else {
+//     // 예약된 시간대를 제외한 시작 시간 옵션 생성
+//     const allTimeSlots = generateTimeSlots('09:00', '18:00', 30);
+//     const bookedStartTimes = bookedTimes.value.map(time => time.interviewStart);
+//     startTimeOptions.value = allTimeSlots.filter(time => !bookedStartTimes.includes(time));
+//
+//     console.log("startTimeOptions: ", startTimeOptions.value);
+//   }
+// };
+// 예약된 시간에 따라 시작 시간 옵션 설정
+const setStartTimeOptions = () => {
+  if (bookedTimes.value.length === 0) {
+    startTimeOptions.value = generateTimeSlots('09:00', '18:00', 30); // 전체 시간대
+  } else {
+    // 예약된 시간대 제외한 시작 시간 옵션 생성
+    const allTimeSlots = generateTimeSlots('09:00', '18:00', 30);
+
+    // 예약된 시간대의 시작과 끝 시간
+    const bookedIntervals = bookedTimes.value.map(time => ({
+      start: time.interviewStart,
+      end: time.interviewEnd
+    }));
+
+    // 예약된 시간대와 겹치지 않는 시간대 필터링
+    startTimeOptions.value = allTimeSlots.filter(time => {
+      return !bookedIntervals.some(interval => {
+        return time >= interval.start && time < interval.end; // 예약 시간대에 포함되지 않는지 확인
+      });
+    });
+  }
+
+  console.log("startTimeOptions: ", startTimeOptions.value);
+};
+
+// 시작 시간 선택 시 끝 시간 옵션 설정
+watch(startTime, (newStartTime) => {
+  if (newStartTime) {
+    const startIndex = startTimeOptions.value.indexOf(newStartTime);
+    const availableEndTimes = startTimeOptions.value.slice(startIndex + 1); // 선택된 시작 시간 이후의 옵션
+    endTimeOptions.value = availableEndTimes;
+  } else {
+    endTimeOptions.value = []; // 시작 시간이 선택되지 않은 경우
+  }
+});
+
+// 예약된 시간 정보를 가져오는 함수
+watch([interviewDate, team], async ([newDate, newTeam]) => {
+  if (newDate && newTeam) {
+    try {
+      bookedTimes.value = await interviewScheduleStore.getAvailableTime(newDate, newTeam, announcementIdxInfo.value);
+      console.log(bookedTimes.value);
+      setStartTimeOptions(); // 예약된 시간대에 따라 시작 시간 옵션 설정
+    } catch (error) {
+      console.error('시간 정보 가져오기 실패:', error);
+    }
+  }
+});
 </script>
 
 
@@ -315,8 +410,8 @@ const submitForm = async () => {
                   </div>
 
                 </div>
-                <div class="form-group col-12">
-                  <div class="form-group">
+                <div class="form-group col-12 row">
+                  <div class="form-group col-5">
                     <label for="end-time" class="subtitle">팀 <span class="required">*</span></label>
                     <select class="time-select interview-calender" v-model="team">
                       <option value="">팀을 선택하세요</option>
@@ -325,20 +420,34 @@ const submitForm = async () => {
                       </option>
                     </select>
                   </div>
+                  <div class="form-group col-5 ml-auto mb-0">
+                    <label for="interview-type" class="subtitle">면접 차수<span class="required">*</span></label>
+                    <div class="row">
+                      <label class="checkbox-label">
+                        <input type="checkbox" value="1" :checked="interviewNum === 1"
+                               @change="handleInterviewNumCheckboxChange(1)"> 1차면접
+                      </label>
+
+                      <label class="checkbox-label ml-auto">
+                        <input type="checkbox" value="2" :checked="interviewNum === 2"
+                               @change="handleInterviewNumCheckboxChange(2)"> 2차면접
+                      </label>
+                    </div>
+                  </div>
                 </div>
                 <div class="col-12 row">
                   <div class="form-group col-5">
                     <label for="start-time" class="subtitle">시작시간 <span class="required">*</span></label>
                     <select class="time-select interview-calender" v-model="startTime">
                       <option value="">시간을 선택하세요</option>
-                      <option v-for="time in timeOptions" :key="time" :value="time">{{ time }}</option>
+                      <option v-for="time in startTimeOptions" :key="time" :value="time">{{ time }}</option>
                     </select>
                   </div>
                   <div class="form-group col-5 ml-auto">
                     <label for="end-time" class="subtitle">종료시간 <span class="required">*</span></label>
                     <select class="time-select interview-calender" v-model="endTime">
                       <option value="">시간을 선택하세요</option>
-                      <option v-for="time in timeOptions" :key="time" :value="time">{{ time }}</option>
+                      <option v-for="time in endTimeOptions" :key="time" :value="time">{{ time }}</option>
                     </select>
                   </div>
                 </div>

@@ -386,10 +386,10 @@ onMounted(() => {
 .body-arp {
   font-family: Arial, sans-serif;
   line-height: 1.6;
-  background-color: #F9FAFB;
+  background-color: #fff;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  height: 100vh;
   margin: 0 auto;
   padding: 0;
 }
@@ -444,7 +444,6 @@ onMounted(() => {
   margin: 60px auto;
   background-color: #fff;
   padding: 50px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .main-container> :last-child {
@@ -623,6 +622,14 @@ h2 {
   background-color: #f6f6f6;
   /* 마우스 올렸을 때 약간 어둡게 변경 */
   cursor: pointer;
+}
+
+SeekerFooterComponent {
+  background-color: #212b36;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  /* 푸터가 항상 하단에 위치 */
 }
 
 /* 상품 공통 */
