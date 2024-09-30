@@ -57,6 +57,7 @@ public enum BaseResponseMessage {
     RESCHEDULE_SEARCH_ALL_SUCCESS(true, 1304, "면접 조율 내역 조회에 성공했습니다."),
     INTERVIEW_SCHEDULE_READ_ALL_SUCCESS(true, 1305, "면접 내역 조회에 성공했습니다."),
     INTERVIEW_SCHEDULE_UPDATE_SUCCESS(true, 1306, "면접 내역 업데이트에 성공했습니다."),
+    INTERVIEW_SCHEDULE_AVAILABLE_TIMES_READ_SUCCESS(true, 1307, "예약 가능한 시간대 조회에 성공했습니다."),
 
     INTERVIEW_PARTICIPATE_NOT_FOUND(false, 1320, "면접 연관 정보를 찾을 수 없습니다."),
 
