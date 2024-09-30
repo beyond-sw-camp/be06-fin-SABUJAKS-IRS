@@ -15,6 +15,7 @@ public class InterviewScheduleReq {
     private String interviewStart;
     private String interviewEnd;
     private String careerBase;
+    private Integer interviewNum;
     private Long announcementIdx;
     private Long teamIdx;
 }
