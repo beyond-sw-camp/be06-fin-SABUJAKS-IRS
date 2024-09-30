@@ -22,8 +22,8 @@
               <td>{{ result[0].seekerEmail }}</td>
               <td><button @click="openSearchEvaluateResultModal(result)" class="searchbtn">조회</button></td>
               <td>
-                  <button @click="handleResultButton(announcement.idx, seekerIdx, true)" class="searchbtn">합격</button>
-                  <button @click="handleResultButton(announcement.idx, seekerIdx, false)" class="searchbtn">불합격</button>
+                  <button @click="handleResultButton(key, 1)" class="searchbtn">합격</button>
+                  <button @click="handleResultButton(key, 0)" class="searchbtn">불합격</button>
               </td>
             </tr>
           </tbody>
@@ -53,10 +53,12 @@ import MainSideBarComponent from "@/components/recruiter/MainSideBarComponent.vu
 import { onMounted, ref } from "vue";
 import MainHeaderComponent from "../../../components/recruiter/MainHeaderComponent.vue";
 import { UseInterviewEvaluateStore } from "@/stores/UseInterviewEvaluateStore";
+import { UseTotalProcessStore } from "@/stores/UseTotalProcessStore"
 import { useRoute } from "vue-router";
 import { useToast } from "vue-toastification";
-
+const totalProcessStore = UseTotalProcessStore();
 const interviewEvaluateStore = UseInterviewEvaluateStore();
+
 const interviewEvaluateResult = ref({});
 const route = useRoute();
 const toast = useToast();
@@ -64,10 +66,10 @@ const evaluateList = ref({})
 const isModalVisible = ref();
 
 onMounted(async () => {
-    const response = await interviewEvaluateStore.readAllEvaluate(route.params.announcementIdx);
+    const response = await interviewEvaluateStore.readAllEvaluate(route.params.announcementIdx, route.params.interviewNum);
     if (response.success) {
         interviewEvaluateResult.value = response.result.interviewEvaluateReadAllResMap;
-        console.log(interviewEvaluateResult.value);
+        console.log(interviewEvaluateResult.value)
         toast.success("지원자들의 면접 평가 결과를 불러왔습니다.");
     } else {
         toast.error("평가 데이터를 불러오는 데 실패했습니다.");
@@ -81,8 +83,19 @@ const openSearchEvaluateResultModal = (result) => {
 
 const closeSearchEvaluateResultModal = () => { isModalVisible.value = false; };
 
-const handleResultButton = async (announcementIdx, seekerIdx, isPass) => {
-  console.log(announcementIdx, seekerIdx, isPass)
+const handleResultButton = async (seekerIdx, isPass) => {
+  const requestBody = {
+    announcementIdx: route.params.announcementIdx,
+    seekerIdx: seekerIdx,
+    isPass: isPass,
+    interviewNum: route.params.interviewNum,
+  }
+  const response = await totalProcessStore.create(requestBody)
+  if(response.success){
+    toast.success(`지원자의 ${route.params.interviewNum}차 면접 평가 결과를 저장했습니다.`)
+  } else {
+    toast.error(`지원자의 ${route.params.interviewNum}차 면접 평가 결과 저장에 실패했습니다.`)
+  }
 }
 
 </script>

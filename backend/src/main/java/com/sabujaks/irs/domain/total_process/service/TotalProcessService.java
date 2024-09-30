@@ -33,7 +33,7 @@ public class TotalProcessService {
         Seeker seeker = seekerRepository.findBySeekerIdx(dto.getSeekerIdx())
         .orElseThrow(() -> new BaseException(BaseResponseMessage.MEMBER_NOT_FOUND));
         Optional<TotalProcess> result = totalProcessRepository.findByAnnouncementIdxAndSeekerIdx(dto.getAnnouncementIdx(), dto.getSeekerIdx());
-        Boolean isPassFlag = dto.getIsPass() == 1;
+        Boolean isPassFlag = (dto.getIsPass() == 1) ? true : false;
         if(result.isPresent()){
             TotalProcess totalProcess = result.get();
             if(dto.getInterviewNum() == 0) {
@@ -66,7 +66,7 @@ public class TotalProcessService {
                         .build();
             }  else if (dto.getInterviewNum() == 2) {
                 totalProcess = TotalProcess.builder()
-                        .interviewOneResult(isPassFlag)
+                        .interviewTwoResult(isPassFlag)
                         .announcement(announcement)
                         .seeker(seeker)
                         .build();
