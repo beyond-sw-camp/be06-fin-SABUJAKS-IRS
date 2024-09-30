@@ -352,14 +352,14 @@ export const UseAnnouncementStore = defineStore('announcement', {
                     filters: selectedFilters // selectedFilters를 JSON 형식으로 감싸서 보냄
                 };
                 
-                // const response = await axios.post(`${backend}/search/filter`, dto,
-                //     {
-                //         headers: { 'Content-Type': 'application/json' },
-                //         // withCredentials: true
-                //     });
+                const response = await axios.post(`${backend}/search/filter`, dto,
+                    {
+                        headers: { 'Content-Type': 'application/json' },
+                        // withCredentials: true
+                    });
 
-                // this.announcements2 = response.data.result;
-                // console.log(this.announcements2)
+                this.announcements2 = response.data.result;
+                console.log(this.announcements2)
 
                 return console.log(dto);
             } catch (error) {

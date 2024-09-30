@@ -482,6 +482,7 @@ const handlePortfolioUpdate = (index, data) => {
     portfolioDiv: data.portfolioDiv,
     portfolioType: data.portfolioType,
     portfolioUrl: data.portfolioUrl,
+    portfolioFile: data.portfolioFile,
   });
   resumeStore.updatePortfolioFile(index, data.portfolioFile)
 };
