@@ -2,7 +2,7 @@
   <div class="body-n">
     <SeekerHeaderComponent></SeekerHeaderComponent>
     <div class="main_div">
-      <div class="container-n">
+      <div class="container-n pt-150">
         <!-- 사이드 바 -->
         <SeekerSideBarComponent></SeekerSideBarComponent>
 
@@ -20,10 +20,10 @@
                 <div
                     class="timeline-content row"
                     :class="{ read: alarm.status === true }"
-                @click="toggleDetail(index, alarm.idx)"
+                    @click="toggleDetail(index, alarm.idx)"
                 >
                   <div class="margin-v-auto">
-                    {{ alarm.message }}
+                    {{ alarm.type }}
                   </div>
                   <div class="ml-auto">
                     <button class="schedule-btn" @click.stop="openScheduleModal(alarm)">면접 일정 조율</button>
@@ -32,46 +32,8 @@
 
                 <!-- 상세 내용 (숨겨진 상태에서 애니메이션으로 열림) -->
                 <transition name="fade">
-                  <div :style="{ maxHeight: isDetailOpen(index) ? '600px' : '0px', padding: isDetailOpen(index) ? '50px 0' : '0px' }" class="timeline-detail">
-                    <p>상세 내역: {{ alarm.details }}</p>
-                    <!-- 이메일 스타일 적용된 상세 내역 -->
-                    <table align="center" cellpadding="0" cellspacing="0" width="600" style="border-collapse: collapse; background-color: #ffffff; margin-top: 50px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-                      <tbody>
-                      <tr>
-                        <td align="center" style="padding: 40px 0; background-color: #212b36;">
-                          <h2 style="color: #ffffff; margin: 0;">면접 일정 안내</h2>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="padding: 30px; color: #333333;">
-                          <p style="margin: 0 0 20px 0; font-size: 16px;">안녕하세요,</p>
-                          <p style="margin: 0 0 20px 0; font-size: 16px;">
-                            지원자님께서 지원하신 직무에 대한 면접 일정이 아래와 같이 확정되었습니다. 면접 일정을 확인해주시기 바랍니다.
-                          </p>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="padding: 20px;">
-                          <table cellpadding="0" cellspacing="0" width="100%" style="border: 1px solid #dddddd;">
-                            <tbody>
-                            <tr>
-                              <td style="padding: 10px; background-color: #f4f4f4; font-weight: bold;">면접 일자</td>
-                              <td style="padding: 10px;">2024년 9월 20일</td>
-                            </tr>
-                            <tr>
-                              <td style="padding: 10px; background-color: #f4f4f4; font-weight: bold;">면접 시간</td>
-                              <td style="padding: 10px;">오후 2시</td>
-                            </tr>
-                            <tr>
-                              <td style="padding: 10px; background-color: #f4f4f4; font-weight: bold;">면접 장소</td>
-                              <td style="padding: 10px;">서울시 강남구 테헤란로 123 ABC빌딩 5층</td>
-                            </tr>
-                            </tbody>
-                          </table>
-                        </td>
-                      </tr>
-                      </tbody>
-                    </table>
+                  <div :style="{ maxHeight: isDetailOpen(index) ? '100%' : '0px', padding: isDetailOpen(index) ? '50px 0' : '0px' }" class="timeline-detail">
+                    <div class="margin-v-auto" v-html="alarm.message"></div>
                   </div>
                 </transition>
 
@@ -104,10 +66,10 @@
             </div>
           </div>
 
-          </div>
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <script setup>
@@ -226,28 +188,28 @@ const isDetailOpen = (index) => {
   background-color: rgba(255, 255, 255, 0);
   display: flex;
   justify-content: center;
-    align-items: center;
-    padding: 20px 0;
-    /* 수직 간격을 추가 */
+  align-items: center;
+  padding: 20px 0;
+  /* 수직 간격을 추가 */
 }
 
 .container-n {
-    display: flex;
-    width: 100%;
-    max-width: 1200px;
-    background-color: rgba(255, 255, 255, 0);
-    /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); */
-    border-radius: 10px;
-    margin: 20px;
-    /* 수직, 수평 여백 추가 */
-    gap: 20px;
-    /* 사이드바와 메인 컨텐츠 사이의 간격 추가 */
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  background-color: rgba(255, 255, 255, 0);
+  /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); */
+  border-radius: 10px;
+  margin: 20px;
+  /* 수직, 수평 여백 추가 */
+  gap: 20px;
+  /* 사이드바와 메인 컨텐츠 사이의 간격 추가 */
 }
 
 /* 타임라인 스타일 */
 .timeline {
-    position: relative;
-    padding: 20px 0;
+  position: relative;
+  padding: 20px 0;
 }
 
 .timeline-item :hover {
@@ -255,66 +217,66 @@ const isDetailOpen = (index) => {
 }
 
 .timeline-item {
-    position: relative;
-    padding-left: 30px;
-    margin-bottom: 20px;
+  position: relative;
+  padding-left: 30px;
+  margin-bottom: 20px;
 }
 
 .timeline-item::before {
-    content: '';
-    position: absolute;
-    left: 15px;
-    top: 0;
-    width: 10px;
-    height: 10px;
-    background-color: #007bff;
-    border-radius: 50%;
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  background-color: #007bff;
+  border-radius: 50%;
 }
 
 .timeline-date {
-    font-size: 12px;
-    color: #999;
-    margin-bottom: 5px;
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 5px;
 }
 
 .timeline-content {
-    background-color: white;
-    padding: 15px;
-    border-radius: 5px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .delete-btn {
-    background-color: white;
-    color: #555;
-    padding: 8px 16px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    cursor: pointer;
+  background-color: white;
+  color: #555;
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .delete-btn:hover {
-    background-color: #f2f2f2;
+  background-color: #f2f2f2;
 }
 
 .main-content {
-    width: 80%;
-    padding: 30px;
-    border-radius: 10px;
-    background-color: white;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 80%;
+  padding: 30px;
+  border-radius: 10px;
+  background-color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
 .header h1 {
-    font-size: 24px;
-    font-weight: bold;
+  font-size: 24px;
+  font-weight: bold;
 }
 
 
@@ -337,7 +299,6 @@ const isDetailOpen = (index) => {
   padding: 40px;
   border-radius: 8px;
   width: 30%;
-  //height: 50%;
 }
 
 .modal-section {
@@ -401,16 +362,16 @@ input[type="text"] {
 }
 
 .schedule-btn {
-    background-color: white;
-    color: #555;
-    padding: 8px 16px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    cursor: pointer;
+  background-color: white;
+  color: #555;
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .schedule-btn:hover {
-    background-color: #f2f2f2;
+  background-color: #f2f2f2;
 }
 
 .timeline-detail {

@@ -1,5 +1,6 @@
 <script setup>
 import {defineProps, defineEmits, onMounted, ref, watch} from 'vue';
+import {UseInterviewScheduleStore} from "@/stores/UseInterviewScheduleStore";
 
 // props를 정의합니다.
 const props = defineProps({
@@ -34,20 +35,25 @@ const interviewDate = ref('');
 const interviewType = ref('');
 const team = ref('');
 const teamList = [
-  { name: '1팀', idx: 1 },
-  { name: '2팀', idx: 2 },
-  { name: '3팀', idx: 3 },
-  { name: '4팀', idx: 4 },
-  { name: '5팀', idx: 5 }
+  {name: '1팀', idx: 1},
+  {name: '2팀', idx: 2},
+  {name: '3팀', idx: 3},
+  {name: '4팀', idx: 4},
+  {name: '5팀', idx: 5}
 ];
 const interviewers = ref([]);
-const timeOptions = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
+const startTimeOptions = ref([]);
+const endTimeOptions = ref([]);
+const bookedTimes = ref([]);
 const startTime = ref('');
 const endTime = ref('');
+const interviewNum = ref(0); // 인터뷰 차수
 
 const participantEmail = ref('');
 const selectedInterviewers = ref([]);
-const showInterviewerList = ref(true);
+// const showInterviewerList = ref(true);
+
+const interviewScheduleStore = UseInterviewScheduleStore();
 
 
 // interviewScheduleDetail에서 seekerList와 estimatorList가 있으면 미리 필터로 설정
@@ -76,17 +82,16 @@ const updateData = () => {
     }
 
     interviewDate.value = props.interviewScheduleDetail.interviewDate || '';
-    startTime.value = props.interviewScheduleDetail.interviewStart || '';
-    endTime.value = props.interviewScheduleDetail.interviewEnd || '';
+    interviewNum.value = props.interviewScheduleDetail.interviewNum || '';
     interviewType.value = props.interviewScheduleDetail.isOnline ? '온라인' : '대면';
     team.value = props.interviewScheduleDetail.teamIdx || '';
   }
 };
 
-const selectInterviewers = () => {
-  // 후보자 선택 후 캘린더를 다시 보여줌
-  selectedFilters.value = [...selectedInterviewers.value]; // 선택한 면접자 필터 업데이트
-};
+// const selectInterviewers = () => {
+//   // 후보자 선택 후 캘린더를 다시 보여줌
+//   selectedFilters.value = [...selectedInterviewers.value]; // 선택한 면접자 필터 업데이트
+// };
 
 // 선택된 필터 삭제
 const removeFilter = (filter) => {
@@ -110,16 +115,14 @@ const submitForm = () => {
   if (confirm("면접 일정을 확정하시겠습니까?")) {
     // 선택된 seeker들의 idx 값만 저장
     // 선택된 seeker의 idx 값을 가져오기
-    const selectedSpanValues = selectedFilters.value.map(filter => {
-      const seeker = props.interviewScheduleDetail.seekerList.find(s => s.name === filter);
-      return seeker ? seeker.idx : null; // idx가 있으면 반환, 없으면 null
-    }).filter(idx => idx !== null);
+    const selectedSpanValues = [props.reScheduleInfo.seekerInfoGetRes.idx];
 
     const participantEmails = selectedEmails.value; // 참가자 이메일
     const selectedDate = interviewDate.value;
     const selectedStartTime = startTime.value;
     const selectedEndTime = endTime.value;
     const selectedType = interviewType.value;
+    const selectedNum = interviewNum.value;
     const selectedTeamIdx = team.value;
 
     // 데이터 객체 생성
@@ -130,6 +133,7 @@ const submitForm = () => {
       interviewDate: selectedDate,
       interviewStart: selectedStartTime,
       interviewEnd: selectedEndTime,
+      interviewNum: selectedNum,
       careerBase: "경력",
       teamIdx: selectedTeamIdx,
       announcementIdx: props.announcementIdx
@@ -153,6 +157,74 @@ const submitForm = () => {
 };
 
 
+// 전체 시간대를 생성하는 함수 (30분 단위)
+const generateTimeSlots = (start, end, interval) => {
+  const times = [];
+  let current = new Date(`1970-01-01T${start}:00`);
+  const endTime = new Date(`1970-01-01T${end}:00`);
+
+  console.log(current);
+  console.log(endTime);
+
+  while (current <= endTime) {
+    times.push(current.toTimeString().slice(0, 5)); // HH:mm 형식으로 변환
+    current.setMinutes(current.getMinutes() + interval);
+  }
+
+  console.log("times: ", times);
+
+  return times;
+};
+// 예약된 시간에 따라 시작 시간 옵션 설정
+const setStartTimeOptions = () => {
+  if (bookedTimes.value.length === 0) {
+    startTimeOptions.value = generateTimeSlots('09:00', '18:00', 30); // 전체 시간대
+  } else {
+    // 예약된 시간대 제외한 시작 시간 옵션 생성
+    const allTimeSlots = generateTimeSlots('09:00', '18:00', 30);
+
+    // 예약된 시간대의 시작과 끝 시간
+    const bookedIntervals = bookedTimes.value.map(time => ({
+      start: time.interviewStart,
+      end: time.interviewEnd
+    }));
+
+    // 예약된 시간대와 겹치지 않는 시간대 필터링
+    startTimeOptions.value = allTimeSlots.filter(time => {
+      return !bookedIntervals.some(interval => {
+        return time >= interval.start && time < interval.end; // 예약 시간대에 포함되지 않는지 확인
+      });
+    });
+  }
+
+  console.log("startTimeOptions: ", startTimeOptions.value);
+};
+
+// 시작 시간 선택 시 끝 시간 옵션 설정
+watch(startTime, (newStartTime) => {
+  if (newStartTime) {
+    const startIndex = startTimeOptions.value.indexOf(newStartTime);
+    const availableEndTimes = startTimeOptions.value.slice(startIndex + 1); // 선택된 시작 시간 이후의 옵션
+    endTimeOptions.value = availableEndTimes;
+  } else {
+    endTimeOptions.value = []; // 시작 시간이 선택되지 않은 경우
+  }
+});
+
+// 예약된 시간 정보를 가져오는 함수
+watch([interviewDate, team], async ([newDate, newTeam]) => {
+  if (newDate && newTeam) {
+    try {
+      bookedTimes.value = await interviewScheduleStore.getAvailableTime(newDate, newTeam, props.announcementIdx);
+      console.log(bookedTimes.value);
+      setStartTimeOptions(); // 예약된 시간대에 따라 시작 시간 옵션 설정
+    } catch (error) {
+      console.error('시간 정보 가져오기 실패:', error);
+    }
+  }
+});
+
+
 </script>
 
 <template>
@@ -166,11 +238,11 @@ const submitForm = () => {
       </tr>
       <tr>
         <td>기존면접일자</td>
-        <td>{{ props.reScheduleInfo.interviewScheduleRes ? props.reScheduleInfo.interviewScheduleRes.interviewDate : '정보 없음' }}</td>
+        <td>{{ props.reScheduleInfo.interviewScheduleRes ? props.reScheduleInfo.interviewScheduleRes.interviewDate : '정보 없음' }} </td>
       </tr>
       <tr>
         <td>기존면접시간</td>
-        <td>{{ props.reScheduleInfo.interviewScheduleRes ? `${props.reScheduleInfo.interviewScheduleRes.interviewStart} ~ ${props.reScheduleInfo.interviewScheduleRes.interviewEnd}` : '정보 없음' }}</td>
+        <td>{{ props.reScheduleInfo.interviewScheduleRes ? `${props.reScheduleInfo.interviewScheduleRes.interviewStart} ~ ${props.reScheduleInfo.interviewScheduleRes.interviewEnd}` : '정보 없음' }} </td>
       </tr>
       <tr>
         <td>요청면접일자</td>
@@ -187,7 +259,7 @@ const submitForm = () => {
     <div id="myModal" class="modal">
       <div class="modal-content" id="draggableModal">
         <div class="col-12 row mt-50 modal-section">
-          <div class="modal-left col-6 margin-auto">
+          <div class="modal-left col-10 margin-auto">
             <div class="form-group col-12 row">
               <div class="col-11">
                 <label for="applicant">후보자 <span class="required">*</span></label>
@@ -198,9 +270,8 @@ const submitForm = () => {
               </div>
             </div>
             <div id="selected-filters-list">
-              <!-- 미리 생성된 seekerList 데이터를 기반으로 span 태그 생성 -->
-              <span v-for="filter in selectedFilters" :key="filter" @click="removeFilter(filter)">
-                {{ filter }} ✕
+              <span @click="removeFilter(filter)">
+                {{ props.reScheduleInfo.seekerInfoGetRes.name }} ✕
               </span>
             </div>
             <div class="form-group col-12 row">
@@ -240,8 +311,8 @@ const submitForm = () => {
                   </div>
 
                 </div>
-                <div class="form-group col-12">
-                  <div class="form-group">
+                <div class="form-group col-12 row">
+                  <div class="form-group col-5">
                     <label for="end-time" class="subtitle">팀 <span class="required">*</span></label>
                     <select class="time-select interview-calender" v-model="team">
                       <option value="">팀을 선택하세요</option>
@@ -250,20 +321,34 @@ const submitForm = () => {
                       </option>
                     </select>
                   </div>
+                  <div class="form-group col-5 ml-auto mb-0">
+                    <label for="interview-type" class="subtitle">면접 차수<span class="required">*</span></label>
+                    <div class="row">
+                      <label class="checkbox-label">
+                        <input type="checkbox" value="1" :checked="interviewNum === 1"
+                               @change="handleInterviewNumCheckboxChange(1)"> 1차면접
+                      </label>
+
+                      <label class="checkbox-label ml-auto">
+                        <input type="checkbox" value="2" :checked="interviewNum === 2"
+                               @change="handleInterviewNumCheckboxChange(2)"> 2차면접
+                      </label>
+                    </div>
+                  </div>
                 </div>
                 <div class="col-12 row">
                   <div class="form-group col-5">
                     <label for="start-time" class="subtitle">시작시간 <span class="required">*</span></label>
                     <select class="time-select interview-calender" v-model="startTime">
                       <option value="">시간을 선택하세요</option>
-                      <option v-for="time in timeOptions" :key="time" :value="time">{{ time }}</option>
+                      <option v-for="time in startTimeOptions" :key="time" :value="time">{{ time }}</option>
                     </select>
                   </div>
                   <div class="form-group col-5 ml-auto">
                     <label for="end-time" class="subtitle">종료시간 <span class="required">*</span></label>
                     <select class="time-select interview-calender" v-model="endTime">
                       <option value="">시간을 선택하세요</option>
-                      <option v-for="time in timeOptions" :key="time" :value="time">{{ time }}</option>
+                      <option v-for="time in endTimeOptions" :key="time" :value="time">{{ time }}</option>
                     </select>
                   </div>
                 </div>
@@ -275,26 +360,13 @@ const submitForm = () => {
           </div>
           <div class="modal-right col-5 margin-auto">
             <!-- 후보자 목록 -->
-            <div v-if="showInterviewerList" id="interviewer">
-              <div id="interviewers-list">
-                <h3>면접자 목록</h3>
-                <form id="nameForm">
-                  <label v-for="name in interviewers" :key="name">
-                    <input type="checkbox" :value="name" v-model="selectedInterviewers"> {{ name }}
-                  </label><br>
-                </form>
-              </div>
-              <div class="add-button-section">
-                <button class="submit-button" @click="selectInterviewers">선택</button>
-              </div>
-            </div>
+
           </div>
         </div>
       </div>
     </div>
   </div>
 </template>
-
 
 
 <style scoped>

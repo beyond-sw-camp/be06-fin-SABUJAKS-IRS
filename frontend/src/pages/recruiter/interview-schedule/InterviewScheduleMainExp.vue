@@ -258,22 +258,6 @@ const generateTimeSlots = (start, end, interval) => {
 
   return times;
 };
-//
-// // 예약된 시간에 따라 시작 시간 옵션 설정
-// const setStartTimeOptions = () => {
-//   if (bookedTimes.value.length === 0) {
-//     startTimeOptions.value = generateTimeSlots('09:00', '18:00', 30); // 전체 시간대
-//
-//     console.log("startTimeOptions-length==0: ", startTimeOptions.value);
-//   } else {
-//     // 예약된 시간대를 제외한 시작 시간 옵션 생성
-//     const allTimeSlots = generateTimeSlots('09:00', '18:00', 30);
-//     const bookedStartTimes = bookedTimes.value.map(time => time.interviewStart);
-//     startTimeOptions.value = allTimeSlots.filter(time => !bookedStartTimes.includes(time));
-//
-//     console.log("startTimeOptions: ", startTimeOptions.value);
-//   }
-// };
 // 예약된 시간에 따라 시작 시간 옵션 설정
 const setStartTimeOptions = () => {
   if (bookedTimes.value.length === 0) {

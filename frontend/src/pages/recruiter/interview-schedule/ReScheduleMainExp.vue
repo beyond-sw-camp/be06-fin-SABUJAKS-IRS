@@ -3,7 +3,7 @@ import {onMounted, ref} from 'vue';
 import MainHeaderComponent from '../../../components/recruiter/MainHeaderComponent.vue';
 import MainSideBarComponent from '../../../components/recruiter/MainSideBarComponent.vue';
 import '@/assets/css/grid.css';
-import { UseInterviewScheduleStore } from '@/stores/UseInterviewScheduleStore';
+import {UseInterviewScheduleStore} from '@/stores/UseInterviewScheduleStore';
 import InterviewScheduleMain from "../../../components/recruiter/InterviewScheduleMain.vue";
 import ReScheduleList from "@/components/recruiter/ReScheduleList.vue";
 import ReScheduleDetail from "@/components/recruiter/ReScheduleDetail.vue";
@@ -87,9 +87,8 @@ const updateData = async (updateData, updateInfo, pageUpdateData) => {
   if (createResult && updateResult) {
     alert('성공했습니다!');
 
-    console.log(pageUpdateData.announcementIdx);
-    console.log(pageUpdateData.announcementUuid);
-    window.scrollTo({ top: 0});
+    window.scrollTo({top: 0});
+    isReScheduleDetail.value = false;
     await interviewScheduleLists(pageUpdateData.announcementIdx);
   }
 }
@@ -132,7 +131,6 @@ const updateData = async (updateData, updateInfo, pageUpdateData) => {
     </ReScheduleDetail>
   </div>
 </template>
-
 
 
 <style scoped>

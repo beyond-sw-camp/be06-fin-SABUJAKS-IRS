@@ -1,37 +1,37 @@
 <template>
-    <header class="header-cp">
-        <div v-if="authStore.isLoggedIn && authStore.userInfo.role=='ROLE_SEEKER'" class="header-container">
-            <a href="/">
-                <img class="header-logo" src="../../assets/img/irs_white.png">
-            </a>
-            <div class="header-right">
-                <a href="#">내 공고 달력</a>
-                <a href="#" @click="goAndReload('/seeker/mypage')">마이페이지</a>
-                <a href="#">알림</a>
-                <a >{{ displayName }}</a>
-                <a @click="handleLogout" class="logout-btn">로그아웃</a>
-            </div>
-        </div>
-        <div v-if="authStore.isLoggedIn && authStore.userInfo.role=='ROLE_RECRUITER'" class="header-container">
-            <a href="/">
-                <img class="header-logo" src="../../assets/img/irs_white.png">
-            </a>
-            <div class="header-right">
-                <a href="/recruiter">채용 관리</a>
-                <a >{{ displayName }}</a>
-                <a @click="handleLogout" class="logout-btn">로그아웃</a>
-            </div>
-        </div>
-        <div v-if="!authStore.isLoggedIn" class="header-container">
-            <a href="/">
-                <img class="header-logo" src="../../assets/img/irs_white.png">
-            </a>
-            <div class="header-right">
-                <a href="/seeker/login">지원자 로그인</a>
-                <a href="/recruiter/login">채용담당자 로그인</a>
-            </div>
-        </div>
-    </header>
+  <header class="header-cp">
+    <div v-if="authStore.isLoggedIn && authStore.userInfo.role=='ROLE_SEEKER'" class="header-container">
+      <a href="/">
+        <img class="header-logo" src="../../assets/img/irs_white.png">
+      </a>
+      <div class="header-right">
+        <a href="#">내 공고 달력</a>
+        <a href="#" @click="goAndReload('/seeker/mypage')">마이페이지</a>
+        <a href="#">알림</a>
+        <a >{{ displayName }}</a>
+        <a @click="handleLogout" class="logout-btn">로그아웃</a>
+      </div>
+    </div>
+    <div v-if="authStore.isLoggedIn && authStore.userInfo.role=='ROLE_RECRUITER'" class="header-container">
+      <a href="/">
+        <img class="header-logo" src="../../assets/img/irs_white.png">
+      </a>
+      <div class="header-right">
+        <a href="/recruiter">채용 관리</a>
+        <a >{{ displayName }}</a>
+        <a @click="handleLogout" class="logout-btn">로그아웃</a>
+      </div>
+    </div>
+    <div v-if="!authStore.isLoggedIn" class="header-container">
+      <a href="/">
+        <img class="header-logo" src="../../assets/img/irs_white.png">
+      </a>
+      <div class="header-right">
+        <a href="/seeker/login">지원자 로그인</a>
+        <a href="/recruiter/login">채용담당자 로그인</a>
+      </div>
+    </div>
+  </header>
 </template>
 
 <script setup>
@@ -48,45 +48,46 @@ const goAndReload = (path) => {
 };
 
 
-const authStore = UseAuthStore(); 
+const authStore = UseAuthStore();
 const toast = useToast();
 const getUserInfoResult = ref({})
 const displayName = ref('')
 
-onMounted( async() => { 
-    if(authStore.isLoggedIn == true){
-        await handleGetUserInfo(); 
-    } 
+onMounted( async() => {
+  if(authStore.isLoggedIn == true){
+    await handleGetUserInfo();
+  }
 })
 
 const handleGetUserInfo = async() => {
-    if(authStore.isLoggedIn && authStore.userInfo.email != null){
-        const response = await authStore.getUserInfo();
-        if(response.success){ 
-            getUserInfoResult.value = authStore.userInfo
-            if(authStore.userInfo.name == null){
-                displayName.value = authStore.userInfo.nickName
-            } else {
-                displayName.value = authStore.userInfo.name
-            }
-        }
-        else { 
-            toast.error("회원정보를 불러오는데 실패했습니다.")
-        }
-    } else if (authStore.userInfo && authStore.isLoggedIn){
-        getUserInfoResult.value = authStore.userInfo
+  if(authStore.isLoggedIn && authStore.userInfo.email != null){
+    const response = await authStore.getUserInfo();
+    if(response.success){
+      getUserInfoResult.value = authStore.userInfo
+      if(authStore.userInfo.name == null){
+        displayName.value = authStore.userInfo.nickName
+      } else {
+        displayName.value = authStore.userInfo.name
+      }
     }
+    else {
+      toast.error("회원정보를 불러오는데 실패했습니다.")
+    }
+  } else if (authStore.userInfo && authStore.isLoggedIn){
+    getUserInfoResult.value = authStore.userInfo
+  }
 }
 
 const handleLogout = async() => {
-    const response = await authStore.logout();
-    if(response.success){
-        authStore.isLoggedIn = false;
-        getUserInfoResult.value = null
-        toast.success(`로그아웃 했습니다.`)
-    } else {
-        toast.error("로그아웃에 실패했습니다.");
-    }
+  const response = await authStore.logout();
+  if(response.success){
+    authStore.isLoggedIn = false;
+    getUserInfoResult.value = null
+    toast.success(`로그아웃 했습니다.`)
+    await router.push("/");
+  } else {
+    toast.error("로그아웃에 실패했습니다.");
+  }
 }
 </script>
 
