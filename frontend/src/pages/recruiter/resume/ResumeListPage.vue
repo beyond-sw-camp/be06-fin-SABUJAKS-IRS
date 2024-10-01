@@ -11,7 +11,7 @@
                     <th>이름</th>
                     <th>지원서 제목</th>
                     <th>지원 날짜</th>
-                    <th>서류 결과</th>
+                    <th>결과</th>
                     <!-- <th>비고 <input type="checkbox"></th> -->
                   </tr>
                   <tr
@@ -24,8 +24,11 @@
                         <td>{{ resume.seekerName }}</td>
                         <td>{{ resume.resumeTitle }}</td>
                         <td>{{ formatDate(resume.resumedAt) }}</td>
-                        <td v-if="resume.docPassed == null"></td>
-                        <td v-else>{{ resume.docPassed ? "합격" : "불합격" }}</td>
+                        <td>{{ checkApplicationResult(
+                                                        resume.resumeResult, 
+                                                        resume.interviewOneResult, 
+                                                        resume.interviewTwoResult, 
+                                                        resume.finalResult) }}</td>
                   </tr>
                   </tbody>
               </table>
@@ -65,6 +68,29 @@ const formatDate = (dateString) => {
 
 const handleRowClick = (resume) => {
     router.push(`/recruiter/resume/detail/${resume.resumeIdx}`);
+};
+
+// 결과를 확인하는 함수
+const checkApplicationResult = (resumeResult, interviewOneResult, interviewTwoResult, finalResult) => {
+    if (finalResult === false) {
+        return '최종 불합격';
+    } else if (finalResult === true) {
+        return '최종 합격';
+    } else if (interviewTwoResult === false) {
+        return '2차 면접 불합격';
+    } else if (interviewTwoResult === true) {
+        return '2차 면접 합격';
+    } else if (interviewOneResult === false) {
+        return '1차 면접 불합격';
+    } else if (interviewOneResult === true) {
+        return '1차 면접 합격';
+    } else if (resumeResult === false) {
+        return '서류 불합격';
+    } else if (resumeResult === true) {
+        return '서류 합격';
+    } else {
+        return '대기';
+    }
 };
 </script>
 

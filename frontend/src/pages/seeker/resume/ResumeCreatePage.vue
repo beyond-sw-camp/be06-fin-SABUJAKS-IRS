@@ -1,6 +1,6 @@
 <template>
   <SeekerHeaderComponent/>
-  <div class="main-container">
+  <div class="main-container pt-150">
     <div class="content">
       <!-- 인적사항 -->
       <div v-if="showPersonalInfo" id="personal-info" class="add-container">
@@ -632,7 +632,7 @@ const handleCreate = async () => {
 
 .resume-sidebar {
   position: fixed;
-  top: 100px;
+  top: 200px;
   right: 220px;
   width: 200px;
   background-color: #ffffff;

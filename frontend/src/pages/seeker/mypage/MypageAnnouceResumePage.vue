@@ -2,7 +2,7 @@
     <div class="body-a">
         <SeekerHeaderComponent></SeekerHeaderComponent>
         <div class="main_div">
-            <div class="container-a">
+            <div class="container-a pt-150">
                 <!-- 사이드 바 -->
                 <SeekerSideBarComponent></SeekerSideBarComponent>
 
@@ -15,7 +15,11 @@
                     <div class="content">
                         <!-- 지원서 항목 리스트 -->
                         <div v-for="(announceResume, index) in resumeStore.announceResumeList" :key="index" class="application-item">
-                            <div class="status">{{ checkAnnouncementStatus(announceResume.announcementStart, announceResume.announcementEnd) }}</div>
+                            <div class="status">{{ checkApplicationResult(
+                                                        announceResume.resumeResult, 
+                                                        announceResume.interviewOneResult, 
+                                                        announceResume.interviewTwoResult, 
+                                                        announceResume.finalResult) }}</div>
                             <div class="application-details">
                                 <div class="application-title">{{ announceResume.resumeTitle }}</div>
                                 <div class="company-name">{{ announceResume.announcementTitle }} / {{ announceResume.companyName }}</div>
@@ -52,20 +56,44 @@ const formatDate = (dateString) => {
     return dateString.split('T')[0];
 }
 
-// 모집 상태를 확인하는 함수
-const checkAnnouncementStatus = (start, end) => {
-    const currentDate = new Date();
-    const announcementStart = new Date(start);
-    const announcementEnd = new Date(end);
+// // 모집 상태를 확인하는 함수
+// const checkAnnouncementStatus = (start, end) => {
+//     const currentDate = new Date();
+//     const announcementStart = new Date(start);
+//     const announcementEnd = new Date(end);
 
-    if (currentDate >= announcementStart && currentDate <= announcementEnd) {
-        return '진행중';
-    } else if (currentDate > announcementEnd) {
-        return '마감';
+//     if (currentDate >= announcementStart && currentDate <= announcementEnd) {
+//         return '진행중';
+//     } else if (currentDate > announcementEnd) {
+//         return '마감';
+//     } else {
+//         return '시작 전';
+//     }
+// };
+
+// 결과를 확인하는 함수
+const checkApplicationResult = (resumeResult, interviewOneResult, interviewTwoResult, finalResult) => {
+    if (finalResult === false) {
+        return '최종 불합격';
+    } else if (finalResult === true) {
+        return '최종 합격';
+    } else if (interviewTwoResult === false) {
+        return '2차 면접 불합격';
+    } else if (interviewTwoResult === true) {
+        return '2차 면접 합격';
+    } else if (interviewOneResult === false) {
+        return '1차 면접 불합격';
+    } else if (interviewOneResult === true) {
+        return '1차 면접 합격';
+    } else if (resumeResult === false) {
+        return '서류 불합격';
+    } else if (resumeResult === true) {
+        return '서류 합격';
     } else {
-        return '시작 전';
+        return '대기';
     }
 };
+
 </script>
 
 <style scoped>
@@ -131,7 +159,7 @@ const checkAnnouncementStatus = (start, end) => {
     background-color: rgba(255, 255, 255, 0);
     /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); */
     border-radius: 10px;
-    margin: 80px 20px;
+    margin: 20px;
     /* 수직, 수평 여백 추가 */
     gap: 20px;
     /* 사이드바와 메인 컨텐츠 사이의 간격 추가 */
@@ -226,7 +254,7 @@ nav ul li a {
     padding: 5px 10px;
     border-radius: 5px;
     margin-right: 20px;
-    width: 80px; /* 너비 고정 */
+    width: 120px; /* 너비 고정 */
     text-align: center; /* 텍스트 중앙 정렬 */
     white-space: nowrap; /* 텍스트 줄바꿈 방지 */
 }
