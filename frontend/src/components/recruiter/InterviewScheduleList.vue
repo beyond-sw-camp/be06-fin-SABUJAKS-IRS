@@ -62,7 +62,8 @@ const handleRowClick = (type) => {
   emit('openModal', type);
 }
 
-const createVideoInterview = (uuid, interviewScheduleInfo) => {
+const createVideoInterview = (uuid, interviewScheduleInfo, event) => {
+  event.stopPropagation();  // 이벤트 버블링 방지
   emit('createVideoInterview', uuid, interviewScheduleInfo);
 }
 
@@ -120,7 +121,7 @@ const handleScheduleClick = (schedule) => {
           </ul>
         </td>
         <td>
-          <button @click="createVideoInterview(schedule.uuid, schedule)">방 생성</button>
+          <button class="create-video-interview" @click="createVideoInterview(schedule.uuid, schedule, $event)">방 생성</button>
         </td>
       </tr>
       </tbody>
@@ -172,5 +173,12 @@ const handleScheduleClick = (schedule) => {
 .review-table tr:hover {
   background-color: #e6e6e6;
   cursor: pointer;
+}
+
+.create-video-interview {
+  background-color: #212b36;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
 }
 </style>
