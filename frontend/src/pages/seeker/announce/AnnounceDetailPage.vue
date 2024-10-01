@@ -334,13 +334,13 @@ onUnmounted(() => {
     /* 화면 전체 높이 */
     background-color: #F9FAFB;
     text-align: left;
-    margin-top: 60px;
+    margin-top: 100px;
 }
 
 .ad-container {
     position: relative;
     width: 960px;
-    margin: 0 auto 0 auto;
+    margin: 20px auto 0 auto;
     display: block;
     background-color: white;
     border: 1px solid white;
