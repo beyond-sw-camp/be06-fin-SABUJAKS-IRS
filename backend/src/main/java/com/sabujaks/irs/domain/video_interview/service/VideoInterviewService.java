@@ -45,6 +45,7 @@ public class VideoInterviewService {
         return VideoInterviewCreateRes.builder()
                 .idx(videoInterviewRoom.getIdx())
                 .interviewScheduleRes(dto.getInterviewScheduleInfo())
+                .announcementUuid(videoInterviewRoom.getAnnounceUUID())
                 .build();
     }
 
@@ -114,39 +115,39 @@ public class VideoInterviewService {
     }
 
 
-        public boolean checkUserAuthorities(CustomUserDetails userDetails, VideoInterviewTokenGetReq dto) {
-            // 현재 시스템 시간
-            LocalDateTime currentTime = LocalDateTime.now();
+    public boolean checkUserAuthorities(CustomUserDetails userDetails, VideoInterviewTokenGetReq dto) {
+        // 현재 시스템 시간
+        LocalDateTime currentTime = LocalDateTime.now();
 
-            // 권한 스트링 형식: "ROLE_SEEKER|id1|id2|날짜|시작시간|종료시간"
-            Collection< ? extends GrantedAuthority> authorities = userDetails.getVideoInterviewAuthorities();
+        // 권한 스트링 형식: "ROLE_SEEKER|id1|id2|날짜|시작시간|종료시간"
+        Collection< ? extends GrantedAuthority> authorities = userDetails.getVideoInterviewAuthorities();
 
-            for (GrantedAuthority authority : authorities) {
-                String authorityStr = authority.getAuthority();
-                if(!Objects.equals(authorityStr, "ROLE_SEEKER") && !Objects.equals(authorityStr, "ROLE_ESTIMATOR")){
-                    String[] parts = authorityStr.split("\\|");
-                    String role = parts[0];
-                    String id1 = parts[1];
-                    String id2 = parts[2];
-                    if(parts.length == 6 && Objects.equals(role, "ROLE_SEEKER") && Objects.equals(id1, dto.getAnnounceUUID()) && Objects.equals(id2, dto.getVideoInterviewUUID())){
-                        String date = parts[3];
-                        String startTime = parts[4];
-                        String endTime = parts[5];
-                        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
-                        LocalDateTime startDateTime = LocalDateTime.parse(date + " " + startTime, dateFormatter);
-                        LocalDateTime endDateTime = LocalDateTime.parse(date + " " + endTime, dateFormatter);
-                        LocalDateTime startDateTimeWithBuffer = startDateTime.minusMinutes(3);
-                        if (currentTime.isAfter(startDateTimeWithBuffer) && currentTime.isBefore(endDateTime)) {
-                            System.out.println("권한이 유효합니다: " + role);
-                            return true;
-                        }
-                    }
-                    if(parts.length == 3 && Objects.equals(role, "ROLE_ESTIMATOR") && Objects.equals(id1, dto.getAnnounceUUID()) && Objects.equals(id2, dto.getVideoInterviewUUID())){
+        for (GrantedAuthority authority : authorities) {
+            String authorityStr = authority.getAuthority();
+            if(!Objects.equals(authorityStr, "ROLE_SEEKER") && !Objects.equals(authorityStr, "ROLE_ESTIMATOR")){
+                String[] parts = authorityStr.split("\\|");
+                String role = parts[0];
+                String id1 = parts[1];
+                String id2 = parts[2];
+                if(parts.length == 6 && Objects.equals(role, "ROLE_SEEKER") && Objects.equals(id1, dto.getAnnounceUUID()) && Objects.equals(id2, dto.getVideoInterviewUUID())){
+                    String date = parts[3];
+                    String startTime = parts[4];
+                    String endTime = parts[5];
+                    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
+                    LocalDateTime startDateTime = LocalDateTime.parse(date + " " + startTime, dateFormatter);
+                    LocalDateTime endDateTime = LocalDateTime.parse(date + " " + endTime, dateFormatter);
+                    LocalDateTime startDateTimeWithBuffer = startDateTime.minusMinutes(3);
+                    if (currentTime.isAfter(startDateTimeWithBuffer) && currentTime.isBefore(endDateTime)) {
+                        System.out.println("권한이 유효합니다: " + role);
                         return true;
                     }
                 }
+                if(parts.length == 3 && Objects.equals(role, "ROLE_ESTIMATOR") && Objects.equals(id1, dto.getAnnounceUUID()) && Objects.equals(id2, dto.getVideoInterviewUUID())){
+                    return true;
+                }
             }
-            return false;
         }
+        return false;
+    }
 }
 
