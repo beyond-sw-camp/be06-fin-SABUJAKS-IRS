@@ -18,4 +18,8 @@ public class ResumeReadAllRes {
     private String announcementStart;
     private String announcementEnd;
     private String companyName;
+    private Boolean resumeResult;
+    private Boolean interviewOneResult;
+    private Boolean interviewTwoResult;
+    private Boolean finalResult;
 }
