@@ -2,7 +2,6 @@ package com.sabujaks.irs.domain.resume.controller;
 
 import com.sabujaks.irs.domain.resume.model.request.ResumeCreateReq;
 import com.sabujaks.irs.domain.resume.model.request.ResumeSubmitReq;
-import com.sabujaks.irs.domain.resume.model.request.ResumeUpdateDocPassedReq;
 import com.sabujaks.irs.domain.resume.model.response.*;
 import com.sabujaks.irs.domain.resume.service.ResumeService;
 import com.sabujaks.irs.global.common.exception.BaseException;
@@ -119,18 +118,6 @@ public class ResumeController {
 
         ResumeReadRes response = resumeService.read(resumeIdx);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.RESUME_READ_SUCCESS, response));
-    }
-
-    // 삭제 필요
-    // (채용담당자) 서류 결과 업데이트
-    @PatchMapping("/update/docPassed/{resumeIdx}")
-    public ResponseEntity<BaseResponse<ResumeUpdateDocPassedRes>> updateDocPassed(
-        @AuthenticationPrincipal CustomUserDetails customUserDetails,
-        @PathVariable Long resumeIdx,
-        @RequestBody ResumeUpdateDocPassedReq dto) throws BaseException {
-
-        ResumeUpdateDocPassedRes response = resumeService.updateDocPassed(customUserDetails, resumeIdx, dto);
-        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.RESUME_UPDATE_SUCCESS_DOC_PASSED, response));
     }
 
     // (지원자) 공고별 지원서 관리 목록

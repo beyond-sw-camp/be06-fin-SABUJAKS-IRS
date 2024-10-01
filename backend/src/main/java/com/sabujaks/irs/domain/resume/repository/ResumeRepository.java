@@ -22,7 +22,4 @@ public interface ResumeRepository extends JpaRepository<Resume, Long> {
 
     @Query("SELECT r FROM Resume r WHERE r.announcement.idx = :announcementIdx")
     List<Resume> findAllByAnnouncementIdx(Long announcementIdx);
-
-    @Query("SELECT r FROM Resume r WHERE r.announcement.idx = :announcementIdx AND r.docPassed = :docPassed")
-    List<Resume> findByAnnouncementIdxAndDocPassed(Long announcementIdx, Boolean docPassed);
 }

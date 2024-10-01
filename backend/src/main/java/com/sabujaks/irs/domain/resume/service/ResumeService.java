@@ -1269,42 +1269,6 @@ public class ResumeService {
 
     }
 
-    // 삭제 필요
-    @Transactional
-    public ResumeUpdateDocPassedRes updateDocPassed(
-        CustomUserDetails customUserDetails,
-        Long resumeIdx,
-        ResumeUpdateDocPassedReq dto) throws BaseException {
-        Long recruiterIdx = customUserDetails.getIdx();
-        // 채용담당자 테이블 조회
-        Optional<Recruiter> resultRecruiter = recruiterRepository.findByRecruiterIdx(recruiterIdx);
-        if(resultRecruiter.isPresent()) {
-            Optional<Resume> resultResume = resumeRepository.findByResumeIdx(resumeIdx);
-            if(resultResume.isPresent()) {
-                Resume resume = resultResume.get();
-                // 채용담당자가 등록한 공고에 지원한 지원서인지 확인
-                if(resume.getAnnouncement().getRecruiter().getIdx().equals(recruiterIdx)) {
-                    // 서류 결과가 null이면 update
-                    if(resume.updateDocPassed(dto.getDocPassed())) {
-                        return ResumeUpdateDocPassedRes.builder()
-                                .resumeIdx(resume.getIdx())
-                                .docPassed(resume.getDocPassed())
-                                .build();
-                    } else {
-                        throw new BaseException(BaseResponseMessage.RESUME_UPDATE_FAIL_DOC_PASSED_ALREADY);
-                    }
-                } else {
-                    throw new BaseException(BaseResponseMessage.RESUME_UPDATE_FAIL_DOC_PASSED);
-                }
-            } else {
-                throw new BaseException(BaseResponseMessage.RESUME_UPDATE_FAIL_DOC_PASSED);
-            }
-        } else {
-            throw new BaseException(BaseResponseMessage.RESUME_REGISTER_FAIL_NOT_FOUND_SEEKER);
-        }
-
-    }
-
     @Transactional
     public List<ResumeReadAllRes> readAll(CustomUserDetails customUserDetails) throws BaseException {
         Long seekerIdx = customUserDetails.getIdx();
@@ -1322,17 +1286,44 @@ public class ResumeService {
                         // 공고 테이블의 채용담당자 idx로 기업명 조회
                         Optional<Company> resultCompany = companyRepository.findByRecruiterIdx(resultAnnouncement.get().getRecruiter().getIdx());
                         if(resultCompany.isPresent()) {
-                            ResumeReadAllRes resumeReadAllRes = ResumeReadAllRes.builder()
-                                    .resumeIdx(resume.getIdx())
-                                    .resumeTitle(resume.getResumeTitle())
-                                    .resumedAt(resume.getResumedAt())
-                                    .announcementIdx(resultAnnouncement.get().getIdx())
-                                    .announcementTitle(resultAnnouncement.get().getTitle())
-                                    .announcementStart(resultAnnouncement.get().getAnnouncementStart())
-                                    .announcementEnd(resultAnnouncement.get().getAnnouncementEnd())
-                                    .companyName(resultCompany.get().getName())
-                                    .build();
-                            resumeReadAllResList.add(resumeReadAllRes);
+                            // total_process 테이블에서 조회하기
+                            Optional<TotalProcess> resultTotalProcess = totalProcessRepository.findByAnnouncementIdxAndSeekerIdx(
+                                    resume.getAnnouncement().getIdx(), resume.getSeeker().getIdx()
+                            );
+                            if (resultTotalProcess.isPresent()) {
+                                TotalProcess totalProcess = resultTotalProcess.get();
+                                ResumeReadAllRes resumeReadAllRes = ResumeReadAllRes.builder()
+                                        .resumeIdx(resume.getIdx())
+                                        .resumeTitle(resume.getResumeTitle())
+                                        .resumedAt(resume.getResumedAt())
+                                        .announcementIdx(resultAnnouncement.get().getIdx())
+                                        .announcementTitle(resultAnnouncement.get().getTitle())
+                                        .announcementStart(resultAnnouncement.get().getAnnouncementStart())
+                                        .announcementEnd(resultAnnouncement.get().getAnnouncementEnd())
+                                        .companyName(resultCompany.get().getName())
+                                        .resumeResult(totalProcess.getResumeResult())
+                                        .interviewOneResult(totalProcess.getInterviewOneResult())
+                                        .interviewTwoResult(totalProcess.getInterviewTwoResult())
+                                        .finalResult(totalProcess.getFinalResult())
+                                        .build();
+                                resumeReadAllResList.add(resumeReadAllRes);
+                            } else {
+                                ResumeReadAllRes resumeReadAllRes = ResumeReadAllRes.builder()
+                                        .resumeIdx(resume.getIdx())
+                                        .resumeTitle(resume.getResumeTitle())
+                                        .resumedAt(resume.getResumedAt())
+                                        .announcementIdx(resultAnnouncement.get().getIdx())
+                                        .announcementTitle(resultAnnouncement.get().getTitle())
+                                        .announcementStart(resultAnnouncement.get().getAnnouncementStart())
+                                        .announcementEnd(resultAnnouncement.get().getAnnouncementEnd())
+                                        .companyName(resultCompany.get().getName())
+                                        .resumeResult(null)
+                                        .interviewOneResult(null)
+                                        .interviewTwoResult(null)
+                                        .finalResult(null)
+                                        .build();
+                                resumeReadAllResList.add(resumeReadAllRes);
+                            }
                         } else {
                             throw new BaseException(BaseResponseMessage.RESUME_READ_FAIL_COMPANY_NOT_FOUND);
                         }
@@ -1365,15 +1356,37 @@ public class ResumeService {
                 if(!resultResumes.isEmpty()) {
                     List<ResumeReadAllRecruiterRes> resumeReadAllRecruiterResList = new ArrayList<>();
                     for(Resume resume : resultResumes) {
-                        // 지원자 테이블 조회
-                        ResumeReadAllRecruiterRes resumeReadAllRecruiterRes = ResumeReadAllRecruiterRes.builder()
-                                .resumeIdx(resume.getIdx())
-                                .resumeTitle(resume.getResumeTitle())
-                                .resumedAt(resume.getResumedAt())
-                                .docPassed(resume.getDocPassed())
-                                .seekerName(resume.getSeeker().getName())
-                                .build();
-                        resumeReadAllRecruiterResList.add(resumeReadAllRecruiterRes);
+                        // total_process 테이블에서 조회하기
+                        Optional<TotalProcess> resultTotalProcess = totalProcessRepository.findByAnnouncementIdxAndSeekerIdx(
+                                resume.getAnnouncement().getIdx(), resume.getSeeker().getIdx()
+                        );
+                        if (resultTotalProcess.isPresent()) {
+                            TotalProcess totalProcess = resultTotalProcess.get();
+                            ResumeReadAllRecruiterRes resumeReadAllRecruiterRes = ResumeReadAllRecruiterRes.builder()
+                                    .resumeIdx(resume.getIdx())
+                                    .resumeTitle(resume.getResumeTitle())
+                                    .resumedAt(resume.getResumedAt())
+                                    .resumeResult(totalProcess.getResumeResult())
+                                    .interviewOneResult(totalProcess.getInterviewOneResult())
+                                    .interviewTwoResult(totalProcess.getInterviewTwoResult())
+                                    .finalResult(totalProcess.getFinalResult())
+                                    .seekerName(resume.getSeeker().getName())
+                                    .build();
+                            resumeReadAllRecruiterResList.add(resumeReadAllRecruiterRes);
+                        } else {
+                            ResumeReadAllRecruiterRes resumeReadAllRecruiterRes = ResumeReadAllRecruiterRes.builder()
+                                    .resumeIdx(resume.getIdx())
+                                    .resumeTitle(resume.getResumeTitle())
+                                    .resumedAt(resume.getResumedAt())
+                                    .resumeResult(null)
+                                    .interviewOneResult(null)
+                                    .interviewTwoResult(null)
+                                    .finalResult(null)
+                                    .seekerName(resume.getSeeker().getName())
+                                    .build();
+                            resumeReadAllRecruiterResList.add(resumeReadAllRecruiterRes);
+                        }
+
                     }
                     return resumeReadAllRecruiterResList;
                 } else {
