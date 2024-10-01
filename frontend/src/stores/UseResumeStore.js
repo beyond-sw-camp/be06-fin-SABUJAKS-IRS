@@ -40,7 +40,7 @@ export const UseResumeStore = defineStore('resume', {
         announcementIdx: 0,
 
         resumeDetail: {},
-        resumeIntegrated: {},
+        resumeIntegrated: null,
         announceResumeList: [],
         resumeList: [],
     }),
@@ -474,6 +474,7 @@ export const UseResumeStore = defineStore('resume', {
                 this.resumeIntegrated = response.data.result;
                 // console.log(response.data.result);
             } catch (error) {
+                // console.log(error.response.data);
                 alert(error.response.data.message);
                 if(error.response.data.code === 2102) {
                     router.push('/seeker/resume/create');
@@ -510,15 +511,15 @@ export const UseResumeStore = defineStore('resume', {
         async updateDocPassed(docPassedValue) {
             try {
                 const response = await axios.post(`${backend}/total-process/create`, { 
-                    isPass: docPassedValue,
-                    announcementIdx: this.resumeDetail.announcementIdx,
-                    seekerIdx: this.resumeDetail.seekerIdx,
-                    interviewNum: 0
-                }, 
-                {
-                    headers: { 'Content-Type': 'application/json' },
-                    withCredentials: true
-                }
+                        isPass: docPassedValue,
+                        announcementIdx: this.resumeDetail.announcementIdx,
+                        seekerIdx: this.resumeDetail.seekerIdx,
+                        interviewNum: 0
+                    }, 
+                    {
+                        headers: { 'Content-Type': 'application/json' },
+                        withCredentials: true
+                    }
                 );
                 // 합격/불합격 처리 성공
                 alert(response.data.message);

@@ -2,11 +2,11 @@
     <div class="body-i">
         <SeekerHeaderComponent></SeekerHeaderComponent>
         <div class="main_div">
-            <div class="container-i">
+            <div class="container-i pt-150">
                 <!-- 사이드 바 -->
                 <SeekerSideBarComponent></SeekerSideBarComponent>
                 <!-- 메인 컨텐츠 -->
-                <div class="main-content">
+                <div class="main-content" v-if="resumeStore.resumeIntegrated">
                     <div class="header">
                         <h1>통합 지원서 관리</h1>
                         <button class="btn edit-profile">지원서 수정하기</button>
@@ -16,7 +16,7 @@
                             <div class="resume-view-container">
                                 <div class="base profile image">
                                     <div class="container-p">
-                                        <div v-if="showPersonalInfo" class="photo"><img name="user_photo" :src="resumeStore.resumeIntegrated.personalInfo.profileImg ? resumeStore.resumeIntegrated.personalInfo.profileImg : ''">
+                                        <div v-if="showPersonalInfo" class="photo"><img name="user_photo" :src="resumeStore.resumeIntegrated.personalInfo ? resumeStore.resumeIntegrated.personalInfo.profileImg : ''">
                                         </div>
                                         <div v-if="showPersonalInfo" class="info-container">
                                             <div class="info-general">
@@ -382,7 +382,7 @@ onMounted(async () => {
     await resumeStore.readIntegrated(router);
 
     showPersonalInfo.value = true;
-    if(resumeStore.resumeIntegrated.codes) {
+    if(resumeStore.resumeIntegrated) {
         showEducation.value = resumeStore.resumeIntegrated.codes.includes("resume_001");
         showPersonalHistory.value = resumeStore.resumeIntegrated.codes.includes("resume_002");
         showInternsActivity.value = resumeStore.resumeIntegrated.codes.includes("resume_003");
@@ -467,7 +467,7 @@ const calculateDuration = (enteredAt, quitAt) => {
     background-color: rgba(255, 255, 255, 0);
     /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); */
     border-radius: 10px;
-    margin: 80px 20px;
+    margin: 20px;
     /* 수직, 수평 여백 추가 */
     gap: 20px;
     /* 사이드바와 메인 컨텐츠 사이의 간격 추가 */

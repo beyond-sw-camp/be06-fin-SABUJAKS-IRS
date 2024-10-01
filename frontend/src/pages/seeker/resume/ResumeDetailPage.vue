@@ -2,7 +2,7 @@
     <div class="body-i">
         <SeekerHeaderComponent></SeekerHeaderComponent>
         <div class="main_div">
-            <div class="container-i">
+            <div class="container-i pt-150">
                 <!-- 사이드 바 -->
                 <SeekerSideBarComponent></SeekerSideBarComponent>
                 <!-- 메인 컨텐츠 -->
@@ -490,7 +490,7 @@ const formatDate = (dateString) => {
     background-color: rgba(255, 255, 255, 0);
     /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); */
     border-radius: 10px;
-    margin: 80px 20px;
+    margin: 20px;
     /* 수직, 수평 여백 추가 */
     gap: 20px;
     /* 사이드바와 메인 컨텐츠 사이의 간격 추가 */
