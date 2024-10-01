@@ -91,14 +91,12 @@ public class EmailSenderSeeker {
                 String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
                 helper.setText(html, true); // Set HTML content
 
-                System.out.println(dto.getSeekerList());
-
                 // Alarm 저장 로직
                 Seeker seeker = seekerRepository.findBySeekerIdx(seekerInfoGetRes.getIdx())
                         .orElseThrow(() -> new BaseException(BaseResponseMessage.MEMBER_NOT_FOUND));
 
                 Alarm alarm = Alarm.builder()
-                        .type("면접일정")
+                        .type("인터뷰 일정 안내")
                         .status(false)
                         .message(html)
                         .seeker(seeker)
@@ -127,13 +125,12 @@ public class EmailSenderSeeker {
     }
 
     public void sendConfirmInterviewScheduleEmail(VideoInterviewCreateRes dto) throws RuntimeException {
-        System.out.println(dto.getInterviewScheduleRes().getSeekerList().get(0).getEmail());
         try {
             for(SeekerInfoGetRes seekerInfoGetRes : dto.getInterviewScheduleRes().getSeekerList()) {
                 MimeMessage message = mailSender.createMimeMessage();
                 MimeMessageHelper helper = new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
                 helper.setTo(seekerInfoGetRes.getEmail());
-                helper.setSubject("[IRS] 인터뷰 상세 안내");
+                helper.setSubject("[IRS] 인터뷰 일정 상세 안내");
 
                 // 템플릿 내부에서 처리한 변수값 매핑
                 Map<String, Object> model = new HashMap<>();
@@ -143,6 +140,7 @@ public class EmailSenderSeeker {
                 model.put("interviewEnd", dto.getInterviewScheduleRes().getInterviewEnd());
                 model.put("companyName", dto.getInterviewScheduleRes().getCompanyName());
                 model.put("announcementTitle", dto.getInterviewScheduleRes().getAnnouncementTitle());
+                model.put("videoInterviewUrl", "http://localhost:3000/video-interview/" + dto.getAnnouncementUuid());
 
                 if(dto.getInterviewScheduleRes().getIsOnline()) {
                     model.put("isOnline", "온라인");
@@ -161,6 +159,30 @@ public class EmailSenderSeeker {
 
                 String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
                 helper.setText(html, true); // Set HTML content
+
+                // Alarm 저장 로직
+                Seeker seeker = seekerRepository.findBySeekerIdx(seekerInfoGetRes.getIdx())
+                        .orElseThrow(() -> new BaseException(BaseResponseMessage.MEMBER_NOT_FOUND));
+
+                Alarm alarm = Alarm.builder()
+                        .type("인터뷰 일정 상세 안내")
+                        .status(false)
+                        .message(html)
+                        .seeker(seeker)
+                        .interviewSchedule(InterviewSchedule.builder()
+                                .idx(dto.getIdx())
+                                .isOnline(dto.getInterviewScheduleRes().getIsOnline())
+                                .interviewDate(dto.getInterviewScheduleRes().getInterviewDate())
+                                .interviewStart(dto.getInterviewScheduleRes().getInterviewStart())
+                                .interviewEnd(dto.getInterviewScheduleRes().getInterviewEnd())
+                                .uuid(dto.getInterviewScheduleRes().getUuid())
+                                .careerBase(dto.getInterviewScheduleRes().getCareerBase())
+                                .interviewNum(dto.getInterviewScheduleRes().getInterviewNum())
+                                .build())
+                        .createdAt(LocalDateTime.now())
+                        .build();
+
+                alarmRepository.save(alarm);
 
                 mailSender.send(message);
             }

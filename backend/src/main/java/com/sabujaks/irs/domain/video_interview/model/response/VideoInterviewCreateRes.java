@@ -11,4 +11,5 @@ import lombok.*;
 public class VideoInterviewCreateRes {
     private Long idx;
     private InterviewScheduleRes interviewScheduleRes;
+    private String announcementUuid;
 }
