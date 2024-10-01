@@ -128,12 +128,12 @@ public class SecurityConfig {
         System.out.println(object.getRequest().getRequestURI());
         String seekerAuthority =
                 "ROLE_SEEKER|" + object.getRequest().getParameter("announceUUID")
-                + '_' + object.getRequest().getParameter("videoInterviewUUID");
+                + '|' + object.getRequest().getParameter("videoInterviewUUID");
         String recruiterAuthority =
                 "ROLE_RECRUITER|" + object.getRequest().getParameter("announceUUID");
         String estimatorAuthority =
                 "ROLE_ESTIMATOR|" + object.getRequest().getParameter("announceUUID")
-                + '_' + object.getRequest().getParameter("videoInterviewUUID");
+                + '|' + object.getRequest().getParameter("videoInterviewUUID");
 
         boolean hasAnnounceUUID = authentication.get().getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
