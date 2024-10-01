@@ -25,7 +25,6 @@ public class AlarmService {
                 .type(dto.getType())
                 .status(dto.getStatus())
                 .message(dto.getMessage())
-                .url(dto.getUrl())
                 .build());
 
         return AlarmRes.builder()
@@ -33,7 +32,6 @@ public class AlarmService {
                 .type(alarm.getType())
                 .status(alarm.getStatus())
                 .message(alarm.getMessage())
-                .url(alarm.getUrl())
                 .createdAt(alarm.getCreatedAt())
                 .build();
     }
@@ -49,7 +47,6 @@ public class AlarmService {
                     .type(alarm.getType())
                     .status(alarm.getStatus())
                     .message(alarm.getMessage())
-                    .url(alarm.getUrl())
                     .createdAt(alarm.getCreatedAt())
                     .interviewScheduleIdx(alarm.getInterviewSchedule().getIdx())
                     .build());

@@ -15,4 +15,9 @@ public interface TotalProcessRepository extends JpaRepository<TotalProcess, Long
             "WHERE tp.announcement.idx = :announcementIdx " +
             "AND tp.seeker.idx = :seekerIdx")
     Optional<TotalProcess> findByAnnouncementIdxAndSeekerIdx(Long announcementIdx, Long seekerIdx);
+
+    @Query("SELECT tp FROM TotalProcess tp " +
+            "WHERE tp.announcement.idx = :announcementIdx " +
+            "AND tp.resumeResult = :resumeResult")
+    List<TotalProcess> findByAnnouncementIdxAndResumeResult(Long announcementIdx, Boolean resumeResult);
 }

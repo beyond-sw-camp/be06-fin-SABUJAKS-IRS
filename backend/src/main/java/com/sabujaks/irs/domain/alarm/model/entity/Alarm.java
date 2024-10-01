@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 
@@ -30,9 +29,6 @@ public class Alarm {
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String message;
-
-    @Column(nullable = false)
-    private String url;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
