@@ -28,6 +28,8 @@ import com.sabujaks.irs.domain.interview_schedule.repository.TeamRepository;
 import com.sabujaks.irs.domain.interview_schedule.repository.querydsl.InterviewScheduleDslRepository;
 import com.sabujaks.irs.domain.resume.model.entity.Resume;
 import com.sabujaks.irs.domain.resume.repository.ResumeRepository;
+import com.sabujaks.irs.domain.total_process.model.entity.TotalProcess;
+import com.sabujaks.irs.domain.total_process.repository.TotalProcessRepository;
 import com.sabujaks.irs.global.common.exception.BaseException;
 import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
 import com.sabujaks.irs.global.security.CustomUserDetails;
@@ -55,7 +57,7 @@ public class InterviewScheduleService {
     private final AnnouncementRepository announcementRepository;
     private final TeamRepository teamRepository;
     private final RecruiterRepository recruiterRepository;
-    private final AlarmRepository alarmRepository;
+    private final TotalProcessRepository totalProcessRepository;
     private final ReScheduleRepository reScheduleRepository;
     private final ResumeRepository resumeRepository;
     private final CompanyRepository companyRepository;
@@ -115,24 +117,6 @@ public class InterviewScheduleService {
                         .build());
                 interviewParticipateRepository.save(interviewParticipate);
             }
-        }
-
-        // Alarm 저장 로직
-        for(Long seekerIdx : dto.getSeekerList()) {
-            Seeker seeker = seekerRepository.findBySeekerIdx(seekerIdx)
-                    .orElseThrow(() -> new BaseException(BaseResponseMessage.MEMBER_NOT_FOUND));
-
-            Alarm alarm = Alarm.builder()
-                    .type("면접일정")
-                    .status(false)
-                    .message("귀하의 면접일정은 다음과 같습니다.")
-                    .seeker(seeker)
-                    .interviewSchedule(interviewSchedule)
-                    .createdAt(LocalDateTime.now())
-                    .url("sleighalsfje-glqwiehglsdkfjlse")
-                    .build();
-
-            alarmRepository.save(alarm);
         }
 
         List<SeekerInfoGetRes> seekerInfoGetResList = new ArrayList<>();
@@ -288,6 +272,7 @@ public class InterviewScheduleService {
                 .interviewDate(result.getInterviewDate())
                 .interviewEnd(result.getInterviewEnd())
                 .interviewStart(result.getInterviewStart())
+                .interviewNum(result.getInterviewNum())
                 .teamIdx(result.getTeam().getIdx())
                 .uuid(result.getUuid())
                 .estimatorList(estimatorInfoGetResList)
@@ -385,6 +370,7 @@ public class InterviewScheduleService {
                                 .interviewDate(interviewSchedule.getInterviewDate())
                                 .interviewStart(interviewSchedule.getInterviewStart())
                                 .interviewEnd(interviewSchedule.getInterviewEnd())
+                                .interviewNum(interviewSchedule.getInterviewNum())
                                 .teamIdx(interviewSchedule.getTeam().getIdx())
                                 .uuid(interviewSchedule.getUuid())
                                 .build())
@@ -421,7 +407,7 @@ public class InterviewScheduleService {
 
     public List<SeekerInfoGetRes> getSeekerList(Long announcementIdx) throws BaseException {
         // 서류 합격자 resume(seeker info 포함)
-        List<Resume> getResumeResult = resumeRepository.findByAnnouncementIdxAndDocPassed(announcementIdx, true);
+        List<TotalProcess> getResumeResult = totalProcessRepository.findByAnnouncementIdxAndResumeResult(announcementIdx, true);
 
         // interview_participate(면접일정이 잡힌 seeker list) 조회
         Optional<List<InterviewSchedule>> interviewScheduleResult = interviewScheduleRepository.findByAnnouncementIdx(announcementIdx);
@@ -443,7 +429,7 @@ public class InterviewScheduleService {
         // interviewParticipaateSeeker => 면접 일정이 잡힌 seekerIdx List
 
         List<SeekerInfoGetRes> seekerInfoGetResList = new ArrayList<>();
-        for(Resume resumeResult : getResumeResult) {
+        for(TotalProcess resumeResult : getResumeResult) {
             if(!interviewParticipateSeeker.contains(resumeResult.getSeeker().getIdx())) {
                 Seeker seeker = seekerRepository.findBySeekerIdx(resumeResult.getSeeker().getIdx()).orElseThrow(() -> new BaseException(BaseResponseMessage.MEMBER_NOT_FOUND));
 
