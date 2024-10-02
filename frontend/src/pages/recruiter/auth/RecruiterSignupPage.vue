@@ -13,10 +13,10 @@
                 <div class="input-section">
                     <h3>기업인증</h3>
                     <input v-model="crn" type="text" maxlength="30" placeholder="사업자등록번호">
-                    <input v-model="opened_at" type="text" maxlength="16" placeholder="개업일자 ex) 20201212">
-                    <input v-model="ceo_name" type="text" maxlength="16" placeholder="회사대표명">
-                    <input v-model="recruiter_email" type="text" maxlength="16" placeholder="채용담당자이메일">
-                    <input type="text" maxlength="16" placeholder="기업인식비밀번호" readonly value="TESTCOMPANYSECRETCODE">
+                    <input v-model="opened_at" type="text" maxlength="30" placeholder="개업일자 ex) 20201212">
+                    <input v-model="ceo_name" type="text" maxlength="30" placeholder="회사대표명">
+                    <input v-model="recruiter_email" type="text" maxlength="30" placeholder="채용담당자이메일">
+                    <input type="text" maxlength="30" placeholder="기업인식비밀번호" readonly value="TESTCOMPANYSECRETCODE">
                     <button type="submit" class="company-verifybtn">기업인증</button>
                 </div>
             </form> 
@@ -24,9 +24,9 @@
                 <div class="input-section">
                     <h3>채용담당자 정보</h3>
                     <input v-model="email" type="text" maxlength="30" placeholder="이메일">
-                    <input v-model="password" type="text" maxlength="16" placeholder="비밀번호(8~16자의 영문, 숫자, 특수기호)">
-                    <input v-model="name" type="text" maxlength="16" placeholder="이름">
-                    <input v-model="phoneNumber" type="text" maxlength="16" placeholder="휴대폰번호">
+                    <input v-model="password" type="text" maxlength="30" placeholder="비밀번호(8~16자의 영문, 숫자, 특수기호)">
+                    <input v-model="name" type="text" maxlength="30" placeholder="이름">
+                    <input v-model="phoneNumber" type="text" maxlength="30" placeholder="휴대폰번호">
                     <label for="file">
                         <div class="file-uploadbtn">프로필 파일 업로드</div>
                     </label>
