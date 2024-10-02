@@ -277,10 +277,10 @@ const generateTimeSlots = (start, end, interval) => {
 // 예약된 시간에 따라 시작 시간 옵션 설정
 const setStartTimeOptions = () => {
   if (bookedTimes.value.length === 0) {
-    startTimeOptions.value = generateTimeSlots('09:00', '18:00', 30); // 전체 시간대
+    startTimeOptions.value = generateTimeSlots('09:00', '24:00', 30); // 전체 시간대
   } else {
     // 예약된 시간대 제외한 시작 시간 옵션 생성
-    const allTimeSlots = generateTimeSlots('09:00', '18:00', 30);
+    const allTimeSlots = generateTimeSlots('09:00', '24:00', 30);
 
     // 예약된 시간대의 시작과 끝 시간
     const bookedIntervals = bookedTimes.value.map(time => ({
