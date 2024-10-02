@@ -15,7 +15,6 @@ import MypageNotificationPage from '@/pages/seeker/mypage/MypageNotificationPage
 import MypageSchedulePage from '@/pages/seeker/mypage/MypageSchedulePage.vue';
 import ResumeCreatePage from '@/pages/seeker/resume/ResumeCreatePage.vue';
 import ResumeSubmitPage from '@/pages/seeker/resume/ResumeSubmitPage.vue'
-import RecruiterSignupPage1 from '@/pages/recruiter/auth/RecruiterSignupPage1.vue';
 import SeekerResumeDetailPage from '@/pages/seeker/resume/ResumeDetailPage.vue'
 import VideoInterviewMainPage from '@/pages/video-interview/VideoInterviewMainPage.vue';
 import VideoInterviewRoomPage from '@/pages/video-interview/VideoInterviewRoomPage.vue';
@@ -67,7 +66,6 @@ const router = createRouter({
         
         { path: '/recruiter/login', component: RecruiterLoginPage, beforeEnter: alreadyLogin },
         { path: '/recruiter/signup', component: RecruiterSignupPage, beforeEnter: alreadyLogin },
-        { path: '/recruiter/signup1', component: RecruiterSignupPage1, beforeEnter: alreadyLogin },
         
         { path: '/recruiter/announce', component: AnnounceMainPage, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/announce/detail/:announcementIdx', component: AnnounceDetailRcrPage, beforeEnter: requireRecruiterLogin },
