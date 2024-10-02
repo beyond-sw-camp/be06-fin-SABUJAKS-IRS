@@ -284,15 +284,13 @@ public class AnnouncementService {
 
         List<AnnouncementReadAllRes> resultReadAllResList = new ArrayList<>();
         for (Announcement am : resultAnnouncementList) {
+            Company company = companyRepository.findByRecruiterIdx(am.getRecruiter().getIdx())
+                    .orElseThrow(()-> new BaseException(BaseResponseMessage.COMPANY_INFO_FAIL_NOT_REGISTER));
             resultReadAllResList.add(
                     AnnouncementReadAllRes.builder()
                             .announcementIdx(am.getIdx())
-                            .companyName(companyRepository.findByRecruiterIdx(am.getRecruiter().getIdx())
-                                    .orElseThrow(()-> new BaseException(BaseResponseMessage.COMPANY_INFO_FAIL_NOT_REGISTER))
-                                    .getName())
-                            .companyInfo(companyRepository.findByRecruiterIdx(am.getRecruiter().getIdx())
-                                    .orElseThrow(()-> new BaseException(BaseResponseMessage.COMPANY_INFO_FAIL_NOT_REGISTER))
-                                    .getCompanyInfo())
+                            .companyName(company.getName())
+                            .companyInfo(company.getCompanyInfo())
                             .announcementTitle(am.getTitle())
                             .jobTitle(am.getJobTitle())
                             .careerBase(am.getCareerBase())
