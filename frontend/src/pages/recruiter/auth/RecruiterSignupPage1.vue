@@ -4,36 +4,29 @@
         <div class="signup-container">
             <img class="logo" src="../../../assets/img/irs_black.png">
             <div class="set-user">
-                <div class="seeker"> 지원자 가입</div>
-                <div class="recruiter"> 
-                    <a href="/recruiter/signup">채용담당자 가입</a></div>
+                <div class="seeker">
+                    <a href="/seeker/signup">지원자 가입</a>
                 </div>
-            <form class="signup-form" @submit.prevent="handleSignup">
-                <div class="social-section">
-                    <h4>소셜로 간편하게 로그인하세요</h4>
-                    <div class="social-list">
-                        <a class="social-kakao-logo" @click="handleSocialLogin" href="http://localhost:8080/oauth2/authorization/kakao"></a>
-                        <a class="social-naver-logo" @click="handleSocialLogin" href="http://localhost:8080/oauth2/authorization/naver"></a>
-                        <a class="social-google-logo" @click="handleSocialLogin" href="http://localhost:8080/oauth2/authorization/google"></a>
-                    </div>
+                <div class="recruiter">채용담당자 가입</div>
                 </div>
+                <form class="signup-form" @submit.prevent="handleCompanyVerify">
                 <div class="input-section">
-                    <h3>지원자 정보</h3>
+                    <h3>기업인증</h3>
+                    <input v-model="crn" type="text" maxlength="30" placeholder="사업자등록번호">
+                    <input v-model="opened_at" type="text" maxlength="16" placeholder="개업일자 ex) 20201212">
+                    <input v-model="ceo_name" type="text" maxlength="16" placeholder="회사대표명">
+                    <input v-model="recruiter_email" type="text" maxlength="16" placeholder="채용담당자이메일">
+                    <input type="text" maxlength="16" placeholder="기업인식비밀번호" readonly value="TESTCOMPANYSECRETCODE">
+                    <button type="submit" class="company-verifybtn">기업인증</button>
+                </div>
+            </form> 
+            <form class="signup-form" @submit.prevent="handleSignup">
+                <div class="input-section">
+                    <h3>채용담당자 정보</h3>
                     <input v-model="email" type="text" maxlength="30" placeholder="이메일">
                     <input v-model="password" type="text" maxlength="16" placeholder="비밀번호(8~16자의 영문, 숫자, 특수기호)">
                     <input v-model="name" type="text" maxlength="16" placeholder="이름">
-                    <input v-model="nickname" type="text" maxlength="16" placeholder="닉네임">
-                    <div class="is-col">
-                        <input v-model="birth" type="text" maxlength="16" placeholder="생년월일 ex) 20201212">
-                        <div class="is-col2">
-                        <input v-model="gender" type="radio" id="boy" :value="true">
-                        <label for="boy">남자</label>
-                        <input v-model="gender" type="radio" id="girl" :value="false">
-                        <label for="girl">여자</label>
-                        </div>
-                    </div>
                     <input v-model="phoneNumber" type="text" maxlength="16" placeholder="휴대폰번호">
-                    
                     <label for="file">
                         <div class="file-uploadbtn">프로필 파일 업로드</div>
                     </label>
@@ -43,8 +36,9 @@
                     </div>
                 </div>
                 <div class="submit-section">
+                    <p class="signup-notice">기업인증을 완료해야 가입을 할 수 있습니다.</p>
                     <p class="signup-notice">가입 후 이메일 인증까지 완료하여야 계정이 활성화됩니다.</p>
-                    <button type="submit" class="signup-submitbtn">가입하기</button>
+                    <button v-if="showSignupBtn" type="submit" class="signup-submitbtn">가입하기</button>
                 </div>
             </form> 
         </div>
@@ -65,33 +59,42 @@ const toast = useToast();
 const email = ref("")
 const password = ref("")
 const name = ref("")
-const nickname = ref("")
-const gender = ref(null)
-const birth = ref("")
 const phoneNumber = ref(null)
 const file = ref(null);
 const fileUrl = ref(null);
-
-const handleSocialLogin = async() => {
-    authStore.isLoggedIn = true;
-}
-
+const showSignupBtn = ref(false);
+const crn = ref("")
+const opened_at = ref("")
+const ceo_name = ref("")
+const recruiter_email = ref("")
 // 파일 업로드 처리
 const handleFileUpload = (event) => {
     file.value = event.target.files[0];
     if (file.value) { fileUrl.value = URL.createObjectURL(file.value); }
 };
-
+const handleCompanyVerify = async () => {
+    const requestBody = {
+        crn: crn.value,
+        opened_at: opened_at.value,
+        ceo_name: ceo_name.value,
+        recruiter_email: recruiter_email.value,
+        company_secret_code: "TESTCOMPANYSECRETCODE"
+    }
+    const response = await authStore.companyVerify(requestBody)
+    if(response.success){
+        showSignupBtn.value = true;
+        toast.success("기업 인증을 완료했습니다.")
+    }else {
+        toast.error("기업 인증 실패")
+    }
+}
 const handleSignup = async () => {
     const formData = new FormData();
     const requestBody = {
-        role: "ROLE_SEEKER",
+        role: "ROLE_RECRUITER",
         email: email.value,
         password: password.value,
-        nickname: nickname.value,
-        gender: gender.value,
-        birth: birth.value,
-        socialType: "normal",
+        name: name.value,
         phone_number: phoneNumber.value
     }
     formData.append('dto', new Blob([JSON.stringify(requestBody)], { type: 'application/json' }));
@@ -148,7 +151,7 @@ const handleSignup = async () => {
     height: 96px;
 }
 
-.seeker {
+.recruiter {
     align-items: center;
     justify-content: center;
     display: flex;
@@ -160,7 +163,7 @@ const handleSignup = async () => {
     font-size: 20px;
 }
 
-.recruiter {
+.seeker {
     align-items: center;
     justify-content: center;
     display: flex;
@@ -170,80 +173,9 @@ const handleSignup = async () => {
     font-size: 20px;
 }
 
-.recruiter a {
+.seeker a {
     text-decoration: none;
     color: black;
-}
-
-.social-section {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 28px 32px;
-    width: 700px;
-    height: 96px;
-    margin-bottom: 12px;
-    align-items: center;
-    border: 1px solid #e8e8e8;
-    background-color: #fff;
-    box-sizing: border-box;
-}
-
-.social-list{
-    display: flex;
-    flex-direction:row;
-    column-gap: 15px;
-}
-
-.social-naver-logo {
-    display: block;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: no-repeat center;
-    background-size: 100%;
-    font-size: 0px;
-    letter-spacing: 0px;
-    text-indent: -9999px;
-    background-image: url(http://localhost:3000/img/sns_naver_large.41b7343a.svg);
-    background-repeat: no-repeat;
-    color: #6a6a6a;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-.social-kakao-logo {
-    display: block;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: no-repeat center;
-    background-size: 100%;
-    font-size: 0px;
-    letter-spacing: 0px;
-    text-indent: -9999px;
-    background-image: url(http://localhost:3000/img/sns_kakao_large.40083307.svg);
-    background-repeat: no-repeat;
-    color: #6a6a6a;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-.social-google-logo {
-    display: block;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: no-repeat center;
-    background-size: 100%;
-    font-size: 0px;
-    letter-spacing: 0px;
-    text-indent: -9999px;
-    background-image: url(http://localhost:3000/img/sns_google_large.72a153e9.svg);
-    background-repeat: no-repeat;
-    color: #6a6a6a;
-    text-decoration: none;
-    cursor: pointer;
 }
 
 .signup-form {
@@ -323,7 +255,19 @@ const handleSignup = async () => {
     color: #fff;
     width: 100%;
 }
-
+.company-verifybtn {
+    background-color: #212b36;
+    text-align: center;
+    height: 100%;
+    display: block;
+    padding: 16px;
+    box-sizing: border-box;
+    font-size: 18px !important;
+    line-height: 26px !important;
+    font-weight: 700;
+    color: #fff;
+    width: 100%;
+}
 .signup-submitbtn:hover {
     opacity: 70%;
 }
