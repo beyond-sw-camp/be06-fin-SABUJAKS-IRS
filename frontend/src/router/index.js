@@ -15,6 +15,7 @@ import MypageNotificationPage from '@/pages/seeker/mypage/MypageNotificationPage
 import MypageSchedulePage from '@/pages/seeker/mypage/MypageSchedulePage.vue';
 import ResumeCreatePage from '@/pages/seeker/resume/ResumeCreatePage.vue';
 import ResumeSubmitPage from '@/pages/seeker/resume/ResumeSubmitPage.vue'
+import RecruiterSignupPage1 from '@/pages/recruiter/auth/RecruiterSignupPage1.vue';
 import SeekerResumeDetailPage from '@/pages/seeker/resume/ResumeDetailPage.vue'
 import VideoInterviewMainPage from '@/pages/video-interview/VideoInterviewMainPage.vue';
 import VideoInterviewRoomPage from '@/pages/video-interview/VideoInterviewRoomPage.vue';
@@ -63,44 +64,50 @@ const router = createRouter({
     history: createWebHistory(),
     routes: [
         { path: '/', component: AnnounceReadAllPage },
+        
         { path: '/recruiter/login', component: RecruiterLoginPage, beforeEnter: alreadyLogin },
         { path: '/recruiter/signup', component: RecruiterSignupPage, beforeEnter: alreadyLogin },
+        { path: '/recruiter/signup1', component: RecruiterSignupPage1, beforeEnter: alreadyLogin },
+        
         { path: '/recruiter/announce', component: AnnounceMainPage, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/announce/detail/:announcementIdx', component: AnnounceDetailRcrPage, beforeEnter: requireRecruiterLogin },
-        { path: '/recruiter/announce/register-step2/:announcementIdx/:title', name: 'AnnouncementCreateStep2', component: AnnounceRegisterStep2Page, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/announce/register-step1', component: AnnounceRegisterStep1Page, beforeEnter: requireRecruiterLogin },
+        { path: '/recruiter/announce/register-step2/:announcementIdx/:title', name: 'AnnouncementCreateStep2', component: AnnounceRegisterStep2Page, beforeEnter: requireRecruiterLogin },
+        
+        { path: '/recruiter/interview-schedule', component: InterviewScheduleMain, beforeEnter: requireRecruiterLogin },
+        { path: '/recruiter/interview-schedule/reschedule', component: ReScheduleMainExp, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/interview-schedule/new', component: InterviewScheduleMainNew, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/interview-schedule/exp', component: InterviewScheduleMainExp, beforeEnter: requireRecruiterLogin },
-        { path: '/recruiter/interview-schedule/detail/:idx',
-            component: InterviewScheduleDetail,
-            beforeEnter: requireRecruiterLogin
-        },
+        { path: '/recruiter/interview-schedule/detail/:idx', component: InterviewScheduleDetail, beforeEnter: requireRecruiterLogin},
+        
+        { path: '/recruiter/resume', component: ResumeMainPage, beforeEnter: requireRecruiterLogin },
+        { path: '/recruiter/resume/list/:announcementIdx', component: ResumeListPage, beforeEnter: requireRecruiterLogin },
+        { path: '/recruiter/resume/detail/:resumeIdx', component: RecruiterResumeDetailPage, beforeEnter: requireRecruiterLogin },
+
         { path: '/recruiter/interview-evaluate/form', component: InterviewEvaluateFormPage, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/interview-evaluate/result', component: InterviewEvaluateResultPage, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/interview-evaluate/result/:announcementIdx/:interviewNum', component: InterveiwEvaluateResultDetailPage, beforeEnter: requireRecruiterLogin },
 
-        { path: '/video-interview/:announceUUID', component: VideoInterviewMainPage, },
-        { path: '/video-interview/:announceUUID/:videoInterviewUUID', component: VideoInterviewRoomPage },
-            
-        { path: '/recruiter/interview-schedule/reschedule', component: ReScheduleMainExp, beforeEnter: requireRecruiterLogin },
-        { path: '/recruiter/interview-schedule', component: InterviewScheduleMain, beforeEnter: requireRecruiterLogin },
-        { path: '/recruiter/resume', component: ResumeMainPage, beforeEnter: requireRecruiterLogin },
-        { path: '/recruiter/resume/list/:announcementIdx', component: ResumeListPage, beforeEnter: requireRecruiterLogin },
-        { path: '/recruiter/resume/detail/:resumeIdx', component: RecruiterResumeDetailPage, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/mypage', component: CompanyInfoPage, beforeEnter: requireRecruiterLogin },
+        
         { path: '/seeker/login', component: SeekerLoginPage, beforeEnter: alreadyLogin },
         { path: '/seeker/signup', component: SeekerSignupPage, beforeEnter: alreadyLogin },
         
         { path: '/seeker/announce', component: AnnounceReadAllPage },
         { path: '/seeker/announce/detail/:announcementIdx', component: AnnounceDetailPage },
+        
         { path: '/seeker/mypage', component: MypageMainPage },
         { path: '/seeker/mypage/schedule', component: MypageSchedulePage },
         { path: '/seeker/mypage/annouce-resume', component: MypageAnnouceResumePage },
         { path: '/seeker/mypage/integration-resume', component: MypageIntegrationeResumePage },
         { path: '/seeker/mypage/notification', component: MypageNotificationPage },
+
         { path: '/seeker/resume/create', component: ResumeCreatePage },
         { path: '/seeker/resume/submit/:announcementIdx', component: ResumeSubmitPage },
         { path: '/seeker/resume/detail/:resumeIdx', component: SeekerResumeDetailPage },
+
+        { path: '/video-interview/:announceUUID', component: VideoInterviewMainPage, },
+        { path: '/video-interview/:announceUUID/:videoInterviewUUID', component: VideoInterviewRoomPage },
     ]
 })
 

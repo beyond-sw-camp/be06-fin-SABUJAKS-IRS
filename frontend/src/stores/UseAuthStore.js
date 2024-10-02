@@ -107,5 +107,19 @@ export const UseAuthStore = defineStore('auth', {
                 return error.response.data;
             }
         },
+        async companyVerify(requestBody) {
+            try {
+                const response = await axios.post(
+                    `${backend}/auth/company-verify`, requestBody,
+                    { 
+                        headers: { 'Content-Type': 'application/json', },
+                        withCredentials: true
+                    }
+                );
+                return response.data;
+            } catch (error) {
+                return error.response.data;
+            }
+        }
     },
 });
