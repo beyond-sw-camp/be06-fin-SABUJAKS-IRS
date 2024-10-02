@@ -285,6 +285,7 @@ const joinSession = async (announceUUID, videoInterviewUUID) => {
   try {
     OV.value = new OpenVidu('http://openvidu-svc:4443');
     session.value = OV.value.initSession();
+    OV.value.setWsServerUrl('wss://openvidu-svc:4443');
     session.value.on("streamCreated", ({ stream }) => {
       const subscriber = session.value.subscribe(stream);
       subscribers.value.push(subscriber);
