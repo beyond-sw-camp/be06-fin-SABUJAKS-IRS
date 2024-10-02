@@ -39,8 +39,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         AuthLoginReq dto;
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            ServletInputStream inputStream = request.getInputStream();
-            String messageBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
+            String messageBody = StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8);
             dto = objectMapper.readValue(messageBody, AuthLoginReq.class);
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                     dto.getEmail(),
@@ -55,33 +54,25 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         CustomUserDetails member = (CustomUserDetails)authResult.getPrincipal();
         Long idx = member.getIdx();
-        String name = member.getName();
         String email = member.getEmail();
         String role = member.getRole();
         Collection<? extends GrantedAuthority> authorities = authResult.getAuthorities();
-        authorities.iterator().next().getAuthority();
         for (GrantedAuthority authority : authorities){
-            if(Objects.equals(authority.getAuthority(), role)){
+            if(Objects.equals(authority.toString(), role)){
                 continue;
-            }else {
-                System.out.println(authority.getAuthority());
-                String viTokenString = jwtUtil.createToken(authority.getAuthority());
-                String uuid = UUID.randomUUID().toString();
-                String viTokenTitle = "VITOKEN"+uuid;
-                Cookie viToken = new Cookie(viTokenTitle, viTokenString);
-                viToken.setHttpOnly(true);
-                viToken.setSecure(true);
-                viToken.setPath("/");
-                viToken.setMaxAge(60 * 60 * 1);
-                response.addCookie(viToken);
             }
+            Cookie viToken = new Cookie("VITOKEN"+ UUID.randomUUID(), jwtUtil.createToken(authority.getAuthority()));
+            viToken.setHttpOnly(true);
+            viToken.setSecure(true);
+            viToken.setPath("/");
+            viToken.setMaxAge(60 * 60);
+            response.addCookie(viToken);
         }
-        String aTokenString = jwtUtil.createToken(idx, email, role);
-        Cookie aToken = new Cookie("ATOKEN", aTokenString);
+        Cookie aToken = new Cookie("ATOKEN", jwtUtil.createToken(idx, email, role));
         aToken.setHttpOnly(true);
         aToken.setSecure(true);
         aToken.setPath("/");
-        aToken.setMaxAge(60 * 60 * 1);
+        aToken.setMaxAge(60 * 60);
         response.addCookie(aToken);
     }
 }

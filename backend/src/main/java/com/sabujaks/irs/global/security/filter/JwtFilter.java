@@ -32,34 +32,33 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String authorization = null;
-        List<String> viAuthorizationList = new ArrayList<>();
+        String accessAuthorization = null;
+        List<String> vidioInterviewAuthorizationList = new ArrayList<>();
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
                 if (cookie.getName().equals("ATOKEN")) {
-                    authorization = cookie.getValue();
+                    accessAuthorization = cookie.getValue();
                 }
                 if (cookie.getName().startsWith("VITOKEN")) {
-                    viAuthorizationList.add(cookie.getValue());
+                    vidioInterviewAuthorizationList.add(cookie.getValue());
                 }
             }
         }
-        if (authorization == null) {
-            log.info("인증 쿠키 없음");
+        if (accessAuthorization == null) {
             filterChain.doFilter(request, response);
             return;
         }
         try {
-            String token = authorization;
+            String token = accessAuthorization;
             Long idx = jwtUtil.getIdx(token);
             String email = jwtUtil.getUsername(token);
             String role = jwtUtil.getRole(token);
-            Set<SimpleGrantedAuthority> grantedAuthorities = new HashSet<>();
+            Set<SimpleGrantedAuthority> authorities = new HashSet<>();
             SimpleGrantedAuthority defaultRole = new SimpleGrantedAuthority(role);
-            grantedAuthorities.add(defaultRole);
-            for (String grantedAuthorityToken : viAuthorizationList) {
-                SimpleGrantedAuthority viRole = new SimpleGrantedAuthority(jwtUtil.getGrantedAuthority(grantedAuthorityToken));
-                grantedAuthorities.add(viRole);
+            authorities.add(defaultRole);
+            for (String videoInterviewAuthorization : vidioInterviewAuthorizationList) {
+                SimpleGrantedAuthority videoInterviewRole = new SimpleGrantedAuthority(jwtUtil.getGrantedAuthority(videoInterviewAuthorization));
+                authorities.add(videoInterviewRole);
             }
             CustomUserDetails customUserDetails = null;
             if (Objects.equals(role, "ROLE_SEEKER")) {
@@ -68,7 +67,7 @@ public class JwtFilter extends OncePerRequestFilter {
                         .email(email)
                         .role(role)
                         .build();
-                customUserDetails = new CustomUserDetails(seeker, grantedAuthorities);
+                customUserDetails = new CustomUserDetails(seeker, authorities);
             }
             if (Objects.equals(role, "ROLE_RECRUITER")) {
                 Recruiter recruiter = Recruiter.builder()
@@ -76,7 +75,7 @@ public class JwtFilter extends OncePerRequestFilter {
                         .email(email)
                         .role(role)
                         .build();
-                customUserDetails = new CustomUserDetails(recruiter, grantedAuthorities);
+                customUserDetails = new CustomUserDetails(recruiter, authorities);
             }
             if (Objects.equals(role, "ROLE_ESTIMATOR")) {
                 Estimator estimator = Estimator.builder()
@@ -84,11 +83,10 @@ public class JwtFilter extends OncePerRequestFilter {
                         .email(email)
                         .role(role)
                         .build();
-                customUserDetails = new CustomUserDetails(estimator, grantedAuthorities);
+                customUserDetails = new CustomUserDetails(estimator, authorities);
             }
-            Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, grantedAuthorities);
+            Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, authorities);
             SecurityContextHolder.getContext().setAuthentication(authToken);
-
         } catch (ExpiredJwtException | UnsupportedJwtException | IllegalArgumentException | UsernameNotFoundException e) {
             request.setAttribute("exception", e);
         }

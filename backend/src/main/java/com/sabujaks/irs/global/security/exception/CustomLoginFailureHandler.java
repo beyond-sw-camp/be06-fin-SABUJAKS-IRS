@@ -18,6 +18,7 @@ import java.net.URLEncoder;
 
 @Component
 public class CustomLoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
+
     private final HandlerExceptionResolver handlerExceptionResolver;
 
     public CustomLoginFailureHandler(@Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver) {

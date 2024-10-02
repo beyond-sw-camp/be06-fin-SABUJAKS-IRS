@@ -120,7 +120,7 @@ public class VideoInterviewService {
         LocalDateTime currentTime = LocalDateTime.now();
 
         // 권한 스트링 형식: "ROLE_SEEKER|id1|id2|날짜|시작시간|종료시간"
-        Collection< ? extends GrantedAuthority> authorities = userDetails.getVideoInterviewAuthorities();
+        Collection< ? extends GrantedAuthority> authorities = userDetails.getAuthorities();
 
         for (GrantedAuthority authority : authorities) {
             String authorityStr = authority.getAuthority();
