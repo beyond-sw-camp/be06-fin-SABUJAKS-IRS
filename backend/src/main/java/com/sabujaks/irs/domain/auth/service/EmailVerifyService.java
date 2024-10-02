@@ -57,7 +57,7 @@ public class EmailVerifyService {
             throw new BaseException(BaseResponseMessage.AUTH_EMAIL_VERIFY_FAIL_INVALID_ROLE);
         }
         String uuid = UUID.randomUUID().toString();
-        message.setText("http://localhost:8080/api/auth/email-verify?email="+response.getEmail()+"&role="+response.getRole()+"&uuid="+uuid);
+        message.setText("https://www.sabujaks-irs.kro.kr/api/api/auth/email-verify?email="+response.getEmail()+"&role="+response.getRole()+"&uuid="+uuid);
         javaMailSender.send(message);
         return uuid;
     }
