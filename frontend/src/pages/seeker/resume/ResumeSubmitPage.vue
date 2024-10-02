@@ -1,6 +1,6 @@
 <template>
   <SeekerHeaderComponent/>
-  <div class="main-container">
+  <div class="main-container pt-150">
     <div class="content">
       <!-- 지원서 제목 -->
         <div class="add-container">
@@ -236,19 +236,17 @@ onMounted(async () => {
   const response = await resumeStore.readSubmitInfo(route.params.announcementIdx);
 
   showPersonalInfo.value = true;
-  if(resumeStore.resumeIntegrated.codes) {
-    showEducation.value = response.result.codes.includes("resume_001");
-    showPersonalHistory.value = response.result.codes.includes("resume_002");
-    showInternsActivity.value = response.result.codes.includes("resume_003");
-    showTraining.value = response.result.codes.includes("resume_004");
-    showCertification.value = response.result.codes.includes("resume_005");
-    showAward.value = response.result.codes.includes("resume_006");
-    showStudyingAbroad.value = response.result.codes.includes("resume_007");
-    showLanguage.value = response.result.codes.includes("resume_008");
-    showPortfolio.value = response.result.codes.includes("resume_009");
-    showPreferentialEmp.value = response.result.codes.includes("resume_010");
-    showCustomLetter.value = response.result.codes.includes("resume_011");
-  }
+  showEducation.value = response.result.codes.includes("resume_001");
+  showPersonalHistory.value = response.result.codes.includes("resume_002");
+  showInternsActivity.value = response.result.codes.includes("resume_003");
+  showTraining.value = response.result.codes.includes("resume_004");
+  showCertification.value = response.result.codes.includes("resume_005");
+  showAward.value = response.result.codes.includes("resume_006");
+  showStudyingAbroad.value = response.result.codes.includes("resume_007");
+  showLanguage.value = response.result.codes.includes("resume_008");
+  showPortfolio.value = response.result.codes.includes("resume_009");
+  showPreferentialEmp.value = response.result.codes.includes("resume_010");
+  showCustomLetter.value = response.result.codes.includes("resume_011");
   // 자기소개서 (맞춤)
   if(showCustomLetter.value) {
     customLetterActivities.value = response.result.customLetterForms.map((customLetterForm, index) => ({
@@ -686,7 +684,7 @@ const handleSubmit = async () => {
 
 .resume-sidebar {
   position: fixed;
-  top: 140px;
+  top: 200px;
   right: 220px;
   width: 200px;
   background-color: #ffffff;
