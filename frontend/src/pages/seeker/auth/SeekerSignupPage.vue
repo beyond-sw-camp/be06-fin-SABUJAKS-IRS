@@ -88,6 +88,7 @@ const handleSignup = async () => {
         role: "ROLE_SEEKER",
         email: email.value,
         password: password.value,
+        name: name.value,
         nickname: nickname.value,
         gender: gender.value,
         birth: birth.value,
