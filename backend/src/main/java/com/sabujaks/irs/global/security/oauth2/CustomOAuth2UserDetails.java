@@ -1,6 +1,8 @@
 package com.sabujaks.irs.global.security.oauth2;
 
+import com.sabujaks.irs.domain.announcement.model.entity.Announcement;
 import com.sabujaks.irs.domain.auth.model.entity.Seeker;
+import com.sabujaks.irs.domain.interview_schedule.model.entity.InterviewParticipate;
 import com.sabujaks.irs.domain.interview_schedule.model.entity.InterviewSchedule;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -9,10 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
@@ -20,11 +19,15 @@ import java.util.stream.Collectors;
 public class CustomOAuth2UserDetails implements UserDetails, OAuth2User {
 
     private final Seeker seeker;
+    private final String role;
+    private Set<SimpleGrantedAuthority> authorities;
     private Map<String, Object> attributes;
 
-    public CustomOAuth2UserDetails(Seeker seeker, Map<String, Object> attributes) {
+    public CustomOAuth2UserDetails(Seeker seeker, Map<String, Object> attributes, Set<SimpleGrantedAuthority> authorities) {
         this.seeker = seeker;
+        this.authorities = authorities;
         this.attributes = attributes;
+        this.role = seeker.getRole();
     }
 
     public Long getIdx(){
@@ -47,14 +50,20 @@ public class CustomOAuth2UserDetails implements UserDetails, OAuth2User {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<GrantedAuthority> collection = new ArrayList<>();
-        collection.add(new GrantedAuthority() {
-            @Override
-            public String getAuthority() {
-                return seeker.getRole();
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        authorities.add(new SimpleGrantedAuthority(role));
+        if (seeker != null && seeker.getInterviewParticipateList() != null) {
+            for (InterviewParticipate participate : seeker.getInterviewParticipateList()) {
+                String authority =
+                        "ROLE_SEEKER|" + participate.getInterviewSchedule().getAnnouncement().getUuid()
+                                + "|" + participate.getInterviewSchedule().getUuid()
+                                + "|" + participate.getInterviewSchedule().getInterviewDate()
+                                + "|" + participate.getInterviewSchedule().getInterviewStart()
+                                + "|" + participate.getInterviewSchedule().getInterviewEnd();
+                authorities.add(new SimpleGrantedAuthority(authority));
             }
-        });
-        return collection;
+        }
+        return authorities;
     }
 
 
