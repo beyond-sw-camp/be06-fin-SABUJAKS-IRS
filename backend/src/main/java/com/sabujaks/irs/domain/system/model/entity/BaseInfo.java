@@ -1,4 +1,4 @@
-package com.sabujaks.irs.domain.data_init.model.entity;
+package com.sabujaks.irs.domain.system.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

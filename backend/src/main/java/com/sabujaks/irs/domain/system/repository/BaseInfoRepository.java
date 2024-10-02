@@ -1,13 +1,12 @@
-package com.sabujaks.irs.domain.data_init.repository;
+package com.sabujaks.irs.domain.system.repository;
 
-import com.sabujaks.irs.domain.data_init.model.entity.BaseInfo;
+import com.sabujaks.irs.domain.system.model.entity.BaseInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.regex.PatternSyntaxException;
 
 @Repository
 public interface BaseInfoRepository extends JpaRepository<BaseInfo, Long> {
