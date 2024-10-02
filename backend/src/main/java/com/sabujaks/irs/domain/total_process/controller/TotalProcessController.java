@@ -28,6 +28,6 @@ public class TotalProcessController {
 
     @GetMapping("/ex01")
     public ResponseEntity<String> ex01(){
-        return ResponseEntity.ok("ex01");
+        return ResponseEntity.ok("ex0123");
     }
 }
