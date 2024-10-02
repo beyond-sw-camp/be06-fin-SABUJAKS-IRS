@@ -15,15 +15,15 @@
                 <a href="/seeker/signup" class="redirect-signup">회원가입</a>
             </form>
             <section class="social-section">
-                <a class="social-button" @click="handleSocialLogin" href="/oauth2/authorization/kakao">
+                <a class="social-button" @click="handleSocialLogin" href="/api/oauth2/authorization/kakao">
                     <span class="social-kakao-logo"></span>
                     <span class="social-label">카카오 로그인</span>
                 </a>
-                <a class="social-button" @click="handleSocialLogin" href="/oauth2/authorization/naver">
+                <a class="social-button" @click="handleSocialLogin" href="/api/oauth2/authorization/naver">
                     <span class="social-naver-logo"></span>
                     <span class="social-label">네이버 로그인</span>
                 </a>
-                <a class="social-button" @click="handleSocialLogin" href="/oauth2/authorization/google">
+                <a class="social-button" @click="handleSocialLogin" href="/api/oauth2/authorization/google">
                     <span class="social-google-logo"></span>
                     <span class="social-label">구글 로그인</span>
                 </a>
