@@ -283,7 +283,7 @@ const updateMainVideoStreamManager = (stream) => {
 
 const joinSession = async (announceUUID, videoInterviewUUID) => {
   try {
-    OV.value = new OpenVidu('https://openvidu-svc:4443');
+    OV.value = new OpenVidu('http://openvidu-svc:4443');
     session.value = OV.value.initSession();
     session.value.on("streamCreated", ({ stream }) => {
       const subscriber = session.value.subscribe(stream);
