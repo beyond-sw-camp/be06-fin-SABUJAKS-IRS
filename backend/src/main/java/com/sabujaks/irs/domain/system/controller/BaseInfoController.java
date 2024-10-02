@@ -1,8 +1,8 @@
-package com.sabujaks.irs.domain.data_init.controller;
+package com.sabujaks.irs.domain.system.controller;
 
 
-import com.sabujaks.irs.domain.data_init.model.response.CategoryRes;
-import com.sabujaks.irs.domain.data_init.service.BaseInfoService;
+import com.sabujaks.irs.domain.system.model.response.CategoryRes;
+import com.sabujaks.irs.domain.system.service.BaseInfoService;
 import com.sabujaks.irs.global.common.exception.BaseException;
 import com.sabujaks.irs.global.common.responses.BaseResponse;
 import com.sabujaks.irs.global.common.responses.BaseResponseMessage;

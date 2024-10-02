@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/total-process")
 public class TotalProcessController {
+
     private final TotalProcessService totalProcessService;
 
     @PostMapping("/create")
@@ -24,10 +25,5 @@ public class TotalProcessController {
             @RequestBody TotalProcessCreateReq dto) throws BaseException {
         TotalProcessCreateRes response = totalProcessService.create(dto, customUserDetails);
         return ResponseEntity.ok(new BaseResponse<>(BaseResponseMessage.TOTAL_PROCESS_CREATE_SUCCESS, response));
-    }
-
-    @GetMapping("/ex01")
-    public ResponseEntity<String> ex01(){
-        return ResponseEntity.ok("ex01");
     }
 }

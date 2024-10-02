@@ -1,9 +1,9 @@
-package com.sabujaks.irs.domain.data_init.service;
+package com.sabujaks.irs.domain.system.service;
 
-import com.sabujaks.irs.domain.data_init.model.entity.BaseInfo;
-import com.sabujaks.irs.domain.data_init.model.response.CategoryRes;
-import com.sabujaks.irs.domain.data_init.model.response.SubcategoryRes;
-import com.sabujaks.irs.domain.data_init.repository.BaseInfoRepository;
+import com.sabujaks.irs.domain.system.model.entity.BaseInfo;
+import com.sabujaks.irs.domain.system.model.response.CategoryRes;
+import com.sabujaks.irs.domain.system.model.response.SubcategoryRes;
+import com.sabujaks.irs.domain.system.repository.BaseInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package com.sabujaks.irs.domain.data_init.model.response;
+package com.sabujaks.irs.domain.system.model.response;
 
 import lombok.*;
 
