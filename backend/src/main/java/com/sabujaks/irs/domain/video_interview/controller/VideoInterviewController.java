@@ -1,5 +1,6 @@
 package com.sabujaks.irs.domain.video_interview.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sabujaks.irs.domain.video_interview.model.request.VideoInterviewCreateAllReq;
 import com.sabujaks.irs.domain.video_interview.model.request.VideoInterviewCreateReq;
 import com.sabujaks.irs.domain.video_interview.model.request.VideoInterviewTokenGetReq;
@@ -57,7 +58,7 @@ public class VideoInterviewController {
 
     @PostMapping("/create-all")
     public ResponseEntity<BaseResponse<?>> scheduleInterviewRoomCreation(
-            @RequestBody VideoInterviewCreateAllReq dto) throws BaseException, OpenViduJavaClientException, OpenViduHttpException {
+            @RequestBody VideoInterviewCreateAllReq dto) throws BaseException, OpenViduJavaClientException, OpenViduHttpException, JsonProcessingException {
 
         String response = videoInterviewService.createAll(dto.getAnnouncementUuid(), dto.getAnnouncementIdx());
 

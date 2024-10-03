@@ -1,5 +1,6 @@
 package com.sabujaks.irs.domain.video_interview.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sabujaks.irs.domain.auth.repository.EstimatorRepository;
 import com.sabujaks.irs.domain.auth.repository.SeekerRepository;
@@ -55,10 +56,12 @@ public class VideoInterviewService {
                 .build();
     }
 
-    public String createAll(String announcementUuid, Long announcementIdx) throws OpenViduJavaClientException, OpenViduHttpException {
+    public String createAll(String announcementUuid, Long announcementIdx) throws OpenViduJavaClientException, OpenViduHttpException, JsonProcessingException {
 
         List<InterviewSchedule> interviewScheduleList = interviewScheduleRepository.findByAnnouncementIdx(announcementIdx).get();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        ObjectMapper objectMapper = new ObjectMapper();
+
 
         for(InterviewSchedule interviewSchedule : interviewScheduleList) {
             Map<String, Object> params = new HashMap<>();
@@ -72,23 +75,26 @@ public class VideoInterviewService {
 
             Date triggerTime = Date.from(triggerDateTime.atZone(ZoneId.systemDefault()).toInstant());
 
+            String jsonParams = objectMapper.writeValueAsString(params);
+
+
             // TaskScheduler로 동적 스케줄링
-            taskScheduler.schedule(() -> {
-                try {
-                    SessionProperties properties = SessionProperties.fromJson(params).build();
-                    Session session = openVidu.createSession(properties);
-
-                    VideoInterview videoInterviewRoom = VideoInterview.builder()
-                            .announceUUID(announcementUuid)
-                            .videoInterviewRoomUUID(session.getSessionId())
-                            .build();
-                    videoInterviewRepository.save(videoInterviewRoom);
-
-                    System.out.println("Video interview room created successfully for UUID: " + interviewSchedule.getUuid());
-                } catch (OpenViduJavaClientException | OpenViduHttpException e) {
-                    e.printStackTrace();
-                }
-            }, triggerTime); // 예약 시간에 생성
+//            taskScheduler.schedule(() -> {
+//                try {
+//                    SessionProperties properties = SessionProperties.fromJson(jsonParams).build();
+//                    Session session = openVidu.createSession(properties);
+//
+//                    VideoInterview videoInterviewRoom = VideoInterview.builder()
+//                            .announceUUID(announcementUuid)
+//                            .videoInterviewRoomUUID(session.getSessionId())
+//                            .build();
+//                    videoInterviewRepository.save(videoInterviewRoom);
+//
+//                    System.out.println("Video interview room created successfully for UUID: " + interviewSchedule.getUuid());
+//                } catch (OpenViduJavaClientException | OpenViduHttpException e) {
+//                    e.printStackTrace();
+//                }
+//            }, triggerTime); // 예약 시간에 생성
         }
 
         return "Video interviews scheduled for creation!";
