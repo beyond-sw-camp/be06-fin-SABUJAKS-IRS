@@ -45,7 +45,7 @@ dependencies {
 	implementation 'org.springframework.security:spring-security-oauth2-client'
 
 	// OpenVidu
-	implementation 'io.openvidu:openvidu-java-client:2.30.0'
+	implementation 'io.openvidu:openvidu-java-client:2.19.0'
 
 	// Lombok
 	compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.30'
