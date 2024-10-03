@@ -87,10 +87,10 @@ public class VideoInterviewService {
     }
 
     public VideoInterviewTokenGetRes sessionToken(VideoInterviewTokenGetReq dto, CustomUserDetails userDetails) throws BaseException, OpenViduJavaClientException, OpenViduHttpException {
-        boolean result = checkUserAuthorities(userDetails, dto);
-        if(!result){
-            throw new BaseException(BaseResponseMessage.VIDEO_INTERVIEW_JOIN_FAIL_NOT_TIME);
-        }
+//        boolean result = checkUserAuthorities(userDetails, dto);
+//        if(!result){
+//            throw new BaseException(BaseResponseMessage.VIDEO_INTERVIEW_JOIN_FAIL_NOT_TIME);
+//        }
         Session session = null;
         for (Session activeSession : openVidu.getActiveSessions()) {
             if(activeSession.getSessionId().equals(dto.getVideoInterviewUUID()));{
