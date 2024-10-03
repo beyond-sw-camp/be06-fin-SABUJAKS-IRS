@@ -1,4 +1,4 @@
-package com.sabujaks.irs.global.utils;
+package com.sabujaks.irs.global.utils.email.service;
 
 
 import com.sabujaks.irs.domain.auth.model.response.SeekerInfoGetRes;

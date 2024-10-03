@@ -9,6 +9,9 @@ import com.sabujaks.irs.global.common.responses.BaseResponse;
 import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
 import com.sabujaks.irs.global.security.CustomUserDetails;
 import com.sabujaks.irs.global.utils.CloudFileUpload;
+import com.sabujaks.irs.global.utils.email.service.EmailService;
+import com.sabujaks.irs.global.utils.email.model.response.ResumeRejectRes;
+import com.sabujaks.irs.global.utils.email.service.EmailSenderSeeker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,6 +26,8 @@ import java.util.List;
 public class ResumeController {
     private final ResumeService resumeService;
     private final CloudFileUpload cloudFileUpload;
+    private final EmailSenderSeeker emailSenderSeeker;
+    private final EmailService emailService;
 
     // (지원자) 마이페이지 -> 지원서 등록
     @PostMapping("/create")
@@ -137,5 +142,16 @@ public class ResumeController {
         List<ResumeReadAllRecruiterRes> response = resumeService.readAllRecruiter(
                 customUserDetails, announcementIdx);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.RESUME_READ_SUCCESS_RESUMED, response));
+    }
+
+    // (채용담당자) 공고에 지원한 지원자 서류 결과 전송
+    @PostMapping("/recruiter/send-result")
+    public ResponseEntity<BaseResponse<?>> sendResult(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestBody List<ResumeReadAllRecruiterRes> resumeList) throws BaseException {
+
+        List<ResumeRejectRes> rejectInfo = emailService.getRejectInfo(customUserDetails, resumeList);
+        emailSenderSeeker.sendResumeResultEmail(rejectInfo);
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.RESUME_READ_SUCCESS_RESUMED));
     }
 }
