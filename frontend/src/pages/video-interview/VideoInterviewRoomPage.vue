@@ -267,6 +267,7 @@ const handleSessionToken = async (announceUUID, videoInterviewUUID) => {
       params: { customSessionId: videoInterviewUUID },
     };
     const response = await videoInterviewStore.getSessionToken(requestBody);
+    console.log(`Session token: ${response.result.sessionToken}`);
     return response.result.sessionToken;
   } catch (error) {
     toast.error(error);
@@ -285,7 +286,6 @@ const joinSession = async (announceUUID, videoInterviewUUID) => {
   try {
     OV.value = new OpenVidu();
     session.value = OV.value.initSession();
-    OV.value.setWsServerUrl('wss://sabujaks-irs.kro.kr/openvidu');
     session.value.on("streamCreated", ({ stream }) => {
       const subscriber = session.value.subscribe(stream);
       subscribers.value.push(subscriber);
