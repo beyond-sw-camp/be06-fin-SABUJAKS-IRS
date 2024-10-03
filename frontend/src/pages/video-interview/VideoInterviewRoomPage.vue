@@ -214,7 +214,6 @@ const handleCreateEvaluate = async(user) => {
     announcementUUID: route.params.announceUUID,
     videoInterviewUUID: route.params.videoInterviewUUID
   };
-  console.log(requestBody);
   const response = await interviewEvaluateStore.createEvaluate(requestBody);
   if(response.success) { toast.success(`${userName} 지원자의 면접 평가가 등록되었습니다.`) } 
   else { toast.error(`${userName} 지원자의 면접 평가가 등록에 실패했습니다.`) }
@@ -266,9 +265,7 @@ const handleSessionToken = async (announceUUID, videoInterviewUUID) => {
       videoInterviewUUID: videoInterviewUUID,
       params: { customSessionId: videoInterviewUUID },
     };
-    console.log('1')
     const response = await videoInterviewStore.getSessionToken(requestBody);
-    console.log(`Session token: ${response.result.sessionToken}`);
     return response.result.sessionToken;
   } catch (error) {
     toast.error(error);
@@ -297,9 +294,12 @@ const joinSession = async (announceUUID, videoInterviewUUID) => {
       session.value.on("exception", ({ exception }) => { console.warn(exception); 
     });
     const token = await handleSessionToken(announceUUID, videoInterviewUUID);
-    if (!token || typeof token !== "string") { throw new Error("유효하지 않은 세션 토큰입니다."); }
-    console.log(`${videoInterviewUUID} Session에 접속중: ${token}`);
-    await session.value.connect(token, { clientData: userName.value },);
+      
+    if(userType.value == "ROLE_ESTIMATOR") {
+      await session.value.connect(token, { clientData: "면접관" },);
+    } else {
+      await session.value.connect(token, { clientData: userName.value },);
+    }
     publisher.value = OV.value.initPublisher(undefined, {
       audioSource: undefined,
       videoSource: undefined,
@@ -314,7 +314,7 @@ const joinSession = async (announceUUID, videoInterviewUUID) => {
     await session.value.publish(publisher.value);
     toast.success("면접방에 오신 걸 환영합니다.\n지원자는 마이크를 끄고 대기해주시길 바랍니다.");
   } catch (error) {
-    console.log(error);
+    console.log(error)
     router.push(`/video-interview/${route.params.announceUUID}`)
     toast.error("지원자는 정해진 시간에 정해진 면접방과 일정에 맞춰 참여 바랍니다.");
   }
