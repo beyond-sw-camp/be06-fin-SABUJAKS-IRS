@@ -137,6 +137,25 @@ export const UseInterviewScheduleStore = defineStore('reservation', {
             }
         },
 
+        async createAllVideoInterview(announcementUuid, announcementIdx){
+            try{
+                const response = await axios.post(
+                    `${backend}/video-interview/create-all`,
+                    {
+                        announcementUuid: announcementUuid,
+                        announcementIdx: announcementIdx
+                    }
+                );
+
+                console.log(response);
+
+                return response;
+            } catch (error) {
+                console.error("Error: ", error);
+                return false;
+            }
+        },
+
         async getAvailableTimes(requestData) {
             try{
                 const response = await axios.post(

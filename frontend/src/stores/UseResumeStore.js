@@ -540,5 +540,22 @@ export const UseResumeStore = defineStore('resume', {
                 alert(error.response.data.message);
             }
         },
+
+        async sendResult(resumeList) {
+            try{
+                const response = await axios.post(`${backend}/resume/recruiter/send-result`,
+                    resumeList,
+                    { headers: { 'Content-Type': 'application/json' },
+                    withCredentials: true
+                });
+
+                console.log("resume result send email response : ", response);
+
+                return response.data.result;
+
+            } catch (error) {
+                alert(error.response.data.message);
+            }
+        }
     },
 });

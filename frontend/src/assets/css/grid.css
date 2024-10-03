@@ -26,13 +26,15 @@ CSS option
 
 
 .margin-auto{margin: 0 auto !important;}
-.margin-v-auto{margin: auto 0 !important}
-.ml-auto{margin-left: auto !important}
+.margin-v-auto{margin: auto 0 !important;}
+.ml-auto{margin-left: auto !important;}
 
 .mt-50{margin-top: 50px !important;}
 
 .mb-0{margin-bottom: 0px !important;}
-.mb-30{margin-bottom: 30px !important}
+.mb-30{margin-bottom: 30px !important;}
+
+.mr-10{margin-right: 10px !important;}
 
 
 .pt-150{padding-top: 150px !important;}

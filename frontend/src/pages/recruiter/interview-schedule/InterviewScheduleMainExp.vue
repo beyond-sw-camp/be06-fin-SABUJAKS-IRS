@@ -240,6 +240,14 @@ const submitForm = async () => {
   }
 };
 
+const createAllVideoInterview = () => {
+  alert(announcementUuidInfo.value);
+  alert(announcementIdxInfo.value);
+  const result = interviewScheduleStore.createAllVideoInterview(announcementUuidInfo.value,  announcementIdxInfo.value);
+
+  console.log(result)
+}
+
 // 전체 시간대를 생성하는 함수 (30분 단위)
 const generateTimeSlots = (start, end, interval) => {
   const times = [];
@@ -328,6 +336,7 @@ watch([interviewDate, team], async ([newDate, newTeam]) => {
         @openModal="openModal"
         @createVideoInterview="createVideoInterview"
         @loadInterviewScheduleList="loadInterviewScheduleList"
+        @createAllVideoInterview="createAllVideoInterview"
         :title="'면접일정'"
         :titleModal="setModalTitle"
         :interviewSchedules="interviewSchedules"
