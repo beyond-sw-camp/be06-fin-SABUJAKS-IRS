@@ -289,7 +289,7 @@ const joinSession = async (announceUUID, videoInterviewUUID) => {
     session.value = OV.value.initSession();
     console.log('2');
     session.value.on("streamCreated", ({ stream }) => {
-      const subscriber = session.value.subscribe(stream);
+      const subscriber = session.value.subscribe(stream); 
       subscribers.value.push(subscriber);
     });
     session.value.on("streamDestroyed", ({ stream }) => {
