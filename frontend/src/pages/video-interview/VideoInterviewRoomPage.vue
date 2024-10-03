@@ -285,7 +285,7 @@ const updateMainVideoStreamManager = (stream) => {
 
 const joinSession = async (announceUUID, videoInterviewUUID) => {
   try {
-    OV.value = new OpenVidu();
+    OV.value = new OpenVidu("https://www.sabujaks-irs.kro.kr:4443/");
     session.value = OV.value.initSession();
     console.log('2');
     session.value.on("streamCreated", ({ stream }) => {
