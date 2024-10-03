@@ -291,14 +291,14 @@ const joinSession = async (announceUUID, videoInterviewUUID) => {
     session.value.on("streamDestroyed", ({ stream }) => {
       const index = subscribers.value.indexOf(stream.streamManager, 0);
       if (index >= 0) { subscribers.value.splice(index, 1); } });
-      session.value.on("exception", ({ exception }) => { console.warn(exception); 
+    session.value.on("exception", ({ exception }) => { console.warn(exception); 
     });
     const token = await handleSessionToken(announceUUID, videoInterviewUUID);
-      
+    console.log("세션 토큰 발급:", token);
     if(userType.value == "ROLE_ESTIMATOR") {
-      await session.value.connect(token, { clientData: "면접관" },);
+      await session.value.connect(token, { clientData: `면접관` },);
     } else {
-      await session.value.connect(token, { clientData: userName.value },);
+      await session.value.connect(token, { clientData: `${userName.value}` },);
     }
     publisher.value = OV.value.initPublisher(undefined, {
       audioSource: undefined,
@@ -308,7 +308,7 @@ const joinSession = async (announceUUID, videoInterviewUUID) => {
       resolution: "640x480",
       frameRate: 30,
       insertMode: "APPEND",
-      mirror: false,
+      mirror: false
     });
     mainStreamManager.value = publisher.value;
     await session.value.publish(publisher.value);
