@@ -266,6 +266,7 @@ const handleSessionToken = async (announceUUID, videoInterviewUUID) => {
       videoInterviewUUID: videoInterviewUUID,
       params: { customSessionId: videoInterviewUUID },
     };
+    console.log('1')
     const response = await videoInterviewStore.getSessionToken(requestBody);
     console.log(`Session token: ${response.result.sessionToken}`);
     return response.result.sessionToken;
@@ -286,6 +287,7 @@ const joinSession = async (announceUUID, videoInterviewUUID) => {
   try {
     OV.value = new OpenVidu();
     session.value = OV.value.initSession();
+    console.log('2');
     session.value.on("streamCreated", ({ stream }) => {
       const subscriber = session.value.subscribe(stream);
       subscribers.value.push(subscriber);
@@ -314,7 +316,8 @@ const joinSession = async (announceUUID, videoInterviewUUID) => {
     await session.value.publish(publisher.value);
     toast.success("면접방에 오신 걸 환영합니다.\n지원자는 마이크를 끄고 대기해주시길 바랍니다.");
   } catch (error) {
-    router.push(`/video-interview/${route.params.announceUUID}`)
+    console.log(error);
+    // router.push(`/video-interview/${route.params.announceUUID}`)
     toast.error("지원자는 정해진 시간에 정해진 면접방과 일정에 맞춰 참여 바랍니다.");
   }
   window.addEventListener("beforeunload", leaveSession);
