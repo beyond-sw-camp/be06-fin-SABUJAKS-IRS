@@ -4,6 +4,11 @@
       <MainSideBarComponent></MainSideBarComponent>
           <div id="content">
               <h1>지원자 리스트</h1>
+              <div class="col-12">
+                <div class="interview-add">
+                  <button @click="sendResult()">서류결과전송</button>
+                </div>
+              </div>
               <table>
                   <tbody>
                   <tr>
@@ -24,11 +29,7 @@
                         <td>{{ resume.seekerName }}</td>
                         <td>{{ resume.resumeTitle }}</td>
                         <td>{{ formatDate(resume.resumedAt) }}</td>
-                        <td>{{ checkApplicationResult(
-                                                        resume.resumeResult, 
-                                                        resume.interviewOneResult, 
-                                                        resume.interviewTwoResult, 
-                                                        resume.finalResult) }}</td>
+                        <td>{{ checkApplicationResult(resume.resumeResult)}}</td>
                   </tr>
                   </tbody>
               </table>
@@ -47,7 +48,7 @@
 <script setup>
 import MainSideBarComponent from "@/components/recruiter/MainSideBarComponent.vue";
 import MainHeaderComponent from "@/components/recruiter/MainHeaderComponent.vue";
-import { onMounted } from 'vue';
+import {onMounted} from 'vue';
 import { UseResumeStore } from '@/stores/UseResumeStore';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -71,27 +72,43 @@ const handleRowClick = (resume) => {
 };
 
 // 결과를 확인하는 함수
-const checkApplicationResult = (resumeResult, interviewOneResult, interviewTwoResult, finalResult) => {
-    if (finalResult === false) {
-        return '최종 불합격';
-    } else if (finalResult === true) {
-        return '최종 합격';
-    } else if (interviewTwoResult === false) {
-        return '2차 면접 불합격';
-    } else if (interviewTwoResult === true) {
-        return '2차 면접 합격';
-    } else if (interviewOneResult === false) {
-        return '1차 면접 불합격';
-    } else if (interviewOneResult === true) {
-        return '1차 면접 합격';
-    } else if (resumeResult === false) {
-        return '서류 불합격';
-    } else if (resumeResult === true) {
-        return '서류 합격';
-    } else {
-        return '대기';
-    }
+const checkApplicationResult = (resumeResult) => {
+  if (resumeResult === false) {
+    return '서류 불합격';
+  } else if (resumeResult === true) {
+    return '서류 합격';
+  }
+    // if (finalResult === false) {
+    //     return '최종 불합격';
+    // } else if (finalResult === true) {
+    //     return '최종 합격';
+    // } else if (interviewTwoResult === false) {
+    //     return '2차 면접 불합격';
+    // } else if (interviewTwoResult === true) {
+    //     return '2차 면접 합격';
+    // } else if (interviewOneResult === false) {
+    //     return '1차 면접 불합격';
+    // } else if (interviewOneResult === true) {
+    //     return '1차 면접 합격';
+    // } else if (resumeResult === false) {
+    //     return '서류 불합격';
+    // } else if (resumeResult === true) {
+    //     return '서류 합격';
+    // } else {
+    //     return '대기';
+    // }
 };
+
+const sendResult = async () => {
+  if (confirm("서류결과를 일괄 전송하시겠습니까?")) {
+    if (await resumeStore.sendResult(resumeStore.resumeList)) {
+      window.location.reload();
+    }  else {
+      alert("일괄 처리 과정에서 오류가 발생했습니다. 관리자에게 문의하십시오.")
+    }
+  }
+
+}
 </script>
 
 <style scoped>
@@ -137,6 +154,18 @@ th, td {
 
 th {
   background-color: #f1f1f1;
+}
+
+.interview-add {
+  float: right;
+  margin: 10px 0;
+}
+
+.interview-add button {
+  background-color: #212b36;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
 }
 
 </style>
