@@ -41,15 +41,20 @@ public class AlarmService {
         List<Alarm> result = alarmRepository.findBySeekerIdx(idx)
                                 .orElseThrow(() -> new BaseException(BaseResponseMessage.ALARM_SEARCH_FAIL));
         List<AlarmRes> alarmResult = new ArrayList<>();
-        for(Alarm alarm : result) {
-            alarmResult.add(AlarmRes.builder()
+        for (Alarm alarm : result) {
+            AlarmRes.AlarmResBuilder alarmResBuilder = AlarmRes.builder()
                     .idx(alarm.getIdx())
                     .type(alarm.getType())
                     .status(alarm.getStatus())
                     .message(alarm.getMessage())
-                    .createdAt(alarm.getCreatedAt())
-                    .interviewScheduleIdx(alarm.getInterviewSchedule().getIdx())
-                    .build());
+                    .createdAt(alarm.getCreatedAt());
+
+            // alarm.getInterviewSchedule()이 null이 아니면 interviewScheduleIdx 설정
+            if (alarm.getInterviewSchedule() != null) {
+                alarmResBuilder.interviewScheduleIdx(alarm.getInterviewSchedule().getIdx());
+            }
+
+            alarmResult.add(alarmResBuilder.build());
         }
 
         return alarmResult;

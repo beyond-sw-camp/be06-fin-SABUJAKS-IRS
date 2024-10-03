@@ -12,7 +12,7 @@ import com.sabujaks.irs.global.common.exception.BaseException;
 import com.sabujaks.irs.global.common.responses.BaseResponse;
 import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
 import com.sabujaks.irs.global.security.CustomUserDetails;
-import com.sabujaks.irs.global.utils.EmailSenderSeeker;
+import com.sabujaks.irs.global.utils.email.service.EmailSenderSeeker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

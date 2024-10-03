@@ -1,4 +1,4 @@
-package com.sabujaks.irs.global.utils;
+package com.sabujaks.irs.global.utils.email.service;
 
 
 import com.sabujaks.irs.domain.alarm.model.entity.Alarm;
@@ -12,6 +12,7 @@ import com.sabujaks.irs.domain.video_interview.model.response.VideoInterviewCrea
 import com.sabujaks.irs.global.common.exception.BaseException;
 import com.sabujaks.irs.global.common.responses.BaseResponse;
 import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
+import com.sabujaks.irs.global.utils.email.model.response.ResumeRejectRes;
 import freemarker.template.Template;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -48,10 +49,46 @@ public class EmailSenderSeeker {
         }
     }
 
-    public void sendResumeResultEmail() throws RuntimeException {
+    public void sendResumeResultEmail(List<ResumeRejectRes> rejectInfo) throws RuntimeException {
         try {
+            for(ResumeRejectRes dto : rejectInfo) {
+                MimeMessage message = mailSender.createMimeMessage();
+                MimeMessageHelper helper = new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
+                helper.setTo(dto.getSeekerEmail());
+                helper.setSubject("[IRS] 서류전형 결과 안내");
 
+                // 템플릿 내부에서 처리한 변수값 매핑
+                Map<String, Object> model = new HashMap<>();
+                model.put("name", dto.getSeekerName());
+                model.put("companyName", dto.getCompanyName());
+                model.put("announcementTitle", dto.getAnnouncementTitle());
+
+                // 메일로 전송할 템플릿 렌더링
+                // 디렉토리 지정한 configure파일에서 객체 얻어와서 해당 객체로 템플릿 찾아서 얻어온다.
+                Template template = freemarkerConfigurer.getConfiguration().getTemplate("ResumeRejectEmail.html");
+
+                String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
+                helper.setText(html, true); // Set HTML content
+
+                // Alarm 저장 로직
+                Seeker seeker = seekerRepository.findBySeekerIdx(dto.getSeekerIdx())
+                        .orElseThrow(() -> new BaseException(BaseResponseMessage.MEMBER_NOT_FOUND));
+
+                Alarm alarm = Alarm.builder()
+                        .type("서류전형 결과 안내")
+                        .status(false)
+                        .message(html)
+                        .seeker(seeker)
+                        .createdAt(LocalDateTime.now())
+                        .build();
+
+                alarmRepository.save(alarm);
+
+
+                mailSender.send(message);
+            }
         } catch (Exception e) {
+            e.printStackTrace();
             new BaseResponse<>(BaseResponseMessage.EMAIL_SEND_FAIL);
         }
     }

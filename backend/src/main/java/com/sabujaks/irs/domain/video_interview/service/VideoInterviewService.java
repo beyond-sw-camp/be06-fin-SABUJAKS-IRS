@@ -17,12 +17,14 @@ import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
 import com.sabujaks.irs.global.security.CustomUserDetails;
 import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -32,6 +34,7 @@ public class VideoInterviewService {
     private final OpenVidu openVidu;
     private final VideoInterviewRepository videoInterviewRepository;
     private final InterviewScheduleRepository interviewScheduleRepository;
+    private final TaskScheduler taskScheduler;
 
     public VideoInterviewCreateRes create(VideoInterviewCreateReq dto) throws OpenViduJavaClientException, OpenViduHttpException, BaseException {
         SessionProperties properties = SessionProperties.fromJson(dto.getParams()).build();
@@ -47,6 +50,45 @@ public class VideoInterviewService {
                 .interviewScheduleRes(dto.getInterviewScheduleInfo())
                 .announcementUuid(videoInterviewRoom.getAnnounceUUID())
                 .build();
+    }
+
+    public String createAll(String announcementUuid, Long announcementIdx) throws OpenViduJavaClientException, OpenViduHttpException {
+
+        List<InterviewSchedule> interviewScheduleList = interviewScheduleRepository.findByAnnouncementIdx(announcementIdx).get();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        for(InterviewSchedule interviewSchedule : interviewScheduleList) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("customSessionId", interviewSchedule.getUuid());
+
+            LocalDateTime interviewDate = LocalDateTime.parse(interviewSchedule.getInterviewDate()+" 00:00:00", formatter);
+
+            // 하루 전 저녁 10시
+            LocalDateTime triggerDateTime = interviewDate.minusDays(1).withHour(22).withMinute(0).withSecond(0);
+
+
+            Date triggerTime = Date.from(triggerDateTime.atZone(ZoneId.systemDefault()).toInstant());
+
+            // TaskScheduler로 동적 스케줄링
+            taskScheduler.schedule(() -> {
+                try {
+                    SessionProperties properties = SessionProperties.fromJson(params).build();
+                    Session session = openVidu.createSession(properties);
+
+                    VideoInterview videoInterviewRoom = VideoInterview.builder()
+                            .announceUUID(announcementUuid)
+                            .videoInterviewRoomUUID(session.getSessionId())
+                            .build();
+                    videoInterviewRepository.save(videoInterviewRoom);
+
+                    System.out.println("Video interview room created successfully for UUID: " + interviewSchedule.getUuid());
+                } catch (OpenViduJavaClientException | OpenViduHttpException e) {
+                    e.printStackTrace();
+                }
+            }, triggerTime); // 예약 시간에 생성
+        }
+
+        return "Video interviews scheduled for creation!";
     }
 
     public List<VideoInterviewSearchRes> searchAll(String announceUUID, CustomUserDetails userDetails) throws BaseException {
