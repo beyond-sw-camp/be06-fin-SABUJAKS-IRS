@@ -241,8 +241,6 @@ const submitForm = async () => {
 };
 
 const createAllVideoInterview = () => {
-  alert(announcementUuidInfo.value);
-  alert(announcementIdxInfo.value);
   const result = interviewScheduleStore.createAllVideoInterview(announcementUuidInfo.value,  announcementIdxInfo.value);
 
   console.log(result)
