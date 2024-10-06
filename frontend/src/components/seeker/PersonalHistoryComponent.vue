@@ -248,15 +248,15 @@ const toggleWork = () => {
 }
 
 .custom-checkbox {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   margin-right: 10px;
-  background: url('../../assets/img/sprite-icon.png') no-repeat 0 -187px;
-  transition: background-position 0.3s;
+  background-image: url(../../assets/img/resume/check.png);
+
 }
 
 .custom-checkbox.checked {
-  background-position: 0 -217px;
+  background-image: url(../../assets/img/resume/check-mark.png);
 }
 
 .custom-checkbox-container label {
@@ -276,21 +276,20 @@ const toggleWork = () => {
     cursor: pointer;
     padding: 5px;
     font-size: 14px;
-    color: #007bff;
+    color: #212b36;
 }
 
 .custom-button .button-icon {
-    width: 9px;
-    height: 9px;
+    width: 16px;
+    height: 16px;
     margin-right: 10px;
-    background: url('../../assets/img/sprite-icon.png') no-repeat 0 0;
-    transition: background-position 0.3s;
+    background-image: url(../../assets/img/resume/plus.png);
 }
 
 .custom-button .button-icon.active {
-    background-position: 0 -19px;
-    width: 11px;
-    height: 11px;
+    background-image: url(../../assets/img/resume/x.png);
+    width: 16px;
+    height: 16px;
 }
 
 .custom-button:focus {
