@@ -16,7 +16,7 @@
         <img class="header-logo" src="../../assets/img/irs_white.png">
       </a>
       <div class="header-right">
-        <a href="/recruiter">채용 관리</a>
+        <a href="/recruiter/announce">채용 관리</a>
         <a >{{ displayName }}</a>
         <a @click="handleLogout" class="logout-btn">로그아웃</a>
       </div>

@@ -1,7 +1,7 @@
 <template>
   <div>
     <MainHeaderComponent></MainHeaderComponent>
-    <div class="wrapper">
+    <div class="">
       <MainSideBarComponent></MainSideBarComponent>
       <div class="container">
         <InterviewEvaluateFormMain
@@ -47,15 +47,5 @@ const loadAnnouncementList = async (btnNum) => {
   margin: 0 auto;
 }
 
-.container {
-  width: 80%;
-  flex: 1;
-  margin: 0 auto;
-  margin-left: 200px;
-  padding: 150px 0;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-}
 </style>
   
