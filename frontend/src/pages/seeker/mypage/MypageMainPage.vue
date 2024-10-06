@@ -10,7 +10,7 @@
                 <div class="main-content">
                     <div class="header">
                         <h1>회원 정보</h1>
-                        <button class="btn edit-profile">내 프로필 수정하기</button>
+                        <!-- <button class="btn edit-profile">내 프로필 수정하기</button> -->
                     </div>
 
                     <div class="content">
@@ -117,7 +117,7 @@ const formatDate = (datetime) => {
 
 .body-m {
     font-family: 'Arial', sans-serif;
-    background-color: #f4f4f4;
+    background-color: white;
     justify-content: center;
     align-items: center;
     height: 100%;
@@ -180,7 +180,7 @@ const formatDate = (datetime) => {
 }
 
 .content {
-    background-color: #f9fafb;
+    background-color: white;
     padding: 20px;
     border-radius: 10px;
 }

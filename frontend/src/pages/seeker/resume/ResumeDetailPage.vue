@@ -465,9 +465,14 @@ const formatDate = (dateString) => {
     /* box-sizing: border-box; */
 }
 
+a {
+  text-decoration: none;
+  color: black;
+}
+
 .body-i {
     font-family: 'Arial', sans-serif;
-    background-color: #f4f4f4;
+    background-color: #ffffff;
     justify-content: center;
     align-items: center;
     height: 100%;
@@ -505,7 +510,7 @@ const formatDate = (dateString) => {
     width: 80%;
     padding: 30px;
     border-radius: 10px;
-    background-color: #F2F4F7;
+    background-color: #ffffff;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
@@ -535,7 +540,7 @@ const formatDate = (dateString) => {
 }
 
 .main-content > .content {
-    background-color: #F2F4F7;
+    background-color: #ffffff;
     padding: 10px;
     border-radius: 10px;
 }

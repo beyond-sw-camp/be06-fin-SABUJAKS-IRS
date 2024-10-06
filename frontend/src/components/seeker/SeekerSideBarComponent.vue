@@ -11,7 +11,7 @@
                 <li @click="goAndReload('/seeker/mypage/annouce-resume')">공고별 지원서 관리</li>
                 <li @click="goAndReload('/seeker/mypage/integration-resume')">통합 지원서 관리</li>
                 <li @click="goAndReload('/seeker/mypage/notification')">알림 관리</li>
-                <li @click="goAndReload('/seeker/mypage/schedule')">일정 관리</li>
+                <!-- <li @click="goAndReload('/seeker/mypage/schedule')">일정 관리</li> -->
             </ul>
         </nav>
     </div>
@@ -38,7 +38,7 @@ const goAndReload = (path) => {
 .sidebar {
     width: 20%;
     height: 400px;
-    background-color: #f9fafb;
+    background-color: #ffffff;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);

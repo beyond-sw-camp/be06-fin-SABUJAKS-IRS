@@ -5,9 +5,8 @@
         <img class="header-logo" src="../../assets/img/irs_white.png">
       </a>
       <div class="header-right">
-        <a href="#">내 공고 달력</a>
         <a href="#" @click="goAndReload('/seeker/mypage')">마이페이지</a>
-        <a href="#">알림</a>
+        <!-- <a href="#">알림</a> -->
         <a >{{ displayName }}</a>
         <a @click="handleLogout" class="logout-btn">로그아웃</a>
       </div>
