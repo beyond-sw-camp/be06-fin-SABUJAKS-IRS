@@ -117,7 +117,7 @@ th {
 
 /* 공고 등록 버튼 스타일 */
 .register-button {
-  background-color: #3a3f51;
+  background-color: #212b36;
   color: white;
   border-radius: 5px;
   padding: 13px 10px;
@@ -125,8 +125,13 @@ th {
   margin-bottom: 10px;
   border: none;
   cursor: pointer;
-  font-weight: bold;
+  /* font-weight: bold; */
+  font-size: 16px;
   /* transition: background-color 0.3s ease; */
+}
+
+.register-button:hover {
+  background-color: #37404a;
 }
 
 /* 테이블 행 hover 시 색깔 변화 */

@@ -161,6 +161,12 @@ export default {
       fields.value[fieldKey] = !fields.value[fieldKey]; // 상태를 반전
     };
 
+    const autoResize = (event) => {
+      const textarea = event.target;
+      textarea.style.height = 'auto';  // 현재 높이를 초기화
+      textarea.style.height = `${textarea.scrollHeight}px`;  // 새로운 높이 설정
+    };
+
     // 2. 지원자격/근무조건 폼 관련 *****************************************************************************
 
     // 근무형태 체크박스 그룹
@@ -424,6 +430,7 @@ export default {
       removeSubcategory,
       exclusiveCheckbox,
       toggleField,
+      autoResize,
 
       // 2. 지원자격/근무조건 섹션 관련
       employmentTypes,
@@ -501,7 +508,7 @@ export default {
                 style="margin-top: 10px; border: 1px solid #abadb8; border-radius: 2px;">이미지 초기화</button>
               <img v-if="imageUrl" :src="imageUrl" id="imagePreview"
                 style="width: 100%; height: 100%; object-fit: contain;">
-              <p v-else id="noImageText" style="color: #777;">이미지를 선택하세요.</p>
+              <p v-else id="noImageText" style="color: #777;">하나의 파일로 된 이미지를 선택하세요.</p>
             </div>
           </div>
         </div>
@@ -515,7 +522,7 @@ export default {
 
             <!-- 직무 카테고리 -->
             <div class="required-parents-div">
-              <label class="required">직무 카테고리</label>
+              <label class="required required2">직무 카테고리</label>
               <div class="required-child-div">
                 <div class="category-group">
                   <div class="category-box">
@@ -603,29 +610,29 @@ export default {
               <div v-if="fields.mainDuty" class="required-parents-div">
                 <label></label>
                 <div class="required-child-div">
-                  <input type="text" v-model="announcementStore.formData.mainDuty" placeholder="주요 업무 입력"
-                    name="mainDuty" />
+                  <textarea type="text" style="width: 800px; font-size: 16px;" @input="autoResize($event)"
+                    v-model="announcementStore.formData.mainDuty" placeholder="주요 업무 입력" name="mainDuty"></textarea>
                 </div>
               </div>
               <div v-if="fields.department" class="required-parents-div">
                 <label></label>
                 <div class="required-child-div">
-                  <input type="text" v-model="announcementStore.formData.department" placeholder="근무 부서 입력"
-                    name="department" />
+                  <textarea type="text" style="width: 800px; font-size: 16px;" @input="autoResize($event)" v-model="announcementStore.formData.department" placeholder="근무 부서 입력"
+                    name="department"></textarea>
                 </div>
               </div>
               <div v-if="fields.position" class="required-parents-div">
                 <label></label>
                 <div class="required-child-div">
-                  <input type="text" v-model="announcementStore.formData.position" placeholder="직급 직책 입력"
-                    name="position" />
+                  <textarea type="text" style="width: 800px; font-size: 16px;" @input="autoResize($event)" v-model="announcementStore.formData.position" placeholder="직급 직책 입력"
+                    name="position"></textarea>
                 </div>
               </div>
               <div v-if="fields.requirement" class="required-parents-div">
                 <label></label>
                 <div class="required-child-div">
-                  <input type="text" v-model="announcementStore.formData.requirement" placeholder="필수/우대조건 입력"
-                    name="requirement" />
+                  <textarea type="text" style="width: 800px; font-size: 16px;" @input="autoResize($event)" v-model="announcementStore.formData.requirement" placeholder="필수/우대조건 입력"
+                    name="requirement"></textarea>
                 </div>
               </div>
             </div>
@@ -1087,8 +1094,9 @@ input[type="email"] {
 
 .select-category {
   margin-left: 10px;
-  background-color: #e0e7ff;
+  background-color: #212b36;
   border: 1px solid #ccc;
+  color: white;
   padding: 5px 10px;
   cursor: pointer;
   border-radius: 5px;
@@ -1153,7 +1161,7 @@ input[type="email"] {
 }
 
 button.active {
-  background-color: #3a3f51;
+  background-color: #212b36;
   /* Navy color for active state */
   color: white;
   border-color: #3a3f51;
@@ -1194,7 +1202,7 @@ button.inactive {
 
 /* 버튼 스타일 */
 #buildFormBtn {
-  background-color: #3a3f51;
+  background-color: #212b36;
   color: white;
   font-size: 16px;
   font-weight: bold;
@@ -1207,7 +1215,7 @@ button.inactive {
 
 /* 버튼 호버 스타일 */
 #buildFormBtn:hover {
-  background-color: #212b36;
+  background-color: #37404a;
 }
 
 .category-label {
