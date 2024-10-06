@@ -380,7 +380,7 @@ onMounted(async () => {
             <p>{{ companyStore.companyInfo.address }}</p>
           </div>
         </div>
-        <button class="submit-button">수정하기</button>
+        <!-- <button class="submit-button">수정하기</button> -->
       </div>
     </div>
   </div>
