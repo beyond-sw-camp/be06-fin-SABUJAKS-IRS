@@ -2,7 +2,8 @@
   <div class="body-arp">
     <SeekerHeaderComponent></SeekerHeaderComponent>
     <section class="main-content">
-      <h2>채용</h2>
+<!--    <section id="wrap">-->
+      <h2>직무 전체</h2>
       <div class="filter-section">
         <!-- 기업형태 필터 -->
         <!-- <div class="filter-item" data-filter="기업형태">
@@ -75,7 +76,7 @@
       </div>
 
       <!-- 선택된 필터들 -->
-      <div class="selected-filters">
+      <div class="selected-filters pb-30">
         <div id="selected-filters-list">
           <span v-for="filter in selectedFilters" :key="filter.name + filter.value" @click="removeFilter(filter)">
             {{ filter.name }}: {{ filter.value }} ✕
@@ -86,7 +87,7 @@
       </div>
 
       <!-- 검색 결과 -->
-      <div class="results-header">
+      <div class="results-header pt-30">
         <span>검색 결과 {{ announcementCount }}건</span>
         <div class="sort-dropdown">
           <button class="dropdown-btn2" @click="toggleSortDropdown">{{ selectedSortOption }} ▼</button>
@@ -100,32 +101,41 @@
       </div>
 
       <!-- 공고 목록 -->
-      <div class="main_product" id="section_banner">
-        <div class="cont_product prd_platinum">
-          <div class="inner_cont">
-            <ul class="prd_list plus" id="_platinumPlus">
+      <div id="recruitWrap" class="recruitWrap">
+        <div class="secContents">
+          <div id="searchLog"></div>
+          <div id="searchList" class="recruitList">
+            <ul data-pageno="1" data-count="20" data-totalcount="3641" data-totalcounttext="3,641">
               <li class="option" v-for="(announcement) in announcementStore.announcements2"
-                :key="announcement.announcementIdx" @click="goToDetailPage(announcement.announcementIdx)">
-                <a class="link_box track_event" rel="sponsored, nofollow">
-                  <span class="logo">
-                    <img src="../../../assets/img/main/company_logo1.png" class="img" alt=" 애경그룹 AK PLAZA"
-                      loading="lazy">
-                  </span>
-                  <span class="c_name"> {{ announcement.companyName }} </span>
-                  <span class="title"> {{ announcement.companyName }} <br> {{ announcement.announcementTitle }} </span>
-                  <span class="title_ex"> {{ announcement.jobTitle }} </span>
-                  <span class="bg">
-                    <img src="../../../assets/img/main/company_card1_596x258.jpg" alt=" 애경그룹 AK PLAZA 2025 신입사원 공개채용 "
-                      loading="lazy">
-                  </span>
-                  <span class="bg_ex">
-                    <img src="../../../assets/img/main/company_card1_600x1120.jpg" alt=" 애경그룹 AK PLAZA 2025 신입사원 공개채용 "
-                      loading="lazy">
-                  </span>
-                  <span class="cont"> 기업 소개 <br> {{ announcement.companyInfo }} <br><br>
-                    {{ announcement.announcementEnd }} 까지 <br>
-                    {{ announcement.region }} 근무 <br> {{ announcement.careerBase }}모집
-                  </span>
+                  :key="announcement.announcementIdx" @click="goToDetailPage(announcement.announcementIdx)">
+                <a href="" class="listCell" target="_blank" data-gno="45672569">
+                  <div class="rLogo">
+                    <img src="@/assets/img/announce/no-background.jpg" alt="㈜365위더스">
+                  </div>
+
+                  <div class="listCont">
+                    <div class="rCor">
+                      <span class="corNm">{{ announcement.companyName }}</span>
+                    </div>
+                    <div class="rTit">{{ announcement.announcementTitle }}</div>
+                    <div class="rInfo">
+                      <span class="rPart">
+                          {{ announcement.jobTitle }}
+                      </span>
+                    </div>
+                    <div class="rSkillBox">
+                      <span class="rSkill">
+                          <span class="rAddress">{{ announcement.region }}</span>
+                      </span>
+                    </div>
+
+                  </div>
+                  <div class="listFoot">
+
+                    <div class="dead-line">
+                      <span class="rPeriod">{{ announcement.announcementStart }} ~ {{ announcement.announcementEnd }}</span>
+                    </div>
+                  </div>
                 </a>
               </li>
             </ul>
@@ -381,14 +391,12 @@ onMounted(() => {
 }
 
 .search-input {
-  width: 300px;
+  width: 90%;
   padding: 10px;
-  border-radius: 25px;
+  border-radius: 5px;
   border: 1px solid #ccc;
   outline: none;
-  font-size: 16px;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .search-input:focus {
@@ -400,10 +408,9 @@ onMounted(() => {
   padding: 10px 20px;
   margin-left: 10px;
   border: none;
-  border-radius: 25px;
+  border-radius: 5px;
   background-color: #212b36;
   color: white;
-  font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -419,10 +426,11 @@ onMounted(() => {
 }
 
 .main-content {
-  max-width: 1200px;
-  margin: 60px auto;
+  overflow: auto;
+  max-width: 1240px;
+  margin: 0 auto;
   background-color: #fff;
-  padding: 50px;
+  padding-top: 150px;
 }
 
 .main-container> :last-child {
@@ -438,20 +446,29 @@ h2 {
 .filter-section {
   display: flex;
   justify-content: left;
-  margin-bottom: 20px;
 }
 
 .filter-item {
+  flex: 1;
   position: relative;
+  margin-right: 5px;
 }
 
 .dropdown-btn {
   padding: 8px 15px;
   width: 130px;
-  border: 1px solid #ffffff;
-  background-color: #cbdaea;
+  border: 1px solid #d2d2d2;
+  background-color: #fff;
+  border-radius: 5px;
   cursor: pointer;
   font-size: 14px;
+}
+
+.dropdown-btn:hover,
+.dropdown-btn:active,
+.dropdown-btn:focus{
+  background-color: #232b36;
+  color: white;
 }
 
 
@@ -490,13 +507,14 @@ h2 {
 }
 
 .selected-filters {
-  margin-bottom: 20px;
+  border-bottom: 1px solid #e8e8e8;
 }
 
 .selected-filters span {
   background-color: #e0e0e0;
   padding: 5px 10px;
   margin-right: 10px;
+  margin-bottom: 10px;
   border-radius: 20px;
   display: inline-block;
   font-size: 14px;
@@ -505,6 +523,7 @@ h2 {
 }
 
 .reset-filters {
+  margin-top: 10px;
   color: #212b36;
   text-decoration: none;
   font-size: 14px;
@@ -548,6 +567,7 @@ h2 {
 }
 
 .search-container {
+  flex: 8;
   display: flex;
   align-items: center;
   margin-left: 20px;
@@ -587,6 +607,7 @@ h2 {
   color: white;
   padding: 10px;
   border: none;
+  width: 166px;
   border-radius: 5px;
   cursor: pointer;
 }
@@ -601,7 +622,8 @@ h2 {
   padding: 10px 0;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 150px;
+  width: 165px;
+  font-size: 0.8rem;
   z-index: 2;
   margin: 0;
   display: flex;
@@ -1328,4 +1350,487 @@ SeekerFooterComponent {
   height: 100%;
   border-radius: 16px
 }
+
+
+
+
+
+
+.main_product .prd_platinum .prd_list.plus li.expanded .bg_ex img,
+.main_product .prd_platinum .prd_list.plus li.option:hover .bg_ex img {
+  width: 100%;
+  height: 100%;
+  border-radius: 16px
+}
+
+body.celebrate_renew #wrap {
+  overflow: auto;
+}
+
+body.celebrate_renew .recruitWrap .recruitList ul {
+  gap: 32px;
+}
+
+#wrap {
+  position: relative;
+  min-width: 1270px;
+  margin: 0 auto;
+  background: #f2f4f7;
+}
+
+#wrap {
+  z-index: 10;
+  min-width: 1240px;
+  margin: 0;
+  background-color: #fff;
+}
+
+.recruitWrap {
+  position: relative;
+}
+
+.secContents {
+  position: relative;
+  z-index: 1;
+  width: 1240px;
+  margin: 0 auto;
+  padding: 100px 0;
+}
+
+.recruitWrap .secContents {
+  width: 1240px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+body.celebrate_renew .recruitWrap .recruitList ul {
+  gap: 32px;
+}
+
+.recruitWrap .recruitList ul {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin: 0;
+}
+
+body.celebrate_renew .recruitWrap .recruitList ul li {
+  margin: 0;
+}
+
+.recruitWrap .recruitList ul > li:nth-child(4n + 1) {
+  margin-left: 0;
+}
+
+.recruitWrap .recruitList ul > li {
+  margin: 0 16px 32px;
+}
+
+li, ul {
+  list-style: none;
+}
+
+recruitWrap .recruitList ul .listCell {
+  position: relative;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 286px;
+  height: 350px;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  cursor: pointer;
+  -webkit-box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.05);
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  transition: 0.3s;
+}
+
+a, a:active, a:focus, a:hover, a:link, a:visited {
+  color: #333;
+  text-decoration: none;
+}
+
+a, img {
+  display: block;
+}
+
+.recruitWrap .recruitList ul .listCell .rLogo.no-image {
+  background: url(@/assets/img/announce/no-background.jpg) no-repeat 50%;
+}
+
+.recruitWrap .recruitList ul .listCell .rLogo {
+  overflow: hidden;
+  position: relative;
+  z-index: -1;
+  height: 130px;
+  border-radius: 8px 8px 0 0;
+}
+
+.recruitWrap .recruitList ul .listCell .listCont {
+  margin-top: -1px;
+  padding: 25px 24px 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.recruitWrap .recruitList ul .listCell .listCont .rCor {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -moz-box-align: center;
+  align-items: center;
+}
+
+.recruitWrap .recruitList ul .listCell .listCont .rCor .corNm {
+  overflow: hidden;
+  display: inline-block;
+  font-size: 15px;
+  letter-spacing: 0;
+  max-width: -webkit-calc(100% - 23px);
+  max-width: -moz-calc(100% - 23px);
+  max-width: calc(100% - 23px);
+  margin: 0 7px 0 0;
+  font-weight: 700;
+  line-height: 22px;
+  color: #171717;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.recruitWrap .recruitList ul .listCell .rIcon {
+  overflow: inherit;
+}
+
+.recruitWrap .rIcon.heart_off, .recruitWrap .rIcon .tplBtnFavOff {
+  width: 16px;
+  height: 14px;
+}
+
+.recruitWrap .rIcon {
+  display: inline-block;
+  position: relative;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  -webkit-background-size: 100% auto;
+  background-size: 100% auto;
+  line-height: normal;
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.recruitWrap .recruitList ul .listCell .listCont .rTit {
+  margin: 12px 0 0;
+  font-size: 16px;
+  letter-spacing: 0;
+  line-height: 26px;
+  color: #171717;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recruitWrap .recruitList ul .listCell .listCont .rInfo {
+  overflow: hidden;
+  margin: 4px 0 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.recruitWrap .recruitList ul .listCell .listCont .rInfo span {
+  position: relative;
+  font-size: 13px;
+  letter-spacing: 0;
+  padding: 0 8px 0 0;
+  line-height: 22px;
+  color: #6a6a6a;
+}
+
+.recruitWrap .recruitList ul .listCell .listCont .rInfo span:after {
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 1px;
+  height: 10px;
+  background-color: #d2d2d2;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  content: '';
+}
+.recruitWrap .recruitList ul .listCell .listCont .rInfo span:last-child:after {
+  display: none;
+}
+.recruitWrap .recruitList ul .listCell .listCont .rInfo .rPeriod {
+  padding: 0 8px 0 0;
+}
+.recruitWrap .recruitList ul .listCell .listCont .rInfo .rAddress,
+.recruitWrap .recruitList ul .listCell .listCont .rInfo .rSkill {
+  padding: 0 0 0 8px;
+}
+.recruitWrap .recruitList ul .listCell .listCont .rSkillBox {
+  overflow: hidden;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -moz-box-align: center;
+  align-items: center;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+  height: 16px;
+  margin: 12px 0 0;
+}
+.recruitWrap .recruitList ul .listCell .listCont .rSkillBox .rSkill {
+  display: inline-block;
+  max-width: 236px;
+  font-size: 0;
+}
+.recruitWrap .recruitList ul .listCell .listCont .rSkillBox .rSkill .tag {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.recruitWrap
+.recruitList
+ul
+.listCell
+.listCont
+.rSkillBox
+.rSkill
+.tag
++ .tag {
+  margin-left: 8px;
+}
+.recruitWrap
+.recruitList
+ul
+.listCell
+.listCont
+.rSkillBox
+.rSkill
+.tag-skil
++ .tag-benefit {
+  position: relative;
+  margin-left: 0;
+  padding-left: 17px;
+}
+.recruitWrap
+.recruitList
+ul
+.listCell
+.listCont
+.rSkillBox
+.rSkill
+.tag-skil
++ .tag-benefit:before {
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: 8px;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background-color: #9e9e9e;
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+  content: '';
+}
+.recruitWrap .recruitList ul .listCell .listCont .rSkillBox span {
+  display: inline-block;
+  font-size: 12px;
+  letter-spacing: 0;
+  position: relative;
+  line-height: 16px;
+  color: #9e9e9e;
+}
+.recruitWrap .recruitList ul .listCell .listFoot {
+  margin: 0 24px;
+  padding: 16px 0 24px;
+  border-top: 1px solid #e8e8e8;
+}
+.recruitWrap .recruitList ul .listCell .listFoot .rAssist {
+  font-size: 14px;
+  letter-spacing: 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -moz-box-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -moz-box-pack: justify;
+  justify-content: space-between;
+  position: relative;
+  padding: 0 0 0 20px;
+  line-height: 22px;
+  color: #171717;
+}
+.recruitWrap .recruitList ul .listCell .listFoot .rAssist:before {
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='14' height='14' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cg clip-path='url(%23clip0_796_175538)'%3E%3Cpath d='M7 13.781C3.264 13.781.219 10.736.219 7 .219 3.264 3.264.219 7 .219c3.736 0 6.781 3.045 6.781 6.781 0 3.736-3.045 6.781-6.781 6.781z' fill='%23FBC400'/%3E%3Cpath d='M7 13.563A6.565 6.565 0 0013.563 7 6.565 6.565 0 007 .437 6.565 6.565 0 00.437 7 6.565 6.565 0 007 13.563zM7 14c-3.859 0-7-3.141-7-7s3.141-7 7-7 7 3.141 7 7-3.141 7-7 7z' fill='%23FBC400'/%3E%3Cpath d='M11.314 6.799h-.84l.481-1.619a.427.427 0 00-.385-.577.492.492 0 00-.63.28c0 .017-.018.043-.018.07l-1.05 3.972h-.035L7.674 5.066a.625.625 0 00-.648-.481.625.625 0 00-.647.499l-1.19 3.85h-.035L4.139 4.988c-.079-.36-.377-.438-.692-.377a.455.455 0 00-.42.473c0 .044.01.079.027.122l.481 1.602h-.84a.374.374 0 00-.394.358v.07a.376.376 0 00.333.42h1.155l.551 1.812c.087.34.42.568.77.525a.709.709 0 00.77-.525l1.111-3.553h.035l1.111 3.553c.088.34.42.568.77.525a.696.696 0 00.77-.534l.534-1.803h1.094c.21 0 .376-.166.385-.367v-.053a.374.374 0 00-.324-.42h-.061l.009-.017z' fill='%23fff'/%3E%3C/g%3E%3Cdefs%3E%3CclipPath id='clip0_796_175538'%3E%3Cpath fill='%23fff' d='M0 0h14v14H0z'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  width: 16px;
+  height: 16px;
+  -webkit-background-size: cover;
+  background-size: cover;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  content: '';
+}
+.recruitWrap .recruitList ul .listCell .listFoot .rPeriod {
+  font-size: 12px;
+  letter-spacing: 0;
+  line-height: 16px;
+  color: #6a6a6a;
+}
+.recruitWrap .recruitList ul .listCell .rIcon {
+  overflow: inherit;
+}
+.recruitWrap .recruitList ul .listCell .rIcon:hover:before {
+  display: block;
+}
+.recruitWrap .recruitList ul .listCell .rIcon:before {
+  display: none;
+  position: absolute;
+  top: -25.5px;
+  left: 50%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 2px 6px;
+  border: 0.5px solid #d2d2d2;
+  border-radius: 4px;
+  background-color: #fff;
+  -webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+  -webkit-transform: translateX(-50%);
+  -moz-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
+  content: '공고 스크랩';
+}
+.recruitWrap .recruitList .none > p {
+  font-weight: 500;
+  font-size: 18px;
+  letter-spacing: 0;
+  color: #9e9e9e;
+}
+.recruitWrap .recruitList .none > p:last-child {
+  font-size: 14px;
+  letter-spacing: 0;
+  margin-top: 8px;
+  font-weight: 400;
+}
+.recruitWrap .rIcon {
+  display: inline-block;
+  position: relative;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  -webkit-background-size: 100% auto;
+  background-size: 100% auto;
+  line-height: normal;
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.recruitWrap .rIcon.heart_off,
+.recruitWrap .rIcon .tplBtnFavOff {
+  width: 16px;
+  height: 14px;
+}
+.recruitWrap .rIcon,
+.recruitWrap .rIcon {
+  position: absolute;
+  top: 10px;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='19' height='18'%3E%3Cg data-name='다운로드 (4)'%3E%3Cpath data-name='패스 59' d='M9.506 14.6l-5.562 2.9 1.062-6.152L.5 6.992 6.719 6.1 9.5.5l2.781 5.6 6.219.892-4.506 4.356 1.062 6.152z' fill='rgba(23,23,23,0.3)'/%3E%3Cpath data-name='패스 60' d='M9.5 0a.73.73 0 01.654.4l2.54 5.1 5.68.816a.73.73 0 01.4 1.247l-4.113 3.97.97 5.6a.73.73 0 01-1.059.77l-5.07-2.648-5.08 2.65a.732.732 0 01-1.059-.772l.97-5.6L.22 7.563a.729.729 0 01.4-1.247L6.3 5.5 8.839.4A.73.73 0 019.5 0zm0 2.37L7.444 6.5a.73.73 0 01-.55.4l-4.583.658 3.318 3.2a.729.729 0 01.213.649l-.784 4.533 4.11-2.143a.732.732 0 01.677 0l4.1 2.142-.784-4.53a.729.729 0 01.213-.649l3.318-3.2-4.586-.66a.73.73 0 01-.55-.4z' fill='%23fff' fill-rule='evenodd'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  right: 10px;
+  width: 20px;
+  height: 19px;
+}
+.recruitWrap .rIcon,
+.recruitWrap .rIcon,
+.recruitWrap .rIcon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 20px;
+  height: 19px;
+}
+.recruitWrap {
+  margin: 80px 0;
+}
+.recruitWrap .foot_banner a {
+  display: block;
+}
+.recruitWrap .foot_banner img {
+  width: 100%;
+}
+.recruitWrap .recruitList ul > li {
+  margin: 0 16px 32px;
+}
+.recruitWrap .recruitList ul > li:nth-child(4n + 1) {
+  margin-left: 0;
+}
+.recruitWrap .recruitList ul > li:nth-child(4n) {
+  margin-right: 0;
+}
+.recruitWrap .recruitList ul .listCell {
+  position: relative;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 286px;
+  height: 350px;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  cursor: pointer;
+  -webkit-box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.05);
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  transition: 0.3s;
+}
+.recruitWrap .recruitList ul .listCell:hover {
+  -webkit-transform: translateY(-8px);
+  -moz-transform: translateY(-8px);
+  -ms-transform: translateY(-8px);
+  transform: translateY(-8px);
+}
+
+.recruitWrap .recruitList ul {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin: 0;
+}
+
+.dead-line {float: inline-end;}
+
 </style>
