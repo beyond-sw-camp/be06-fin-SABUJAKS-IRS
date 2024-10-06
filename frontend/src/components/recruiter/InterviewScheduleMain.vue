@@ -1,5 +1,7 @@
 <script setup>
 import {defineProps, defineEmits, computed, ref} from 'vue';
+import router from "@/router";
+import {UseInterviewScheduleStore} from "@/stores/UseInterviewScheduleStore";
 
 // props를 정의합니다.
 const props = defineProps({
@@ -54,11 +56,16 @@ const handlePageClick = async (pageNumber) => {
 // });
 
 // const announceIdx = ref(0);
-
+const interviewScheduleStore = UseInterviewScheduleStore(); // Store 인스턴스
 const handleRowClick = (announcementIdx, announcementUuid) => {
-  emit('interviewScheduleList', announcementIdx, announcementUuid);
-  emit('announcementUuid', announcementUuid);
-  emit('titleModal', props.careerBase);
+  // Store에 데이터 저장
+  interviewScheduleStore.setAnnouncementIdx(announcementIdx);
+  interviewScheduleStore.setAnnouncementUuid(announcementUuid);
+  interviewScheduleStore.setCareerBase(props.careerBase);
+
+  router.push({
+    path: "/recruiter/interview-schedule/list",
+  });
 }
 
 const formatDate = (datetime) => {

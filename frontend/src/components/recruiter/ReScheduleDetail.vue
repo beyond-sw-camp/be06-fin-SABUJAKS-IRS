@@ -163,15 +163,10 @@ const generateTimeSlots = (start, end, interval) => {
   let current = new Date(`1970-01-01T${start}:00`);
   const endTime = new Date(`1970-01-01T${end}:00`);
 
-  console.log(current);
-  console.log(endTime);
-
   while (current <= endTime) {
     times.push(current.toTimeString().slice(0, 5)); // HH:mm 형식으로 변환
     current.setMinutes(current.getMinutes() + interval);
   }
-
-  console.log("times: ", times);
 
   return times;
 };
@@ -196,8 +191,6 @@ const setStartTimeOptions = () => {
       });
     });
   }
-
-  console.log("startTimeOptions: ", startTimeOptions.value);
 };
 
 // 시작 시간 선택 시 끝 시간 옵션 설정
@@ -216,7 +209,6 @@ watch([interviewDate, team], async ([newDate, newTeam]) => {
   if (newDate && newTeam) {
     try {
       bookedTimes.value = await interviewScheduleStore.getAvailableTime(newDate, newTeam, props.announcementIdx);
-      console.log(bookedTimes.value);
       setStartTimeOptions(); // 예약된 시간대에 따라 시작 시간 옵션 설정
     } catch (error) {
       console.error('시간 정보 가져오기 실패:', error);
@@ -238,11 +230,17 @@ watch([interviewDate, team], async ([newDate, newTeam]) => {
       </tr>
       <tr>
         <td>기존면접일자</td>
-        <td>{{ props.reScheduleInfo.interviewScheduleRes ? props.reScheduleInfo.interviewScheduleRes.interviewDate : '정보 없음' }} </td>
+        <td>{{
+            props.reScheduleInfo.interviewScheduleRes ? props.reScheduleInfo.interviewScheduleRes.interviewDate : '정보 없음'
+          }}
+        </td>
       </tr>
       <tr>
         <td>기존면접시간</td>
-        <td>{{ props.reScheduleInfo.interviewScheduleRes ? `${props.reScheduleInfo.interviewScheduleRes.interviewStart} ~ ${props.reScheduleInfo.interviewScheduleRes.interviewEnd}` : '정보 없음' }} </td>
+        <td>{{
+            props.reScheduleInfo.interviewScheduleRes ? `${props.reScheduleInfo.interviewScheduleRes.interviewStart} ~ ${props.reScheduleInfo.interviewScheduleRes.interviewEnd}` : '정보 없음'
+          }}
+        </td>
       </tr>
       <tr>
         <td>요청면접일자</td>
