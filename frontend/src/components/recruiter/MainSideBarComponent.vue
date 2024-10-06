@@ -57,9 +57,6 @@ const goAndReload = (path) => {
       <li @click="goAndReload('/recruiter/mypage')">
         마이페이지
       </li>
-      <li @click="goAndReload('/recruiter/interview-evaluate/result')">
-          면접 평가
-      </li>
     </ul>
   </div>
 </template>
