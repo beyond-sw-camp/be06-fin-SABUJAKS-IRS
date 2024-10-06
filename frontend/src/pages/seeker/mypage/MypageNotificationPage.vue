@@ -177,7 +177,7 @@ const isDetailOpen = (index) => {
 
 .body-n {
   font-family: 'Arial', sans-serif;
-  background-color: #f4f4f4;
+  background-color: white;
   justify-content: center;
   align-items: center;
   height: 100vh;
@@ -406,7 +406,7 @@ input[type="text"] {
 
 .main_div {
   width: 100%;
-  background-color: #f4f4f4; /* 배경색 설정 */
+  background-color: #ffffff; /* 배경색 설정 */
   display: flex;
   justify-content: center;
   align-items: center;

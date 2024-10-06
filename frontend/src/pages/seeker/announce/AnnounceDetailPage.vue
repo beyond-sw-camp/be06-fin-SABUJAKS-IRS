@@ -13,7 +13,7 @@
                         <div class="ad-list">
                             <span class="ad-text3">직무 카테고리 <br><span class="ad-text4">{{ announcementDetail.jobCategory
                                     }}</span></span>
-                            <span class="ad-text3">모집분야명 <span class="ad-text4">{{ announcementDetail.jobTitle
+                            <span class="ad-text3">모집분야명 <br><span class="ad-text4">{{ announcementDetail.jobTitle
                                     }}</span></span>
                             <span class="ad-text3">채용형태 <span class="ad-text4">{{ announcementDetail.careerBase
                                     }}</span></span>
@@ -26,11 +26,11 @@
                         <div class="ad-list">
                             <span class="ad-text3">고용형태 <span class="ad-text4">{{ announcementDetail.jobType
                                     }}</span></span>
-                            <span class="ad-text3">급여 <span class="ad-text4">{{ announcementDetail.salary
+                            <span class="ad-text3">급여 <br><span class="ad-text4">{{ announcementDetail.salary
                                     }}</span></span>
-                            <span class="ad-text3">지역
+                            <span class="ad-text3">지역 <br>
                                 <span class="ad-text4">{{ announcementDetail.region }}</span>
-                                <button type="button" class="ad-smbtn"><span>지도</span></button>
+                                <!-- <button type="button" class="ad-smbtn"><span>지도</span></button> -->
                             </span>
                         </div>
                     </div>
@@ -65,9 +65,9 @@
                             </span>
                             <span class="ad-text3">기업주소 <span class="ad-text4">{{ announcementDetail.companyAddress
                                     }}</span></span>
-                            <a href="" class="ad-smbtn"><span>기업소개</span></a>
-                            <a href="" class="ad-smbtn"><span>진행중인
-                                    채용보기</span></a>
+                            <!-- <a href="" class="ad-smbtn"><span>기업소개</span></a> -->
+                            <!-- <a href="" class="ad-smbtn"><span>진행중인
+                                    채용보기</span></a> -->
                         </div>
                     </div>
                 </div>
@@ -102,10 +102,10 @@
                     <img src="announce-detail-check.png" alt="">
                     <span>&nbsp;즉시지원</span>
                 </button>
-                <button type="button" class="ad-bgbtn">
+                <!-- <button type="button" class="ad-bgbtn">
                     <img src="announce-detail-star-fill.png" alt="">
                     <span>&nbsp;스크랩</span>
-                </button>
+                </button> -->
             </div>
             <!-- 공고 이미지가 있을 때 -->
             <div class="image-display-container" v-if="announcementDetail.imgUrl">
@@ -137,6 +137,7 @@
                     <span>포지션 및 자격요건</span>
                 </p>
                 <p class="add-desc">
+                    <br>
                     <span v-for="(condition, index) in splitConditions(announcementDetail.positionQuali)" :key="index">
                         {{ condition.trim() }}<br />
                     </span>
@@ -147,6 +148,7 @@
                     <span>근무 조건</span>
                 </p>
                 <p class="add-desc">
+                    <br>
                     <span v-for="(condition, index) in splitConditions(announcementDetail.conditions)" :key="index">
                         {{ condition.trim() }}<br />
                     </span>
@@ -156,14 +158,16 @@
                     <img src="../../../assets/img/announce/check-circle.png">
                     <span>추가 복지 및 혜택</span>
                 </p>
-                <p class="add-desc">{{ announcementDetail.benefits }}
+                <p class="add-desc"><br>{{ announcementDetail.benefits }}
                 </p>
                 <br>
                 <p class="add-heading">
                     <img src="../../../assets/img/announce/check-circle.png">
                     <span>전형 절차</span>
                 </p>
-                <p class="add-desc">면접 횟수 : {{ announcementDetail.interviewNum }}<br>
+                <p class="add-desc">
+                    <br>
+                    면접 횟수 : {{ announcementDetail.interviewNum }}<br>
                     절차 : {{ announcementDetail.process }}
                 </p>
                 <br>
@@ -171,7 +175,9 @@
                     <img src="../../../assets/img/announce/check-circle.png">
                     <span>인사담당자 정보</span>
                 </p>
-                <p class="add-desc">인사담당자명 : {{ announcementDetail.managerName }}<br>
+                <p class="add-desc">
+                    <br>
+                    인사담당자명 : {{ announcementDetail.managerName }}<br>
                     인사담당자 연락처 : {{ announcementDetail.managerContact }}<br>
                     인사담당자 이메일 : {{ announcementDetail.managerEmail }}<br>
                 </p>
@@ -180,7 +186,7 @@
                     <img src="../../../assets/img/announce/check-circle.png">
                     <span>유의 사항</span>
                 </p>
-                <p class="add-desc">{{ announcementDetail.note }}
+                <p class="add-desc"><br>{{ announcementDetail.note }}
                 </p>
             </div>
         </section>
@@ -504,6 +510,7 @@ onUnmounted(() => {
     justify-content: center;
     align-items: center;
     border-top: 1px solid #212b36;
+    border-bottom: 1px solid #212b36;
 }
 
 .ad-text5 {
@@ -537,7 +544,7 @@ onUnmounted(() => {
 /* annouce-detail-detail -> add */
 .ad-detail {
     padding: 18px 0;
-    border-top: 1px solid #212b36;
+    /* border-top: 1px solid #212b36; */
     margin: 18px 18px 0 18px;
     position: relative;
     float: left;

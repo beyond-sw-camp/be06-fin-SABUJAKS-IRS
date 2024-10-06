@@ -9,7 +9,7 @@
                 <div class="main-content" v-if="resumeStore.resumeIntegrated">
                     <div class="header">
                         <h1>통합 지원서 관리</h1>
-                        <button class="btn edit-profile">지원서 수정하기</button>
+                        <!-- <button class="btn edit-profile">지원서 수정하기</button> -->
                     </div>
                     <div id="content-detail">
                         <div class="resume-view-wrapper">
@@ -442,9 +442,14 @@ const calculateDuration = (enteredAt, quitAt) => {
     /* box-sizing: border-box; */
 }
 
+a {
+  text-decoration: none;
+  color: black;
+}
+
 .body-i {
     font-family: 'Arial', sans-serif;
-    background-color: #f4f4f4;
+    background-color: white;
     justify-content: center;
     align-items: center;
     height: 100%;
@@ -482,7 +487,7 @@ const calculateDuration = (enteredAt, quitAt) => {
     width: 80%;
     padding: 30px;
     border-radius: 10px;
-    background-color: #F2F4F7;
+    background-color: white;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
