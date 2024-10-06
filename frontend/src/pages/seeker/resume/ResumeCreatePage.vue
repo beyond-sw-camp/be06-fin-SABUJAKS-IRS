@@ -255,9 +255,18 @@ const customLetterActivities = ref([{}]);
 
 
 const scrollToSection = (sectionId) => {
-  document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
-};
+  const element = document.getElementById(sectionId);
+  if (element) {
+    const headerOffset = 100; // 고정된 헤더의 높이 (예: 100px)
+    const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+    const offsetPosition = elementPosition - headerOffset;
 
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: 'smooth'
+    });
+  }
+};
 
 const toggleBtnState = ref({}); // 사이드바 버튼 상태를 관리할 변수
 
@@ -658,7 +667,8 @@ const handleCreate = async () => {
 
 .resume-sidebar li .span-scroll {
   cursor: pointer; /* 클릭 가능한 커서 모양 */
-  color: #3933F4;
+  color: #212b36; 
+  font-weight: bold;
 }
 
 .sidebar-bottom-btns {
@@ -677,65 +687,64 @@ const handleCreate = async () => {
 .resume-sidebar .icon {
   display: inline-block;
   width: 24px;
-  height: 22px;
-  background-image: url('../../../assets/img/sprite-menu.png');
+  height: 24px;
   background-repeat: no-repeat;
   margin-right: 8px;
 }
 
 .resume-sidebar .personal-info-icon {
-  background-position: -60px -754px; /* 인적사항 */
+  background-image: url(../../../assets/img/resume/personal-info.png);
 }
 
 .resume-sidebar .education-icon {
-  background-position: 0 -403px;
+  background-image: url(../../../assets/img/resume/education.png);
 }
 
 .resume-sidebar .personal-history-icon {
-  background-position: 0 -458px;
+  background-image: url(../../../assets/img/resume/personal-history.png);
 }
 
 .resume-sidebar .interns-activity-icon {
-  background-position: 0 -486px;
+  background-image: url(../../../assets/img/resume/interns-activity.png);
 }
 
 .resume-sidebar .education-completion-icon {
-  background-position: 0 -430px;
+  background-image: url(../../../assets/img/resume/education-completion.png);
 }
 
 .resume-sidebar .certification-icon {
-  background-position: -30px -754px;
+  background-image: url(../../../assets/img/resume/certification.png);
 }
 
 .resume-sidebar .award-icon {
-  background-position: -30px -784px;
+  background-image: url(../../../assets/img/resume/award.png);
 }
 
 .resume-sidebar .studying-abroad-icon {
-  background-position: 0 -630px;
+  background-image: url(../../../assets/img/resume/studying-abroad.png);
 }
 
 .resume-sidebar .language-icon {
-  background-position: 0 -514px;
+  background-image: url(../../../assets/img/resume/language.png);
 }
 
 .resume-sidebar .portfolio-icon {
-  background-position: 0 -571px;
+  background-image: url(../../../assets/img/resume/portfolio.png);
 }
 
 .resume-sidebar .preferential-employment-icon {
-  background-position: 0 -662px;
+  background-image: url(../../../assets/img/resume/preferential-employment.png);
 }
 
 .resume-sidebar .cover-letter-icon {
-  background-position: 0 -377px; /* 자기소개서 */
+  background-image: url(../../../assets/img/resume/cover-letter.png);
 }
 
 .resume-sidebar .toggle-btn {
   background-color: transparent;
   border: none;
-  width: 25px;
-  height: 25px;
+  width: 24px;
+  height: 24px;
   cursor: pointer;
   background-repeat: no-repeat;
   position: absolute; /* 버튼을 항목의 오른쪽에 고정하기 위해 absolute 위치 설정 */
@@ -743,8 +752,7 @@ const handleCreate = async () => {
 }
 
 .resume-sidebar .toggle-minus {
-  background-image: url('../../../assets/img/sprite-menu.png');
-  background-position: -35px 0; /* - 버튼 위치 */
+  background-image: url(../../../assets/img/resume/subtracting-button.png);
 }
 
 .resume-sidebar .toggle-plus {
@@ -790,13 +798,15 @@ const handleCreate = async () => {
 .form-actions {
   text-align: center;
   padding: 15px 0;
-  background-color: #e0e0e0;
+  background-color: #212b36;
   cursor: pointer;
   border-radius: 4px;
   font-size: 16px;
+  color: white;
 }
+
 .form-actions:hover {
-  background-color: #212b36;
+  background-color: #37404a;
   color: white;
 }
 </style>

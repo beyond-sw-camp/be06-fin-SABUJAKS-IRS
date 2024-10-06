@@ -493,19 +493,18 @@ export const UseResumeStore = defineStore('resume', {
                 alert(error.response.data.message);
             }
         },
-        async readAll() {
+        async readAll(router) {
             try {
                 const response = await axios.get(`${backend}/resume/read-all`, {
                     headers: { 'Content-Type': 'application/json' },
                     withCredentials: true
                 });
                 this.announceResumeList = response.data.result;
-                // 공고에 지원한 기록이 존재하지 않으면 마이페이지 홈으로
-
 
             } catch (error) {
                 console.log(error.response.data.message);
                 alert('공고별 지원서 조회에 실패하였습니다.');
+                router.push('/seeker/mypage');
             }
         },
         async updateDocPassed(docPassedValue) {

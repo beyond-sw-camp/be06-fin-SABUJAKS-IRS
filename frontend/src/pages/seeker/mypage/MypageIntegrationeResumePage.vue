@@ -382,7 +382,7 @@ onMounted(async () => {
     await resumeStore.readIntegrated(router);
 
     showPersonalInfo.value = true;
-    if(resumeStore.resumeIntegrated) {
+    if(resumeStore.resumeIntegrated.codes) {
         showEducation.value = resumeStore.resumeIntegrated.codes.includes("resume_001");
         showPersonalHistory.value = resumeStore.resumeIntegrated.codes.includes("resume_002");
         showInternsActivity.value = resumeStore.resumeIntegrated.codes.includes("resume_003");

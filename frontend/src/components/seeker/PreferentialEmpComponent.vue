@@ -237,20 +237,20 @@ const handleMilitaryClassChange = () => {
 
 /* 선택된 항목의 스타일 */
 .form-item.selected {
-  border-color: #007bff; /* 선택된 상태일 때의 테두리 색상 */
+  border-color: #212b36; /* 선택된 상태일 때의 테두리 색상 */
 }
 
 /* 스프라이트 이미지를 체크박스 대신 사용 */
 .custom-checkbox {
   width: 24px;
   height: 24px;
-  background: url('../../assets/img/sprite-icon.png') no-repeat 0 -187px; /* 기본 체크 안된 이미지 */
-  transition: background-position 0.3s;
+  background-image: url(../../assets/img/resume/check.png);
+
 }
 
 /* 선택된 상태의 체크박스 이미지 변경 */
 .custom-checkbox.checked {
-  background-position: 0 -217px; /* 체크된 이미지 부분으로 이동 */
+  background-image: url(../../assets/img/resume/check-mark.png);
 }
 
 /* 라벨 스타일 */
@@ -262,7 +262,7 @@ const handleMilitaryClassChange = () => {
 
 /* 선택된 항목의 라벨 스타일 */
 .form-item.selected label {
-  color: #007bff; /* 선택된 상태일 때의 라벨 색상 */
+  color: #212b36; /* 선택된 상태일 때의 라벨 색상 */
 }
 
 .form-item input,

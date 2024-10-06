@@ -43,12 +43,14 @@ import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.v
 
 import { onMounted } from 'vue';
 import { UseResumeStore } from '@/stores/UseResumeStore';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const resumeStore = UseResumeStore();
 
 
 onMounted(async () => {
-    await resumeStore.readAll();
+    await resumeStore.readAll(router);
     console.log(resumeStore.announceResumeList);
 });
 
