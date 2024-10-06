@@ -4,11 +4,23 @@ import {backend} from "@/const";
 
 // 전역 저장소 생성
 export const UseInterviewScheduleStore = defineStore('reservation', {
-    state: () => (
-        {reservationList: [{ idx: 0, createdAt: "", time: "", section: "", floor: 0}]},
-            {reservationTimeList: [[{ idx: 0 }], [{idx: 0,}]]}
+    state: () => ({
+            announcementIdx: null,
+            announcementUuid: "",
+            careerBase: "",
+        }
     ),
     actions: {
+        setAnnouncementIdx(announcementIdx) {
+            this.announcementIdx = announcementIdx;
+        },
+        setAnnouncementUuid(announcementUuid) {
+            this.announcementUuid = announcementUuid;
+        },
+        setCareerBase(careerBase) {
+            this.careerBase = careerBase;
+        },
+
         // 면접 일정 생성
         async createInterviewSchedule(interviewData) {
             if (interviewData.isOnline === "대면") {
@@ -91,8 +103,6 @@ export const UseInterviewScheduleStore = defineStore('reservation', {
                     // 쿠키 포함
                     { withCredentials: true }
                 );
-
-                console.log(response.data.result);
 
                 return response.data.result;
             } catch (error) {
