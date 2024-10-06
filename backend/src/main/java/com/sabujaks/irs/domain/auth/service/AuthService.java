@@ -1,5 +1,6 @@
 package com.sabujaks.irs.domain.auth.service;
 
+import com.sabujaks.irs.domain.auth.model.response.RecruiterInfoReadRes;
 import com.sabujaks.irs.domain.auth.model.entity.Recruiter;
 import com.sabujaks.irs.domain.auth.model.entity.Seeker;
 import com.sabujaks.irs.domain.auth.model.request.AuthSignupReq;
@@ -252,6 +253,34 @@ public class AuthService {
                     .build();
         } else {
             throw new BaseException(BaseResponseMessage.AUTH_SEARCH_USER_INFO_FAIL);
+        }
+    }
+
+    // 공고 등록 페이지 클릭시 채용담당자 정보 조회
+    public RecruiterInfoReadRes readRecruiterInfo(CustomUserDetails customUserDetails) throws BaseException {
+        Long recruiterIdx = customUserDetails.getIdx();
+        // 채용담당자 확인
+        Optional<Recruiter> resultRecruiter = recruiterRepository.findByRecruiterIdx(recruiterIdx);
+        if(resultRecruiter.isPresent()) {
+            String phoneNumber = resultRecruiter.get().getPhoneNumber();
+
+            String phoneNumberDasi = phoneNumber.replace("-", "");
+
+            String phone1 = phoneNumberDasi.substring(0, 3);
+            String phone2 = phoneNumberDasi.substring(3, 7);
+            String phone3 = phoneNumberDasi.substring(7);
+
+            return RecruiterInfoReadRes.builder()
+                    .managerName(resultRecruiter.get().getName())
+                    .managerContact(phoneNumber)  // 전체 전화번호를 유지하는 경우
+                    .phone1(phone1)               // 첫 번째 부분
+                    .phone2(phone2)               // 두 번째 부분
+                    .phone3(phone3)               // 세 번째 부분
+                    .managerEmail(resultRecruiter.get().getEmail())
+                    .build();
+        } else {
+            // 채용담당자 유저에서 찾을 수 없을 때
+            throw new BaseException(BaseResponseMessage.ANNOUNCEMENT_REGISTER_STEP_ONE_FAIL_NOT_RECRUITER);
         }
     }
 }

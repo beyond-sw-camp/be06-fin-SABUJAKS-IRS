@@ -1,6 +1,5 @@
 package com.sabujaks.irs.domain.company.model.response;
 
-import com.sabujaks.irs.domain.announcement.model.response.BenefitCategory;
 import lombok.*;
 
 import java.util.List;

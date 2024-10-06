@@ -54,22 +54,6 @@ public class AnnouncementController {
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.ANNOUNCEMENT_REGISTER_STEP_TWO_SUCCESS, response));
     }
 
-    // 공고 등록을 위한 조회1
-    @GetMapping("/read-recruiter-info")
-    public ResponseEntity<BaseResponse<RecruiterInfoReadRes>> readRecruiterInfo(
-        @AuthenticationPrincipal CustomUserDetails customUserDetails) throws BaseException {
-
-        RecruiterInfoReadRes response = announcementService.readRecruiterInfo(customUserDetails);
-        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.AUTH_SEARCH_USER_INFO_SUCCESS, response));
-    }
-
-    // 공고 등록을 위한 조회2
-    @GetMapping("/read-company-info")
-    public ResponseEntity<BaseResponse<CompanyInfoReadRes>> readCompanyInfo(String recruiterEmail) throws BaseException {
-
-        CompanyInfoReadRes response = announcementService.readCompanyInfo(recruiterEmail);
-        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.COMPANY_INFO_SUCCESS_REGISTER, response));
-    }
 
     // 공고 전체 목록 조회 (지원자 페이지에서)
     @GetMapping("/read-all/see")
