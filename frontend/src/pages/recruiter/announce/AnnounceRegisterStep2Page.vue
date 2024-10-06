@@ -3,34 +3,37 @@
     <div class="container">
         <MainSideBarComponent></MainSideBarComponent>
         <div id="content">
-            <h2>[{{router.params.title}}] 공고<br>지원서 폼 조립</h2>
+            <div style="display: flex; justify-content: space-between;">
+                <h2>[{{ router.params.title }}] 공고<br>지원서 폼 조립</h2>
+                <!-- 저장 버튼 -->
+                <button @click="saveForm" class="save-button">폼 저장</button>
+            </div>
             <div class="form-builder" style="margin-top: 30px;">
-                
-                <!-- 동글동글한 버튼들 -->
+
+                <!-- 네모네모한 버튼들 -->
                 <div class="form-options">
                     <button v-for="(item, index) in formItems" :key="index"
                         :class="{ 'selected': selectedForms.includes(item.code) }" @click="toggleForm(item.code)">
                         {{ item.description }}
                     </button>
                 </div>
-                
+
                 <!-- 자기소개서 특별 기능 -->
                 <div v-if="selectedForms.includes('resume_011')" class="cover-letter-section">
-                    <div>
+                    <div style="display: flex; justify-content: space-between;">
                         <h3>자기소개서 항목&글자수</h3>
-                        <button style="margin-top: 15px; border-radius: 5px;" @click="addCoverLetterSection">항목 추가</button>
+                        <button style="margin-top: 15px; border-radius: 5px;" @click="addCoverLetterSection">항목
+                            추가</button>
                     </div>
                     <div v-for="(section, index) in coverLetterSections" :key="index" class="cover-letter-item"
                         style="margin-top: 15px;">
-                        <input type="text" v-model="section.title" placeholder="문항입력" />
-                        <input type="number" v-model="section.characterLimit"
-                            style="width: 60px;" placeholder="글자 수 제한" />
-                        <button style="padding: 10px 10px; border-radius: 5px;" @click="removeCoverLetterSection(index)">삭제</button>
+                        <textarea type="text" v-model="section.title" @input="autoResize($event)" style="font-size: 18px; height: 40px; width: 600px;" placeholder="문항입력" ></textarea>
+                        <input type="number" v-model="section.characterLimit" style="font-size: 18px; height: 20px; width: 60px;"
+                            placeholder="글자 수 제한" />
+                        <button style="padding: 10px 10px; border-radius: 5px; height: 40px; width: 60px;"
+                            @click="removeCoverLetterSection(index)">삭제</button>
                     </div>
                 </div>
-
-                <!-- 저장 버튼 -->
-                <button @click="saveForm" class="save-button">폼 저장</button>
             </div>
         </div>
     </div>
@@ -98,6 +101,12 @@ const removeCoverLetterSection = (index) => {
     coverLetterSections.value.splice(index, 1);
 };
 
+const autoResize = (event) => {
+    const textarea = event.target;
+    textarea.style.height = 'auto';  // 현재 높이를 초기화
+    textarea.style.height = `${textarea.scrollHeight}px`;  // 새로운 높이 설정
+};
+
 // 폼 저장 함수 호출
 const saveForm = () => {
     customFormStore.saveForm(router.params.announcementIdx, selectedForms.value, coverLetterSections.value);
@@ -147,29 +156,30 @@ const saveForm = () => {
 .form-options button {
     margin: 10px;
     padding: 10px 20px;
-    border-radius: 50px;
-    border: 2px solid #ccc;
+    border-radius: 5px;
+    border: 1px solid #ccc;
     background-color: #f1f1f1;
     font-weight: bold;
     color: #333;
     transition: all 0.3s ease;
     cursor: pointer;
+    font-size: 16px;
 }
 
 .form-options button.selected {
-    background-color: #3a3f51;
+    background-color: #212b36;
     color: white;
     border-color: #3a3f51;
 }
 
 .form-options button:hover {
-    background-color: #3498db;
+    background-color: #37404a;
     color: white;
 }
 
 .cover-letter-section {
     width: 100%;
-    max-width: 600px;
+    /* max-width: 600px; */
     margin: 20px auto;
     border-top: 1px solid #ccc;
     padding-top: 20px;
@@ -177,12 +187,12 @@ const saveForm = () => {
 
 .cover-letter-item {
     display: flex;
-    justify-content: space-between;
+    justify-content:center;
     margin-bottom: 10px;
 }
 
 .cover-letter-item input {
-    margin-right: 10px;
+    margin: 0 10px;
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #ccc;
@@ -191,28 +201,30 @@ const saveForm = () => {
 
 button {
     padding: 10px 20px;
-    background-color: #3a3f51;
+    background-color: #212b36;
     border: none;
     color: white;
     font-weight: bold;
     cursor: pointer;
     border-radius: 1px;
     transition: background-color 0.3s ease;
+    font-size: 16px;
 }
 
 button:hover {
-    background-color: #3a3f51;
+    background-color: #37404a;
 }
 
 .save-button {
-    background-color: #3a3f51;
+    background-color: #212b36;
     color: white;
     border-radius: 5px;
     padding: 10px 30px;
     margin-top: 20px;
+    font-size: 16px;
 }
 
 .save-button:hover {
-    background-color: #2980b9;
+    background-color: #37404a;
 }
 </style>

@@ -447,7 +447,8 @@ onUnmounted(() => {
 
 .ad-smbtn:hover,
 .ad-bgbtn:hover {
-    opacity: 70%;
+    /* opacity: 70%; */
+    background-color: #37404a;
 }
 
 .ad-link {

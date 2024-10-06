@@ -383,7 +383,7 @@ onMounted(() => {
 .search-input {
   width: 300px;
   padding: 10px;
-  border-radius: 25px;
+  border-radius: 16px;
   border: 1px solid #ccc;
   outline: none;
   font-size: 16px;
@@ -400,7 +400,7 @@ onMounted(() => {
   padding: 10px 20px;
   margin-left: 10px;
   border: none;
-  border-radius: 25px;
+  border-radius: 16px;
   background-color: #212b36;
   color: white;
   font-size: 16px;
@@ -410,8 +410,8 @@ onMounted(() => {
 }
 
 .search-btn:hover {
-  background-color: #0056b3;
-  box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3);
+  background-color: #37404a;
+  /* box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3); */
 }
 
 .search-btn:focus {
@@ -570,9 +570,6 @@ h2 {
   border-radius: 4px;
 }
 
-#search-btn:hover {
-  background-color: #212b36;
-}
 
 /* 정렬 관련 */
 
@@ -587,8 +584,12 @@ h2 {
   color: white;
   padding: 10px;
   border: none;
-  border-radius: 5px;
+  border-radius: 16px;
   cursor: pointer;
+}
+
+.dropdown-btn2:hover {
+  background-color: #37404a;
 }
 
 .sort-options {
