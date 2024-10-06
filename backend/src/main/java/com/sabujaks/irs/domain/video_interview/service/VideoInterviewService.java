@@ -38,10 +38,7 @@ public class VideoInterviewService {
     private final TaskScheduler taskScheduler;
 
     public VideoInterviewCreateRes create(VideoInterviewCreateReq dto) throws OpenViduJavaClientException, OpenViduHttpException, BaseException {
-//        SessionProperties properties = SessionProperties.fromJson(dto.getParams()).build();
-        SessionProperties properties = new SessionProperties.Builder()
-                .customSessionId(dto.getParams().get("customSessionId").toString())
-                .build();
+        SessionProperties properties = SessionProperties.fromJson(dto.getParams()).build();
         Session session = openVidu.createSession(properties);
         VideoInterview videoInterviewRoom = VideoInterview.builder()
                 .announceUUID(dto.getAnnounceUUID())
@@ -139,17 +136,9 @@ public class VideoInterviewService {
 //        if(!result){
 //            throw new BaseException(BaseResponseMessage.VIDEO_INTERVIEW_JOIN_FAIL_NOT_TIME);
 //        }
-        Session session = null;
-        for (Session activeSession : openVidu.getActiveSessions()) {
-            if(activeSession.getSessionId().equals(dto.getVideoInterviewUUID()));{
-                session = activeSession;
-                break;
-            }
-        }
+        Session session = openVidu.getActiveSession(dto.getVideoInterviewUUID());
         if (session == null) { throw new BaseException(BaseResponseMessage.VIDEO_INTERVIEW_JOIN_FAIL);}
-        ConnectionProperties properties = new ConnectionProperties.Builder()
-                .type(ConnectionType.WEBRTC).data(dto.getParams().get("customSessionId").toString()).role(OpenViduRole.PUBLISHER)
-                .build();
+        ConnectionProperties properties = ConnectionProperties.fromJson(dto.getParams()).build();
 
         try{
             Connection connection = session.createConnection(properties);
@@ -160,22 +149,11 @@ public class VideoInterviewService {
                     .build();
         } catch (Exception e){
             System.out.println("Error creating connection: " + e.getMessage());
-            SessionProperties recoverProperties = new SessionProperties.Builder()
-                    .customSessionId(dto.getParams().get("customSessionId").toString())
-                    .build();
-            openVidu.createSession(recoverProperties);
-            Session recoverSession = null;
-            for (Session activeSession : openVidu.getActiveSessions()) {
-                if(activeSession.getSessionId().equals(dto.getVideoInterviewUUID()));{
-                    recoverSession = activeSession;
-                    break;
-                }
-            }
-            ConnectionProperties recoverConnectionProperties = new ConnectionProperties.Builder()
-                    .type(ConnectionType.WEBRTC).data(dto.getParams().get("customSessionId").toString()).role(OpenViduRole.PUBLISHER)
-                    .build();
-            recoverSession.getConnection(dto.getVideoInterviewUUID());
-            Connection connection = recoverSession.createConnection(recoverConnectionProperties);
+            openVidu.createSession(SessionProperties.fromJson(dto.getParams()).build());
+            Session activeSession = openVidu.getActiveSession(dto.getVideoInterviewUUID());
+            ConnectionProperties reCreateProperties = ConnectionProperties.fromJson(dto.getParams()).build();
+            activeSession.getConnection(dto.getVideoInterviewUUID());
+            Connection connection = activeSession.createConnection(reCreateProperties);
             return VideoInterviewTokenGetRes.builder()
                     .sessionToken(connection.getToken())
                     .userEmail(userDetails.getEmail())
