@@ -1,5 +1,6 @@
 package com.sabujaks.irs.domain.auth.controller;
 
+import com.sabujaks.irs.domain.auth.model.response.RecruiterInfoReadRes;
 import com.sabujaks.irs.domain.auth.model.request.AuthSignupReq;
 import com.sabujaks.irs.domain.auth.model.request.CompanyVerifyReq;
 import com.sabujaks.irs.domain.auth.model.request.PasswordEditReq;
@@ -88,6 +89,15 @@ public class AuthController {
     public ResponseEntity<BaseResponse<SeekerRes>> readSeeker(
             @AuthenticationPrincipal CustomUserDetails customUserDetails) throws BaseException {
         SeekerRes response = authService.readSeeker(customUserDetails);
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.AUTH_SEARCH_USER_INFO_SUCCESS, response));
+    }
+
+    // 채용담당자 일부 정보 조회 (공고 등록을 위한 조회1)
+    @GetMapping("/read-recruiter-info")
+    public ResponseEntity<BaseResponse<RecruiterInfoReadRes>> readRecruiterInfo(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails) throws BaseException {
+
+        RecruiterInfoReadRes response = authService.readRecruiterInfo(customUserDetails);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.AUTH_SEARCH_USER_INFO_SUCCESS, response));
     }
 }

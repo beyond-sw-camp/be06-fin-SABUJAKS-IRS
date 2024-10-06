@@ -1,4 +1,4 @@
-package com.sabujaks.irs.domain.announcement.model.response;
+package com.sabujaks.irs.domain.company.model.response;
 
 import lombok.*;
 

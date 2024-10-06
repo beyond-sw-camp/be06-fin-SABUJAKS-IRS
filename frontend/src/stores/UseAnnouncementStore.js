@@ -85,7 +85,7 @@ export const UseAnnouncementStore = defineStore('announcement', {
         async fetchManagerInfo() {
             try {
                 const response = await axios.get(
-                    `${backend}/announcement/read-recruiter-info`,
+                    `${backend}/auth/read-recruiter-info`,
                     {
                         headers: { 'Content-Type': 'application/json', },
                         withCredentials: true
@@ -109,7 +109,7 @@ export const UseAnnouncementStore = defineStore('announcement', {
         async fetchCompanyBenefits(recruiterEmail) {
             try {
                 const response = await axios.get(
-                    `${backend}/announcement/read-company-info?recruiterEmail=${recruiterEmail}`,
+                    `${backend}/company/read-company-info?recruiterEmail=${recruiterEmail}`,
                     {
                         headers: { 'Content-Type': 'application/json' },
                         // withCredentials: true
