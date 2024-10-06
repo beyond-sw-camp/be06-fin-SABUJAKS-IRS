@@ -17,7 +17,7 @@
     "core-js": "^3.8.3",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
-    "openvidu-browser": "2.19.0",
+    "openvidu-browser": "2.30.0",
     "pinia": "^2.2.2",
     "pinia-plugin-persistedstate": "^4.0.0",
     "vue": "^3.2.13",

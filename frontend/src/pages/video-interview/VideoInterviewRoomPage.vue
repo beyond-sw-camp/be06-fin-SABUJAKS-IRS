@@ -294,12 +294,8 @@ const joinSession = async (announceUUID, videoInterviewUUID) => {
     session.value.on("exception", ({ exception }) => { console.warn(exception); 
     });
     const token = await handleSessionToken(announceUUID, videoInterviewUUID);
-    console.log("세션 토큰 발급:", token);
-    if(userType.value == "ROLE_ESTIMATOR") {
-      await session.value.connect(token, { clientData: `면접관` },);
-    } else {
-      await session.value.connect(token, { clientData: `${userName.value}` },);
-    }
+    console.log("면접방 토큰 발급:", token);
+    await session.value.connect(token, { clientData: userName.value },);
     publisher.value = OV.value.initPublisher(undefined, {
       audioSource: undefined,
       videoSource: undefined,
