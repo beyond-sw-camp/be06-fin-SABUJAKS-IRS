@@ -15,7 +15,7 @@
                     <input v-model="crn" type="text" maxlength="30" placeholder="사업자등록번호">
                     <input v-model="opened_at" type="text" maxlength="30" placeholder="개업일자 ex) 20201212">
                     <input v-model="ceo_name" type="text" maxlength="30" placeholder="회사대표명">
-                    <input v-model="recruiter_email" type="text" maxlength="30" placeholder="채용담당자이메일">
+                    <input v-model="recruiter_email" type="email" maxlength="30" placeholder="채용담당자이메일">
                     <input type="text" maxlength="30" placeholder="기업인식비밀번호" readonly value="TESTCOMPANYSECRETCODE">
                     <button type="submit" class="company-verifybtn">기업인증</button>
                 </div>
@@ -23,10 +23,10 @@
             <form class="signup-form" @submit.prevent="handleSignup">
                 <div class="input-section">
                     <h3>채용담당자 정보</h3>
-                    <input v-model="email" type="text" maxlength="30" placeholder="이메일">
-                    <input v-model="password" type="text" maxlength="30" placeholder="비밀번호(8~16자의 영문, 숫자, 특수기호)">
+                    <input v-model="email" type="email" maxlength="30" placeholder="이메일">
+                    <input v-model="password" type="password" maxlength="30" placeholder="비밀번호 (8~16자의 영문, 숫자, 특수기호)">
                     <input v-model="name" type="text" maxlength="30" placeholder="이름">
-                    <input v-model="phoneNumber" type="text" maxlength="30" placeholder="휴대폰번호">
+                    <input v-model="phoneNumber" type="text" maxlength="30" placeholder="휴대폰번호 ex) 01012341234">
                     <label for="file">
                         <div class="file-uploadbtn">프로필 파일 업로드</div>
                     </label>
@@ -53,8 +53,9 @@ import { UseAuthStore } from "@/stores/UseAuthStore"
 import { ref } from "vue";
 import { useToast } from "vue-toastification";
 
-const authStore = UseAuthStore();
 const toast = useToast();
+
+const authStore = UseAuthStore();
 
 const email = ref("")
 const password = ref("")
@@ -67,11 +68,12 @@ const crn = ref("")
 const opened_at = ref("")
 const ceo_name = ref("")
 const recruiter_email = ref("")
-// 파일 업로드 처리
+
 const handleFileUpload = (event) => {
     file.value = event.target.files[0];
     if (file.value) { fileUrl.value = URL.createObjectURL(file.value); }
 };
+
 const handleCompanyVerify = async () => {
     const requestBody = {
         crn: crn.value,
@@ -88,6 +90,7 @@ const handleCompanyVerify = async () => {
         toast.error("기업 인증 실패")
     }
 }
+
 const handleSignup = async () => {
     const formData = new FormData();
     const requestBody = {
@@ -220,10 +223,12 @@ const handleSignup = async () => {
     flex-direction: row;
     justify-content: space-between;
 }
+
 .is-col input {
     display: flex;
     flex: 1;
 }
+
 .is-col input[type="radio"]{
     width: 28px;
     height: 28px
@@ -254,7 +259,10 @@ const handleSignup = async () => {
     font-weight: 700;
     color: #fff;
     width: 100%;
+    border: none;
+    outline: none;
 }
+
 .company-verifybtn {
     background-color: #212b36;
     text-align: center;
@@ -267,23 +275,32 @@ const handleSignup = async () => {
     font-weight: 700;
     color: #fff;
     width: 100%;
+    border: none;
+    outline: none;
 }
-.signup-submitbtn:hover {
+
+.company-verifybtn:hover {
+    opacity: 70%;
+}
+
+.signup-submitbtn:hover {   
     opacity: 70%;
 }
 
 .file-uploadbtn {
-  width: auto;
-  height: auto;
-  padding: 12px;
-  background: #212b36;
-  color: white;
-  border: 1px solid rgb(77,77,77);
-  font-weight: 500;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    background-color: #212b36;
+    text-align: center;
+    height: 100%;
+    display: block;
+    padding: 16px;
+    box-sizing: border-box;
+    font-size: 18px !important;
+    line-height: 26px !important;
+    font-weight: 700;
+    color: #fff;
+    width: 100%;
+    border: none;
+    outline: none;
 }
 
 .file-uploadbtn:hover {

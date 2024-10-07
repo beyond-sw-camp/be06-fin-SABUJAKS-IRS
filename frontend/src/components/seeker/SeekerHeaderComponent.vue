@@ -21,6 +21,15 @@
         <a @click="handleLogout" class="logout-btn">로그아웃</a>
       </div>
     </div>
+    <div v-if="authStore.isLoggedIn && authStore.userInfo.role=='ROLE_ESTIMATOR'" class="header-container">
+      <a href="/">
+        <img class="header-logo" src="../../assets/img/irs_white.png">
+      </a>
+      <div class="header-right">
+        <span>면접관-{{ authStore.userInfo.email }}</span>
+        <a @click="handleLogout" class="logout-btn">로그아웃</a>
+      </div>
+    </div>
     <div v-if="!authStore.isLoggedIn" class="header-container">
       <a href="/">
         <img class="header-logo" src="../../assets/img/irs_white.png">
@@ -39,16 +48,10 @@ import { ref, onMounted } from "vue";
 import { useToast } from "vue-toastification";
 import {useRouter} from 'vue-router';
 const router = useRouter();
-
-const goAndReload = (path) => {
-  router.replace(path).then(() => {
-    window.location.reload();
-  });
-};
-
+const toast = useToast();
 
 const authStore = UseAuthStore();
-const toast = useToast();
+
 const getUserInfoResult = ref({})
 const displayName = ref('')
 
@@ -57,6 +60,12 @@ onMounted( async() => {
     await handleGetUserInfo();
   }
 })
+
+const goAndReload = (path) => {
+  router.replace(path).then(() => {
+    window.location.reload();
+  });
+};
 
 const handleGetUserInfo = async() => {
   if(authStore.isLoggedIn && authStore.userInfo.email != null){
