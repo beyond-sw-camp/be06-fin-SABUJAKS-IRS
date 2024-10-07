@@ -4,11 +4,11 @@ import MainSideBarComponent from "@/components/recruiter/MainSideBarComponent.vu
 import MainHeaderComponent from "@/components/recruiter/MainHeaderComponent.vue";
 import { UseCompanyStore } from '@/stores/UseCompanyStore';
 import { UseBaseInfoStore } from '@/stores/UseBaseInfoStore';
-import { useRouter } from 'vue-router';
+// import { useRouter } from 'vue-router';
 
 const companyStore = UseCompanyStore();
 const baseInfoStore = UseBaseInfoStore();
-const router = useRouter(); // router 호출
+// const router = useRouter(); // router 호출
 
 // 템플릿 ref 정의
 const imageUploadInput = ref(null);
@@ -17,6 +17,7 @@ const imageUploadInput = ref(null);
 const priceInput = ref(null);  // 초기값을 null로 설정
 const uploadedImages = ref([]); // 업로드 된 이미지 배열
 const imageCount = ref(0); // 이미지 개수를 추적하기 위한 변수
+const type = ref(companyStore.companyInfo.type ? companyStore.companyInfo.type : '');
 
 // 이미지 업로드 핸들러
 const handleImageUpload = (event) => {
@@ -30,7 +31,7 @@ const handleImageUpload = (event) => {
 
   files.forEach((file) => {
     const isFileAlreadyUploaded = uploadedImages.value.some((uploadedFile) => uploadedFile.file.name === file.name && uploadedFile.file.size === file.size);
-    
+
     if (!isFileAlreadyUploaded) {
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -117,7 +118,7 @@ const saveSelection = () => {
   // console.log(selectedCategories.value + selectedSubcategories.value);
   // console.log(companyStore.companyInfo);
 
-  companyStore.createCompany(combinedCategories, router); // 스토어 저장 처리
+  companyStore.createCompany(combinedCategories, type); // 스토어 저장 처리
 };
 
 
@@ -129,7 +130,7 @@ onMounted(async () => {
   await nextTick(); // DOM이 완전히 렌더링된 후에 실행
 
   // 페이지 입장 시 files 배열을 초기화 (배열 내부의 요소들을 제거)
-  companyStore.files.splice(0); 
+  companyStore.files.splice(0);
   uploadedImages.value.splice(0);
 
   if (imageUploadInput.value) {
@@ -155,7 +156,7 @@ onMounted(async () => {
 
 <template>
   <MainHeaderComponent />
-  <div class="container padding-0">
+  <div class="container padding-100 0 0 0">
     <MainSideBarComponent />
     <div id="content">
       <!-- 기업 정보 등록 섹션 -->
@@ -165,7 +166,7 @@ onMounted(async () => {
         <div class="image-upload-container">
           <div>
             <input ref="imageUploadInput" id="image-upload" name="media" type="file" multiple
-              accept="image/png, image/jpeg, image/jpg" class="hidden" @change="handleImageUpload"/>
+              accept="image/png, image/jpeg, image/jpg" class="hidden" @change="handleImageUpload" />
             <label for="image-upload" class="product-image-btn">
               <div class="flex flex-col">
                 <img src="@/assets/img/img_upload.png" style="width: 80px; height: 80px" />
@@ -185,17 +186,19 @@ onMounted(async () => {
 
         <div class="company-info">
           <!-- 기업 인증 테이블에서 받아오는 정보 -->
-          <div class="form-group">
-            <label for="ceo">대표자 명</label>
-            <input type="text" v-model="companyStore.companyInfo.ceoName" id="ceo" placeholder="대표자 명" readonly />
-          </div>
-          <div class="form-group">
-            <label for="crn">사업자 등록 번호</label>
-            <input type="text" v-model="companyStore.companyInfo.crn" id="ceo" placeholder="사업자 등록번호" readonly />
-          </div>
-          <div class="form-group">
-            <label for="opened-at">개업 일자</label>
-            <input type="text" v-model="companyStore.companyInfo.openedAt" id="ceo" placeholder="개업 일자" readonly />
+          <div style="display: flex; justify-items: center;">
+            <div class="form-group">
+              <label for="ceo">대표자 명</label>
+              <input type="text" v-model="companyStore.companyInfo.ceoName" id="ceo" placeholder="대표자 명" readonly />
+            </div>
+            <div class="form-group">
+              <label for="crn">사업자 등록 번호</label>
+              <input type="text" v-model="companyStore.companyInfo.crn" id="ceo" placeholder="사업자 등록번호" readonly />
+            </div>
+            <div class="form-group">
+              <label for="opened-at">개업 일자</label>
+              <input type="text" v-model="companyStore.companyInfo.openedAt" id="ceo" placeholder="개업 일자" readonly />
+            </div>
           </div>
           <!-- 입력하는 정보 -->
           <div class="form-group">
@@ -209,8 +212,16 @@ onMounted(async () => {
           </div>
           <div class="form-group">
             <label for="company-type">기업 구분</label>
-            <input type="text" v-model="companyStore.companyInfo.type" id="company-type"
-              placeholder="기업 구분을 입력하세요 (예: 대기업, 중견기업 등)" />
+            <select v-model="type" id="company-type" class="form-control styled-select" style="width: 220px;">
+              <option value="" disabled>기업 구분을 선택하세요</option>
+              <option value="대기업">대기업</option>
+              <option value="중견기업">중견기업</option>
+              <option value="중소기업">중소기업</option>
+              <option value="공공기관/공기업">공공기관/공기업</option>
+              <option value="외국계기업">외국계기업</option>
+              <option value="비영리단체/협회/재단">비영리단체/협회/재단</option>
+              <option value="벤처기업">벤처기업</option>
+            </select>
           </div>
           <div class="form-group">
             <label for="company-info">기업 소개</label>
@@ -228,12 +239,12 @@ onMounted(async () => {
           </div>
           <div class="form-group">
             <label for="establishment-date">설립일</label>
-            <input type="date" v-model="companyStore.companyInfo.establishDate" id="establishment-date"
+            <input type="date" v-model="companyStore.companyInfo.establishDate" id="establishment-date" style="width: 200px;"
               placeholder="설립일을 입력하세요" />
           </div>
           <div class="form-group">
             <label for="revenue">매출액</label>
-            <input type="text" v-model="companyStore.companyInfo.sales" ref="priceInput" id="revenue"
+            <input type="number" style="padding: 15px 10px; border-radius: 5px;" v-model="companyStore.companyInfo.sales" ref="priceInput" id="revenue"
               placeholder="매출액을 입력하세요" />
           </div>
           <div class="form-group">
@@ -255,27 +266,8 @@ onMounted(async () => {
 
           <!-- 복리후생 추가 -->
           <h2>기업 복리후생 추가</h2>
-          <!-- 선택한 복리후생 리스트 -->
-          <!-- <div class="benefits-box">
-            <div v-for="(benefit, index) in benefitsList" :key="index" class="benefit-item">
-              <span>{{ benefit.category }} > {{ benefit.subcategory }}</span>
-              <button @click="removeBenefit(index)">x</button>
-            </div>
-          </div>
-
-          <div v-for="category in baseInfoStore.categories" :key="category.code" class="benefit-category">
-            <h3>{{ category.description }}</h3>
-            <div style="display: flex;">
-              <div v-for="subcategory in category.subcategories" :key="subcategory.code" class="benefit-subcategory">
-                <button @click="addBenefit(category.description, subcategory.description)">
-                  {{ subcategory.description }}
-                </button>
-              </div>
-            </div>
-          </div> -->
-
           <!-- 대분류 및 소분류 복리후생 -->
-          <div style="background-color: #F5F8FF; padding: 10px 10px;">
+          <div style="padding: 10px 10px;">
             <div v-for="(category, index) in categories" :key="index" class="category-box">
               <h3>{{ category.description }}</h3>
               <div class="subcategories">
@@ -293,7 +285,7 @@ onMounted(async () => {
       </div>
 
       <!-- 기업 정보 조회 섹션 -->
-      <div v-else id="readSections" style="margin: 100px 0;">
+      <div v-else id="readSections" style="margin: 0 0 100px 0;">
         <h1>{{ companyStore.companyInfo.name }} 기업 정보</h1>
         <div class="image-preview-container">
           <!-- 이미지 리스트를 보여줌 -->
@@ -431,7 +423,18 @@ input[type="text"] {
   width: calc(100% - 40px);
   padding: 10px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 5px;
+}
+
+.styled-select, input[type="number"] {
+  /* width: calc(100% - 40px); */
+  padding: 20px 5px;
+  width: 200px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  background-size: 15px;
+  font-size: 16px;
 }
 
 /* .submit-button {
@@ -446,32 +449,41 @@ input[type="text"] {
 } */
 
 .submit-button {
-  margin-top: 20px;
-  padding: 10px 30px;
-  background-color: #333;
+  margin-top: 50px;
+  padding: 15px 30px;
+  width: 100%;
+  background-color: #212b36;
   color: white;
   border: none;
   border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
 }
 
+.submit-button:hover {
+  background-color: #37404a;
+}
+
 .button-be.selected {
-  background-color: #3a3f51;
+  background-color: #212b36;
   color: white;
 }
 
 .button-be:hover {
-  background-color: #ddd;
+  background-color: #37404a;
+  color: white;
 }
 
 .button-be {
   padding: 10px 20px;
   margin: 5px;
-  border-radius: 15px;
+  border-radius: 5px;
   border: 1px solid #ccc;
   background-color: #f1f1f1;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  font-size: 16px;
 }
 
 .subcategories {
@@ -495,8 +507,8 @@ input[type="text"] {
 }
 
 .benefits-box {
-  border: 1px solid #f5f8ff;
-  background-color: #f5f8ff;
+  /* border: 1px solid #f5f8ff; */
+  /* background-color: #f5f8ff; */
   padding: 20px;
   border-radius: 5px;
   margin-bottom: 50px;
@@ -540,7 +552,9 @@ input[type="text"] {
   padding: 5px 10px;
   border-radius: 15px;
   margin: 5px;
-  background-color: #eaedf4;
+  background-color: #212b36;
+  color: white;
+  /* font-weight: lighter; */
 }
 
 .subcategory-label {

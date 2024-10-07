@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
 import { backend } from '@/const';
+import { toRaw } from 'vue';
+import { useToast } from "vue-toastification";
 
 export const UseCompanyStore = defineStore('company', {
     state: () => ({
@@ -74,7 +76,7 @@ export const UseCompanyStore = defineStore('company', {
 
                 // 등록된 기업이 없다면
                 if (data.result.saved == "N") {
-                    alert("등록된 기업 정보가 없습니다. 기업정보를 등록 해 주세요.");
+                    // alert("등록된 기업 정보가 없습니다. 기업정보를 등록 해 주세요.");
                     this.companyInfo = {
                         saved: data.result.saved,
                         ceoName: data.result.ceoName,
@@ -114,14 +116,16 @@ export const UseCompanyStore = defineStore('company', {
         },
 
         // 기업 정보 저장 로직
-        async createCompany(combinedCategories, router) {
+        async createCompany(combinedCategories, type) {
+            const toast = useToast();
             try {
                 const formDataCreate = new FormData();
+                const rawType = toRaw(type).value || type.value; // .value로 실제 값을 가져옴
 
                 const CompanyCreateReq = {
                     industry: this.companyInfo.industry,
                     name: this.companyInfo.name,
-                    type: this.companyInfo.type,
+                    type: rawType,
                     companyInfo: this.companyInfo.companyInfo,
                     capital: this.companyInfo.capital,
                     totalEmp: this.companyInfo.totalEmp,
@@ -134,6 +138,7 @@ export const UseCompanyStore = defineStore('company', {
                 };
 
                 console.log('저장할 데이터:', CompanyCreateReq);
+
 
                 const jsonBlob = new Blob([JSON.stringify(CompanyCreateReq)], { type: 'application/json' });
                 formDataCreate.append('dto', jsonBlob);
@@ -152,17 +157,23 @@ export const UseCompanyStore = defineStore('company', {
                         withCredentials: true
                     },
                 });
-                console.log("응답" + response.data);
+                console.log("응답" + response);
 
                 if (response.status === 200) {
-                    alert('기업 정보가 등록되었습니다.');
+                    toast.success('기업 정보가 등록되었습니다.');
 
-                    // router를 통해 특정 경로로 리다이렉트
-                    router.push('/recruiter/mypage');
+                    // router를 통해 특정 경로로 리다이렉트 (기록 남기지 않음)
+                    // router.replace('/recruiter/mypage');
+
+                    // 알림이 끝난 후 새로고침 (2초 후)
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000); // 2000ms = 2초 (알림 지속 시간에 맞추어 조정)
                 }
             } catch (error) {
                 console.error('기업 정보 등록 실패:', error);
-                alert('기업 정보 등록에 실패하였습니다. ' + error);
+                // alert('기업 정보 등록에 실패하였습니다. ' + error);
+                toast.error('기업 정보 등록에 실패하였습니다. ' + error.data);
             }
 
         }
