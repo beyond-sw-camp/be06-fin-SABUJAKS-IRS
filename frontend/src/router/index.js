@@ -28,11 +28,11 @@ import InterviewScheduleMain from '@/components/recruiter/InterviewScheduleMain.
 import ReScheduleMainExp from "@/pages/recruiter/interview-schedule/ReScheduleMainExp.vue";
 import { UseAuthStore } from "@/stores/UseAuthStore";
 import CompanyInfoPage from "@/pages/recruiter/company/CompanyInfoPage.vue";
-import InterviewEvaluateFormPage from '@/pages/recruiter/interview-evaluate/InterviewEvaluateFormPage.vue';
 import InterviewEvaluateResultPage from '@/pages/recruiter/interview-evaluate/InterviewEvaluateResultPage.vue';
 import InterveiwEvaluateResultDetailPage from '@/pages/recruiter/interview-evaluate/InterveiwEvaluateResultDetailPage.vue';
 import InterviewScheduleDetail from "@/pages/recruiter/interview-schedule/InterviewScheduleDetail.vue";
 import InterviewScheduleListPage from "@/pages/recruiter/interview-schedule/InterviewScheduleListPage.vue";
+import InterviewEvaluateFormCreatePage from '@/pages/recruiter/interview-evaluate/InterviewEvaluateFormCreatePage.vue';
 
 const requireRecruiterLogin = async (to, from, next) => {
     const authStore = UseAuthStore();
@@ -84,7 +84,7 @@ const router = createRouter({
         { path: '/recruiter/resume/list/:announcementIdx', component: ResumeListPage, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/resume/detail/:resumeIdx', component: RecruiterResumeDetailPage, beforeEnter: requireRecruiterLogin },
 
-        { path: '/recruiter/interview-evaluate/form', component: InterviewEvaluateFormPage, beforeEnter: requireRecruiterLogin },
+        { path: '/recruiter/interview-evaluate/form', component: InterviewEvaluateFormCreatePage, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/interview-evaluate/result', component: InterviewEvaluateResultPage, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/interview-evaluate/result/:announcementIdx/:interviewNum', component: InterveiwEvaluateResultDetailPage, beforeEnter: requireRecruiterLogin },
 
