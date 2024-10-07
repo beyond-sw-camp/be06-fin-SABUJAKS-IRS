@@ -42,6 +42,7 @@ export const UseResumeStore = defineStore('resume', {
         resumeDetail: {},
         resumeIntegrated: null,
         announceResumeList: [],
+        announceResumeListPage: {},
         resumeList: [],
         resumeListPage: {}
     }),
@@ -494,14 +495,15 @@ export const UseResumeStore = defineStore('resume', {
                 alert(error.response.data.message);
             }
         },
-        async readAll(router) {
+        async readAll(router, page, size) {
             try {
-                const response = await axios.get(`${backend}/resume/read-all`, {
+                const response = await axios.get(`${backend}/resume/read-all?page=${page}&size=${size}`, {
                     headers: { 'Content-Type': 'application/json' },
                     withCredentials: true
                 });
-                this.announceResumeList = response.data.result;
-
+                this.announceResumeList = response.data.result.content;
+                this.announceResumeListPage = response.data.result;
+                console.log(this.announceResumeListPage);
             } catch (error) {
                 console.log(error.response.data.message);
                 alert('공고별 지원서 조회에 실패하였습니다.');
