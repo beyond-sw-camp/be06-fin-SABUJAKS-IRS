@@ -73,6 +73,7 @@ export const UseAnnouncementStore = defineStore('announcement', {
         },
 
         announcements: [], // 공고 전체 조회 (채용담당자페이지 공고 메뉴)
+        announcementsPage: {}, // 페이징 처리 정보
 
         announcements2: [], // 공고 전체 조회 (지원자페이지 홈)
 
@@ -131,15 +132,16 @@ export const UseAnnouncementStore = defineStore('announcement', {
 
 
         // 공고 조회 함수 (채용담당자 페이지 - 공고 메뉴 클릭시)
-        async fetchAnnouncements() {
+        async fetchAnnouncements(page, size) {
             try {
                 const response = await axios.get(
-                    `${backend}/announcement/recruiter/read-all/resume`,
+                    `${backend}/announcement/recruiter/read-all/resume?page=${page}&size=${size}`,
                     {
                         headers: { 'Content-Type': 'application/json' },
                         withCredentials: true
                     });
-                this.announcements = response.data.result; // 백엔드에서 가져온 데이터를 저장
+                this.announcements = response.data.result.content; // 백엔드에서 가져온 데이터를 저장
+                this.announcementsPage = response.data.result; // 페이징 정보 저장
                 console.log(this.announcements)
             } catch (error) {
                 console.error('공고 목록을 불러오는 중 오류 발생:', error);
@@ -351,7 +353,7 @@ export const UseAnnouncementStore = defineStore('announcement', {
                 const dto = {
                     filters: selectedFilters // selectedFilters를 JSON 형식으로 감싸서 보냄
                 };
-                
+
                 const response = await axios.post(`${backend}/search/filter`, dto,
                     {
                         headers: { 'Content-Type': 'application/json' },
