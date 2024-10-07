@@ -23,6 +23,10 @@ import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
 import com.sabujaks.irs.global.security.CustomUserDetails;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -1340,7 +1344,7 @@ public class ResumeService {
         }
     }
 
-    public List<ResumeReadAllRecruiterRes> readAllRecruiter(CustomUserDetails customUserDetails, Long announcementIdx) throws BaseException {
+    public Page<ResumeReadAllRecruiterRes> readAllRecruiter(CustomUserDetails customUserDetails, Long announcementIdx, Integer page, Integer size) throws BaseException {
         Long recruiterIdx = customUserDetails.getIdx();
         // 채용담당자 테이블 조회
         Optional<Recruiter> resultRecruiter = recruiterRepository.findByRecruiterIdx(recruiterIdx);
@@ -1351,9 +1355,10 @@ public class ResumeService {
                 if(!resultAnnouncement.get().getRecruiter().getIdx().equals(recruiterIdx)) {
                     throw new BaseException(BaseResponseMessage.ACCESS_DENIED);
                 }
-                // 공고지원서 테이블 조회
-                List<Resume> resultResumes = resumeRepository.findAllByAnnouncementIdx(announcementIdx);
-                if(!resultResumes.isEmpty()) {
+                // 공고지원서 테이블 조회 (페이징 처리)
+                Pageable pageable = PageRequest.of(page, size);
+                Page<Resume> resultResumes = resumeRepository.findAllByAnnouncementIdx(announcementIdx, pageable);
+                if(resultResumes.hasContent()) {
                     List<ResumeReadAllRecruiterRes> resumeReadAllRecruiterResList = new ArrayList<>();
                     for(Resume resume : resultResumes) {
                         // total_process 테이블에서 조회하기
@@ -1388,7 +1393,7 @@ public class ResumeService {
                         }
 
                     }
-                    return resumeReadAllRecruiterResList;
+                    return new PageImpl<>(resumeReadAllRecruiterResList, pageable, resultResumes.getTotalElements());
                 } else {
                     throw new BaseException(BaseResponseMessage.RESUME_READ_FAIL_RESUME);
                 }
@@ -1399,4 +1404,7 @@ public class ResumeService {
             throw new BaseException(BaseResponseMessage.RESUME_REGISTER_FAIL_NOT_FOUND_SEEKER);
         }
     }
+
+
+
 }

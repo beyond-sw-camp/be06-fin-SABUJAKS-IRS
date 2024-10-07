@@ -13,6 +13,7 @@ import com.sabujaks.irs.global.utils.email.service.EmailService;
 import com.sabujaks.irs.global.utils.email.model.response.ResumeRejectRes;
 import com.sabujaks.irs.global.utils.email.service.EmailSenderSeeker;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -134,13 +135,14 @@ public class ResumeController {
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.RESUME_READ_SUCCESS, response));
     }
 
-    // (채용담당자) 공고에 지원한 지원자 목록
+    // (채용담당자) 공고에 지원한 지원자 목록 페이징 처리
     @GetMapping("/recruiter/read-all")
-    public ResponseEntity<BaseResponse<ResumeReadAllRes>> readAllRecruiter(
-            @AuthenticationPrincipal CustomUserDetails customUserDetails, Long announcementIdx) throws BaseException {
+    public ResponseEntity<BaseResponse<ResumeReadAllRes>> readAllRecruiter2(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails, Long announcementIdx, Integer page, Integer size) throws BaseException {
 
-        List<ResumeReadAllRecruiterRes> response = resumeService.readAllRecruiter(
-                customUserDetails, announcementIdx);
+        Page<ResumeReadAllRecruiterRes> response = resumeService.readAllRecruiter(
+                customUserDetails, announcementIdx, page, size
+        );
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.RESUME_READ_SUCCESS_RESUMED, response));
     }
 
