@@ -17,6 +17,7 @@ import com.sabujaks.irs.domain.company.model.entity.Company;
 import com.sabujaks.irs.domain.company.repository.CompanyBenefitsRepository;
 import com.sabujaks.irs.domain.company.repository.CompanyRepository;
 import com.sabujaks.irs.domain.company.service.CompanyService;
+import com.sabujaks.irs.domain.resume.model.entity.Resume;
 import com.sabujaks.irs.domain.system.model.entity.BaseInfo;
 import com.sabujaks.irs.domain.system.repository.BaseInfoRepository;
 import com.sabujaks.irs.domain.resume.repository.ResumeRepository;
@@ -25,10 +26,7 @@ import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
 import com.sabujaks.irs.global.security.CustomUserDetails;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import com.sabujaks.irs.domain.company.model.entity.CompanyBenefits;
 
@@ -334,16 +332,17 @@ public class AnnouncementService {
     }
 
     @Transactional
-    public List<AnnouncementReadAllRes3> readAllRecruiterAnnouncement(CustomUserDetails customUserDetails) throws BaseException {
+    public Page<AnnouncementReadAllRes3> readAllRecruiterAnnouncement(CustomUserDetails customUserDetails, Integer page, Integer size) throws BaseException {
         Long recruiterIdx = customUserDetails.getIdx();
         // 채용담당자 테이블 조회
         Optional<Recruiter> resultRecruiter = recruiterRepository.findByRecruiterIdx(recruiterIdx);
         if(resultRecruiter.isPresent()) {
-            // 공고 테이블 조회
-            Optional<List<Announcement>> resultAnnouncements = announcementRepository.findByRecruiterIdx(recruiterIdx);
-            if(resultAnnouncements.isPresent()) {
+            // 공고 테이블 조회 (페이징 처리)
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Announcement> resultAnnouncements = announcementRepository.findByRecruiterIdx(recruiterIdx, pageable);
+            if(resultAnnouncements.hasContent()) {
                 List<AnnouncementReadAllRes3> announcementReadAllRes3List = new ArrayList<>();
-                for(Announcement announcement : resultAnnouncements.get()) {
+                for(Announcement announcement : resultAnnouncements) {
                     // 공고에 지원한 지원자 수 조회
                     AnnouncementReadAllRes3 announcementReadAllRes3 = AnnouncementReadAllRes3.builder()
                             .announcementIdx(announcement.getIdx())
@@ -355,7 +354,7 @@ public class AnnouncementService {
                             .build();
                     announcementReadAllRes3List.add(announcementReadAllRes3);
                 }
-                return announcementReadAllRes3List;
+                return new PageImpl<>(announcementReadAllRes3List, pageable, resultAnnouncements.getTotalElements());
             } else {
                 throw new BaseException(BaseResponseMessage.ANNOUNCEMENT_SEARCH_FAIL);
             }
@@ -365,4 +364,5 @@ public class AnnouncementService {
         }
 
     }
+
 }

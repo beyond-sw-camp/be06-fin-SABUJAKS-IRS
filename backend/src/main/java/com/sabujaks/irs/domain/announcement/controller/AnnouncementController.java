@@ -10,6 +10,7 @@ import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
 import com.sabujaks.irs.global.security.CustomUserDetails;
 import com.sabujaks.irs.global.utils.CloudFileUpload;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -96,10 +97,12 @@ public class AnnouncementController {
 
     // (채용담당자) 등록한 공고 목록 조회
     @GetMapping("/recruiter/read-all/resume")
-    public ResponseEntity<BaseResponse<AnnouncementReadAllRes>> readAllRecruiterAnnouncement (
-            @AuthenticationPrincipal CustomUserDetails customUserDetails) throws BaseException {
-        List<AnnouncementReadAllRes3> response = announcementService.readAllRecruiterAnnouncement(customUserDetails);
-
+    public ResponseEntity<BaseResponse<AnnouncementReadAllRes>> readAllRecruiterAnnouncement2 (
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            Integer page, Integer size) throws BaseException {
+        Page<AnnouncementReadAllRes3> response = announcementService.readAllRecruiterAnnouncement(
+                customUserDetails, page, size
+        );
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.ANNOUNCEMENT_READ_ALL_SUCCESS, response));
     }
 }
