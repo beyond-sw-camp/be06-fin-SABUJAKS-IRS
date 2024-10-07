@@ -12,15 +12,15 @@
                 <div class="social-section">
                     <h4>소셜로 간편하게 로그인하세요</h4>
                     <div class="social-list">
-                        <a class="social-kakao-logo" @click="handleSocialLogin" href="http://localhost:8080/oauth2/authorization/kakao"></a>
-                        <a class="social-naver-logo" @click="handleSocialLogin" href="http://localhost:8080/oauth2/authorization/naver"></a>
-                        <a class="social-google-logo" @click="handleSocialLogin" href="http://localhost:8080/oauth2/authorization/google"></a>
+                        <a class="social-kakao-logo" @click.prevent="handleSocialLogin('kakao')"></a>
+                        <a class="social-naver-logo" @click.prevent="handleSocialLogin('naver')"></a>
+                        <a class="social-google-logo" @click.prevent="handleSocialLogin('google')"></a>
                     </div>
                 </div>
                 <div class="input-section">
                     <h3>지원자 정보</h3>
-                    <input v-model="email" type="text" maxlength="30" placeholder="이메일">
-                    <input v-model="password" type="text" maxlength="16" placeholder="비밀번호(8~16자의 영문, 숫자, 특수기호)">
+                    <input v-model="email" type="email" maxlength="30" placeholder="이메일">
+                    <input v-model="password" type="password" maxlength="16" placeholder="비밀번호 (8~16자의 영문, 숫자, 특수기호)">
                     <input v-model="name" type="text" maxlength="16" placeholder="이름">
                     <input v-model="nickname" type="text" maxlength="16" placeholder="닉네임">
                     <div class="is-col">
@@ -32,8 +32,7 @@
                         <label for="girl">여자</label>
                         </div>
                     </div>
-                    <input v-model="phoneNumber" type="text" maxlength="16" placeholder="휴대폰번호">
-                    
+                    <input v-model="phoneNumber" type="text" maxlength="16" placeholder="휴대폰번호 ex) 01012341234">
                     <label for="file">
                         <div class="file-uploadbtn">프로필 파일 업로드</div>
                     </label>
@@ -57,10 +56,13 @@ import SeekerHeaderComponent from "@/components/seeker/SeekerHeaderComponent.vue
 import SeekerFooterComponent from "@/components/seeker/SeekerFooterComponent.vue"
 import { UseAuthStore } from "@/stores/UseAuthStore"
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 
-const authStore = UseAuthStore();
 const toast = useToast();
+const router = useRouter();
+
+const authStore = UseAuthStore();
 
 const email = ref("")
 const password = ref("")
@@ -72,11 +74,6 @@ const phoneNumber = ref(null)
 const file = ref(null);
 const fileUrl = ref(null);
 
-const handleSocialLogin = async() => {
-    authStore.isLoggedIn = true;
-}
-
-// 파일 업로드 처리
 const handleFileUpload = (event) => {
     file.value = event.target.files[0];
     if (file.value) { fileUrl.value = URL.createObjectURL(file.value); }
@@ -104,6 +101,22 @@ const handleSignup = async () => {
         toast.error("회원가입에 실패했습니다.");
     }
 }
+
+const handleSocialLogin = async (provider) => {
+    try {
+        window.location.href = `/api/oauth2/authorization/${provider}`;
+        const response = await authStore.getUserInfo();
+        if (response.success) {
+            authStore.isLoggedIn = true;
+            router.push("/");
+            toast.success("로그인에 성공했습니다.")
+        } else {
+            toast.error("로그인에 실패했습니다.");
+        }
+    } catch (error) {
+        toast.error("소셜 로그인 처리 중 문제가 발생했습니다.");
+    }
+};
 </script>
 
 <style scoped>
@@ -206,7 +219,7 @@ const handleSignup = async () => {
     font-size: 0px;
     letter-spacing: 0px;
     text-indent: -9999px;
-    background-image: url(http://localhost:3000/img/sns_naver_large.41b7343a.svg);
+    background-image: url(../../../assets/svg/sns_naver_large.svg);
     background-repeat: no-repeat;
     color: #6a6a6a;
     text-decoration: none;
@@ -223,7 +236,7 @@ const handleSignup = async () => {
     font-size: 0px;
     letter-spacing: 0px;
     text-indent: -9999px;
-    background-image: url(http://localhost:3000/img/sns_kakao_large.40083307.svg);
+    background-image: url(../../../assets/svg/sns_kakao_large.svg);
     background-repeat: no-repeat;
     color: #6a6a6a;
     text-decoration: none;
@@ -240,7 +253,7 @@ const handleSignup = async () => {
     font-size: 0px;
     letter-spacing: 0px;
     text-indent: -9999px;
-    background-image: url(http://localhost:3000/img/sns_google_large.72a153e9.svg);
+    background-image: url(../../../assets/svg/sns_google_large.svg);
     background-repeat: no-repeat;
     color: #6a6a6a;
     text-decoration: none;
@@ -289,10 +302,12 @@ const handleSignup = async () => {
     flex-direction: row;
     justify-content: space-between;
 }
+
 .is-col input {
     display: flex;
     flex: 1;
 }
+
 .is-col input[type="radio"]{
     width: 28px;
     height: 28px
@@ -323,6 +338,8 @@ const handleSignup = async () => {
     font-weight: 700;
     color: #fff;
     width: 100%;
+    border: none;
+    outline: none;
 }
 
 .signup-submitbtn:hover {
@@ -330,17 +347,19 @@ const handleSignup = async () => {
 }
 
 .file-uploadbtn {
-  width: auto;
-  height: auto;
-  padding: 12px;
-  background: #212b36;
-  color: white;
-  border: 1px solid rgb(77,77,77);
-  font-weight: 500;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    background-color: #212b36;
+    text-align: center;
+    height: 100%;
+    display: block;
+    padding: 16px;
+    box-sizing: border-box;
+    font-size: 18px;
+    line-height: 26px;
+    font-weight: 700;
+    color: #fff;
+    width: 100%;
+    border: none;
+    outline: none;
 }
 
 .file-uploadbtn:hover {

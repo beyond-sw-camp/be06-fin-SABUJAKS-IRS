@@ -1,40 +1,39 @@
 <template>
-<div class="login-wrapper">
-    <SeekerHeaderComponent></SeekerHeaderComponent>
-    <div class="login-container">
-        <div class="login-section">
-            <img class="logo" src="../../../assets/img/irs_black.png">
-            <form class="login-form" @submit.prevent="handleLogin">
-                <section class="input-section">
-                    <label class="label-id">아이디</label>
-                    <input v-model="email" type="text" placeholder="아이디" size="16" maxlength="30" title="아이디 입력" required="">
-                    <label class="label-pw">비밀번호</label>
-                    <input v-model="password" type="password" placeholder="비밀번호" size="16" title="비밀번호 입력" required="">
+    <div class="login-wrapper">
+        <SeekerHeaderComponent></SeekerHeaderComponent>
+        <div class="login-container">
+            <div class="login-section">
+                <img class="logo" src="../../../assets/img/irs_black.png">
+                <form class="login-form" @submit.prevent="handleLogin">
+                    <section class="input-section">
+                        <label class="label-id">아이디</label>
+                        <input v-model="email" type="email" placeholder="아이디" size="16" maxlength="30" title="아이디 입력" required="">
+                        <label class="label-pw">비밀번호</label>
+                        <input v-model="password" type="password" placeholder="비밀번호" size="16" title="비밀번호 입력" required="">
+                    </section>
+                    <button type="submit" class="login-submitbtn">로그인</button>
+                    <a href="/seeker/signup" class="redirect-signup">회원가입</a>
+                </form>
+                <section class="social-section">
+                    <a class="social-button" @click.prevent="handleSocialLogin('kakao')">
+                        <span class="social-kakao-logo"></span>
+                        <span class="social-label">카카오 로그인</span>
+                    </a>
+                    <a class="social-button" @click.prevent="handleSocialLogin('naver')">
+                        <span class="social-naver-logo"></span>
+                        <span class="social-label">네이버 로그인</span>
+                    </a>
+                    <a class="social-button" @click.prevent="handleSocialLogin('google')">
+                        <span class="social-google-logo"></span>
+                        <span class="social-label">구글 로그인</span>
+                    </a>
                 </section>
-                <button type="submit" class="login-submitbtn">로그인</button>
-                <a href="/seeker/signup" class="redirect-signup">회원가입</a>
-            </form>
-            <section class="social-section">
-                <a class="social-button" @click="handleSocialLogin" href="/api/oauth2/authorization/kakao">
-                    <span class="social-kakao-logo"></span>
-                    <span class="social-label">카카오 로그인</span>
-                </a>
-                <a class="social-button" @click="handleSocialLogin" href="/api/oauth2/authorization/naver">
-                    <span class="social-naver-logo"></span>
-                    <span class="social-label">네이버 로그인</span>
-                </a>
-                <a class="social-button" @click="handleSocialLogin" href="/api/oauth2/authorization/google">
-                    <span class="social-google-logo"></span>
-                    <span class="social-label">구글 로그인</span>
-                </a>
-            </section>
+            </div>
         </div>
-
+        <SeekerFooterComponent></SeekerFooterComponent>
     </div>
-    <SeekerFooterComponent></SeekerFooterComponent>
-</div>
 </template>
-
+    
 <script setup>
 import SeekerHeaderComponent from "@/components/seeker/SeekerHeaderComponent.vue";
 import SeekerFooterComponent from "@/components/seeker/SeekerFooterComponent.vue"
@@ -42,9 +41,11 @@ import { ref } from "vue"
 import { UseAuthStore } from "@/stores/UseAuthStore"
 import { useToast } from "vue-toastification";
 import { useRouter } from "vue-router"
-const authStore = UseAuthStore();
+
 const toast = useToast();
 const router = useRouter();
+
+const authStore = UseAuthStore();
 
 const email = ref("")
 const password = ref("")
@@ -63,16 +64,21 @@ const handleLogin = async() => {
     }
 }
 
-const handleSocialLogin = async() => {
-    const response = await authStore.getUserInfo();
-    if(response){
-        authStore.isLoggedIn = true;
-        router.push("/")
-        toast.success("로그인에 성공했습니다.")
-    } else {
-        toast.error("소셜로그인에 실패했습니다.")
+const handleSocialLogin = async (provider) => {
+    try {
+        window.location.href = `/api/oauth2/authorization/${provider}`;
+        const response = await authStore.getUserInfo();
+        if (response.success) {
+            authStore.isLoggedIn = true;
+            router.push("/");
+            toast.success("로그인에 성공했습니다.")
+        } else {
+            toast.error("로그인에 실패했습니다.");
+        }
+    } catch (error) {
+        toast.error("소셜 로그인 처리 중 문제가 발생했습니다.");
     }
-}
+};
 </script>
 
 <style scoped>
@@ -162,7 +168,6 @@ const handleSocialLogin = async() => {
 }
 
 .input-section input {
-    -webkit-appearance: none;
     width: 100%;
     color: #333;
     box-sizing: border-box;

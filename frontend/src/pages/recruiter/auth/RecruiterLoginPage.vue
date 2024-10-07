@@ -13,13 +13,13 @@
       <h1>Welcome to IRS</h1>
       <form method="post" name="login" action="" @submit.prevent="handleLogin">
         <div>
-          <label class="app-sign-in-register__form-label" for="j_username">사용자 이름</label>
+          <label class="app-sign-in-register__form-label" for="j_username">채용담당자 이메일</label>
           <input
               autocorrect="off"
               autocomplete="off"
               name="j_username"
               id="j_username"
-              type="text"
+              type="email"
               autofocus="autofocus"
               class="jenkins-input"
               autocapitalize="off"
