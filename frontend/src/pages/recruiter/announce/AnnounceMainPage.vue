@@ -16,11 +16,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(announcement, index) in announcementStore.announcements" 
-              :key="announcement.announcementIdx" 
+          <tr v-for="(announcement, index) in paginatedAnnouncements" 
+              :key="index" 
               @click="goToDetailPage(announcement.announcementIdx)"
               class="hoverable-row">
-            <td>{{ index + 1 }}</td>
+            <td>{{ announcementStore.announcementsPage.totalElements - ((currentPage - 1) * pageSize + index) }}</td>
             <td>{{ formatDate(announcement.announcementStart) }} - {{ formatDate(announcement.announcementEnd) }}</td>
             <td>{{ announcement.announcementTitle }}</td>
             <td>{{ announcement.careerBase }}</td>
@@ -28,6 +28,16 @@
           </tr>
         </tbody>
       </table>
+      <div class="pagination">
+        <button 
+          v-for="page in totalPages" 
+          :key="page" 
+          @click="fetchAnnouncements(page)" 
+          :class="{ active: currentPage === page }"
+        >
+          {{ page }}
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -37,12 +47,8 @@ import MainHeaderComponent from "@/components/recruiter/MainHeaderComponent.vue"
 import MainSideBarComponent from "@/components/recruiter/MainSideBarComponent.vue";
 import { UseAnnouncementStore } from '@/stores/UseAnnouncementStore';
 import { useRouter } from 'vue-router';
-import { onMounted } from 'vue';
-// import axios from 'axios';
-// import { backend } from '@/const';
+import { onMounted, ref, computed } from 'vue';
 
-// 공고 리스트 상태
-// const announcements = ref([]);
 const announcementStore = UseAnnouncementStore();
 const router = useRouter();
 
@@ -50,7 +56,7 @@ const router = useRouter();
 const formatDate = (dateString) => {
   const date = new Date(dateString);
   const year = date.getFullYear();
-  const month = (`0${date.getMonth() + 1}`).slice(-2); // 두 자리수로 유지
+  const month = (`0${date.getMonth() + 1}`).slice(-2);
   const day = (`0${date.getDate()}`).slice(-2);
   return `${year}.${month}.${day}`;
 };
@@ -65,9 +71,24 @@ const goToDetailPage = (announcementIdx) => {
   router.push(`/recruiter/announce/detail/${announcementIdx}`);
 };
 
-// 컴포넌트가 로드될 때 데이터를 가져옴
-onMounted(() => {
-  announcementStore.fetchAnnouncements();
+const currentPage = ref(1);
+const pageSize = 10;
+
+onMounted(async () => {
+  await fetchAnnouncements(currentPage.value);
+});
+
+const fetchAnnouncements = async (page) => {
+    currentPage.value = page;
+    await announcementStore.fetchAnnouncements(page - 1, pageSize);
+};
+
+const paginatedAnnouncements = computed(() => {
+    return announcementStore.announcements;
+});
+
+const totalPages = computed(() => {
+    return announcementStore.announcementsPage.totalPages || 0;
 });
 </script>
 
@@ -142,5 +163,24 @@ th {
 .hoverable-row:hover {
   background-color: #f6f6f6; /* 마우스 올렸을 때 약간 어둡게 변경 */
   cursor: pointer;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.pagination button {
+    background-color: #f1f1f1;
+    border: none;
+    padding: 10px 15px;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+.pagination button.active {
+    background-color: #212b36;
+    color: white;
 }
 </style>

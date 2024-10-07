@@ -2,15 +2,13 @@ package com.sabujaks.irs.domain.video_interview.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sabujaks.irs.domain.auth.repository.EstimatorRepository;
-import com.sabujaks.irs.domain.auth.repository.SeekerRepository;
 import com.sabujaks.irs.domain.interview_schedule.model.entity.InterviewSchedule;
 import com.sabujaks.irs.domain.interview_schedule.repository.InterviewScheduleRepository;
 import com.sabujaks.irs.domain.video_interview.model.entity.VideoInterview;
 import com.sabujaks.irs.domain.video_interview.model.request.VideoInterviewCreateReq;
 import com.sabujaks.irs.domain.video_interview.model.request.VideoInterviewTokenGetReq;
 import com.sabujaks.irs.domain.video_interview.model.response.VideoInterviewCreateRes;
-import com.sabujaks.irs.domain.video_interview.model.response.VideoInterviewSearchRes;
+import com.sabujaks.irs.domain.video_interview.model.response.VideoInterviewReadRes;
 import com.sabujaks.irs.domain.video_interview.model.response.VideoInterviewTokenGetRes;
 import com.sabujaks.irs.domain.video_interview.repository.VideoInterviewRepository;
 import com.sabujaks.irs.global.common.exception.BaseException;
@@ -20,8 +18,6 @@ import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -97,35 +93,37 @@ public class VideoInterviewService {
         return "Video interviews scheduled for creation!";
     }
 
-    public List<VideoInterviewSearchRes> searchAll(String announceUUID, CustomUserDetails userDetails) throws BaseException {
+    public List<VideoInterviewReadRes> searchAll(String announcementUUID, CustomUserDetails userDetails) throws BaseException {
         if(Objects.equals(userDetails.getRole(), "ROLE_ESTIMATOR")){
-            List<InterviewSchedule> interviewScheduleList = interviewScheduleRepository.findByUuidAndEstimatorIdx(announceUUID, userDetails.getEstimator().getIdx());
-            List<VideoInterviewSearchRes> videoInterviewSearchResList = new ArrayList<>();
+            List<InterviewSchedule> interviewScheduleList = interviewScheduleRepository.findByUuidAndEstimatorIdx(announcementUUID, userDetails.getEstimator().getIdx());
+            List<VideoInterviewReadRes> videoInterviewReadResList = new ArrayList<>();
             for(InterviewSchedule interviewSchedule : interviewScheduleList){
-                VideoInterviewSearchRes videoInterviewSearchRes = VideoInterviewSearchRes.builder()
-                        .announceUUID(announceUUID)
-                        .videoInterviewUUID(interviewSchedule.getUuid())
+                VideoInterviewReadRes videoInterviewReadRes = VideoInterviewReadRes.builder()
+                        .announcementTitle(interviewSchedule.getAnnouncement().getTitle())
+                        .announcementUUID(announcementUUID)
+                        .interviewScheduleUUID(interviewSchedule.getUuid())
                         .interviewDate(interviewSchedule.getInterviewDate())
                         .interviewStart(interviewSchedule.getInterviewStart())
                         .interviewEnd(interviewSchedule.getInterviewEnd())
                         .build();
-                videoInterviewSearchResList.add(videoInterviewSearchRes);
+                videoInterviewReadResList.add(videoInterviewReadRes);
             }
-            return videoInterviewSearchResList;
+            return videoInterviewReadResList;
         } else if (Objects.equals(userDetails.getRole(), "ROLE_SEEKER")) {
-            List<InterviewSchedule> interviewScheduleList = interviewScheduleRepository.findByUuidAndSeekerIdx(announceUUID, userDetails.getSeeker().getIdx());
-            List<VideoInterviewSearchRes> videoInterviewSearchResList = new ArrayList<>();
+            List<InterviewSchedule> interviewScheduleList = interviewScheduleRepository.findByUuidAndSeekerIdx(announcementUUID, userDetails.getSeeker().getIdx());
+            List<VideoInterviewReadRes> videoInterviewReadResList = new ArrayList<>();
             for(InterviewSchedule interviewSchedule : interviewScheduleList){
-                VideoInterviewSearchRes videoInterviewSearchRes = VideoInterviewSearchRes.builder()
-                        .announceUUID(announceUUID)
-                        .videoInterviewUUID(interviewSchedule.getUuid())
+                VideoInterviewReadRes videoInterviewReadRes = VideoInterviewReadRes.builder()
+                        .announcementTitle(interviewSchedule.getAnnouncement().getTitle())
+                        .announcementUUID(announcementUUID)
+                        .interviewScheduleUUID(interviewSchedule.getUuid())
                         .interviewDate(interviewSchedule.getInterviewDate())
                         .interviewStart(interviewSchedule.getInterviewStart())
                         .interviewEnd(interviewSchedule.getInterviewEnd())
                         .build();
-                videoInterviewSearchResList.add(videoInterviewSearchRes);
+                videoInterviewReadResList.add(videoInterviewReadRes);
             }
-            return videoInterviewSearchResList;
+            return videoInterviewReadResList;
         } else {
             throw new BaseException(BaseResponseMessage.VIDEO_INTERVIEW_SEARCH_ALL_FAIL);
         }

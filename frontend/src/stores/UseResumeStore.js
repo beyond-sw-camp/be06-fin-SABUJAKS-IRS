@@ -44,6 +44,7 @@ export const UseResumeStore = defineStore('resume', {
         announceResumeList: [],
         announceResumeListPage: {},
         resumeList: [],
+        resumeListPage: {}
     }),
     actions: {
         updateShowEducation(value) {
@@ -529,13 +530,27 @@ export const UseResumeStore = defineStore('resume', {
                 alert(error.response.data.message);
             }
         },
-        async readAllRecruiter(announcementIdx) {
+        // async readAllRecruiter(announcementIdx) {
+        //     try {
+        //         const response = await axios.get(`${backend}/resume/recruiter/read-all?announcementIdx=${announcementIdx}`, {
+        //             headers: { 'Content-Type': 'application/json' },
+        //             withCredentials: true
+        //         });
+        //         this.resumeList = response.data.result;
+
+        //     } catch (error) {
+        //         alert(error.response.data.message);
+        //     }
+        // },
+        async readAllRecruiter(announcementIdx, page, size) {
             try {
-                const response = await axios.get(`${backend}/resume/recruiter/read-all?announcementIdx=${announcementIdx}`, {
+                const response = await axios.get(`${backend}/resume/recruiter/read-all?announcementIdx=${announcementIdx}&page=${page}&size=${size}`, {
                     headers: { 'Content-Type': 'application/json' },
                     withCredentials: true
                 });
-                this.resumeList = response.data.result;
+                this.resumeList = response.data.result.content;
+                this.resumeListPage = response.data.result;
+                console.log(this.resumeListPage);
 
             } catch (error) {
                 alert(error.response.data.message);

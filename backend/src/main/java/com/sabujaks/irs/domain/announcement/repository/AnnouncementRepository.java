@@ -2,6 +2,8 @@ package com.sabujaks.irs.domain.announcement.repository;
 
 import com.sabujaks.irs.domain.announcement.model.entity.Announcement;
 import com.sabujaks.irs.domain.announcement.model.response.AnnouncementReadAllRes;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -20,6 +22,9 @@ public interface AnnouncementRepository extends JpaRepository<Announcement, Long
 
     @Query("SELECT a FROM Announcement a WHERE a.recruiter.idx = :recruiterIdx")
     Optional<List<Announcement>> findByRecruiterIdx(Long recruiterIdx);
+
+    @Query("SELECT a FROM Announcement a WHERE a.recruiter.idx = :recruiterIdx ORDER BY a.idx DESC")
+    Page<Announcement> findByRecruiterIdx(Long recruiterIdx, Pageable pageable);
 
     @Query("SELECT a FROM Announcement a WHERE a.title LIKE %:keyword% OR a.jobTitle LIKE %:keyword1%")
     Optional<List<Announcement>> findAllByTitleContainingOrjobTitleContaining(String keyword, String keyword1);
