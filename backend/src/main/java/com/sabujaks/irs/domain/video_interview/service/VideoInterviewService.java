@@ -99,7 +99,7 @@ public class VideoInterviewService {
             List<VideoInterviewReadRes> videoInterviewReadResList = new ArrayList<>();
             for(InterviewSchedule interviewSchedule : interviewScheduleList){
                 VideoInterviewReadRes videoInterviewReadRes = VideoInterviewReadRes.builder()
-                        .announceTitle(interviewSchedule.getAnnouncement().getTitle())
+                        .announcementTitle(interviewSchedule.getAnnouncement().getTitle())
                         .announcementUUID(announcementUUID)
                         .interviewScheduleUUID(interviewSchedule.getUuid())
                         .interviewDate(interviewSchedule.getInterviewDate())
@@ -114,7 +114,7 @@ public class VideoInterviewService {
             List<VideoInterviewReadRes> videoInterviewReadResList = new ArrayList<>();
             for(InterviewSchedule interviewSchedule : interviewScheduleList){
                 VideoInterviewReadRes videoInterviewReadRes = VideoInterviewReadRes.builder()
-                        .announceTitle(interviewSchedule.getAnnouncement().getTitle())
+                        .announcementTitle(interviewSchedule.getAnnouncement().getTitle())
                         .announcementUUID(announcementUUID)
                         .interviewScheduleUUID(interviewSchedule.getUuid())
                         .interviewDate(interviewSchedule.getInterviewDate())
