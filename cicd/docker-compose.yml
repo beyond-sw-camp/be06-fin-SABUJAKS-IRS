@@ -52,7 +52,7 @@ services:
       - ../cicd/mariadb:/var/lib/mysql
 
   openvidu:
-    image: openvidu/openvidu-dev:2.19.0
+    image: openvidu/openvidu-dev:2.23.0
     ports:
       - 4443:4443
     environment:
