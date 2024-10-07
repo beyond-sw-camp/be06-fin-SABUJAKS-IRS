@@ -751,6 +751,27 @@ public class ResumeService {
 
     }
 
+    public ResumeReadIntegratedInfoRes readIntegratedInfo(CustomUserDetails customUserDetails) throws BaseException {
+        Long seekerIdx = customUserDetails.getIdx();
+        // 지원자 테이블 조회
+        Optional<Seeker> resultSeeker = seekerRepository.findBySeekerIdx(seekerIdx);
+        if(resultSeeker.isPresent()) {
+            // 지원정보 테이블 조회 (통합지원서 등록 여부 조회)
+            Optional<ResumeInfo> resultResumeInfo = resumeInfoRepository.findBySeekerIdxAndIntegrated(seekerIdx, true);
+            if(resultResumeInfo.isPresent()) {
+                return ResumeReadIntegratedInfoRes.builder()
+                        .integrated(true)
+                        .build();
+            } else {
+                return ResumeReadIntegratedInfoRes.builder()
+                        .integrated(false)
+                        .build();
+            }
+        } else {
+            throw new BaseException(BaseResponseMessage.RESUME_REGISTER_FAIL_NOT_FOUND_SEEKER);
+        }
+    }
+
     @Transactional
     public ResumeReadIntegratedRes readIntegrated(CustomUserDetails customUserDetails) throws BaseException {
         Long seekerIdx = customUserDetails.getIdx();

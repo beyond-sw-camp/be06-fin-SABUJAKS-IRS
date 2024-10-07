@@ -109,6 +109,15 @@ public class ResumeController {
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.RESUME_READ_SUCCESS, response));
     }
 
+    // (지원자) 통합지원서 등록 여부 조회
+    @GetMapping("/read/integrated-info")
+    public ResponseEntity<BaseResponse<ResumeReadIntegratedInfoRes>> readIntegratedInfo(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails) throws BaseException {
+
+        ResumeReadIntegratedInfoRes response = resumeService.readIntegratedInfo(customUserDetails);
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.RESUME_READ_SUCCESS, response));
+    }
+
     // (지원자) 마이페이지 -> 통합 지원서 조회
     @GetMapping("/read/integrated")
     public ResponseEntity<BaseResponse<ResumeReadRes>> readIntegrated(
@@ -156,4 +165,5 @@ public class ResumeController {
         emailSenderSeeker.sendResumeResultEmail(rejectInfo);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.RESUME_READ_SUCCESS_RESUMED));
     }
+
 }
