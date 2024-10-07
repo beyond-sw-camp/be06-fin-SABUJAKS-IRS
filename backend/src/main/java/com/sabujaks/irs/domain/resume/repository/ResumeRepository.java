@@ -16,8 +16,8 @@ public interface ResumeRepository extends JpaRepository<Resume, Long> {
     @Query("SELECT r FROM Resume r WHERE r.announcement.idx = :announcementIdx AND r.seeker.idx = :seekerIdx")
     Optional<Resume> findByAnnouncementIdxAndSeekerIdx(Long announcementIdx, Long seekerIdx);
 
-    @Query("SELECT r FROM Resume r WHERE r.seeker.idx = :seekerIdx")
-    List<Resume> findAllBySeekerIdx(Long seekerIdx);
+    @Query("SELECT r FROM Resume r WHERE r.seeker.idx = :seekerIdx ORDER BY r.idx DESC")
+    Page<Resume> findAllBySeekerIdx(Long seekerIdx, Pageable pageable);
 
     @Query("SELECT COUNT(r) FROM Resume r WHERE r.announcement.idx = :announcementIdx")
     Long countResumesByAnnouncementIdx(Long announcementIdx);

@@ -1274,14 +1274,15 @@ public class ResumeService {
     }
 
     @Transactional
-    public List<ResumeReadAllRes> readAll(CustomUserDetails customUserDetails) throws BaseException {
+    public Page<ResumeReadAllRes> readAll(CustomUserDetails customUserDetails, Integer page, Integer size) throws BaseException {
         Long seekerIdx = customUserDetails.getIdx();
         // 지원자 테이블 조회
         Optional<Seeker> resultSeeker = seekerRepository.findBySeekerIdx(seekerIdx);
         if(resultSeeker.isPresent()) {
-            // 지원자 idx로 공고지원서 테이블 조회
-            List<Resume> resultResumes = resumeRepository.findAllBySeekerIdx(seekerIdx);
-            if(!resultResumes.isEmpty()) {
+            // 지원자 idx로 공고지원서 테이블 조회 (페이징 처리)
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Resume> resultResumes = resumeRepository.findAllBySeekerIdx(seekerIdx, pageable);
+            if(resultResumes.hasContent()) {
                 List<ResumeReadAllRes> resumeReadAllResList = new ArrayList<>();
                 for(Resume resume : resultResumes) {
                     // 공고 idx로 테이블 조회
@@ -1335,7 +1336,8 @@ public class ResumeService {
                         throw new BaseException(BaseResponseMessage.RESUME_REGISTER_FAIL_NOT_FOUND_ANNOUNCE);
                     }
                 }
-                return resumeReadAllResList;
+                return new PageImpl<>(resumeReadAllResList, pageable, resultResumes.getTotalElements());
+
             } else {
                 throw new BaseException(BaseResponseMessage.RESUME_READ_FAIL_RESUME_NOT_FOUND);
             }
