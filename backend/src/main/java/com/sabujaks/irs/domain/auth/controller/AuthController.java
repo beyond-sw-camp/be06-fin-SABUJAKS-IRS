@@ -14,10 +14,14 @@ import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
 import com.sabujaks.irs.global.security.CustomUserDetails;
 import com.sabujaks.irs.global.utils.CloudFileUpload;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -44,13 +48,17 @@ public class AuthController {
     }
 
     @GetMapping("/email-verify")
-    public ResponseEntity<BaseResponse> emailVerify(
-        String email, String role, String uuid) throws Exception, BaseException {
-        if(emailVerifyService.isExist(email, uuid)){
+    public ResponseEntity<Void> emailVerify(
+            String email, String role, String uuid) throws Exception, BaseException {
+        HttpHeaders headers = new HttpHeaders();
+
+        if (emailVerifyService.isExist(email, uuid)) {
             authService.activeUser(email, role);
-            return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.AUTH_EMAIL_VERIFY_SUCCESS));
+            headers.setLocation(URI.create("https://www.sabujaks-irs/seeker/login"));
+            return new ResponseEntity<>(headers, HttpStatus.FOUND);
         } else {
-            return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.AUTH_EMAIL_VERIFY_FAIL));
+            headers.setLocation(URI.create("http://www.sabujaks-irs/seeker/login?error=true"));
+            return new ResponseEntity<>(headers, HttpStatus.FOUND);
         }
     }
 
