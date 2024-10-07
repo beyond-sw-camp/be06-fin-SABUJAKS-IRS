@@ -49,31 +49,6 @@ public enum BaseResponseMessage {
     AUTH_INACTIVE_USER_SUCCESS(true, 1500, "계정 비활성화에 성공했습니다."),
     AUTH_INACTIVE_USER_FAIL(false, 1501, "계정 비활성화에 실패했습니다."),
 
-    // INTERVIEW_SCHEDULE 면접 일정 1300
-    INTERVIEW_SCHEDULE_CREATE_SUCCESS(true, 1300, "면접 일정 등록에 성공했습니다."),
-    RESCHEDULE_CREATE_SUCCESS(true, 1301, "면접 조율 신청 생성 완료"),
-    INTERVIEW_SCHEDULE_NOT_FOUND(false, 1302, "해당 면접을 찾을 수 없습니다."),
-    RESCHEDULE_NOT_FOUND(false, 1303, "면접 조율 내역을 찾을 수 없습니다."),
-    RESCHEDULE_SEARCH_ALL_SUCCESS(true, 1304, "면접 조율 내역 조회에 성공했습니다."),
-    INTERVIEW_SCHEDULE_READ_ALL_SUCCESS(true, 1305, "면접 내역 조회에 성공했습니다."),
-    INTERVIEW_SCHEDULE_UPDATE_SUCCESS(true, 1306, "면접 내역 업데이트에 성공했습니다."),
-    INTERVIEW_SCHEDULE_AVAILABLE_TIMES_READ_SUCCESS(true, 1307, "예약 가능한 시간대 조회에 성공했습니다."),
-
-    INTERVIEW_PARTICIPATE_NOT_FOUND(false, 1320, "면접 연관 정보를 찾을 수 없습니다."),
-
-    // VIDEO_INTERVIEW 화상 면접 1400
-    VIDEO_INTERVIEW_CREATE_SUCCESS(true, 1400, "화상 면접 방 생성에 성공했습니다."),
-    VIDEO_INTERVIEW_SEARCH_ALL_SUCCESS(true, 1401, "화상 면접방 목록 조회에 성공했습니다."),
-    VIDEO_INTERVIEW_SEARCH_ALL_FAIL(false, 1402, "화상 면접방 목록 조회에 실패했습니다."),
-    VIDEO_INTERVIEW_JOIN_SUCCESS(true, 1403, "화상 면접방에 참가했습니다."),
-    VIDEO_INTERVIEW_JOIN_FAIL(false, 1404, "화상 면접방 참가에 실패했습니다."),
-    VIDEO_INTERVIEW_JOIN_FAIL_NOT_TIME(false, 1405, "참여 시간대가 아닙니다. 참여 시간을 맞춘뒤 접속해주세요."),
-    // MEMBER 1500
-    MEMBER_NOT_FOUND(false, 1500, "회원을 찾을 수 없습니다."),
-    ESTIMATOR_NOT_FOUND(false, 1501, "면접관을 찾을 수 없습니다."),
-
-    // TEAM 1600
-    TEAM_NOT_FOUND(false, 1600, "팀을 찾을 수 없습니다."),
 
     // RESUME 2000~2999
     RESUME_REGISTER_SUCCESS(true, 2000, "지원서 등록에 성공했습니다."),
@@ -149,7 +124,32 @@ public enum BaseResponseMessage {
 
     TOTAL_PROCESS_CREATE_SUCCESS(true, 8000, "통합 지원 프로세스 생성에 성공했습니다."),
     TOTAL_PROCESS_CREATE_FAIL(true, 8001, "통합 지원 프로세스 생성에 실패했습니다."),
-    TOTAL_PROCESS_READ_FAIL(true, 8002, "통합 지원 프로세스 조회에 실패했습니다.");
+    TOTAL_PROCESS_READ_FAIL(true, 8002, "통합 지원 프로세스 조회에 실패했습니다."),
+
+    // INTERVIEW_SCHEDULE 면접 일정 8000 ~ 8099
+    INTERVIEW_SCHEDULE_CREATE_SUCCESS(true, 8000, "면접 일정 등록에 성공했습니다."),
+    INTERVIEW_SCHEDULE_READ_ALL_SUCCESS(true, 8001, "면접 내역 조회에 성공했습니다."),
+    INTERVIEW_SCHEDULE_UPDATE_SUCCESS(true, 8002, "면접 내역 업데이트에 성공했습니다."),
+    INTERVIEW_SCHEDULE_NOT_FOUND(false, 8003, "해당 면접을 찾을 수 없습니다."),
+    INTERVIEW_SCHEDULE_AVAILABLE_TIMES_READ_SUCCESS(true, 8004, "예약 가능한 시간대 조회에 성공했습니다."),
+    RESCHEDULE_CREATE_SUCCESS(true, 8005, "면접 조율 신청 생성 완료"),
+    RESCHEDULE_NOT_FOUND(false, 8006, "면접 조율 내역을 찾을 수 없습니다."),
+    RESCHEDULE_SEARCH_ALL_SUCCESS(true, 8007, "면접 조율 내역 조회에 성공했습니다."),
+
+    INTERVIEW_PARTICIPATE_NOT_FOUND(false, 8008, "면접 연관 정보를 찾을 수 없습니다."),
+
+    // VIDEO_INTERVIEW 화상 면접 8100 ~ 8199
+    VIDEO_INTERVIEW_CREATE_SUCCESS(true, 8100, "화상 면접 방 생성에 성공했습니다."),
+    VIDEO_INTERVIEW_SEARCH_ALL_SUCCESS(true, 8101, "화상 면접방 목록 조회에 성공했습니다."),
+    VIDEO_INTERVIEW_SEARCH_ALL_FAIL(false, 8102, "화상 면접방 목록 조회에 실패했습니다."),
+    VIDEO_INTERVIEW_JOIN_SUCCESS(true, 8103, "화상 면접방에 참가했습니다."),
+    VIDEO_INTERVIEW_JOIN_FAIL(false, 8104, "화상 면접방 참가에 실패했습니다."),
+    VIDEO_INTERVIEW_JOIN_FAIL_NOT_TIME(false, 8105, "참여 시간대가 아닙니다. 참여 시간을 맞춘뒤 접속해주세요."),
+
+    // MEMBER, ESTIMATOR, TEAM 8300
+    MEMBER_NOT_FOUND(false, 8300, "회원을 찾을 수 없습니다."),
+    ESTIMATOR_NOT_FOUND(false, 8301, "면접관을 찾을 수 없습니다."),
+    TEAM_NOT_FOUND(false, 8302, "팀을 찾을 수 없습니다.");
 
     private Boolean success;
     private Integer code;
