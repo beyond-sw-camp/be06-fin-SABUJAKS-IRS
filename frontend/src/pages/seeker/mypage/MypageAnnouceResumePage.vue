@@ -14,7 +14,7 @@
 
                     <div class="content">
                         <!-- 지원서 항목 리스트 -->
-                        <div v-for="(announceResume, index) in resumeStore.announceResumeList" :key="index" class="application-item">
+                        <div v-for="(announceResume, index) in paginatedResumes" :key="index" class="application-item">
                             <div class="status">{{ checkApplicationResult(
                                                         announceResume.resumeResult, 
                                                         announceResume.interviewOneResult, 
@@ -31,6 +31,16 @@
                             </div>
                         </div>
                     </div>
+                    <div class="pagination">
+                        <button 
+                            v-for="page in totalPages" 
+                            :key="page" 
+                            @click="fetchResumes(page)" 
+                            :class="{ active: currentPage === page }"
+                            >
+                            {{ page }}
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -41,17 +51,31 @@
 import SeekerHeaderComponent from "@/components/seeker/SeekerHeaderComponent.vue";
 import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.vue";
 
-import { onMounted } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import { UseResumeStore } from '@/stores/UseResumeStore';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const resumeStore = UseResumeStore();
 
+const currentPage = ref(1);
+const pageSize = 10;
 
 onMounted(async () => {
-    await resumeStore.readAll(router);
-    console.log(resumeStore.announceResumeList);
+    await fetchResumes(currentPage.value);
+});
+
+const fetchResumes = async (page) => {
+    currentPage.value = page;
+    await resumeStore.readAll(router, page - 1, pageSize);
+};
+
+const paginatedResumes = computed(() => {
+    return resumeStore.announceResumeList;
+});
+
+const totalPages = computed(() => {
+    return resumeStore.announceResumeListPage.totalPages || 0;
 });
 
 const formatDate = (dateString) => {
@@ -411,7 +435,22 @@ nav ul li a {
     color: white;
 }
 
-.logout-btn:hover {
-    /* background-color: #83a5ea; */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: 50px 10px 0;
+}
+
+.pagination button {
+    background-color: #f1f1f1;
+    border: none;
+    padding: 10px 15px;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+.pagination button.active {
+    background-color: #212b36;
+    color: white;
 }
 </style>

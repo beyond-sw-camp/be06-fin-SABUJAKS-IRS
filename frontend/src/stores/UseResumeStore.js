@@ -42,6 +42,7 @@ export const UseResumeStore = defineStore('resume', {
         resumeDetail: {},
         resumeIntegrated: null,
         announceResumeList: [],
+        announceResumeListPage: {},
         resumeList: [],
     }),
     actions: {
@@ -273,7 +274,7 @@ export const UseResumeStore = defineStore('resume', {
                 router.push('/seeker/mypage/integration-resume');
             } catch (error) {
                 alert(error.response.data.message);
-                if(error.response.data.code === 2003) {
+                if (error.response.data.code === 2003) {
                     router.push('/seeker/mypage/integration-resume');
                 }
             }
@@ -442,13 +443,13 @@ export const UseResumeStore = defineStore('resume', {
                 // console.log('서버 응답:', response.data);
                 const toast = useToast();
                 toast.success(response.data.message);
-                if(response.data.code === 2000) {
+                if (response.data.code === 2000) {
                     router.push(`/seeker/resume/detail/${response.data.result.resumeIdx}`);
                 }
             } catch (error) {
                 console.log(error);
                 alert(error.response.data.message);
-                if(error.response.data.code === 2007) {
+                if (error.response.data.code === 2007) {
                     router.push('/seeker/mypage/annouce-resume');
                 }
             }
@@ -476,7 +477,7 @@ export const UseResumeStore = defineStore('resume', {
             } catch (error) {
                 // console.log(error.response.data);
                 alert(error.response.data.message);
-                if(error.response.data.code === 2102) {
+                if (error.response.data.code === 2102) {
                     router.push('/seeker/resume/create');
                 }
             }
@@ -493,14 +494,15 @@ export const UseResumeStore = defineStore('resume', {
                 alert(error.response.data.message);
             }
         },
-        async readAll(router) {
+        async readAll(router, page, size) {
             try {
-                const response = await axios.get(`${backend}/resume/read-all`, {
+                const response = await axios.get(`${backend}/resume/read-all?page=${page}&size=${size}`, {
                     headers: { 'Content-Type': 'application/json' },
                     withCredentials: true
                 });
-                this.announceResumeList = response.data.result;
-
+                this.announceResumeList = response.data.result.content;
+                this.announceResumeListPage = response.data.result;
+                console.log(this.announceResumeListPage);
             } catch (error) {
                 console.log(error.response.data.message);
                 alert('공고별 지원서 조회에 실패하였습니다.');
@@ -509,12 +511,12 @@ export const UseResumeStore = defineStore('resume', {
         },
         async updateDocPassed(docPassedValue) {
             try {
-                const response = await axios.post(`${backend}/total-process/create`, { 
-                        isPass: docPassedValue,
-                        announcementIdx: this.resumeDetail.announcementIdx,
-                        seekerIdx: this.resumeDetail.seekerIdx,
-                        interviewNum: 0
-                    }, 
+                const response = await axios.post(`${backend}/total-process/create`, {
+                    isPass: docPassedValue,
+                    announcementIdx: this.resumeDetail.announcementIdx,
+                    seekerIdx: this.resumeDetail.seekerIdx,
+                    interviewNum: 0
+                },
                     {
                         headers: { 'Content-Type': 'application/json' },
                         withCredentials: true
@@ -541,12 +543,13 @@ export const UseResumeStore = defineStore('resume', {
         },
 
         async sendResult(resumeList) {
-            try{
+            try {
                 const response = await axios.post(`${backend}/resume/recruiter/send-result`,
                     resumeList,
-                    { headers: { 'Content-Type': 'application/json' },
-                    withCredentials: true
-                });
+                    {
+                        headers: { 'Content-Type': 'application/json' },
+                        withCredentials: true
+                    });
 
                 console.log("resume result send email response : ", response);
 
