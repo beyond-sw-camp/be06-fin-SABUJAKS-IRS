@@ -106,8 +106,8 @@ const router = createRouter({
         { path: '/seeker/resume/submit/:announcementIdx', component: ResumeSubmitPage },
         { path: '/seeker/resume/detail/:resumeIdx', component: SeekerResumeDetailPage },
 
-        { path: '/video-interview/:announceUUID', component: VideoInterviewMainPage, },
-        { path: '/video-interview/:announceUUID/:videoInterviewUUID', component: VideoInterviewRoomPage },
+        { path: '/video-interview/:announcementUUID', component: VideoInterviewMainPage, },
+        { path: '/video-interview/:announcementUUID/:videoInterviewUUID', component: VideoInterviewRoomPage },
     ]
 })
 

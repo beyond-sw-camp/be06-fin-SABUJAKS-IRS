@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class VideoInterviewReadRes {
-    private String announceTitle;
+    private String announcementTitle;
     private String announcementUUID;
     private String interviewScheduleUUID;
     private String interviewDate;

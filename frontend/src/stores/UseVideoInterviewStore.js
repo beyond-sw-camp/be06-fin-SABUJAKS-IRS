@@ -20,10 +20,10 @@ export const UseVideoInterviewStore = defineStore('videoInterivew', {
                 return error.response.data
             }
         },
-        async searchAll(announceUUID) {
+        async readAll(announcementUUID) {
             try {
                 const response = await axios.get(
-                    `${backend}/video-interview/search-all?announceUUID=${announceUUID}`,
+                    `${backend}/video-interview/read-all?announcementUUID=${announcementUUID}`,
                     {
                         headers: { 'Content-Type': 'application/json', },
                     }
