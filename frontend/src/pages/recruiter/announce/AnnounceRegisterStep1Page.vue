@@ -6,6 +6,7 @@ import { ref, computed, onMounted, watch } from "vue";
 import { UseAnnouncementStore } from '@/stores/UseAnnouncementStore';
 import { UseAuthStore } from '@/stores/UseAuthStore';
 import { useRouter } from 'vue-router';
+import { useToast } from "vue-toastification";
 
 export default {
   components: {
@@ -17,6 +18,7 @@ export default {
     const announcementStore = UseAnnouncementStore();
     const authStore = UseAuthStore();
     const router = useRouter();
+    const toast = useToast();
 
 
     // 1. 항목 추가 필드 상태 (true/false)
@@ -386,7 +388,10 @@ export default {
         const today = new Date();
         announcementStore.formData.startDate = formatDate(today); // 페이지 로드 시 오늘 날짜로 초기화
       } catch (error) {
-        showErrorModal(error.message);
+        toast.error("먼저 기업 정보를 등록 해 주세요.");
+        // toast.error(error.message);
+        // showErrorModal(error.message);
+        router.push(`/recruiter/mypage`);
       }
     });
 
