@@ -129,15 +129,15 @@ public class ResumeController {
     // (지원자) 공고별 지원서 관리 목록
     @GetMapping("/read-all")
     public ResponseEntity<BaseResponse<ResumeReadAllRes>> readAll(
-            @AuthenticationPrincipal CustomUserDetails customUserDetails) throws BaseException {
+            @AuthenticationPrincipal CustomUserDetails customUserDetails, Integer page, Integer size) throws BaseException {
 
-        List<ResumeReadAllRes> response = resumeService.readAll(customUserDetails);
+        Page<ResumeReadAllRes> response = resumeService.readAll(customUserDetails, page, size);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.RESUME_READ_SUCCESS, response));
     }
 
     // (채용담당자) 공고에 지원한 지원자 목록 페이징 처리
     @GetMapping("/recruiter/read-all")
-    public ResponseEntity<BaseResponse<ResumeReadAllRes>> readAllRecruiter2(
+    public ResponseEntity<BaseResponse<ResumeReadAllRes>> readAllRecruiter(
             @AuthenticationPrincipal CustomUserDetails customUserDetails, Long announcementIdx, Integer page, Integer size) throws BaseException {
 
         Page<ResumeReadAllRecruiterRes> response = resumeService.readAllRecruiter(
