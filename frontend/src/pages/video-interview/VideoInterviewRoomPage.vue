@@ -1,18 +1,14 @@
 <template>
   <div>
-    <!-- 지원자 화면 -->
+    <!-- 헤더 -->
     <header class="header">
       <img class="header-logo" src="../../assets/img/irs_white.png" />
       <div>
-        <button @click="leaveSession" class="exitBtn" type="button" id="buttonLeaveSession" value="Leave session" >
-        면접 나가기
-        </button>
-        <button @click="handleTogglePubsAudio" class="soundBtn">
-          {{ audioMuted ? '음소거 해제' : '음소거' }}
-        </button>
+        <button @click="leaveSession" class="exitBtn" type="button" id="buttonLeaveSession" value="Leave session" >면접 나가기</button>
+        <button @click="handleTogglePubsAudio" class="soundBtn">{{ audioMuted ? '음소거 해제' : '음소거' }}</button>
       </div>
-
     </header>
+    <!-- 지원자 화면 -->
     <div v-if="(session != null) && (userType == 'ROLE_SEEKER')" class="seeker-wrapper" >
         <div id="video-container" class="video-container">
           <UserVideo 
@@ -24,18 +20,16 @@
           <UserVideo 
             class="video" 
             :isSubscriber="true" 
-            v-for="sub in subscribers" 
-            :key="sub.stream.connection.connectionId" 
-            :stream-manager="sub"
-            :audio-muted="sub.audioMuted"
+            v-for="subscriber in subscribers"
+            :key="subscriber.stream.connection.connectionId" 
+            :stream-manager="subscriber"
+            :audio-muted="subscriber.audioMuted"
             @handle-toggle-audio="handleToggleSubsAudio" 
-            @click="updateMainVideoStreamManager(sub)"
+            @click="updateMainVideoStreamManager(subscriber)"
           />
         </div>
-        <!-- <div id="main-video" class="main-video-container">
-          <UserVideo class="video" :stream-manager="mainStreamManager" />
-        </div> -->
     </div>
+    <!-- 면접관 화면 -->
     <div v-if="(session != null) && (userType == 'ROLE_ESTIMATOR')" class="estimator-wrapper">
       <div id="video-container" class="video-container">
           <UserVideo 
@@ -47,12 +41,12 @@
           <UserVideo 
             class="video" 
             :isSubscriber="true" 
-            v-for="sub in subscribers" 
-            :key="sub.stream.connection.connectionId" 
-            :stream-manager="sub"
-            :audio-muted="sub.audioMuted"
+            v-for="subscriber in subscribers"
+            :key="subscriber.stream.connection.connectionId" 
+            :stream-manager="subscriber"
+            :audio-muted="subscriber.audioMuted"
             @toggle-audio="handleToggleSubsAudio" 
-            @click="updateMainVideoStreamManager(sub)"
+            @click="updateMainVideoStreamManager(subscriber)"
           />
         </div>
       <div class="evaluate-container">
@@ -126,20 +120,24 @@ import { OpenVidu } from "openvidu-browser";
 import UserVideo from "@/components/video-interview/UserVideo.vue";
 import { useToast } from "vue-toastification";
 
+// Sys
 const route = useRoute();
 const router = useRouter()
 const toast = useToast();
 
+// Store
 const authStore = UseAuthStore();
 const videoInterviewStore = UseVideoInterviewStore();
 const interviewEvaluateStore = UseInterviewEvaluateStore();
 
+// OpenVidu
 const OV = ref(null);
 const session = ref(null);
 let mainStreamManager = ref(null);
 const publisher = ref(null);
 const subscribers = ref([]);
 
+// Interview
 const audioMuted = ref(false);
 const showEvaluateMenus = ref(false);
 const showEvaluateForm = ref(false);
@@ -148,6 +146,7 @@ const userName = ref("")
 const userType = ref("")
 const evaluateForm = ref({});
 
+// InterviewEvaluate
 const resumeList = ref({});
 const currentUser = ref({});
 const currentUserResume = ref("");

@@ -5,8 +5,7 @@
         <VideoInterviewMainSideBarComponent></VideoInterviewMainSideBarComponent>
         <div class="container">
             <h1 class="t1">공고 정보</h1>
-            <p>(주) 한화 시스템,백엔드 엔지니어 신입공채</p>
-
+            <p>{{  }}</p>
             <h1 class="t1">참여자 정보</h1>
             <table class="table">
                 <tbody>
@@ -18,12 +17,10 @@
                     <tr>
                         <td>{{ getUserInfoResult.name }}</td>
                         <td>{{ getUserInfoResult.email }}</td>
-                        <td v-if="getUserInfoResult.role=='ROLE_SEEKER'">지원자</td>
-                        <td v-if="getUserInfoResult.role=='ROLE_ESTIMATOR'">면접관</td>
+                        <td>{{ getUserInfoResult.role === 'ROLE_SEEKER' ? '지원자' : getUserInfoResult.role === 'ROLE_ESTIMATOR' ? '면접관' : '' }}</td>
                     </tr>
                 </tbody>
             </table>
-
             <h1 class="t1">화상 면접 목록</h1>
             <div v-if="searchAllResult != null">
                 <table>

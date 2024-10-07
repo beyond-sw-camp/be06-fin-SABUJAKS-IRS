@@ -5,7 +5,7 @@ import com.sabujaks.irs.domain.video_interview.model.request.VideoInterviewCreat
 import com.sabujaks.irs.domain.video_interview.model.request.VideoInterviewCreateReq;
 import com.sabujaks.irs.domain.video_interview.model.request.VideoInterviewTokenGetReq;
 import com.sabujaks.irs.domain.video_interview.model.response.VideoInterviewCreateRes;
-import com.sabujaks.irs.domain.video_interview.model.response.VideoInterviewSearchRes;
+import com.sabujaks.irs.domain.video_interview.model.response.VideoInterviewReadRes;
 import com.sabujaks.irs.domain.video_interview.model.response.VideoInterviewTokenGetRes;
 import com.sabujaks.irs.domain.video_interview.service.VideoInterviewService;
 import com.sabujaks.irs.global.common.exception.BaseException;
@@ -40,11 +40,11 @@ public class VideoInterviewController {
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.VIDEO_INTERVIEW_CREATE_SUCCESS, response));
     }
 
-    @GetMapping("/search-all")
-    public ResponseEntity<BaseResponse<VideoInterviewSearchRes>> searchAll(
+    @GetMapping("/read-all")
+    public ResponseEntity<BaseResponse<VideoInterviewReadRes>> searchAll(
         @AuthenticationPrincipal CustomUserDetails customUserDetails,
-        @RequestParam String announceUUID) throws BaseException {
-        List<VideoInterviewSearchRes> response = videoInterviewService.searchAll(announceUUID, customUserDetails);
+        @RequestParam String announcementUUID) throws BaseException {
+        List<VideoInterviewReadRes> response = videoInterviewService.searchAll(announcementUUID, customUserDetails);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.VIDEO_INTERVIEW_SEARCH_ALL_SUCCESS, response));
     }
 
