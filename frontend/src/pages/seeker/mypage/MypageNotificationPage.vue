@@ -12,7 +12,7 @@
             <h1>알림 관리</h1>
           </div>
 
-          <div class="content">
+          <div class="content margin-0">
             <div class="timeline">
               <!-- 알림 리스트 반복 출력 -->
               <div v-for="(alarm, index) in alarms" :key="alarm.idx" class="timeline-item">
