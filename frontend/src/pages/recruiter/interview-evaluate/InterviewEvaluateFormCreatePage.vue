@@ -1,76 +1,72 @@
 <template>
 <div>
   <MainHeaderComponent></MainHeaderComponent>
-    <div class="container">
-      <MainSideBarComponent></MainSideBarComponent>
-      <!-- <div class="container">
-        <InterviewEvaluateFormMain
-        v-if="isInterviewScheduleMain"
-        @loadAnnouncementList="loadAnnouncementList"
-        :title="careerBase"
-        :announcements="announcements"
-        :totalAnnouncements="totalAnnouncements">
-        </InterviewEvaluateFormMain>
-      </div> -->
-      <div class="content">
-        <h1>면접 평가표 생성</h1>
-        <table class="announcement-table">
-        <tbody>
-        <tr>
-          <th>번호</th>
-          <th>공고기간</th>
-          <th>공고명</th>
-          <th>생성</th>
-        </tr>
-        <tr v-for="(announcement, index) in announcements" :key="announcement.idx">
-          <td>{{ startNumberForPage - index }}</td>
-          <td>{{ formatDate(announcement.announcementStart) }} - {{ formatDate(announcement.announcementEnd) }}</td>
-          <td>{{ announcement.title }}</td>
-          <td><button @click="openCreateFormModal(announcement.idx)" class="createbtn">생성</button></td>       
-        </tr>
-        <div v-if="showModal" class="modal-wrapper" @click="closeCreateFormModal">
-            <div class="modal-container" @click.stop>
-              <span class="modal-closebtn" @click="closeCreateFormModal">×</span>
-              <h2></h2>
-              <label>평가항목 1</label>
-              <input v-model="q1" type="text" placeholder="면접평가항목을 입력해주세요" />
-              
-              <label>평가항목 2</label>
-              <input v-model="q2" type="text" placeholder="면접평가항목을 입력해주세요" />
-              
-              <label>평가항목 3</label>
-              <input v-model="q3" type="text" placeholder="면접평가항목을 입력해주세요" />
-              
-              <label>평가항목 4</label>
-              <input v-model="q4" type="text" placeholder="면접평가항목을 입력해주세요" />
-              
-              <label>평가항목 5</label>
-              <input v-model="q5" type="text" placeholder="면접평가항목을 입력해주세요" />
-              
-              <label>평가항목 6</label>
-              <input v-model="q6" type="text" placeholder="면접평가항목을 입력해주세요" />
-              
-              <label>평가항목 7</label>
-              <input v-model="q7" type="text" placeholder="면접평가항목을 입력해주세요" />
-              
-              <label>평가항목 8</label>
-              <input v-model="q8" type="text" placeholder="면접평가항목을 입력해주세요" />
-              
-              <label>평가항목 9</label>
-              <input v-model="q9" type="text" placeholder="면접평가항목을 입력해주세요" />
-              
-              <label>평가항목 10</label>
-              <input v-model="q10" type="text" placeholder="면접평가항목을 입력해주세요" />
+  <div class="container">
+    <MainSideBarComponent></MainSideBarComponent>
+    <div class="content">
+      <h1>면접 평가표 생성</h1>
+      <table class="announcement-table">
+      <tbody>
+      <tr>
+        <th>번호</th>
+        <th>공고기간</th>
+        <th>공고명</th>
+        <th>생성</th>
+      </tr>
+      <tr v-for="(announcement, index) in announcements" :key="announcement.idx">
+        <td>{{ startNumberForPage - index }}</td>
+        <td>{{ formatDate(announcement.announcementStart) }} - {{ formatDate(announcement.announcementEnd) }}</td>
+        <td>{{ announcement.title }}</td>
+        <td><button @click="openCreateFormModal(announcement.idx)" class="createbtn">생성</button></td>       
+      </tr>
+      <div v-if="showModal" class="modal-wrapper" @click="closeCreateFormModal">
+          <div class="modal-container" @click.stop>
+            <span class="modal-closebtn" @click="closeCreateFormModal">×</span>
+            <h2></h2>
+            <label>평가항목 1</label>
+            <input v-model="q1" type="text" placeholder="면접평가항목을 입력해주세요" />
+            
+            <label>평가항목 2</label>
+            <input v-model="q2" type="text" placeholder="면접평가항목을 입력해주세요" />
+            
+            <label>평가항목 3</label>
+            <input v-model="q3" type="text" placeholder="면접평가항목을 입력해주세요" />
+            
+            <label>평가항목 4</label>
+            <input v-model="q4" type="text" placeholder="면접평가항목을 입력해주세요" />
+            
+            <label>평가항목 5</label>
+            <input v-model="q5" type="text" placeholder="면접평가항목을 입력해주세요" />
+            
+            <label>평가항목 6</label>
+            <input v-model="q6" type="text" placeholder="면접평가항목을 입력해주세요" />
+            
+            <label>평가항목 7</label>
+            <input v-model="q7" type="text" placeholder="면접평가항목을 입력해주세요" />
+            
+            <label>평가항목 8</label>
+            <input v-model="q8" type="text" placeholder="면접평가항목을 입력해주세요" />
+            
+            <label>평가항목 9</label>
+            <input v-model="q9" type="text" placeholder="면접평가항목을 입력해주세요" />
+            
+            <label>평가항목 10</label>
+            <input v-model="q10" type="text" placeholder="면접평가항목을 입력해주세요" />
 
-              <button class="moadl-submitbtn" @click="handleCreateForm">면접 평가표 등록</button>
-            </div>
-        </div>
-        </tbody>
-      </table>
-      <div id="size-buttons">
-        <button v-for="page in totalPages" :key="page" @click="handlePageClick(page)">{{ page }}</button>
+            <button class="moadl-submitbtn" @click="handleCreateForm">면접 평가표 등록</button>
+          </div>
       </div>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <button 
+        v-for="page in totalPages" 
+        :key="page" 
+        @click="handlePageClick(page)"
+        :class="{ active: currentPage === page }"
+        >{{ page }}</button>
     </div>
+  </div>
   </div>
 </div>
 </template> 
@@ -211,6 +207,26 @@ tbody {
     border-color: inherit;
 }
 
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.pagination button {
+    background-color: #f1f1f1;
+    border: none;
+    padding: 10px 15px;
+    margin: 0 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.pagination button.active {
+    background-color: #212b36;
+    color: white;
+}
+
 .announcement-table th:nth-child(1) { /* 첫 번째 열 (번호) */
   width: 10%; /* 비율 조정 */
 }
@@ -226,6 +242,7 @@ tbody {
 .announcement-table th:nth-child(4) { /* 두 번째 열 (신입/경력) */
   width: 10%; /* 비율 조정 */
 }
+
 tr {
     display: table-row;
     vertical-align: inherit;
@@ -245,7 +262,7 @@ th {
     text-align: center;
     border: 1px solid #ddd;
     display: table-cell;
-    vertical-align: inherit;
+    vertical-align: inherit;  
     font-weight: bold;
     text-align: -internal-center;
     unicode-bidi: isolate;

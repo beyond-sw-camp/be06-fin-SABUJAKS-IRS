@@ -1,13 +1,11 @@
 <template>
-    <div>
-      <MainHeaderComponent></MainHeaderComponent>
-      <div class="">
-        <MainSideBarComponent></MainSideBarComponent>
-        <div class="container">
-          <div id="content">
-      <!-- props.title을 직접 사용합니다 -->
+<div>
+  <MainHeaderComponent></MainHeaderComponent>
+  <div class="container">
+    <MainSideBarComponent></MainSideBarComponent>
+    <div class="content">
       <h1>면접 평가 조회</h1>
-      <table class="review-table">
+      <table class="announcement-table">
         <tbody>
         <tr>
           <th>번호</th>
@@ -26,14 +24,17 @@
         </tr>
         </tbody>
       </table>
-  
-      <div id="size-buttons">
-        <button v-for="page in totalPages" :key="page" @click="handlePageClick(page)">{{ page }}</button>
+      <div class="pagination">
+        <button 
+          v-for="page in totalPages" 
+          :key="page" 
+          @click="handlePageClick(page)"
+          :class="{ active: currentPage === page }"
+          >{{ page }}</button>
       </div>
-    </div>
-        </div>
-      </div>
-    </div>
+  </div>
+  </div>
+</div>
 </template>
 <script setup>
 import MainSideBarComponent from "@/components/recruiter/MainSideBarComponent.vue";
@@ -81,20 +82,109 @@ const handleSearchButton = async (announcementIdx, interviewNum) => {
 
 </script> 
 <style scoped>
-.wrapper {
-    width: 80%;
-    margin: 0 auto;
-}
-  
 .container {
-    width: 80%;
-    flex: 1;
-    margin: 0 auto;
-    margin-left: 200px;
-    padding: 150px 0;
+  width: 80%;
+  margin: 0 auto;
+  margin-left: 200px;
+  padding: 150px 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.content{
+  flex: 1;
+  margin-left: 200px;
+  padding: 0 0 150px 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.content h1{
+  font-size: 24px;
+  margin: 50px 0;
+}
+
+.pagination {
     display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.pagination button {
+    background-color: #f1f1f1;
+    border: none;
+    padding: 10px 15px;
+    margin: 0 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.pagination button.active {
+    background-color: #212b36;
+    color: white;
+}
+
+.announcement-table th:nth-child(1) { /* 첫 번째 열 (번호) */
+  width: 10%; /* 비율 조정 */
+}
+
+.announcement-table th:nth-child(2) { 
+  width: 40%;
+}
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 40px;
+    border: 1px solid #ddd;
+}
+
+tr {
+    display: table-row;
+    vertical-align: inherit;
+    unicode-bidi: isolate;
+    border-color: inherit;
+}
+
+td {
+    border: 1px solid #ddd;
+    padding: 25px;
+    text-align: center;
+}
+
+th {
+    background-color: #f1f1f1;
+    padding: 25px;
+    text-align: center;
+    border: 1px solid #ddd;
+    display: table-cell;
+    vertical-align: inherit;
+    font-weight: bold;
+    text-align: -internal-center;
+    unicode-bidi: isolate;
+}
+
+.searchbtn {
+    width: fit-content;
+    background-color: #212b36;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    height: 100%;
+    transition: background-color 0.3s;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.searchbtn:hover {
+    background-color: #90959a;
 }
 </style>
     

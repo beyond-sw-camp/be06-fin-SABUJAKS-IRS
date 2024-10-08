@@ -1,50 +1,50 @@
 <template>
-  <div>
-    <MainHeaderComponent></MainHeaderComponent>
-    <div class="wrapper">
-      <MainSideBarComponent></MainSideBarComponent>
-      <div class="container">
-        <h1>면접 평가 조회</h1>
-        <table>
-          <tbody>
-            <tr>
-              <th>번호</th>
-              <th>지원자 ID</th>
-              <th>지원자 이름</th>
-              <th>지원자 이메일</th>
-              <th>상세보기</th>
-              <th>합격/불합격</th>
-            </tr>
-            <tr v-for="([key, result], index) in Object.entries(interviewEvaluateResult)" :key="key">
-              <td>{{ index + 1 }}</td>
-              <td>{{ key }}</td>
-              <td>{{ result[0].seekerName || '정보 없음' }}</td>
-              <td>{{ result[0].seekerEmail }}</td>
-              <td><button @click="openSearchEvaluateResultModal(result)" class="searchbtn">조회</button></td>
-              <td>
-                  <button @click="handleResultButton(key, 1)" class="searchbtn">합격</button>
-                  <button @click="handleResultButton(key, 0)" class="searchbtn">불합격</button>
-              </td>
-            </tr>
-          </tbody>
-      </table>
-        <div v-if="isModalVisible" class="modal-wrapper" @click="closeSearchEvaluateResultModal">
-          <div class="modal-container" @click.stop>
-            <span class="modal-closebtn" @click="closeSearchEvaluateResultModal">×</span>
-            <h2>면접 평가 상세</h2>
-            <h3>평가자별 면접 결과</h3>
-            <div v-for="(evaluate, index) in evaluateList" :key="index">
-              <h4>면접관 {{ index + 1 }} - 이메일: {{ evaluate.estimatorEmail }}</h4>
-              <label>총점: {{ evaluate.totalScore }}</label>
-              <label>의견: {{ evaluate.comments }}</label>
-              <div v-for="(value, questionKey) in evaluate.interviewEvaluateFormReadRes" :key="questionKey">
-                <label>{{ questionKey }}: {{ value }} 점수: {{ evaluate.interviewEvaluateResultReadRes[`r${questionKey.charAt(1)}`] }}</label>
-              </div>
+<div>
+  <MainHeaderComponent></MainHeaderComponent>
+  <div class="container">
+    <MainSideBarComponent></MainSideBarComponent>
+    <div class="content">
+      <h1>면접 평가 조회</h1>
+      <table>
+        <tbody>
+          <tr>
+            <th>번호</th>
+            <th>지원자 ID</th>
+            <th>지원자 이름</th>
+            <th>지원자 이메일</th>
+            <th>상세보기</th>
+            <th>합격/불합격</th>
+          </tr>
+          <tr v-for="([key, result], index) in Object.entries(interviewEvaluateResult)" :key="key">
+            <td>{{ index + 1 }}</td>
+            <td>{{ key }}</td>
+            <td>{{ result[0].seekerName || '정보 없음' }}</td>
+            <td>{{ result[0].seekerEmail }}</td>
+            <td><button @click="openSearchEvaluateResultModal(result)" class="searchbtn">조회</button></td>
+            <td>
+                <button @click="handleResultButton(key, 1)" class="searchbtn">합격</button>
+                <button @click="handleResultButton(key, 0)" class="searchbtn">불합격</button>
+            </td>
+          </tr>
+        </tbody>
+    </table>
+      <div v-if="isModalVisible" class="modal-wrapper" @click="closeSearchEvaluateResultModal">
+        <div class="modal-container" @click.stop>
+          <span class="modal-closebtn" @click="closeSearchEvaluateResultModal">×</span>
+          <h2>면접 평가 상세</h2>
+          <h3>평가자별 면접 결과</h3>
+          <div v-for="(evaluate, index) in evaluateList" :key="index">
+            <h4>면접관 {{ index + 1 }} - 이메일: {{ evaluate.estimatorEmail }}</h4>
+            <label>총점: {{ evaluate.totalScore }}</label>
+            <label>의견: {{ evaluate.comments }}</label>
+            <div v-for="(value, questionKey) in evaluate.interviewEvaluateFormReadRes" :key="questionKey">
+              <label>{{ questionKey }}: {{ value }} 점수: {{ evaluate.interviewEvaluateResultReadRes[`r${questionKey.charAt(1)}`] }}</label>
             </div>
-        </div>
+          </div>
       </div>
     </div>
   </div>
+</div>
 </div>
 </template>
 
@@ -101,21 +101,30 @@ const handleResultButton = async (seekerIdx, isPass) => {
 </script>
 
 <style scoped>
-.wrapper {
-    width: 80%;
-    margin: 0 auto;
-}
-  
 .container {
-    width: 80%;
-    flex: 1;
-    margin: 0 auto;
-    margin-left: 200px;
-    padding: 150px 0;
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
+  width: 80%;
+  margin: 0 auto;
+  margin-left: 200px;
+  padding: 150px 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
 }
+
+.content {
+  flex: 1;
+  margin-left: 200px;
+  padding: 0 0 150px 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.content h1 {
+  font-size: 24px;
+  margin: 50px 0;
+}
+
 table {
     width: 100%;
     border: 1px solid #ddd;
