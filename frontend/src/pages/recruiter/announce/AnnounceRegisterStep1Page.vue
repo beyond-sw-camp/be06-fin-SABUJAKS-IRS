@@ -300,16 +300,31 @@ export default {
     // 5. 채용절차 폼 관련 *************************************************************************************
 
     const selectedPeriod = ref('');
-    const activeProcessSteps = ref([]);
+    // const activeProcessSteps = ref([]);
+    const processSteps = ref(['서류전형', '면접전형 > 1차', '면접전형 > 2차', '최종합격']); // 전체 전형 절차 목록
+    const activeProcessSteps = ref([]); // 활성화된 전형 절차 목록
     const times = ['07시', '08시', '09시', '10시', '11시', '12시', '13시', '14시', '15시', '16시', '17시', '18시', '19시', '20시', '21시', '22시', '23시', '24시'];
 
-    const processSteps = computed(() => {
-      const steps = ['서류전형', '면접전형 > 1차', '최종합격'];
-      if (announcementStore.formData.interviewCount === '2') {
-        steps.splice(2, 0, '면접전형 > 2차');
+    // const processSteps = computed(() => {
+    //   const steps = ['서류전형', '면접전형 > 1차', '최종합격'];
+    //   if (announcementStore.formData.interviewCount === '2') {
+    //     steps.splice(2, 0, '면접전형 > 2차');
+    //   }
+    //   return steps;
+    // });
+
+    // 면접 횟수가 변경되면 전형 절차 자동 설정
+    const updateProcessSteps = () => {
+      const interviewCount = announcementStore.formData.interviewCount;
+
+      if (interviewCount === '1') {
+        activeProcessSteps.value = ['서류전형', '면접전형 > 1차', '최종합격'];
+      } else if (interviewCount === '2') {
+        activeProcessSteps.value = ['서류전형', '면접전형 > 1차', '면접전형 > 2차', '최종합격'];
+      } else {
+        activeProcessSteps.value = []; // 초기화
       }
-      return steps;
-    });
+    };
 
     // 1개월2개월 버튼클릭시 마감일 자동설정 함수
     const setActiveButton = (period) => {
@@ -333,15 +348,15 @@ export default {
     };
 
     // 전형절차 버튼클릭으로 해당 단계 활성화, 비활성화
-    const toggleProcessStep = (step) => {
-      if (activeProcessSteps.value.includes(step)) {
-        activeProcessSteps.value = activeProcessSteps.value.filter(s => s !== step);
-      } else {
-        activeProcessSteps.value.push(step);
-      }
-    };
+    // const toggleProcessStep = (step) => {
+    //   if (activeProcessSteps.value.includes(step)) {
+    //     activeProcessSteps.value = activeProcessSteps.value.filter(s => s !== step);
+    //   } else {
+    //     activeProcessSteps.value.push(step);
+    //   }
+    // };
 
-    // 전형절차 문자열 변환
+    // 활성화된 전형 절차를 문자열로 변환하여 히든 인풋에 반영
     const formattedProcessSteps = computed(() => activeProcessSteps.value.join(', '));
 
     // 날짜형식변환
@@ -461,8 +476,9 @@ export default {
       processSteps,
       activeProcessSteps,
       formattedProcessSteps,
+      updateProcessSteps,
       setActiveButton,
-      toggleProcessStep,
+      // toggleProcessStep,
 
       showErrorModal,
       alreadyFun,
@@ -495,22 +511,28 @@ export default {
               </div>
             </div>
           </div>
-          <p>이미지 업로드는 *필수*값을 꼭 입력해 주시고, 템플릿 작성은 모든 값을 입력해 주세요.</p>
+          <p style="font-size: large;">이미지 업로드 양식 - 이미지를 업로드 하고 템플릿 작성 양식으로 이동하여 *필수*값을 꼭 입력한 후 등록해 주세요. <br>
+            템플릿 작성 양식 - 템플릿의 정보를 모두 작성 후 등록해 주세요. </p>
         </div>
 
         <hr style="border: 0.5px solid #abadb8; margin: 30px 0;">
 
         <!-- 이미지 업로드 섹션 -->
-        <div v-if="isImageUpload" id="imageUpload" style="text-align: left; background-color: #f5f8ff;">
+        <div v-if="isImageUpload" id="imageUpload" style="text-align: left; background-color: #f1f1f1;">
           <h3>이미지 업로드</h3>
           <div style="text-align: left;">
-            <input type="file" @change="previewImage" accept="image/*" />
+            <!-- 커스텀 파일 업로드 버튼 -->
+            <label for="fileInput" class="custom-file-upload"
+              style="background-color: #212b36; color: #fff; padding: 10px 10px 10px 35px; border-radius: 5px; cursor: pointer; display: inline-block;">
+              파일 선택
+            </label>
+            <input type="file" id="fileInput" @change="previewImage" accept="image/*" style="display: none;" />
             <!-- <p v-if="fileName">{{ fileName }}</p> -->
             <div id="imagePreviewContainer"
               style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; flex-direction: column; background-color: #fff;">
               <!-- 이미지 초기화 버튼 -->
               <button @click="resetImage" v-if="imageUrl"
-                style="margin-top: 10px; border: 1px solid #abadb8; border-radius: 2px;">이미지 초기화</button>
+                style="margin: 10px 0; padding: 10px 10px; border: 1px solid #abadb8; border-radius: 5px; background-color: white;">이미지 초기화</button>
               <img v-if="imageUrl" :src="imageUrl" id="imagePreview"
                 style="width: 100%; height: 100%; object-fit: contain;">
               <p v-else id="noImageText" style="color: #777;">하나의 파일로 된 이미지를 선택하세요.</p>
@@ -622,21 +644,22 @@ export default {
               <div v-if="fields.department" class="required-parents-div">
                 <label></label>
                 <div class="required-child-div">
-                  <textarea type="text" style="width: 800px; font-size: 16px;" @input="autoResize($event)" v-model="announcementStore.formData.department" placeholder="근무 부서 입력"
-                    name="department"></textarea>
+                  <textarea type="text" style="width: 800px; font-size: 16px;" @input="autoResize($event)"
+                    v-model="announcementStore.formData.department" placeholder="근무 부서 입력" name="department"></textarea>
                 </div>
               </div>
               <div v-if="fields.position" class="required-parents-div">
                 <label></label>
                 <div class="required-child-div">
-                  <textarea type="text" style="width: 800px; font-size: 16px;" @input="autoResize($event)" v-model="announcementStore.formData.position" placeholder="직급 직책 입력"
-                    name="position"></textarea>
+                  <textarea type="text" style="width: 800px; font-size: 16px;" @input="autoResize($event)"
+                    v-model="announcementStore.formData.position" placeholder="직급 직책 입력" name="position"></textarea>
                 </div>
               </div>
               <div v-if="fields.requirement" class="required-parents-div">
                 <label></label>
                 <div class="required-child-div">
-                  <textarea type="text" style="width: 800px; font-size: 16px;" @input="autoResize($event)" v-model="announcementStore.formData.requirement" placeholder="필수/우대조건 입력"
+                  <textarea type="text" style="width: 800px; font-size: 16px;" @input="autoResize($event)"
+                    v-model="announcementStore.formData.requirement" placeholder="필수/우대조건 입력"
                     name="requirement"></textarea>
                 </div>
               </div>
@@ -735,10 +758,9 @@ export default {
               <div v-if="fields2.workTime" class="required-parents-div">
                 <label>출퇴근 시간</label>
                 <div class="required-child-div">
-                  <select v-model="announcementStore.formData.startTime" style="width: 200px; padding: 10px;">
+                  <select v-model="announcementStore.formData.startTime" style="width: 200px; padding: 10px; margin-right: 15px;">
                     <option v-for="time in timeOptions" :key="time" :value="time">{{ time }}</option>
                   </select>
-                  ~
                   <select v-model="announcementStore.formData.endTime" style="width: 200px; padding: 10px;">
                     <option v-for="time in timeOptions" :key="time" :value="time">{{ time }}</option>
                   </select>
@@ -842,19 +864,18 @@ export default {
             <!-- 지원 접수 기간 -->
             <div class="required-parents-div">
               <label class="required required2">지원 접수 기간</label>
-              <div class="required-child-div">
+              <div class="required-child-div" style="display: flex; justify-content: left; flex-direction: column; align-items:start">
                 <div class="btn-group" style="margin-bottom: 20px;">
                   <button :class="{ active: selectedPeriod === '1개월' }" @click="setActiveButton('1개월')">1개월</button>
                   <button :class="{ active: selectedPeriod === '2개월' }" @click="setActiveButton('2개월')">2개월</button>
                 </div>
                 <div>
                   <input type="date" v-model="announcementStore.formData.startDate" />
-                  <select v-model="announcementStore.formData.startTimeRegi">
+                  <select style="margin-right: 15px;" v-model="announcementStore.formData.startTimeRegi">
                     <option v-for="time in times" :key="time" :value="time">{{ time }}</option>
                   </select>
-                  ~
                   <input type="date" v-model="announcementStore.formData.endDate" />
-                  <select v-model="announcementStore.formData.endTimeRegi">
+                  <select style="margin-right: 15px;" v-model="announcementStore.formData.endTimeRegi">
                     <option v-for="time in times" :key="time" :value="time">{{ time }}</option>
                   </select>
                   <select v-model="announcementStore.formData.recruitmentType">
@@ -869,7 +890,7 @@ export default {
             <div class="required-parents-div">
               <label class="required required2">면접 횟수</label>
               <div class="required-child-div">
-                <select v-model="announcementStore.formData.interviewCount">
+                <select v-model="announcementStore.formData.interviewCount" @change="updateProcessSteps">
                   <option value="선택해 주세요">선택해 주세요</option>
                   <option value="1">1</option>
                   <option value="2">2</option>
@@ -882,12 +903,12 @@ export default {
               <label>전형절차</label>
               <div class="required-child-div">
                 <div class="btn-group">
+                  <!-- @click="toggleProcessStep(step)" -->
                   <button v-for="step in processSteps" :key="step"
-                    :class="{ active: activeProcessSteps.includes(step) }" @click="toggleProcessStep(step)">
+                    :class="{ active: activeProcessSteps.includes(step) }">
                     {{ step }}
                   </button>
                 </div>
-                <p> 면접 횟수와 맞춰 클릭 해 주세요.</p>
               </div>
             </div>
 
@@ -915,6 +936,7 @@ export default {
 
         <!-- 다음 스텝 버튼 -->
         <div class="submit-section">
+          <p style="font-size: large;">이미지 업로드 시, 템플릿 작성 양식으로 이동하여 *필수*값을 꼭 입력한 후 등록해 주세요.</p>
           <button @click="alreadyFun" id="buildFormBtn">공고 등록 후 지원서 폼 조립하기</button>
         </div>
       </div>
@@ -939,6 +961,17 @@ export default {
 
 
 /* 추가된 css */
+input[type="number"] {
+  /* width: calc(100% - 40px); */
+  padding: 20px 5px;
+  width: 200px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  background-size: 15px;
+  font-size: 16px;
+}
+
 #imageUpload {
   background-color: #f5f8ff;
   border: 1px solid #ccc;
@@ -1192,8 +1225,8 @@ button.inactive {
 }
 
 .benefits-box {
-  border: 1px solid #f5f8ff;
-  background-color: #f5f8ff;
+  /* border: 1px solid #f5f8ff; */
+  /* background-color: #f5f8ff; */
   padding: 20px;
   border-radius: 5px;
   margin-bottom: 50px;
@@ -1228,7 +1261,8 @@ button.inactive {
   padding: 5px 10px;
   border-radius: 15px;
   margin: 5px;
-  background-color: #eaedf4;
+  background-color: #212b36;
+  color: white;
 }
 
 .subcategory-label {

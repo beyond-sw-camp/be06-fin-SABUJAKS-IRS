@@ -4,7 +4,7 @@
         <MainSideBarComponent></MainSideBarComponent>
         <div id="content">
             <div style="display: flex; justify-content: space-between;">
-                <h2>[{{ router.params.title }}] 공고<br>지원서 폼 조립</h2>
+                <h2>[{{ route.params.title }}] 공고<br>지원서 폼 조립</h2>
                 <!-- 저장 버튼 -->
                 <button @click="saveForm" class="save-button">폼 저장</button>
             </div>
@@ -28,7 +28,7 @@
                     <div v-for="(section, index) in coverLetterSections" :key="index" class="cover-letter-item"
                         style="margin-top: 15px;">
                         <textarea type="text" v-model="section.title" @input="autoResize($event)" style="font-size: 18px; height: 40px; width: 600px;" placeholder="문항입력" ></textarea>
-                        <input type="number" v-model="section.characterLimit" style="font-size: 18px; height: 20px; width: 60px;"
+                        <input type="number" v-model="section.characterLimit" style="font-size: 18px; height: 40px; width: 100px;"
                             placeholder="글자 수 제한" />
                         <button style="padding: 10px 10px; border-radius: 5px; height: 40px; width: 60px;"
                             @click="removeCoverLetterSection(index)">삭제</button>
@@ -45,11 +45,12 @@ import MainSideBarComponent from "@/components/recruiter/MainSideBarComponent.vu
 // import { UseAnnouncementStore } from '@/stores/UseAnnouncementStore';
 import { UseCustomFormStore } from '@/stores/UseCustomFormStore';
 import { ref } from "vue";
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 // const announcementStore = UseAnnouncementStore();s
 const customFormStore = UseCustomFormStore();
-const router = useRoute();
+const route = useRoute();
+const router = useRouter();
 
 // 폼 종류 리스트
 const formItems = ref([
@@ -109,7 +110,7 @@ const autoResize = (event) => {
 
 // 폼 저장 함수 호출
 const saveForm = () => {
-    customFormStore.saveForm(router.params.announcementIdx, selectedForms.value, coverLetterSections.value);
+    customFormStore.saveForm(route.params.announcementIdx, selectedForms.value, coverLetterSections.value, router);
 };
 </script>
 
@@ -129,7 +130,7 @@ const saveForm = () => {
     /* flex: 1; */
     margin-left: 200px;
     /* 사이드바 너비만큼 왼쪽 여백 추가 */
-    padding: 150px 0;
+    padding: 0 0 150px 0;
     display: flex;
     /* flex-direction: column; */
     box-sizing: border-box;

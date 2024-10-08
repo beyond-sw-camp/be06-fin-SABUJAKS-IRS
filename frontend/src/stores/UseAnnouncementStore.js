@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 import { backend } from '@/const';
 import { toRaw } from 'vue';
+import { useToast } from 'vue-toastification';
 
 export const UseAnnouncementStore = defineStore('announcement', {
     state: () => ({
@@ -295,7 +296,11 @@ export const UseAnnouncementStore = defineStore('announcement', {
                 console.log("응답" + response.data.result);
 
                 if (response.status === 200) {
-                    alert('데이터가 성공적으로 저장되었습니다.');
+                    // alert('데이터가 성공적으로 저장되었습니다.');
+                    console.log(response.data);
+
+                    const toast = useToast();
+                    toast.success("공고가 등록되었습니다. 지원서 폼 조립 페이지로 이동합니다.");
 
                     // announcementIdx가 제대로 전달되는지 확인
                     // console.log(response.data.result.announcementIdx);
@@ -311,7 +316,9 @@ export const UseAnnouncementStore = defineStore('announcement', {
                 }
             } catch (error) {
                 console.error('데이터 저장 실패:', error);
-                alert('데이터 저장 중 오류가 발생했습니다.' + error.response.data.message);
+                // alert('데이터 저장 중 오류가 발생했습니다.' + error.response.data.message);
+                const toast = useToast();
+                toast.error(error.response.data.message);
             }
         },
 

@@ -108,7 +108,7 @@
             <ul data-pageno="1" data-count="20" data-totalcount="3641" data-totalcounttext="3,641">
               <li class="option" v-for="(announcement) in announcementStore.announcements2"
                   :key="announcement.announcementIdx" @click="goToDetailPage(announcement.announcementIdx)">
-                <a href="" class="listCell" target="_blank" data-gno="45672569">
+                <a href="" class="listCell" data-gno="45672569">
                   <div class="rLogo">
                     <img src="@/assets/img/announce/no-background.jpg" alt="㈜365위더스">
                   </div>
