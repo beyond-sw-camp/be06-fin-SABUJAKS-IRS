@@ -23,20 +23,18 @@ public class Announcement { //공고
 
 
     // 공고 기본 설정
-    @Column(length = 50)
+    @Column(length = 100)
     private String title; // 공고제목
 
     private Boolean selectForm; // 양식 선택
 
-    @Column(length = 100)
     private String imgUrl; // 공고 img
 
 
     // 모집분야
-    @Column(length = 50)
     private String jobCategory; // 직무 카테고리
 
-    @Column(length = 50)
+    @Column(length = 100)
     private String jobTitle; // 모집분야명
 
     private Integer recruitedNum; // 모집인원
@@ -49,7 +47,7 @@ public class Announcement { //공고
 
 
     // 지원자격/근무조건
-    @Column(length = 20)
+    @Column(length = 100)
     private String region; // 근무지역
 
     @Column(length = 20)
