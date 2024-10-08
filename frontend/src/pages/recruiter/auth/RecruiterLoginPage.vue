@@ -21,7 +21,7 @@
               id="j_username"
               type="text"
               autofocus="autofocus"
-              class="jenkins-input"
+              class="jenkins-input custom-input"
               autocapitalize="off"
               v-model="username"
           />
@@ -32,7 +32,7 @@
               name="j_password"
               id="j_password"
               type="password"
-              class="jenkins-input"
+              class="jenkins-input custom-input"
               v-model="password"
           />
         </div>
@@ -1160,6 +1160,9 @@ a:focus-visible:after {
 .login-btn {
   color: white !important;
   background-color: #212b36 !important;
+}
+.custom-input {
+  border: 1px solid #232b36;
 }
 
 </style>
