@@ -72,7 +72,6 @@ public class SecurityConfig {
                                 .requestMatchers("/api/resume/read").hasAnyAuthority("ROLE_SEEKER", "ROLE_RECRUITER")
                                 .requestMatchers("/api/resume/read/submit-info").hasAuthority("ROLE_SEEKER")
                                 .requestMatchers("/api/resume/read/integrated").hasAuthority("ROLE_SEEKER")
-                                .requestMatchers("/api/resume/read/integrated-info").hasAuthority("ROLE_SEEKER")
                                 .requestMatchers("/api/resume/read-all").hasAuthority("ROLE_SEEKER")
                                 .requestMatchers("/api/resume/recruiter/read-all").hasAuthority("ROLE_RECRUITER")
                                 .requestMatchers("/api/resume/update/docPassed/{resumeIdx}").hasAuthority("ROLE_RECRUITER")
