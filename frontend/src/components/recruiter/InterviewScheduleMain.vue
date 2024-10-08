@@ -51,10 +51,6 @@ const handlePageClick = async (pageNumber) => {
   isLoading.value = false; // 로딩 종료
 };
 
-// const startNumberForPage = computed(() => {
-//   return props.totalAnnouncements - (currentPage.value - 1) * postsPerPage;
-// });
-
 // const announceIdx = ref(0);
 const interviewScheduleStore = UseInterviewScheduleStore(); // Store 인스턴스
 const handleRowClick = (announcementIdx, announcementUuid) => {
@@ -63,9 +59,17 @@ const handleRowClick = (announcementIdx, announcementUuid) => {
   interviewScheduleStore.setAnnouncementUuid(announcementUuid);
   interviewScheduleStore.setCareerBase(props.careerBase);
 
-  router.push({
-    path: "/recruiter/interview-schedule/list",
-  });
+  console.log(props.title);
+  if (props.title === "전체") {
+    // emit('interviewScheduleList', props.announcementIdx, props.announcementUuid);
+    router.push({
+      path: "/recruiter/interview-schedule/reschedule/list",
+    });
+  } else {
+    router.push({
+      path: "/recruiter/interview-schedule/list",
+    });
+  }
 }
 
 const formatDate = (datetime) => {

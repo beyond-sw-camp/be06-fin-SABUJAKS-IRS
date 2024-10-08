@@ -8,6 +8,7 @@ export const UseInterviewScheduleStore = defineStore('reservation', {
             announcementIdx: null,
             announcementUuid: "",
             careerBase: "",
+            scheduleInfo: {},
         }
     ),
     actions: {
@@ -19,6 +20,9 @@ export const UseInterviewScheduleStore = defineStore('reservation', {
         },
         setCareerBase(careerBase) {
             this.careerBase = careerBase;
+        },
+        setScheduleInfo(scheduleInfo) {
+            this.scheduleInfo = scheduleInfo;
         },
 
         // 면접 일정 생성
@@ -207,12 +211,10 @@ export const UseInterviewScheduleStore = defineStore('reservation', {
             try{
                 const reScheduleResponse = await axios.get(
                     `${backend}/interview-schedule/read-all/re-schedule?` +
-                    `announcementIdx=${announceIdx.announcementIdx}` +
+                    `announcementIdx=${announceIdx}` +
                     `&pageNum=${pageNum}` ,
                     {withCredentials: true}
                 );
-
-                console.log(reScheduleResponse.data.result);
 
                 return reScheduleResponse.data.result;
             } catch (error) {
@@ -221,17 +223,15 @@ export const UseInterviewScheduleStore = defineStore('reservation', {
             }
         },
 
-        async getTotalReSchedule(reqData) {
+        async getTotalReSchedule(announcementIdx) {
             try{
                 const response = await axios.get(
                     // `api/interview-schedule/create`,
                     `${backend}/interview-schedule/read-all/count/re-schedule?` +
-                    `&announcementIdx=${reqData.announcementIdx}`,
+                    `&announcementIdx=${announcementIdx}`,
                     // 쿠키 포함
                     { withCredentials: true }
                 );
-
-                console.log(response);
 
                 return response.data.result;
             } catch (error) {
