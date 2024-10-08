@@ -348,7 +348,7 @@ watch([interviewDate, team], async ([newDate, newTeam]) => {
             <div class="form-group col-12 row">
               <div class="col-11">
                 <label for="participants">면접관 추가</label>
-                <input type="text" id="participants" placeholder="이메일을 입력 후 + 버튼을 눌러주세요." v-model="participantEmail">
+                <input type="text" id="participants" placeholder='"이름-이메일"을 입력 후 + 버튼을 눌러주세요.' v-model="participantEmail">
               </div>
               <div class="col-1 add-button-section">
                 <button class="add-email" @click="addParticipantEmail">+</button>

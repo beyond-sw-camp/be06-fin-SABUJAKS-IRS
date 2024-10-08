@@ -95,10 +95,14 @@ public class InterviewScheduleService {
                 String estimatorPassword = UUID.randomUUID().toString();
                 Optional<Estimator> resultEstimator = estimatorRepository.findByEstimatorEmail(estimatorEmail);
                 Estimator estimator = null;
+                String[] parts = estimatorEmail.split("-");
+                String name = parts[0].trim(); // 이름
+                String email = parts.length > 1 ? parts[1].trim() : "";
                 if(resultEstimator.isEmpty()){
                     estimator = Estimator.builder()
                             .role("ROLE_ESTIMATOR")
-                            .email(estimatorEmail)
+                            .name(name)
+                            .email(email)
                             // UUID로 저장하고, UUID를 이메일로 전송
                             .password(passwordEncoder.encode("qwer1234"))
                             .emailAuth(true)
