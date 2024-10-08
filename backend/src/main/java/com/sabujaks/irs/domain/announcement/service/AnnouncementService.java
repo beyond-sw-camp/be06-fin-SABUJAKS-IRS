@@ -64,6 +64,7 @@ public class AnnouncementService {
                         .recruiter(resultRecruiter.get())
                         .selectForm(dto.getSelectForm())
                         .title(dto.getTitle()) // 공고제목
+                        .jobCategory(dto.getJobCategoryList()) // 모집직무
                         .jobTitle(dto.getJobTitle()) // 모집분야명
                         .recruitedNum(dto.getRecruitedNum()) // 모집인원
                         .careerBase(dto.getCareerBase()) // 신입경력
@@ -85,7 +86,7 @@ public class AnnouncementService {
                         .recruiter(resultRecruiter.get())
                         .selectForm(dto.getSelectForm())
                         .title(dto.getTitle())
-                        .jobCategory(dto.getJobCategoryList().toString())
+                        .jobCategory(dto.getJobCategoryList())
                         .jobTitle(dto.getJobTitle())
                         .recruitedNum(dto.getRecruitedNum())
                         .careerBase(dto.getCareerBase())
@@ -120,6 +121,7 @@ public class AnnouncementService {
 
 
     /*******채용담당자 지원서 폼 조립 + 자기소개서 문항 등록 (step2)***********/
+    @Transactional
     public CustomFormCreateRes createCustomForm(
         CustomUserDetails customUserDetails,
         CustomFormCreateReq dto) throws BaseException {
