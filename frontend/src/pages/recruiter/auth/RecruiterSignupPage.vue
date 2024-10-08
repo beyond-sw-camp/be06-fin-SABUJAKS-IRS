@@ -11,7 +11,7 @@
                 </div>
                 <form class="signup-form" @submit.prevent="handleCompanyVerify">
                 <div class="input-section">
-                    <h3>기업인증</h3>
+                    <h3 class="t1">기업인증</h3>
                     <input v-model="crn" type="text" maxlength="30" placeholder="사업자등록번호">
                     <input v-model="opened_at" type="text" maxlength="30" placeholder="개업일자 ex) 20201212">
                     <input v-model="ceo_name" type="text" maxlength="30" placeholder="회사대표명">
@@ -22,7 +22,7 @@
             </form> 
             <form class="signup-form" @submit.prevent="handleSignup">
                 <div class="input-section">
-                    <h3>채용담당자 정보</h3>
+                    <h3 class="t1">채용담당자 정보</h3>
                     <input v-model="email" type="email" maxlength="30" placeholder="이메일">
                     <input v-model="password" type="password" maxlength="30" placeholder="비밀번호 (8~16자의 영문, 숫자, 특수기호)">
                     <input v-model="name" type="text" maxlength="30" placeholder="이름">
@@ -117,6 +117,13 @@ const handleSignup = async () => {
     padding: 0;
 }
 
+.t1 {
+    margin: 20px 0;
+    font-weight: 600;
+    line-height: 26px;
+    font-size: 1.1875rem;
+}
+
 .signup-container {
     width: auto;
     height: fit-content;
@@ -163,7 +170,10 @@ const handleSignup = async () => {
     height: 100%;
     background-color: #212b36;
     color: white;
-    font-size: 20px;
+    margin: 20px 0;
+    font-weight: 600;
+    line-height: 26px;
+    font-size: 1.1875rem;
 }
 
 .seeker {
@@ -173,7 +183,10 @@ const handleSignup = async () => {
     flex: 1;
     width: 100%;
     height: 100%;
-    font-size: 20px;
+    margin: 20px 0;
+    font-weight: 600;
+    line-height: 26px;
+    font-size: 1.1875rem;
 }
 
 .seeker a {

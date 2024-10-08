@@ -10,7 +10,7 @@
                 </div>
             <form class="signup-form" @submit.prevent="handleSignup">
                 <div class="social-section">
-                    <h4>소셜로 간편하게 로그인하세요</h4>
+                    <h3 class="t1">소셜로 간편하게 로그인하세요</h3>
                     <div class="social-list">
                         <a class="social-kakao-logo" @click.prevent="handleSocialLogin('kakao')"></a>
                         <a class="social-naver-logo" @click.prevent="handleSocialLogin('naver')"></a>
@@ -18,7 +18,7 @@
                     </div>
                 </div>
                 <div class="input-section">
-                    <h3>지원자 정보</h3>
+                    <h3 class="t1">지원자 정보</h3>
                     <input v-model="email" type="email" maxlength="30" placeholder="이메일">
                     <input v-model="password" type="password" maxlength="16" placeholder="비밀번호 (8~16자의 영문, 숫자, 특수기호)">
                     <input v-model="name" type="text" maxlength="16" placeholder="이름">
@@ -139,6 +139,13 @@ const handleSocialLogin = async (provider) => {
     align-items: center;
 }
 
+.t1 {
+    margin: 20px 0;
+    font-weight: 600;
+    line-height: 26px;
+    font-size: 1.1875rem;
+}
+
 .logo {
     justify-content: center;
     align-items: center;
@@ -171,7 +178,10 @@ const handleSocialLogin = async (provider) => {
     height: 100%;
     background-color: #212b36;
     color: white;
-    font-size: 20px;
+    margin: 20px 0;
+    font-weight: 600;
+    line-height: 26px;
+    font-size: 1.1875rem;
 }
 
 .recruiter {
@@ -181,7 +191,10 @@ const handleSocialLogin = async (provider) => {
     flex: 1;
     width: 100%;
     height: 100%;
-    font-size: 20px;
+    margin: 20px 0;
+    font-weight: 600;
+    line-height: 26px;
+    font-size: 1.1875rem;
 }
 
 .recruiter a {

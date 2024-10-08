@@ -213,7 +213,7 @@ const handleCreateEvaluate = async(user) => {
     scores: scores,
     totalScore: totalScore,
     comments: comments,
-    announcementUUID: route.params.announceUUID,
+    announcementUUID: route.params.announcementUUID,
     videoInterviewUUID: route.params.videoInterviewUUID
   };
   const response = await interviewEvaluateStore.createEvaluate(requestBody);
@@ -222,8 +222,8 @@ const handleCreateEvaluate = async(user) => {
 };
 
 
-const handleGetInterviewForm = async (announceUUID, videoInterviewUUID) => {
-    const response = await interviewEvaluateStore.searchForm(announceUUID, videoInterviewUUID)
+const handleGetInterviewForm = async (announcementUUID, videoInterviewUUID) => {
+    const response = await interviewEvaluateStore.searchForm(announcementUUID, videoInterviewUUID)
     if(response.success) {
       evaluateForm.value = response.result
       toast.success("면접 평가항목을 불러오는데 성공했습니다.")

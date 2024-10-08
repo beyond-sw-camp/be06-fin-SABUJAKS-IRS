@@ -490,6 +490,7 @@ public class InterviewEvaluateService {
                             .seekerName(interviewParticipate.getSeeker().getName())
                             .seekerEmail(interviewParticipate.getSeeker().getEmail())
                             .estimatorEmail(interviewParticipate.getEstimator().getEmail())
+                            .estimatorName(interviewParticipate.getEstimator().getName())
                             .totalScore(interviewEvaluate.getTotalScore())
                             .comments(interviewEvaluate.getComments())
                             .interviewEvaluateResultReadRes(interviewEvaluateResultReadRes)

@@ -92,24 +92,23 @@ public class InterviewScheduleService {
         List<String> estimatorPasswordList = new ArrayList<>();
         for(Long seekerIdx : dto.getSeekerList()) {
             for(String estimatorEmail : dto.getEstimatorList()) {
-                String estimatorPassword = UUID.randomUUID().toString();
-                Optional<Estimator> resultEstimator = estimatorRepository.findByEstimatorEmail(estimatorEmail);
-                Estimator estimator = null;
+//                String estimatorPassword = UUID.randomUUID().toString();
                 String[] parts = estimatorEmail.split("-");
-                String name = parts[0].trim(); // 이름
-                String email = parts.length > 1 ? parts[1].trim() : "";
-                if(resultEstimator.isEmpty()){
+                String name = parts[0].trim();
+                String email = parts[1].trim();
+                Optional<Estimator> resultEstimator = estimatorRepository.findByEstimatorEmail(email);
+                Estimator estimator = null;
+                if (resultEstimator.isPresent()) {
+                    estimator = resultEstimator.get();
+                } else {
                     estimator = Estimator.builder()
                             .role("ROLE_ESTIMATOR")
                             .name(name)
                             .email(email)
-                            // UUID로 저장하고, UUID를 이메일로 전송
                             .password(passwordEncoder.encode("qwer1234"))
                             .emailAuth(true)
                             .build();
                     estimatorRepository.save(estimator);
-                } else {
-                    estimator = resultEstimator.get();
                 }
                 estimatorList.add(estimator);
                 InterviewParticipate interviewParticipate = interviewParticipateRepository.save(InterviewParticipate.builder()

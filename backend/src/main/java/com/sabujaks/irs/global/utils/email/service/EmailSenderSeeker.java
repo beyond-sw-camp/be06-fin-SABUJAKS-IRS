@@ -177,7 +177,7 @@ public class EmailSenderSeeker {
                 model.put("interviewEnd", dto.getInterviewScheduleRes().getInterviewEnd());
                 model.put("companyName", dto.getInterviewScheduleRes().getCompanyName());
                 model.put("announcementTitle", dto.getInterviewScheduleRes().getAnnouncementTitle());
-                model.put("videoInterviewUrl", "http://localhost:3000/video-interview/" + dto.getAnnouncementUuid());
+                model.put("videoInterviewUrl", "https://sabujaks-irs.kro.kr/video-interview/" + dto.getAnnouncementUuid());
 
                 if(dto.getInterviewScheduleRes().getIsOnline()) {
                     model.put("isOnline", "온라인");
