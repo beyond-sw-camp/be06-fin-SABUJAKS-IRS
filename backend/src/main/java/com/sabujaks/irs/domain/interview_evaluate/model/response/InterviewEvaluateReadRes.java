@@ -12,6 +12,7 @@ public class InterviewEvaluateReadRes {
     private String seekerEmail;
     private Integer totalScore;
     private String comments;
+    private String estimatorName;
     private String estimatorEmail;
     private InterviewEvaluateFormReadRes interviewEvaluateFormReadRes;
     private InterviewEvaluateResultReadRes interviewEvaluateResultReadRes;

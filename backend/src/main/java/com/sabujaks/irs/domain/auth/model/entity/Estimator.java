@@ -20,6 +20,7 @@ public class Estimator {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
+    @Column(nullable = false, length = 100, unique = true)
     private String email; // 이메일
     private String password; // 비밀번호
     private String name;
