@@ -1,4 +1,5 @@
 <template>
+
     <body class="body-m">
         <SeekerHeaderComponent></SeekerHeaderComponent>
         <div class="main_div">
@@ -13,7 +14,7 @@
                         <!-- <button class="btn edit-profile">내 프로필 수정하기</button> -->
                     </div>
 
-                    <div class="content">
+                    <div class="content-info">
                         <!-- 기본 정보 -->
                         <div class="info-section">
                             <h2>기본 정보</h2>
@@ -31,7 +32,7 @@
                             </div>
                             <div class="info-row">
                                 <span class="label">성별</span>
-                                <span class="value">{{ readSeeker.gender ? '남자' : '여자'}}</span>
+                                <span class="value">{{ readSeeker.gender ? '남자' : '여자' }}</span>
                             </div>
                             <div class="info-row">
                                 <span class="label">생년월일</span>
@@ -61,7 +62,8 @@
                             </div>
                             <div class="info-row">
                                 <span class="label">수정날짜</span>
-                                <span class="value">{{ (readSeeker.updatedAt === readSeeker.createdAt) ? '-' : formatDate(readSeeker.updatedAt) }}</span>
+                                <span class="value">{{ (readSeeker.updatedAt === readSeeker.createdAt) ? '-' :
+                                    formatDate(readSeeker.updatedAt) }}</span>
                             </div>
                         </div>
 
@@ -78,18 +80,21 @@ import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.v
 import { ref, onMounted } from 'vue';
 import { UseAuthStore } from '@/stores/UseAuthStore';
 import { useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
 
 const router = useRouter();
 const authStore = UseAuthStore();
+const toast = useToast();
 
 const readSeeker = ref({});
 
 onMounted(async () => {
     const response = await authStore.readSeeker();
-    if(response.success){
+    if (response.success) {
         readSeeker.value = response.result;
     } else {
-        alert(response.message);
+        toast.console.error();
+        (response.message);
         router.push('/seeker/login');
     }
 });
@@ -104,7 +109,7 @@ const formatDate = (datetime) => {
     const minutes = String(date.getMinutes()).padStart(2, '0');
     const seconds = String(date.getSeconds()).padStart(2, '0');
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-  }
+}
 
 </script>
 
@@ -179,7 +184,7 @@ const formatDate = (datetime) => {
     background-color: #212b36;
 }
 
-.content {
+.content-info {
     background-color: white;
     padding: 20px;
     border-radius: 10px;

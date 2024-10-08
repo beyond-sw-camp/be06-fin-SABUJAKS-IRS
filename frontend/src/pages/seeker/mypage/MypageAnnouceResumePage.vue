@@ -12,32 +12,31 @@
                         <h1>공고별 지원서 관리</h1>
                     </div>
 
-                    <div class="content">
+                    <div class="content-info">
                         <!-- 지원서 항목 리스트 -->
                         <div v-for="(announceResume, index) in paginatedResumes" :key="index" class="application-item">
                             <div class="status">{{ checkApplicationResult(
-                                                        announceResume.resumeResult, 
-                                                        announceResume.interviewOneResult, 
-                                                        announceResume.interviewTwoResult, 
-                                                        announceResume.finalResult) }}</div>
+                                announceResume.resumeResult,
+                                announceResume.interviewOneResult,
+                                announceResume.interviewTwoResult,
+                                announceResume.finalResult) }}</div>
                             <div class="application-details">
                                 <div class="application-title">{{ announceResume.resumeTitle }}</div>
-                                <div class="company-name">{{ announceResume.announcementTitle }} / {{ announceResume.companyName }}</div>
+                                <div class="company-name">{{ announceResume.announcementTitle }} / {{
+                                    announceResume.companyName }}</div>
                                 <div class="date">{{ formatDate(announceResume.resumedAt) }}</div>
                             </div>
                             <div class="application-actions">
-                                <router-link :to="`/seeker/announce/detail/${announceResume.announcementIdx}`"><button class="announce-btn">공고 보기</button></router-link>
-                                <router-link :to="`/seeker/resume/detail/${announceResume.resumeIdx}`"><button class="resume-btn">지원서 보기</button></router-link>
+                                <router-link :to="`/seeker/announce/detail/${announceResume.announcementIdx}`"><button
+                                        class="announce-btn">공고 보기</button></router-link>
+                                <router-link :to="`/seeker/resume/detail/${announceResume.resumeIdx}`"><button
+                                        class="resume-btn">지원서 보기</button></router-link>
                             </div>
                         </div>
                     </div>
                     <div class="pagination">
-                        <button 
-                            v-for="page in totalPages" 
-                            :key="page" 
-                            @click="fetchResumes(page)" 
-                            :class="{ active: currentPage === page }"
-                            >
+                        <button v-for="page in totalPages" :key="page" @click="fetchResumes(page)"
+                            :class="{ active: currentPage === page }">
                             {{ page }}
                         </button>
                     </div>
@@ -191,16 +190,6 @@ const checkApplicationResult = (resumeResult, interviewOneResult, interviewTwoRe
     /* 사이드바와 메인 컨텐츠 사이의 간격 추가 */
 }
 
-.sidebar {
-    width: 20%;
-    height: 400px;
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-
-}
-
 .profile {
     text-align: center;
 }
@@ -254,7 +243,7 @@ nav ul li a {
     margin-bottom: 20px;
 }
 
-.content {
+.content-info {
     background-color: white;
     border-radius: 10px;
     padding: 20px;
@@ -280,9 +269,12 @@ nav ul li a {
     padding: 5px 10px;
     border-radius: 5px;
     margin-right: 20px;
-    width: 120px; /* 너비 고정 */
-    text-align: center; /* 텍스트 중앙 정렬 */
-    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+    width: 120px;
+    /* 너비 고정 */
+    text-align: center;
+    /* 텍스트 중앙 정렬 */
+    white-space: nowrap;
+    /* 텍스트 줄바꿈 방지 */
 }
 
 .application-details {

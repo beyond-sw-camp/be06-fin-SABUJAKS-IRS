@@ -7,9 +7,9 @@
         <nav>
             <ul>
                 <li @click="goAndReload('/seeker/mypage')">홈</li>
-                <li @click="goAndReload('/seeker/resume/create')">지원서 등록</li>
-                <li @click="goAndReload('/seeker/mypage/annouce-resume')">공고별 지원서 관리</li>
                 <li @click="goAndReload('/seeker/mypage/integration-resume')">통합 지원서 관리</li>
+                <!-- <li @click="goAndReload('/seeker/resume/create')">지원서 등록</li> -->
+                <li @click="goAndReload('/seeker/mypage/annouce-resume')">공고별 지원서 관리</li>
                 <li @click="goAndReload('/seeker/mypage/notification')">알림 관리</li>
                 <!-- <li @click="goAndReload('/seeker/mypage/schedule')">일정 관리</li> -->
             </ul>
@@ -18,13 +18,13 @@
 </template>
 
 <script setup>
-import {useRouter} from 'vue-router';
+import { useRouter } from 'vue-router';
 const router = useRouter();
 
 const goAndReload = (path) => {
-  router.replace(path).then(() => {
-    window.location.reload();
-  });
+    router.replace(path).then(() => {
+        window.location.reload();
+    });
 };
 </script>
 
@@ -36,8 +36,8 @@ const goAndReload = (path) => {
 }
 
 .sidebar {
-    width: 20%;
-    height: 400px;
+    width: 220px;
+    height: 350px;
     background-color: #ffffff;
     padding: 20px;
     border-radius: 10px;
