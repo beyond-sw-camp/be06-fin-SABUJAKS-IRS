@@ -1,6 +1,7 @@
 package com.sabujaks.irs.domain.system.service;
 
 import com.sabujaks.irs.domain.system.model.entity.BaseInfo;
+import com.sabujaks.irs.domain.system.model.response.BaseInfoReadRes;
 import com.sabujaks.irs.domain.system.model.response.CategoryRes;
 import com.sabujaks.irs.domain.system.model.response.SubcategoryRes;
 import com.sabujaks.irs.domain.system.repository.BaseInfoRepository;
@@ -8,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,5 +43,25 @@ public class BaseInfoService {
         }
 
         return categoryResList;
+    }
+
+    public List<BaseInfoReadRes> getInfo(String codes) {
+        // codes가 쉼표를 포함하는지 확인하고, 포함되면 split, 그렇지 않으면 단일 코드로 리스트 생성
+        List<String> codeList = codes.contains(",") ? Arrays.asList(codes.split(",")) : List.of(codes);
+
+        List<BaseInfo> baseInfoList = baseInfoRepository.findByCodeIn(codeList);
+
+        List<BaseInfoReadRes> baseInfoReadResList = new ArrayList<>();
+        // 검색 결과를 BaseInfoReadRes 리스트로 변환하여 반환
+        for (BaseInfo baseInfo : baseInfoList) {
+            BaseInfoReadRes baseInfoReadRes = BaseInfoReadRes.builder()
+                    .code(baseInfo.getCode())
+                    .description(baseInfo.getDescription())
+                    .groupName(baseInfo.getGroupName())
+                    .parentCode(baseInfo.getParentCode())
+                    .build();
+            baseInfoReadResList.add(baseInfoReadRes);
+        }
+        return baseInfoReadResList;
     }
 }

@@ -19,8 +19,10 @@ import com.sabujaks.irs.domain.company.repository.CompanyRepository;
 import com.sabujaks.irs.domain.company.service.CompanyService;
 import com.sabujaks.irs.domain.resume.model.entity.Resume;
 import com.sabujaks.irs.domain.system.model.entity.BaseInfo;
+import com.sabujaks.irs.domain.system.model.response.BaseInfoReadRes;
 import com.sabujaks.irs.domain.system.repository.BaseInfoRepository;
 import com.sabujaks.irs.domain.resume.repository.ResumeRepository;
+import com.sabujaks.irs.domain.system.service.BaseInfoService;
 import com.sabujaks.irs.global.common.exception.BaseException;
 import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
 import com.sabujaks.irs.global.security.CustomUserDetails;
@@ -45,6 +47,7 @@ public class AnnouncementService {
     private final CompanyRepository companyRepository;
     private final ResumeRepository resumeRepository;
     private final CompanyService companyService;
+    private final BaseInfoService baseInfoService;
 
 
     /*******채용담당자 공고 등록 (step1)***********/
@@ -225,6 +228,17 @@ public class AnnouncementService {
             if (resultCompany.isPresent()) {
                 Company company = resultCompany.get();
                 Recruiter resultRecruiter = recruiterRepository.findByRecruiterIdx(company.getRecruiter().getIdx()).get();
+
+                // 카테고리 문자로 변환
+                List<String> addJobCategorys = new ArrayList<>();
+                if(announcement.getJobCategory() != null) {
+                    for(BaseInfoReadRes bir : baseInfoService.getInfo(announcement.getJobCategory())) {
+                        addJobCategorys.add(bir.getGroupName()+" > "+bir.getDescription());
+                    }
+                }
+                String jobCategoryString = String.join(", ", addJobCategorys);
+
+
                 AnnouncementReadDetailRes announcementReadDetailRes = AnnouncementReadDetailRes.builder()
                         .announcementIdx(announcementIdx)
                         .companyIdx(company.getIdx())
@@ -232,7 +246,7 @@ public class AnnouncementService {
                         .title(announcement.getTitle())
                         .selectForm(announcement.getSelectForm())
                         .imgUrl(announcement.getImgUrl())
-                        .jobCategory(announcement.getJobCategory())
+                        .jobCategory(jobCategoryString)
                         .jobTitle(announcement.getJobTitle())
                         .recruitedNum(announcement.getRecruitedNum())
                         .careerBase(announcement.getCareerBase())

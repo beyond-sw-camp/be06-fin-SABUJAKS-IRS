@@ -15,7 +15,7 @@ public interface BaseInfoRepository extends JpaRepository<BaseInfo, Long> {
     @Query("SELECT b FROM BaseInfo b WHERE b.groupName = :groupName AND b.code IN :codes")
     List<BaseInfo> findAllByGroupNameAndCodeIn(@Param("groupName") String groupName, @Param("codes") List<String> codes);
 
-    List<BaseInfo> findByCodeIn(List<String> companyBenefitsCodes);
+    List<BaseInfo> findByCodeIn(List<String> codes);
 
     @Query("SELECT b FROM BaseInfo b WHERE b.code LIKE %:inCode% AND b.parentCode IS NULL")
     List<BaseInfo> findAllByCodeContainingAndParentCodeIsNull(@Param("inCode") String inCode);
