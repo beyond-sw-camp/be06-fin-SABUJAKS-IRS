@@ -84,7 +84,7 @@ const handleRowClick = (announcement) => {
 };
 </script>
 
-<style>
+<style scoped>
 .container {
   width: 80%;
   margin: 0 auto;

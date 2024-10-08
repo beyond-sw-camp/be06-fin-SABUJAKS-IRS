@@ -80,7 +80,7 @@ const handleSearchButton = async (announcementIdx, interviewNum) => {
 }
 
 </script> 
-<style>
+<style scoped>
 .wrapper {
     width: 80%;
     margin: 0 auto;

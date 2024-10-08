@@ -64,7 +64,7 @@ onMounted(async () => {
     </div>
   </div>
 </template>
-<style>
+<style scoped>
 ul{padding: 0;}
 li {
   list-style: none; /* 기본 리스트 스타일 제거 */

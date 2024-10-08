@@ -78,7 +78,7 @@ const handleLogin = async () => {
 }
 </script>
 
-<style>
+<style scoped>
 html {
   box-sizing: border-box;
   height: 100%;
