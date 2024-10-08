@@ -5,6 +5,7 @@ import MainSideBarComponent from '../../../components/recruiter/MainSideBarCompo
 import { ref, computed, onMounted, watch } from "vue";
 import { UseAnnouncementStore } from '@/stores/UseAnnouncementStore';
 import { UseAuthStore } from '@/stores/UseAuthStore';
+import { UseBaseInfoStore } from '@/stores/UseBaseInfoStore';
 import { useRouter } from 'vue-router';
 import { useToast } from "vue-toastification";
 
@@ -17,6 +18,7 @@ export default {
   setup() {
     const announcementStore = UseAnnouncementStore();
     const authStore = UseAuthStore();
+    const baseInfoStore = UseBaseInfoStore();
     const router = useRouter();
     const toast = useToast();
 
@@ -115,39 +117,84 @@ export default {
       "호텔·외식": ["호텔운영", "레스토랑운영", "조리", "객실관리", "외식기획", "행사기획", "프론트관리"]
     });
 
+    // const jobCategories = ref([]); // 모집직무 대분류와 소분류 데이터
+
+    // // 상태값
+    // const showCategoryDropdown = ref(false);
+    // const selectedCategory = ref(''); // 선택된 대분류 코드
+    // const selectedSubcategories = ref([]); // 선택된 소분류 코드 리스트
+    // const selectedCategories = ref({}); // 저장된 대분류 및 소분류 코드들
+
+    const jobCategories = ref([]); // 서버에서 받아온 데이터 저장
+    const selectedCategory = ref(''); // 선택된 대분류 코드
+    const selectedSubcategories = ref([]); // 선택된 소분류 코드 리스트
+    const selectedCategories = ref({}); // 저장된 대분류 및 소분류 코드들
     const showCategoryDropdown = ref(false); // 카테고리 선택 드롭다운 표시 여부
-    const selectedCategory = ref(''); // 선택된 대분류 카테고리
-    const selectedSubcategories = ref([]); // 선택된 소분류 카테고리들
-    const selectedCategories = ref({}); // 저장된 대분류 및 소분류 카테고리
+
+    // const showCategoryDropdown = ref(false); // 카테고리 선택 드롭다운 표시 여부
+    // const selectedCategory = ref(''); // 선택된 대분류 카테고리
+    // const selectedSubcategories = ref([]); // 선택된 소분류 카테고리들
+    // const selectedCategories = ref({}); // 저장된 대분류 및 소분류 카테고리
 
     // 카테고리 선택 드롭다운 토글 함수
     const toggleCategoryDropdown = () => {
       showCategoryDropdown.value = !showCategoryDropdown.value; // 열기/닫기 토글
     };
 
+    // // 선택된 대분류 및 소분류를 저장하는 함수
+    // const addSelectedCategories = () => {
+    //   if (selectedCategory.value && selectedSubcategories.value.length) {
+    //     selectedCategories.value = {
+    //       ...selectedCategories.value,
+    //       [selectedCategory.value]: [...(selectedCategories.value[selectedCategory.value] || []), ...selectedSubcategories.value],
+    //     };
+    //     selectedCategory.value = '';
+    //     selectedSubcategories.value = [];
+    //     showCategoryDropdown.value = false;
+
+    //   }
+    // };
+
     // 선택된 대분류 및 소분류를 저장하는 함수
     const addSelectedCategories = () => {
       if (selectedCategory.value && selectedSubcategories.value.length) {
-        // selectedCategories.value[selectedCategory.value] = selectedSubcategories.value;
-        // selectedCategory.value = '';
-        // selectedSubcategories.value = [];
-        // showCategoryDropdown.value = false;
-        selectedCategories.value = {
-          ...selectedCategories.value,
-          [selectedCategory.value]: [...(selectedCategories.value[selectedCategory.value] || []), ...selectedSubcategories.value],
-        };
+        const selectedCategoryObj = jobCategories.value.find(cat => cat.code === selectedCategory.value);
+
+        if (selectedCategoryObj) {
+          // 소분류 코드와 설명을 함께 저장
+          const subcategoryDetails = selectedSubcategories.value.map(subCode => {
+            const subcategory = selectedCategoryObj.subcategories.find(sub => sub.code === subCode);
+            return { code: subcategory.code, description: subcategory.description };
+          });
+
+          // 대분류 설명을 키로, 소분류의 code와 description 객체 리스트를 값으로 추가
+          selectedCategories.value = {
+            ...selectedCategories.value,
+            [selectedCategoryObj.description]: [
+              ...(selectedCategories.value[selectedCategoryObj.description] || []),
+              ...subcategoryDetails,
+            ],
+          };
+        }
         selectedCategory.value = '';
         selectedSubcategories.value = [];
         showCategoryDropdown.value = false;
-
       }
     };
 
+    // // 소분류 삭제 함수
+    // const removeSubcategory = (category, sub) => {
+    //   selectedCategories.value[category] = selectedCategories.value[category].filter((item) => item !== sub);
+    //   if (!selectedCategories.value[category].length) {
+    //     delete selectedCategories.value[category]; // 대분류에 소분류가 없으면 대분류 삭제
+    //   }
+    // };
+
     // 소분류 삭제 함수
     const removeSubcategory = (category, sub) => {
-      selectedCategories.value[category] = selectedCategories.value[category].filter((item) => item !== sub);
+      selectedCategories.value[category] = selectedCategories.value[category].filter(item => item.code !== sub.code);
       if (!selectedCategories.value[category].length) {
-        delete selectedCategories.value[category]; // 대분류에 소분류가 없으면 대분류 삭제
+        delete selectedCategories.value[category];
       }
     };
 
@@ -400,15 +447,29 @@ export default {
         await announcementStore.fetchManagerInfo();
         await announcementStore.fetchCompanyBenefits(announcementStore.managerInfo.managerEmail);
 
+        const keyword = "job"
+        await baseInfoStore.fetchCategories(keyword); // 모집직무 카테고리 데이터를 백엔드에서 가져옴
+        jobCategories.value = baseInfoStore.categories; // 스토어에서 불러온 데이터를 jobCategories에 할당
+        // console.log(jobCategories.value);
+
         const today = new Date();
         announcementStore.formData.startDate = formatDate(today); // 페이지 로드 시 오늘 날짜로 초기화
+
       } catch (error) {
         toast.error("먼저 기업 정보를 등록 해 주세요.");
-        // toast.error(error.message);
-        // showErrorModal(error.message);
+        console.log(error);
         router.push(`/recruiter/mypage`);
       }
     });
+
+    // 모집직무 카테고리 코드 추출
+    const getSelectedCategoryCodes = () => {
+      // 모든 소분류 코드만 모아 쉼표로 나열된 문자열을 반환
+      return Object.values(selectedCategories.value)
+        .flat()
+        .map(sub => sub.code)
+        .join(',');
+    };
 
 
     // 저장하기 전 작업
@@ -420,7 +481,10 @@ export default {
       announcementStore.formData.announcementStart = formatDateTime(announcementStore.formData.startDate, announcementStore.formData.startTimeRegi);
       announcementStore.formData.announcementEnd = formatDateTime(announcementStore.formData.endDate, announcementStore.formData.endTimeRegi);
 
-      announcementStore.createAnnouncement(selectedCategories, fields.value, fields2.value, router); // 스토어 저장 처리
+      // 모집직무 출력
+      const jobCategory = getSelectedCategoryCodes();
+
+      announcementStore.createAnnouncement(jobCategory, fields.value, fields2.value, router); // 스토어 저장 처리
     }
 
 
@@ -441,6 +505,7 @@ export default {
 
       // 1. 모집분야 섹션 관련
       categoryData,
+      jobCategories,
       showCategoryDropdown,
       selectedCategory,
       selectedSubcategories,
@@ -451,6 +516,7 @@ export default {
       exclusiveCheckbox,
       toggleField,
       autoResize,
+      getSelectedCategoryCodes,
 
       // 2. 지원자격/근무조건 섹션 관련
       employmentTypes,
@@ -532,7 +598,8 @@ export default {
               style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; flex-direction: column; background-color: #fff;">
               <!-- 이미지 초기화 버튼 -->
               <button @click="resetImage" v-if="imageUrl"
-                style="margin: 10px 0; padding: 10px 10px; border: 1px solid #abadb8; border-radius: 5px; background-color: white;">이미지 초기화</button>
+                style="margin: 10px 0; padding: 10px 10px; border: 1px solid #abadb8; border-radius: 5px; background-color: white;">이미지
+                초기화</button>
               <img v-if="imageUrl" :src="imageUrl" id="imagePreview"
                 style="width: 100%; height: 100%; object-fit: contain;">
               <p v-else id="noImageText" style="color: #777;">하나의 파일로 된 이미지를 선택하세요.</p>
@@ -556,27 +623,31 @@ export default {
                     <!-- 선택된 카테고리 표시 -->
                     <div v-for="(subcategories, category) in selectedCategories" :key="category">
                       {{ category }} >
-                      <span v-for="sub in subcategories" :key="sub">
-                        {{ sub }} <button @click="removeSubcategory(category, sub)">×</button>
+                      <span v-for="sub in subcategories" :key="sub.code">
+                        {{ sub.description }} <button @click="removeSubcategory(category, sub)">×</button>
                       </span>
                     </div>
                   </div>
                   <button @click="toggleCategoryDropdown" class="select-category">➕ 선택</button>
                 </div>
+
                 <!-- 대분류 선택 드롭다운 -->
                 <div v-if="showCategoryDropdown" class="dropdown">
                   <div class="dropdown-container" style="margin-bottom: 20px;">
+                    <!-- 대분류 선택 -->
                     <select v-model="selectedCategory">
                       <option value="">대분류 선택</option>
-                      <option v-for="(subcategories, category) in categoryData" :key="category" :value="category">
-                        {{ category }}
+                      <option v-for="category in jobCategories" :key="category.code" :value="category.code">
+                        {{ category.description }}
                       </option>
                     </select>
 
                     <!-- 소분류 선택 (대분류 선택 시 표시됨) -->
                     <select v-if="selectedCategory" v-model="selectedSubcategories" multiple>
-                      <option v-for="sub in categoryData[selectedCategory]" :key="sub" :value="sub">
-                        {{ sub }}
+                      <option
+                        v-for="sub in (jobCategories.find(cat => cat.code === selectedCategory)?.subcategories || [])"
+                        :key="sub.code" :value="sub.code">
+                        {{ sub.description }}
                       </option>
                     </select>
 
@@ -587,6 +658,7 @@ export default {
                     </button>
                   </div>
                 </div>
+
               </div>
             </div>
 
@@ -758,7 +830,8 @@ export default {
               <div v-if="fields2.workTime" class="required-parents-div">
                 <label>출퇴근 시간</label>
                 <div class="required-child-div">
-                  <select v-model="announcementStore.formData.startTime" style="width: 200px; padding: 10px; margin-right: 15px;">
+                  <select v-model="announcementStore.formData.startTime"
+                    style="width: 200px; padding: 10px; margin-right: 15px;">
                     <option v-for="time in timeOptions" :key="time" :value="time">{{ time }}</option>
                   </select>
                   <select v-model="announcementStore.formData.endTime" style="width: 200px; padding: 10px;">
@@ -864,7 +937,8 @@ export default {
             <!-- 지원 접수 기간 -->
             <div class="required-parents-div">
               <label class="required required2">지원 접수 기간</label>
-              <div class="required-child-div" style="display: flex; justify-content: left; flex-direction: column; align-items:start">
+              <div class="required-child-div"
+                style="display: flex; justify-content: left; flex-direction: column; align-items:start">
                 <div class="btn-group" style="margin-bottom: 20px;">
                   <button :class="{ active: selectedPeriod === '1개월' }" @click="setActiveButton('1개월')">1개월</button>
                   <button :class="{ active: selectedPeriod === '2개월' }" @click="setActiveButton('2개월')">2개월</button>
@@ -955,7 +1029,7 @@ export default {
 
 #content2 {
   margin: 0 0 0 200px;
-  /* padding: 100px 0; */
+  padding: 150px 0;
   width: 80%;
 }
 
