@@ -101,7 +101,7 @@ const totalPages = computed(() => {
 #content {
   flex: 1;
   margin-left: 200px; /* 사이드바 너비만큼 왼쪽 여백 추가 */
-  padding: 0 0 150px 0;
+  padding: 150px 0;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;

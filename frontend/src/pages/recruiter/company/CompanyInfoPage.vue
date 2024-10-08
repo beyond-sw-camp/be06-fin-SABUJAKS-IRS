@@ -156,9 +156,9 @@ onMounted(async () => {
 
 <template>
   <MainHeaderComponent />
-  <div class="container padding-100 0 0 0">
+  <div class="container padding-100 0 0 0" style="margin: 150px 0 200px 200px;">
     <MainSideBarComponent />
-    <div id="content">
+    <div id="content" style="padding: 100px 100px;">
       <!-- 기업 정보 등록 섹션 -->
       <div v-if="companyStore.companyInfo.saved === 'N'" id="createSections">
         <h1>기업 정보 등록</h1>
