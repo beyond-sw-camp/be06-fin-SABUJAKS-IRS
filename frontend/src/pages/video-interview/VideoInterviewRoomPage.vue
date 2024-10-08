@@ -31,7 +31,7 @@
     </div>
     <!-- 면접관 화면 -->
     <div v-if="(session != null) && (userType == 'ROLE_ESTIMATOR')" class="estimator-wrapper">
-      <div id="video-container" class="video-container">
+      <div id="video-container" class="video-container-es">
           <UserVideo 
             class="video" 
             :isSubscriber="false" 
@@ -45,7 +45,7 @@
             :key="subscriber.stream.connection.connectionId" 
             :stream-manager="subscriber"
             :audio-muted="subscriber.audioMuted"
-            @toggle-audio="handleToggleSubsAudio" 
+            @handle-toggle-audio="handleToggleSubsAudio" 
             @click="updateMainVideoStreamManager(subscriber)"
           />
         </div>
@@ -71,7 +71,9 @@
             면접자 평가</button>
         </div>
         <div v-if="showEvaluateMenus && showResumeInfo" class="resume">
-            {{ currentUserResume }}
+          <VideoInterviewResumeComponent
+          :resume="currentUser"
+          />
           </div>
           <div v-if="showEvaluateMenus && showEvaluateForm" class="evaluate">
             <div v-if="showEvaluateMenus && currentUser">
@@ -114,6 +116,7 @@
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { UseVideoInterviewStore } from "@/stores/UseVideoInterviewStore";
+import VideoInterviewResumeComponent from "@/components/video-interview/VideoInterviewResumeComponent.vue";
 import { UseAuthStore } from "@/stores/UseAuthStore";
 import { UseInterviewEvaluateStore } from "@/stores/UseInterviewEvaluateStore";
 import { OpenVidu } from "openvidu-browser";
@@ -143,21 +146,22 @@ const showEvaluateMenus = ref(false);
 const showEvaluateForm = ref(false);
 const showResumeInfo = ref(false);
 const userName = ref("")
+const userEmail = ref("")
 const userType = ref("")
 const evaluateForm = ref({});
 
 // InterviewEvaluate
 const resumeList = ref({});
 const currentUser = ref({});
-const currentUserResume = ref("");
+// const currentUserResume = ref("");
 const currentUserScores = ref({});
 const currentUserComments = ref({});
 
 onMounted(async() => {
-  await joinSession(route.params.announceUUID, route.params.videoInterviewUUID);
+  await joinSession(route.params.announcementUUID, route.params.videoInterviewUUID);
   if(userType.value == "ROLE_ESTIMATOR") {
-    await handleGetInterviewForm(route.params.announceUUID, route.params.videoInterviewUUID)
-    await handleReadAllResumeInfo(route.params.announceUUID, route.params.videoInterviewUUID)
+    await handleGetInterviewForm(route.params.announcementUUID, route.params.videoInterviewUUID)
+    await handleReadAllResumeInfo(route.params.announcementUUID, route.params.videoInterviewUUID)
   }
 });
 
@@ -174,7 +178,6 @@ const handleShowEvaluateMenus = async (user) => {
       currentUserComments.value[user.personalInfo.name] = "";
   }
   currentUser.value = user;
-  currentUserResume.value = JSON.stringify(user, null, 2);
 }
 
 const handleShowEvaluateForm = () => {
@@ -259,6 +262,8 @@ const handleSessionToken = async (announceUUID, videoInterviewUUID) => {
   try {
     userName.value = authStore.userInfo.name;
     userType.value = authStore.userInfo.role;
+    userEmail.value = authStore.userInfo.email;
+
     const requestBody = {
       announceUUID: announceUUID,
       videoInterviewUUID: videoInterviewUUID,
@@ -310,7 +315,7 @@ const joinSession = async (announceUUID, videoInterviewUUID) => {
     toast.success("면접방에 오신 걸 환영합니다.\n지원자는 마이크를 끄고 대기해주시길 바랍니다.");
   } catch (error) {
     console.log(error)
-    router.push(`/video-interview/${route.params.announceUUID}`)
+    router.push(`/video-interview/${route.params.announcementUUID}`)
     toast.error("지원자는 정해진 시간에 정해진 면접방과 일정에 맞춰 참여 바랍니다.");
   }
   window.addEventListener("beforeunload", leaveSession);
@@ -324,7 +329,7 @@ const leaveSession = () => {
   subscribers.value = [];
   OV.value = undefined;
   window.removeEventListener("beforeunload", leaveSession);
-  router.push(`/video-interview/${route.params.announceUUID}`)
+  router.push(`/video-interview/${route.params.announcementUUID}`)
 };
 </script>
 
@@ -419,6 +424,18 @@ button:hover {
   gap: 20px;
 }
 
+.video-container-es{
+  position: relative;
+  margin: 20px 0;
+  width: 100%;
+  height: min-content;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  overflow-y: scroll
+}
+
 .video {
   position: relative;
   object-fit: cover;
@@ -450,6 +467,7 @@ button:hover {
   display: flex;
   flex-direction: column;
   width: 100%;
+  height: 100%;
   float: left;
   box-sizing: border-box;
   background: black;
@@ -473,21 +491,19 @@ button:hover {
 .evaluate-button {
   width: 100%;
   height: fit-content;
-  background-color: #f1f1f1;
+  background-color: #212b36;
   border: 1px solid #ddd;
-  border-radius: 10px;
+  border-radius: 5px;
   padding: 10px 20px;
   font-size: 0.8rem;
   font-weight: bold;
-  color: #000;
+  color: #fff;
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
 .active-button {
-  background-color: #007bff !important;
-  color: white !important;
-  border: 1px solid #007bff !important;
+  opacity: 70%;
 }
 
 .button:hover {
@@ -537,13 +553,13 @@ button:hover {
 .evaluate-submitbtn{
   width: 100%;
   height: fit-content;
-  background-color: #f1f1f1;
-  border: 1px solid #ddd;
-  border-radius: 10px;
+  background-color: #212b36;
+  border: 1px solid #212b36;
+  border-radius: 5px;
   padding: 10px 20px;
   font-size: 0.8rem;
   font-weight: bold;
-  color: #000;
+  color: #fff;
   cursor: pointer;
   transition: background-color 0.3s;
 }

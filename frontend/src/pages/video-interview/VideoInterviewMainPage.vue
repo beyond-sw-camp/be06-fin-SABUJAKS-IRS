@@ -163,7 +163,7 @@ tbody {
 
 
 table th:nth-child(4) {
-    width: 10%;
+    width: 20%;
 }
 
 tr {

@@ -52,6 +52,7 @@ public class InterviewEvaluateService {
     private final TrainingRepository trainingRepository;
     private final AwardRepository awardRepository;
     private final PortfolioRepository portfolioRepository;
+    private final CustomLetterRepository customLetterRepository;
     private final CustomLetterFormRepository customLetterFormRepository;
     private final InterviewEvaluateResultRepository interviewEvaluateResultRepository;
     private final InterviewScheduleRepository interviewScheduleRepository;
@@ -357,18 +358,19 @@ public class InterviewEvaluateService {
                     }
                 }
                 if((Objects.equals(customResumeInfo.getCode(), "resume_011"))) { // 자기소개서
-                    List<CustomLetterForm> resultCustomLetterForm = customLetterFormRepository.findAllByAnnouncementIdx(announcement.getIdx());
-                    if(!resultCustomLetterForm.isEmpty()) {
+                    List<CustomLetter> resultCustomLetter = customLetterRepository.findAllByResumeInfoIdx(customResumeInfo.getResumeInfo().getIdx());
+                    if(!resultCustomLetter.isEmpty()) {
                         // 자기소개서 맞춤 양식 테이블 조회 (공고 idx로)
-                        List<CustomLetterFormReadRes> customLetterFormResList = new ArrayList<>();
-                        for(CustomLetterForm customLetterForm : resultCustomLetterForm) {
-                            CustomLetterFormReadRes customLetterFormRes = CustomLetterFormReadRes.builder()
-                                    .title(customLetterForm.getTitle())
-                                    .chatLimit(customLetterForm.getChatLimit())
+                        List<CustomLetterReadRes> customLetterResList = new ArrayList<>();
+                        for(CustomLetter customLetter : resultCustomLetter) {
+                            CustomLetterReadRes customLetterRes = CustomLetterReadRes.builder()
+                                    .title(customLetter.getTitle())
+                                    .charNum(customLetter.getCharNum())
+                                    .contents(customLetter.getContents())
                                     .build();
-                            customLetterFormResList.add(customLetterFormRes);
+                            customLetterResList.add(customLetterRes);
                         }
-                        responseBuilder.customLetterForms(customLetterFormResList);
+                        responseBuilder.customLetters(customLetterResList);
                     }
                 }
             }

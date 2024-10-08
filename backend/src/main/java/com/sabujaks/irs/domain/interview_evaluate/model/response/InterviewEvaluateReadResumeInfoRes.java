@@ -20,6 +20,6 @@ public class InterviewEvaluateReadResumeInfoRes {
     private List<CertificationReadRes> certifications; // 자격증 n개
     private List<TrainingReadRes> trainings; // 교육이수 n개
     private List<AwardReadRes> awards; // 수상 n개
-    private List<CustomLetterFormReadRes> customLetterForms; // 공고등록 step2에서 등록한 자기소개서 문항
+    private List<CustomLetterReadRes> customLetters; // 자기소개서 n개
     private List<PortfolioReadRes> portfolios; // 포트폴리오 n개
 }
