@@ -121,7 +121,7 @@ const handleCreateAllVideoInterview = () => {
             </li>
           </ul>
         </td>
-        <td>
+        <td class="text-center">
           <button class="create-video-interview" @click="createVideoInterview(schedule.uuid, schedule, $event)">방 생성
           </button>
         </td>
@@ -217,6 +217,7 @@ th {
 .pagination button {
   background-color: #f1f1f1;
   border: none;
+  border-radius: 5px;
   padding: 10px 15px;
   margin: 0 5px;
   cursor: pointer;

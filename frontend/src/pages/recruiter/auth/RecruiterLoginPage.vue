@@ -78,7 +78,7 @@ const handleLogin = async () => {
 }
 </script>
 
-<style scoped>
+<style>
 html {
   box-sizing: border-box;
   height: 100%;
@@ -1160,9 +1160,6 @@ a:focus-visible:after {
 .login-btn {
   color: white !important;
   background-color: #212b36 !important;
-}
-.custom-input {
-  border: 1px solid #232b36;
 }
 
 </style>
