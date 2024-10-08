@@ -5,6 +5,8 @@ import InterviewScheduleList from "@/components/recruiter/InterviewScheduleList.
 import MainSideBarComponent from "@/components/recruiter/MainSideBarComponent.vue";
 import {onMounted, ref, watch} from "vue";
 import {UseInterviewScheduleStore} from "@/stores/UseInterviewScheduleStore";
+import {useRouter} from "vue-router";
+import {useToast} from "vue-toastification";
 
 const isModalOpen = ref(false);
 const modalTitle = ref('');
@@ -41,9 +43,11 @@ const reqData = ref({});
 const uuidData = ref({});
 const careerBase = ref("");
 const isInterviewScheduleList = ref(true);
-const isInterviewScheduleMain = ref(true);
+// const isInterviewScheduleMain = ref(true);
 
 const pageNum = ref(1);
+const router = useRouter();
+const toast = useToast();
 
 const interviewScheduleStore = UseInterviewScheduleStore(); // Store 인스턴스
 
@@ -66,23 +70,6 @@ const loadInterviewScheduleList = async (btnNumValue) => {
   interviewSchedules.value = response; // 데이터를 가져온 후 interviewSchedules에 값을 할당
 };
 
-
-// 모달 부분
-const interviewScheduleLists = async (announcementIdx, announcementUuid) => {
-  isInterviewScheduleList.value = true;
-  isInterviewScheduleMain.value = false;
-
-  reqData.value = {
-    careerBase: careerBase.value,
-    announcementIdx: announcementIdx,
-  };
-
-  interviewSchedules.value = await interviewScheduleStore.readAllInterviewSchedule(reqData.value, pageNum.value);
-  totalInterviewSchedules.value = await interviewScheduleStore.getTotalInterviewSchedule(reqData.value);
-
-  announcementIdxInfo.value = announcementIdx;
-  announcementUuidInfo.value = announcementUuid;
-}
 const handleCheckboxChange = (type) => {
   if (interviewType.value === type) {
     interviewType.value = ''; // 이미 선택된 타입을 클릭했을 경우 해제
@@ -190,6 +177,7 @@ const submitForm = async () => {
     const selectedType = interviewType.value;
     const selectedNum = interviewNum.value;
     const selectedTeamIdx = team.value;
+    const careerBase = interviewScheduleStore.careerBase;
 
     // 데이터 객체 생성
     const interviewData = {
@@ -199,7 +187,7 @@ const submitForm = async () => {
       interviewDate: selectedDate,
       interviewStart: selectedStartTime,
       interviewEnd: selectedEndTime,
-      careerBase: "경력",
+      careerBase: careerBase,
       teamIdx: selectedTeamIdx,
       interviewNum: selectedNum,
       announcementIdx: announcementIdxInfo.value
@@ -208,18 +196,33 @@ const submitForm = async () => {
     // Store의 createInterviewSchedule 함수 호출
     await interviewScheduleStore.createInterviewSchedule(interviewData)
         .then(() => {
-          if (confirm('면접 일정이 성공적으로 등록되었습니다.')) {
-            // 면접 일정 리스트 업데이트
-            closeModal();
-            interviewScheduleLists(announcementIdxInfo, announcementUuidInfo);
-          }
+          toast.success('면접 일정이 성공적으로 등록되었습니다.')
+          // 면접 일정 리스트 업데이트
+          closeModal();
+          router.push(`/recruiter/interview-schedule/list`);
+          interviewScheduleLists(announcementIdxInfo, announcementUuidInfo);
         })
         .catch((error) => {
-          console.error('면접 일정 등록 중 오류 발생:', error);
+          toast.error('면접 일정 등록 중 오류가 발생했습니다.', error);
         });
 
   }
 };
+
+const interviewScheduleLists = async (announcementIdx, announcementUuid) => {
+  isInterviewScheduleList.value = true;
+
+  reqData.value = {
+    careerBase: careerBase.value,
+    announcementIdx: announcementIdx,
+  };
+
+  interviewSchedules.value = await interviewScheduleStore.readAllInterviewSchedule(reqData.value, pageNum.value);
+  totalInterviewSchedules.value = await interviewScheduleStore.getTotalInterviewSchedule(reqData.value);
+
+  announcementIdxInfo.value = announcementIdx;
+  announcementUuidInfo.value = announcementUuid;
+}
 
 // 화상면접방 생성 부분
 const createVideoInterview = async (interviewScheduleUuid, interviewScheduleInfo) => {
@@ -236,7 +239,7 @@ const createVideoInterview = async (interviewScheduleUuid, interviewScheduleInfo
 
 
 const createAllVideoInterview = () => {
-  const result = interviewScheduleStore.createAllVideoInterview(announcementUuidInfo.value,  announcementIdxInfo.value);
+  const result = interviewScheduleStore.createAllVideoInterview(announcementUuidInfo.value, announcementIdxInfo.value);
 
   console.log(result)
 }

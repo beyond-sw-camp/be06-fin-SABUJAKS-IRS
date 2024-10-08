@@ -5,92 +5,26 @@ import MainSideBarComponent from '../../../components/recruiter/MainSideBarCompo
 import '@/assets/css/grid.css';
 import {UseInterviewScheduleStore} from '@/stores/UseInterviewScheduleStore';
 import InterviewScheduleMain from "../../../components/recruiter/InterviewScheduleMain.vue";
-import ReScheduleList from "@/components/recruiter/ReScheduleList.vue";
-import ReScheduleDetail from "@/components/recruiter/ReScheduleDetail.vue";
 
 
 const isInterviewScheduleMain = ref(true);
-const isInterviewScheduleList = ref(false);
-const isReScheduleDetail = ref(false);
 
 const interviewScheduleStore = UseInterviewScheduleStore(); // Store 인스턴스
 const careerBase = ref("전체");
-const isModalOpen = ref(false);
-const modalTitle = ref('');
+
 const announcements = ref([]);
 const totalAnnouncements = ref(0);
-const interviewSchedules = ref([]);
-const totalReSchedules = ref(0);
-const announcementIdxInfo = ref(0);
-const announcementUuidInfo = ref("");
-const reSchedules = ref([]);
-const interviewScheduleDetail = ref([]);
 
 
-const reqData = ref({});
 const pageNum = ref(1);
 
 onMounted(async () => {
   announcements.value = await interviewScheduleStore.readAllAnnouncement(careerBase.value, pageNum.value);
   totalAnnouncements.value = await interviewScheduleStore.getTotalAnnouncement(careerBase.value);
-
-  console.log(announcements);
-  console.log(totalAnnouncements.value);
 })
 
 const loadAnnouncementList = async (btnNum) => {
   announcements.value = await interviewScheduleStore.readAllAnnouncement(careerBase.value, btnNum);
-}
-
-const interviewScheduleLists = async (announcementIdx, announcementUuid) => {
-  isInterviewScheduleList.value = true;
-  isInterviewScheduleMain.value = false;
-
-  reqData.value = {
-    careerBase: careerBase.value,
-    announcementIdx: announcementIdx,
-  };
-
-  reSchedules.value = await interviewScheduleStore.readAllReSchedule(reqData.value, pageNum.value);
-  totalReSchedules.value = await interviewScheduleStore.getTotalReSchedule(reqData.value);
-
-  announcementIdxInfo.value = announcementIdx;
-  announcementUuidInfo.value = announcementUuid;
-}
-
-// const announcementUuid = (announcementUuid) => {
-//   announcementUuidInfo.value = announcementUuid;
-// }
-
-const setModalTitle = (title) => {
-  if (!isModalOpen.value) {  // 모달이 열려있지 않을 때만 실행
-    modalTitle.value = title;
-  }
-}
-
-// 모달 열기 함수에서 무한 호출 방지
-const interviewScheduleInfo = async (interviewScheduleInfo, announcementIdx, announcementUuid) => {
-  isInterviewScheduleList.value = false;
-  isReScheduleDetail.value = true;
-
-  interviewSchedules.value = interviewScheduleInfo;
-
-  interviewScheduleDetail.value = await interviewScheduleStore.readInterviewSchedule(interviewScheduleInfo.interviewScheduleRes.idx);
-  announcementIdxInfo.value = announcementIdx;
-  announcementUuidInfo.value = announcementUuid;
-};
-
-const updateData = async (updateData, updateInfo, pageUpdateData) => {
-  const updateResult = await interviewScheduleStore.updateInterviewSchedule(updateInfo);
-  const createResult = await interviewScheduleStore.createInterviewSchedule(updateData);
-
-  if (createResult && updateResult) {
-    alert('성공했습니다!');
-
-    window.scrollTo({top: 0});
-    isReScheduleDetail.value = false;
-    await interviewScheduleLists(pageUpdateData.announcementIdx);
-  }
 }
 </script>
 
@@ -99,7 +33,6 @@ const updateData = async (updateData, updateInfo, pageUpdateData) => {
   <MainHeaderComponent/>
   <div class="container">
     <MainSideBarComponent/>
-    <!-- InterviewScheduleMainNew에서 이벤트를 받아 모달을 제어 -->
     <InterviewScheduleMain
         v-if="isInterviewScheduleMain"
         @interviewScheduleList="interviewScheduleLists"
@@ -108,27 +41,6 @@ const updateData = async (updateData, updateInfo, pageUpdateData) => {
         :announcements="announcements"
         :totalAnnouncements="totalAnnouncements">
     </InterviewScheduleMain>
-
-    <ReScheduleList
-        v-if="isInterviewScheduleList"
-        @interviewScheduleInfo="interviewScheduleInfo"
-        :title="'일정 조율 신청 내역'"
-        :titleModal="setModalTitle"
-        :reSchedules="reSchedules"
-        :totalReSchedules="totalReSchedules"
-        :announcementIdx="announcementIdxInfo"
-        :announcementUuid="announcementUuidInfo">
-    </ReScheduleList>
-
-    <ReScheduleDetail
-        v-if="isReScheduleDetail"
-        @updateData="updateData"
-        :title="'면접일정 세부내역'"
-        :reScheduleInfo="interviewSchedules"
-        :interviewScheduleDetail="interviewScheduleDetail"
-        :announcementIdx="announcementIdxInfo"
-        :announcementUuid="announcementUuidInfo">
-    </ReScheduleDetail>
   </div>
 </template>
 

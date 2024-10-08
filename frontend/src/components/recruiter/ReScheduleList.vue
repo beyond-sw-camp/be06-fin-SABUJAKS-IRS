@@ -1,5 +1,7 @@
 <script setup>
 import {computed, defineEmits, defineProps, ref} from 'vue';
+import router from "@/router";
+import {UseInterviewScheduleStore} from "@/stores/UseInterviewScheduleStore";
 
 // props를 정의합니다.
 const props = defineProps({
@@ -27,6 +29,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['interviewScheduleInfo']);
+const interviewScheduleStore = UseInterviewScheduleStore();
 
 const postsPerPage = 10; // 페이지당 게시글 수
 const totalPages = computed(() => {
@@ -52,7 +55,14 @@ const paginatedReSchedules = computed(() => {
 });
 
 const handleRowClick = (schedule) => {
-  emit('interviewScheduleInfo', schedule, props.announcementIdx, props.announcementUuid);
+  // emit('interviewScheduleInfo', schedule, props.announcementIdx, props.announcementUuid);
+  interviewScheduleStore.setScheduleInfo(schedule);
+
+  console.log(interviewScheduleStore.scheduleInfo);
+
+  router.push({
+    path: "/recruiter/interview-schedule/reschedule/detail/" + schedule.idx,
+  })
 }
 </script>
 

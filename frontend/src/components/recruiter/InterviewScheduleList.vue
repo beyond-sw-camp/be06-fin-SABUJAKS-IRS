@@ -52,12 +52,6 @@ const startNumberForPage = computed(() => {
   return isLoading.value ? '-' : props.totalInterviewSchedules - (currentPage.value - 1) * postsPerPage;
 });
 
-// 현재 페이지에 맞는 면접 일정 slice
-const paginatedInterviewSchedules = computed(() => {
-  const start = (currentPage.value - 1) * postsPerPage;
-  return props.interviewSchedules.slice(start, start + postsPerPage);
-});
-
 const handleRowClick = (type) => {
   emit('openModal', type);
 }
@@ -84,7 +78,6 @@ const getUniqueSeekers = (seekerList) => {
 }
 
 const handleScheduleClick = (schedule) => {
-  console.log(schedule);
   router.push(`/recruiter/interview-schedule/detail/${schedule.idx}`);
 }
 
@@ -115,7 +108,7 @@ const handleCreateAllVideoInterview = () => {
         <th>참가자</th>
         <th>면접방생성</th>
       </tr>
-      <tr v-for="(schedule, index) in paginatedInterviewSchedules" :key="schedule.uuid"
+      <tr v-for="(schedule, index) in props.interviewSchedules" :key="schedule.uuid"
           @click="handleScheduleClick(schedule)">
         <td>{{ startNumberForPage - index }}</td>
         <td>{{ formatDate(schedule.interviewDate) }}</td>
@@ -129,7 +122,8 @@ const handleCreateAllVideoInterview = () => {
           </ul>
         </td>
         <td>
-          <button class="create-video-interview" @click="createVideoInterview(schedule.uuid, schedule, $event)">방 생성</button>
+          <button class="create-video-interview" @click="createVideoInterview(schedule.uuid, schedule, $event)">방 생성
+          </button>
         </td>
       </tr>
       </tbody>

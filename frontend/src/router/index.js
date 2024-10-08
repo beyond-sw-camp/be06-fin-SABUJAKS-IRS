@@ -25,7 +25,7 @@ import AnnounceRegisterStep1Page from "@/pages/recruiter/announce/AnnounceRegist
 import InterviewScheduleMainNewPage from "@/pages/recruiter/interview-schedule/InterviewScheduleMainNewPage.vue";
 import InterviewScheduleMainExpPage from "@/pages/recruiter/interview-schedule/InterviewScheduleMainExpPage.vue";
 import InterviewScheduleMain from '@/components/recruiter/InterviewScheduleMain.vue';
-import ReScheduleMainExp from "@/pages/recruiter/interview-schedule/ReScheduleMainExp.vue";
+import ReScheduleMainPage from "@/pages/recruiter/interview-schedule/ReScheduleMainPage.vue";
 import { UseAuthStore } from "@/stores/UseAuthStore";
 import CompanyInfoPage from "@/pages/recruiter/company/CompanyInfoPage.vue";
 import InterviewEvaluateResultPage from '@/pages/recruiter/interview-evaluate/InterviewEvaluateResultPage.vue';
@@ -33,6 +33,8 @@ import InterveiwEvaluateResultDetailPage from '@/pages/recruiter/interview-evalu
 import InterviewScheduleDetail from "@/pages/recruiter/interview-schedule/InterviewScheduleDetail.vue";
 import InterviewScheduleListPage from "@/pages/recruiter/interview-schedule/InterviewScheduleListPage.vue";
 import InterviewEvaluateFormCreatePage from '@/pages/recruiter/interview-evaluate/InterviewEvaluateFormCreatePage.vue';
+import ReScheduleListPage from "@/pages/recruiter/interview-schedule/ReScheduleListPage.vue";
+import ReScheduleDetailPage from "@/pages/recruiter/interview-schedule/ReScheduleDetailPage.vue";
 
 const requireRecruiterLogin = async (to, from, next) => {
     const authStore = UseAuthStore();
@@ -74,7 +76,9 @@ const router = createRouter({
         { path: '/recruiter/announce/register-step2/:announcementIdx/:title', name: 'AnnouncementCreateStep2', component: AnnounceRegisterStep2Page, beforeEnter: requireRecruiterLogin },
 
         { path: '/recruiter/interview-schedule', component: InterviewScheduleMain, beforeEnter: requireRecruiterLogin },
-        { path: '/recruiter/interview-schedule/reschedule', component: ReScheduleMainExp, beforeEnter: requireRecruiterLogin },
+        { path: '/recruiter/interview-schedule/reschedule', component: ReScheduleMainPage, beforeEnter: requireRecruiterLogin },
+        { path: '/recruiter/interview-schedule/reschedule/list', component: ReScheduleListPage, beforeEnter: requireRecruiterLogin },
+        { path: '/recruiter/interview-schedule/reschedule/detail/:idx', component: ReScheduleDetailPage, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/interview-schedule/new', component: InterviewScheduleMainNewPage, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/interview-schedule/exp', component: InterviewScheduleMainExpPage, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/interview-schedule/list', component: InterviewScheduleListPage, beforeEnter: requireRecruiterLogin },
