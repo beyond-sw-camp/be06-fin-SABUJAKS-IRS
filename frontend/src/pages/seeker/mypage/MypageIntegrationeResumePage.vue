@@ -16,29 +16,38 @@
                             <div class="resume-view-container">
                                 <div class="base profile image">
                                     <div class="container-p">
-                                        <div v-if="showPersonalInfo" class="photo"><img name="user_photo" :src="resumeStore.resumeIntegrated.personalInfo ? resumeStore.resumeIntegrated.personalInfo.profileImg : ''">
+                                        <div v-if="showPersonalInfo" class="photo"><img name="user_photo"
+                                                :src="resumeStore.resumeIntegrated.personalInfo ? resumeStore.resumeIntegrated.personalInfo.profileImg : ''">
                                         </div>
                                         <div v-if="showPersonalInfo" class="info-container">
                                             <div class="info-general">
-                                                <div class="item name">{{ resumeStore.resumeIntegrated.personalInfo.name }}</div>
-                                                <div class="item sex">{{ resumeStore.resumeIntegrated.personalInfo.gender }}</div>
-                                                <div class="item year">{{ resumeStore.resumeIntegrated.personalInfo.birth }}</div>
-                                                <div class="item age">(만 {{ calculateAge(resumeStore.resumeIntegrated.personalInfo.birth) }}세)</div>
+                                                <div class="item name">{{ resumeStore.resumeIntegrated.personalInfo.name
+                                                    }}</div>
+                                                <div class="item sex">{{
+                                                    resumeStore.resumeIntegrated.personalInfo.gender }}</div>
+                                                <div class="item year">{{
+                                                    resumeStore.resumeIntegrated.personalInfo.birth }}</div>
+                                                <div class="item age">(만 {{
+                                                    calculateAge(resumeStore.resumeIntegrated.personalInfo.birth) }}세)
+                                                </div>
                                             </div>
                                             <div class="info-detail">
                                                 <div class="item">
                                                     <div class="label">휴대폰</div>
-                                                    <div class="value">{{ resumeStore.resumeIntegrated.personalInfo.phone }}</div>
+                                                    <div class="value">{{
+                                                        resumeStore.resumeIntegrated.personalInfo.phone }}</div>
                                                 </div>
                                                 <div class="item">
                                                     <div class="label">Email</div>
                                                     <div class="value">
-                                                        <a href="mailto:eunjoo.nine@gmail.com">{{ resumeStore.resumeIntegrated.personalInfo.email }}</a>
+                                                        <a href="mailto:eunjoo.nine@gmail.com">{{
+                                                            resumeStore.resumeIntegrated.personalInfo.email }}</a>
                                                     </div>
                                                 </div>
                                                 <div class="item-address">
                                                     <div class="label">주소</div>
-                                                    <div class="value">{{ resumeStore.resumeIntegrated.personalInfo.address }}</div>
+                                                    <div class="value">{{
+                                                        resumeStore.resumeIntegrated.personalInfo.address }}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -48,41 +57,51 @@
                                 <div v-if="showEducation" class="base education">
                                     <h2 class="header_title">학력</h2>
                                     <div class="list list-education">
-                                        <div class="item" v-for="(education, index) in resumeStore.resumeIntegrated.educations" :key="index">
-                                        <div class="date">
-                                            <div v-if="education.schoolDiv === '고등학교' && !education.qualificationExam" class="term"> ~ {{ education.graduatedAt }}</div>
-                                            <div v-if="education.schoolDiv === '고등학교' && education.qualificationExam" class="term"> ~ {{ education.passedAt }}</div>
-                                            <div v-if="education.schoolDiv !== '고등학교' && !education.qualificationExam" class="term">{{ education.enteredAt }} ~ {{ education.graduatedAt }}</div>
-                                            <div class="state">{{ education.status }}</div>
-                                        </div>
-                                        <div class="content">
-                                            <div class="content-header">
-                                            <div v-if="education.schoolDiv !== '대학원'" class="name">{{ education.schoolName }} ({{ education.graduationStatus }})</div>
-                                            <div v-else class="name">{{ education.schoolName }} ({{ education.degree }} {{ education.graduationStatus }})</div>
-                                            <div class="position position2">{{ education.schoolDiv }}</div>
-                                            <div class="line">{{ education.major }}</div>
+                                        <div class="item"
+                                            v-for="(education, index) in resumeStore.resumeIntegrated.educations"
+                                            :key="index">
+                                            <div class="date">
+                                                <div v-if="education.schoolDiv === '고등학교' && !education.qualificationExam"
+                                                    class="term"> ~ {{ education.graduatedAt }}</div>
+                                                <div v-if="education.schoolDiv === '고등학교' && education.qualificationExam"
+                                                    class="term"> ~ {{ education.passedAt }}</div>
+                                                <div v-if="education.schoolDiv !== '고등학교' && !education.qualificationExam"
+                                                    class="term">{{ education.enteredAt }} ~ {{ education.graduatedAt }}
+                                                </div>
+                                                <div class="state">{{ education.status }}</div>
                                             </div>
-                                            <div v-if="education.schoolDiv !== '고등학교'" class="content-body">
-                                            <div class="info">
-                                                <div class="item">
-                                                <div class="label">전공명</div>
-                                                <div class="value">{{ education.majorName }} {{ education.transfer ? "(편입)" : "" }}</div>
+                                            <div class="content">
+                                                <div class="content-header">
+                                                    <div v-if="education.schoolDiv !== '대학원'" class="name">{{
+                                                        education.schoolName }} ({{ education.graduationStatus }})</div>
+                                                    <div v-else class="name">{{ education.schoolName }} ({{
+                                                        education.degree }} {{ education.graduationStatus }})</div>
+                                                    <div class="position position2">{{ education.schoolDiv }}</div>
+                                                    <div class="line">{{ education.major }}</div>
+                                                </div>
+                                                <div v-if="education.schoolDiv !== '고등학교'" class="content-body">
+                                                    <div class="info">
+                                                        <div class="item">
+                                                            <div class="label">전공명</div>
+                                                            <div class="value">{{ education.majorName }} {{
+                                                                education.transfer ? "(편입)" : "" }}</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="info">
+                                                        <div class="item">
+                                                            <div class="label">학점</div>
+                                                            <div class="value">{{ education.grade }} / {{
+                                                                education.totalGrade }}</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="info">
+                                                        <div class="item">
+                                                            <div class="label">{{ education.majorType }}</div>
+                                                            <div class="value">{{ education.otherMajor }}</div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="info">
-                                                <div class="item">
-                                                <div class="label">학점</div>
-                                                <div class="value">{{ education.grade }} / {{ education.totalGrade }}</div>
-                                                </div>
-                                            </div>
-                                            <div class="info">
-                                                <div class="item">
-                                                <div class="label">{{ education.majorType}}</div>
-                                                <div class="value">{{ education.otherMajor }}</div>
-                                                </div>
-                                            </div>
-                                            </div>
-                                        </div>
                                         </div>
                                     </div>
                                 </div>
@@ -90,18 +109,24 @@
                                 <div v-if="showPersonalHistory" class="base career">
                                     <h2 class="header_title">경력</h2>
                                     <div class="list list-education">
-                                        <div class="item" v-for="(personalHistory, index) in resumeStore.resumeIntegrated.personalHistories" :key="index">
+                                        <div class="item"
+                                            v-for="(personalHistory, index) in resumeStore.resumeIntegrated.personalHistories"
+                                            :key="index">
                                             <div class="date">
-                                                <div class="term">{{ personalHistory.enteredAt }} ~ {{ personalHistory.quitAt }}</div>
+                                                <div class="term">{{ personalHistory.enteredAt }} ~ {{
+                                                    personalHistory.quitAt }}</div>
                                                 <div class="term-calculator">
-                                                    {{ personalHistory.enteredAt && personalHistory.quitAt ? calculateDuration(personalHistory.enteredAt, personalHistory.quitAt) : '' }}
+                                                    {{ personalHistory.enteredAt && personalHistory.quitAt ?
+                                                        calculateDuration(personalHistory.enteredAt, personalHistory.quitAt)
+                                                        : '' }}
                                                 </div>
                                             </div>
                                             <div class="content">
                                                 <div class="content-header">
                                                     <div class="name">
                                                         {{ personalHistory.companyName }} </div>
-                                                        <div v-if="personalHistory.empStatus" class="position position1">재직중</div>
+                                                    <div v-if="personalHistory.empStatus" class="position position1">재직중
+                                                    </div>
                                                 </div>
                                                 <div class="content-body">
                                                     <div class="info">
@@ -137,18 +162,24 @@
                                 <div v-if="showInternsActivity" class="base intern">
                                     <h2 class="header_title">인턴·대외활동</h2>
                                     <div class="list list-intern">
-                                        <div class="item" v-for="(internsActivity, index) in resumeStore.resumeIntegrated.internsActivities" :key="index">
+                                        <div class="item"
+                                            v-for="(internsActivity, index) in resumeStore.resumeIntegrated.internsActivities"
+                                            :key="index">
                                             <div class="date">
-                                                <div class="term">{{ internsActivity.startAt }} ~ {{ internsActivity.endAt }}</div>
+                                                <div class="term">{{ internsActivity.startAt }} ~ {{
+                                                    internsActivity.endAt }}</div>
                                                 <div class="term-calculator">
-                                                    {{ internsActivity.start && internsActivity.endAt ? calculateDuration(internsActivity.startAt, internsActivity.endAt) : '' }}
+                                                    {{ internsActivity.start && internsActivity.endAt ?
+                                                        calculateDuration(internsActivity.startAt, internsActivity.endAt) :
+                                                        '' }}
                                                 </div>
                                             </div>
 
                                             <div class="content">
                                                 <div class="content-header">
                                                     <div class="name">{{ internsActivity.organization }}</div>
-                                                    <div class="position position3">{{ internsActivity.activityDiv }}</div>
+                                                    <div class="position position3">{{ internsActivity.activityDiv }}
+                                                    </div>
                                                 </div>
                                                 <div class="content-body">
                                                     {{ internsActivity.contents }}</div>
@@ -161,7 +192,9 @@
                                 <div v-if="showTraining" class="base learn">
                                     <h2 class="header_title">교육이수</h2>
                                     <div class="list list-learn">
-                                        <div class="item" v-for="(training, index) in resumeStore.resumeIntegrated.trainings" :key="index">
+                                        <div class="item"
+                                            v-for="(training, index) in resumeStore.resumeIntegrated.trainings"
+                                            :key="index">
                                             <div class="date">{{ training.startAt }} ~ {{ training.endAt }}</div>
                                             <div class="content">
                                                 <div class="content-header">
@@ -179,7 +212,9 @@
                                 <div v-if="showCertification" class="base certificate">
                                     <h2 class="header_title">자격증</h2>
                                     <div class="list list-certificate">
-                                        <div class="item" v-for="(certification, index) in resumeStore.resumeIntegrated.certifications" :key="index">
+                                        <div class="item"
+                                            v-for="(certification, index) in resumeStore.resumeIntegrated.certifications"
+                                            :key="index">
                                             <div class="date">{{ certification.takingAt }}</div>
                                             <div class="content">
                                                 <div class="content-header">
@@ -195,7 +230,8 @@
                                 <div v-if="showAward" class="base awards">
                                     <h2 class="header_title">수상</h2>
                                     <div class="list list-awards">
-                                        <div class="item" v-for="(award, index) in resumeStore.resumeIntegrated.awards" :key="index">
+                                        <div class="item" v-for="(award, index) in resumeStore.resumeIntegrated.awards"
+                                            :key="index">
                                             <div class="date">
                                                 {{ award.year }}
                                             </div>
@@ -215,11 +251,16 @@
                                 <div v-if="showStudyingAbroad" class="base experience">
                                     <h2 class="header_title">해외경험</h2>
                                     <div class="list list-experience">
-                                        <div class="item" v-for="(studyingAbroad, index) in resumeStore.resumeIntegrated.studyingAbroads" :key="index">
+                                        <div class="item"
+                                            v-for="(studyingAbroad, index) in resumeStore.resumeIntegrated.studyingAbroads"
+                                            :key="index">
                                             <div class="date">
-                                                <div class="term">{{ studyingAbroad.startAt }} ~ {{ studyingAbroad.endAt }}</div>
+                                                <div class="term">{{ studyingAbroad.startAt }} ~ {{ studyingAbroad.endAt
+                                                    }}</div>
                                                 <div class="term-calculator">
-                                                    {{ studyingAbroad.startAt && studyingAbroad.endAt ? calculateDuration(studyingAbroad.startAt, studyingAbroad.endAt) : '' }}
+                                                    {{ studyingAbroad.startAt && studyingAbroad.endAt ?
+                                                        calculateDuration(studyingAbroad.startAt, studyingAbroad.endAt) : ''
+                                                    }}
                                                 </div>
                                             </div>
                                             <div class="content">
@@ -236,9 +277,12 @@
                                 <div v-if="showLanguage" class="base career">
                                     <h2 class="header_title">어학</h2>
                                     <div class="list list-education">
-                                        <div class="item" v-for="(language, index) in resumeStore.resumeIntegrated.languages" :key="index">
+                                        <div class="item"
+                                            v-for="(language, index) in resumeStore.resumeIntegrated.languages"
+                                            :key="index">
                                             <div class="date">
-                                                <div class="term" style="font-weight: bold; font-size: 16px;">{{ language.languageName }}</div>
+                                                <div class="term" style="font-weight: bold; font-size: 16px;">{{
+                                                    language.languageName }}</div>
                                             </div>
                                             <div class="content">
                                                 <div class="content-body">
@@ -247,11 +291,14 @@
                                                             <div class="label">공인시험</div>
                                                             <div class="value">{{ language.officialTest }}</div>
                                                         </div>
-                                                        <div v-if="language.testDiv === '공인시험' && language.selectScore !== '취득'" class="item">
+                                                        <div v-if="language.testDiv === '공인시험' && language.selectScore !== '취득'"
+                                                            class="item">
                                                             <div class="label">급수/점수</div>
-                                                            <div class="value">{{ language.score }}{{  language.selectScore }}</div>
+                                                            <div class="value">{{ language.score }}{{
+                                                                language.selectScore }}</div>
                                                         </div>
-                                                        <div v-if="language.testDiv === '공인시험' && language.selectScore === '취득'" class="item">
+                                                        <div v-if="language.testDiv === '공인시험' && language.selectScore === '취득'"
+                                                            class="item">
                                                             <div class="label">{{ language.testDiv }}</div>
                                                             <div class="value">{{ language.conversationLevel }}</div>
                                                         </div>
@@ -269,14 +316,16 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div v-if="showCustomLetter" class="base introduction">
                                     <h2 class="header_title">자기소개서</h2>
                                     <div id="SummaryAjax">
                                     </div>
                                     <ul class="list list-introduction">
-                                        <li v-for="(customLetter, index) in resumeStore.resumeIntegrated.customLetters" :key="index" class="item">
-                                            <div class="header_title" style="font-weight: bold; margin-bottom: 10px;">{{ customLetter.title }} ({{ customLetter.charNum }}자)</div>
+                                        <li v-for="(customLetter, index) in resumeStore.resumeIntegrated.customLetters"
+                                            :key="index" class="item">
+                                            <div class="header_title" style="font-weight: bold; margin-bottom: 10px;">{{
+                                                customLetter.title }} ({{ customLetter.charNum }}자)</div>
                                             <div class="content" id="pfl_original">
                                                 {{ customLetter.contents }}
                                             </div>
@@ -292,7 +341,8 @@
                                             <col style="width:320px;">
                                         </colgroup>
                                         <tbody>
-                                            <tr v-for="(portfolio, index) in resumeStore.resumeIntegrated.portfolios" :key="index" >
+                                            <tr v-for="(portfolio, index) in resumeStore.resumeIntegrated.portfolios"
+                                                :key="index">
                                                 <th>{{ portfolio.portfolioDiv }}</th>
                                                 <td>
                                                     <a :href="portfolio.portfolioUrl" target="_blank">
@@ -320,25 +370,36 @@
                                         <tbody>
                                             <tr>
                                                 <th>보훈대상 여부</th>
-                                                <td>{{ resumeStore.resumeIntegrated.preferentialEmp.veterans ? 'O' : 'X'}}</td>
+                                                <td>{{ resumeStore.resumeIntegrated.preferentialEmp.veterans ? 'O' :
+                                                    'X' }}</td>
                                                 <th>취업보호대상 여부</th>
-                                                <td>{{ resumeStore.resumeIntegrated.preferentialEmp.protection ? 'O' : 'X'}}</td>
+                                                <td>{{ resumeStore.resumeIntegrated.preferentialEmp.protection ? 'O' :
+                                                    'X' }}</td>
                                                 <th>고용지원금대상 여부</th>
-                                                <td>{{ resumeStore.resumeIntegrated.preferentialEmp.subsidy ? 'O' : 'X'}}</td>
+                                                <td>{{ resumeStore.resumeIntegrated.preferentialEmp.subsidy ? 'O' :
+                                                    'X' }}</td>
                                             </tr>
                                             <tr>
                                                 <th>병역사항</th>
-                                                <td v-if="resumeStore.resumeIntegrated.preferentialEmp.militaryClass === '군필'" colspan="3">
-                                                    {{ resumeStore.resumeIntegrated.preferentialEmp.military 
-                                                    ? resumeStore.resumeIntegrated.preferentialEmp.militaryClass : 'X'}}
-                                                    ({{ resumeStore.resumeIntegrated.preferentialEmp.militaryStart }} ~ {{ resumeStore.resumeIntegrated.preferentialEmp.militaryEnd }}) 
-                                                    [{{ resumeStore.resumeIntegrated.preferentialEmp.militaryRank }} / {{ resumeStore.resumeIntegrated.preferentialEmp.militaryType }}]
+                                                <td v-if="resumeStore.resumeIntegrated.preferentialEmp.militaryClass === '군필'"
+                                                    colspan="3">
+                                                    {{ resumeStore.resumeIntegrated.preferentialEmp.military
+                                                        ? resumeStore.resumeIntegrated.preferentialEmp.militaryClass : 'X'
+                                                    }}
+                                                    ({{ resumeStore.resumeIntegrated.preferentialEmp.militaryStart }} ~
+                                                    {{ resumeStore.resumeIntegrated.preferentialEmp.militaryEnd }})
+                                                    [{{ resumeStore.resumeIntegrated.preferentialEmp.militaryRank }} /
+                                                    {{ resumeStore.resumeIntegrated.preferentialEmp.militaryType }}]
                                                 </td>
                                                 <td v-else colspan="3">
-                                                    {{ resumeStore.resumeIntegrated.preferentialEmp.military 
-                                                    ? resumeStore.resumeIntegrated.preferentialEmp.militaryClass : 'X'}} </td>
+                                                    {{ resumeStore.resumeIntegrated.preferentialEmp.military
+                                                        ? resumeStore.resumeIntegrated.preferentialEmp.militaryClass : 'X'
+                                                    }}
+                                                </td>
                                                 <th>장애여부</th>
-                                                <td>{{ resumeStore.resumeIntegrated.preferentialEmp.disability ? resumeStore.resumeIntegrated.preferentialEmp.disabilityDegree : 'X'}}</td>
+                                                <td>{{ resumeStore.resumeIntegrated.preferentialEmp.disability ?
+                                                    resumeStore.resumeIntegrated.preferentialEmp.disabilityDegree :
+                                                    'X' }}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -382,7 +443,7 @@ onMounted(async () => {
     await resumeStore.readIntegrated(router);
 
     showPersonalInfo.value = true;
-    if(resumeStore.resumeIntegrated.codes) {
+    if (resumeStore.resumeIntegrated && resumeStore.resumeIntegrated.codes) {
         showEducation.value = resumeStore.resumeIntegrated.codes.includes("resume_001");
         showPersonalHistory.value = resumeStore.resumeIntegrated.codes.includes("resume_002");
         showInternsActivity.value = resumeStore.resumeIntegrated.codes.includes("resume_003");
@@ -400,7 +461,7 @@ onMounted(async () => {
 const calculateAge = (birthDate) => {
     const birth = new Date(birthDate.replace(/\./g, '-')); // 문자열 변환
     const today = new Date();
-    
+
     let age = today.getFullYear() - birth.getFullYear();
     const monthDiff = today.getMonth() - birth.getMonth();
 
@@ -408,29 +469,29 @@ const calculateAge = (birthDate) => {
     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
         age--;
     }
-    
+
     return age;
 };
 
 
 // 개월 수를 계산하고 년과 개월로 반환하는 메서드
 const calculateDuration = (enteredAt, quitAt) => {
-  const start = new Date(enteredAt.replace('.', '-') + '-01'); // "YYYY-MM-DD" 형식으로 변환
-  const end = new Date(quitAt.replace('.', '-') + '-01'); // "YYYY-MM-DD" 형식으로 변환
+    const start = new Date(enteredAt.replace('.', '-') + '-01'); // "YYYY-MM-DD" 형식으로 변환
+    const end = new Date(quitAt.replace('.', '-') + '-01'); // "YYYY-MM-DD" 형식으로 변환
 
-  const yearDiff = end.getFullYear() - start.getFullYear();
-  const monthDiff = end.getMonth() - start.getMonth();
+    const yearDiff = end.getFullYear() - start.getFullYear();
+    const monthDiff = end.getMonth() - start.getMonth();
 
-  const totalMonths = yearDiff * 12 + monthDiff;
+    const totalMonths = yearDiff * 12 + monthDiff;
 
-  const years = Math.floor(totalMonths / 12);
-  const months = totalMonths % 12;
+    const years = Math.floor(totalMonths / 12);
+    const months = totalMonths % 12;
 
-  if(years == 0) {
-    return `${months}개월`;
-  }
+    if (years == 0) {
+        return `${months}개월`;
+    }
 
-  return `${years}년 ${months}개월`;
+    return `${years}년 ${months}개월`;
 };
 
 </script>
@@ -443,8 +504,8 @@ const calculateDuration = (enteredAt, quitAt) => {
 }
 
 a {
-  text-decoration: none;
-  color: black;
+    text-decoration: none;
+    color: black;
 }
 
 .body-i {
@@ -499,7 +560,7 @@ a {
 }
 
 .header h1 {
-    font-size: 28px;
+    font-size: 24px;
     font-weight: bold;
 }
 
@@ -516,7 +577,7 @@ a {
     background-color: #212b36;
 }
 
-.main-content > .content {
+.main-content>.content {
     background-color: #F2F4F7;
     padding: 10px;
     border-radius: 10px;
