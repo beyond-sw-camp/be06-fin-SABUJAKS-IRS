@@ -36,7 +36,7 @@ public class PersonalInfo {
     @Column(length = 30)
     private String tel;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false)
     private String address;
 
     @Column(nullable = false)

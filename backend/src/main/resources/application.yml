@@ -13,6 +13,10 @@ cloud:
     s3:
       bucket: ${S3_BUCKET_NAME}
 spring:
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 2MB
   jwt:
     secret: ${JWT_SECRET}
   datasource:
