@@ -77,10 +77,11 @@
   
   <style scoped>
   .video-wrapper {
-    padding: 20px;
+    padding: 10px;
     position: relative;
     height: 100%;
     transition: border 0.3s ease;
+    border-radius: 5px; /* 모서리를 둥글게 */
   }
   
   .speaking {

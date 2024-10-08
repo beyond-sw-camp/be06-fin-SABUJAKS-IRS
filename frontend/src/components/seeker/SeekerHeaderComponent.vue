@@ -26,7 +26,7 @@
         <img class="header-logo" src="../../assets/img/irs_white.png">
       </a>
       <div class="header-right">
-        <span>면접관-{{ authStore.userInfo.email }}</span>
+        <span class="estimator-name">면접관-{{ authStore.userInfo.name }}</span>
         <a @click="handleLogout" class="logout-btn">로그아웃</a>
       </div>
     </div>
@@ -150,5 +150,8 @@ const handleLogout = async() => {
 
 .header-right a:hover {
   opacity: 70%;
+}
+.estimator-name{
+  color: #fff;
 }
 </style>
