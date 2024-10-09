@@ -14,4 +14,7 @@ public interface ReScheduleRepository extends JpaRepository<ReSchedule, Long> {
 
     @Query("SELECT r FROM ReSchedule r WHERE r.idx = :reScheduleIdx")
     Optional<ReSchedule> findByReScheduleIdx(Long reScheduleIdx);
+
+    @Query("SELECT COUNT(r) FROM ReSchedule r WHERE r.interviewSchedule.idx = :interviewScheduleIdx")
+    Integer countReScheduleByInterviewIdx(Long interviewScheduleIdx);
 }

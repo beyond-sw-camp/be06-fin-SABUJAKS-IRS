@@ -137,8 +137,9 @@ public enum BaseResponseMessage {
     RESCHEDULE_CREATE_SUCCESS(true, 8005, "면접 조율 신청 생성 완료"),
     RESCHEDULE_NOT_FOUND(false, 8006, "면접 조율 내역을 찾을 수 없습니다."),
     RESCHEDULE_SEARCH_ALL_SUCCESS(true, 8007, "면접 조율 내역 조회에 성공했습니다."),
+    INTERVIEW_SCHEDULE_COUNT_SUCCESS(true, 8008, "공고별 생성 면접 개수 조회에 성공했습니다."),
 
-    INTERVIEW_PARTICIPATE_NOT_FOUND(false, 8008, "면접 연관 정보를 찾을 수 없습니다."),
+    INTERVIEW_PARTICIPATE_NOT_FOUND(false, 8009, "면접 연관 정보를 찾을 수 없습니다."),
 
     // VIDEO_INTERVIEW 화상 면접 8100 ~ 8199
     VIDEO_INTERVIEW_CREATE_SUCCESS(true, 8100, "화상 면접 방 생성에 성공했습니다."),
