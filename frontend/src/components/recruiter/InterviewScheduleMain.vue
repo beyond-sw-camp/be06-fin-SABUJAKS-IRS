@@ -91,6 +91,7 @@ const formatDate = (datetime) => {
         <th>번호</th>
         <th>공고기간</th>
         <th>공고명</th>
+        <th>면접생성수</th>
       </tr>
       <!--      <tr @click="handleRowClick('경력')">-->
       <tr v-for="(announcement, index) in props.announcements" :key="announcement.idx"
@@ -98,6 +99,7 @@ const formatDate = (datetime) => {
         <td>{{ props.totalAnnouncements - index }}</td>
         <td>{{ formatDate(announcement.announcementStart) }} - {{ formatDate(announcement.announcementEnd) }}</td>
         <td>{{ announcement.title }}</td>
+        <td>{{ props.title === "전체" ? announcement.countReSchedule : announcement.countInterviewSchedule }}</td>
       </tr>
       </tbody>
     </table>
