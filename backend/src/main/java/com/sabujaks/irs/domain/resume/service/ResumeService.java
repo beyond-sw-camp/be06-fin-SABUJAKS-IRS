@@ -505,6 +505,11 @@ public class ResumeService {
             // 공고 idx로 공고 조회
             Optional<Announcement> resultAnnouncement = announcementRepository.findByAnnounceIdx(announcementIdx);
             if(resultAnnouncement.isPresent()) {
+                // 지원자가 해당 공고 이미 지원했을때
+                Optional<Resume> resultResume = resumeRepository.findByAnnouncementIdxAndSeekerIdx(announcementIdx, seekerIdx);
+                if(resultResume.isPresent()) {
+                    throw new BaseException(BaseResponseMessage.RESUME_REGISTER_FAIL_RESUME_DUPLICATE);
+                }
                 ResumeReadSubmitInfoRes.ResumeReadSubmitInfoResBuilder responseBuilder = ResumeReadSubmitInfoRes.builder();
                 // 지원서 맞춤 양식 테이블 조회
                 List<CustomForm> resultCustomForms = customFormRepository.findAllByAnnouncementIdx(resultAnnouncement.get().getIdx());
