@@ -233,10 +233,10 @@ const preferentialEmp = ref({});
 
 
 onMounted(async () => {
-  const response = await resumeStore.readSubmitInfo(route.params.announcementIdx);
+  const response = await resumeStore.readSubmitInfo(router, route.params.announcementIdx);
 
   showPersonalInfo.value = true;
-  if(response.result.codes) {
+  if(response && response.result.codes) {
     showEducation.value = response.result.codes.includes("resume_001");
     showPersonalHistory.value = response.result.codes.includes("resume_002");
     showInternsActivity.value = response.result.codes.includes("resume_003");
@@ -258,7 +258,7 @@ onMounted(async () => {
     }));
   }
 
-  if(response.result.integrated) {
+  if(response && response.result.integrated) {
     // 인적사항
     if(showPersonalInfo.value && response.result.personalInfo) {
       personalInfo.value = response.result.personalInfo;
