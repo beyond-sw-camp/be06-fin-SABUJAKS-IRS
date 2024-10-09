@@ -17,7 +17,7 @@
                     v-for="(announcement, index) in paginatedAnnouncements"
                     :key="index"
                     @click="handleRowClick(announcement)"
-                    style="cursor: pointer"
+                    class="hoverable-row"
                 >
                 <td>{{ announcementStore.announcementsPage.totalElements - ((currentPage - 1) * pageSize + index) }}</td>
                 <td>{{ formatDate(announcement.announcementStart) }} - {{ formatDate(announcement.announcementEnd) }}</td>
@@ -166,6 +166,16 @@ th {
 
 #size-buttons button:hover {
   background-color: #ddd;
+}
+
+/* 테이블 행 hover 시 색깔 변화 */
+.hoverable-row {
+  transition: background-color 0.3s ease;
+}
+
+.hoverable-row:hover {
+  background-color: #f6f6f6; /* 마우스 올렸을 때 약간 어둡게 변경 */
+  cursor: pointer;
 }
 
 .pagination {

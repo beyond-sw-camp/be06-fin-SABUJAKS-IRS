@@ -168,7 +168,7 @@ export const UseCompanyStore = defineStore('company', {
                     // 알림이 끝난 후 새로고침 (2초 후)
                     setTimeout(() => {
                         window.location.reload();
-                    }, 2000); // 2000ms = 2초 (알림 지속 시간에 맞추어 조정)
+                    }, 3000); // 2000ms = 2초 (알림 지속 시간에 맞추어 조정)
                 }
             } catch (error) {
                 console.error('기업 정보 등록 실패:', error);

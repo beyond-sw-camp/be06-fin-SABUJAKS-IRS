@@ -22,7 +22,7 @@
             v-for="(resume, index) in paginatedResumes"
             :key="index"
             @click="handleRowClick(resume)"
-            style="cursor: pointer"
+            class="hoverable-row"
           >
             <td>{{ resumeStore.resumeListPage.totalElements - ((currentPage - 1) * pageSize + index) }}</td>
             <td>{{ resume.seekerName }}</td>
@@ -161,6 +161,16 @@ th {
     color: white;
     padding: 10px;
     border-radius: 5px;
+}
+
+/* 테이블 행 hover 시 색깔 변화 */
+.hoverable-row {
+  transition: background-color 0.3s ease;
+}
+
+.hoverable-row:hover {
+  background-color: #f6f6f6; /* 마우스 올렸을 때 약간 어둡게 변경 */
+  cursor: pointer;
 }
 
 .pagination {

@@ -3,8 +3,11 @@
     <div class="container">
         <MainSideBarComponent></MainSideBarComponent>
         <div id="content">
-            <div style="display: flex; justify-content: space-between;">
-                <h2>[{{ route.params.title }}] 공고<br>지원서 폼 조립</h2>
+            <div style="display: flex; justify-content: space-between; margin-top: 50px">
+                <div>
+                    <h2>[{{ route.params.title }}] 공고 지원서 폼 조립</h2><br>
+                    <p style="font-size: 16px;">📢 지원서에 받을 항목을 선택하고 추가하세요. 자기소개서 항목은 문항까지 추가해 주세요.</p>
+                </div>
                 <!-- 저장 버튼 -->
                 <button @click="saveForm" class="save-button">폼 저장</button>
             </div>
@@ -128,11 +131,11 @@ const saveForm = () => {
 
 #content {
     /* flex: 1; */
-    margin-left: 200px;
+    margin-left: 158px;
     /* 사이드바 너비만큼 왼쪽 여백 추가 */
     padding: 0 0 150px 0;
     display: flex;
-    /* flex-direction: column; */
+    flex-direction: column;
     box-sizing: border-box;
 }
 

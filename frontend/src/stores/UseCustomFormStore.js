@@ -5,7 +5,7 @@ import { useToast } from 'vue-toastification';
 
 export const UseCustomFormStore = defineStore('customform', {
     state: () => ({
-
+        custom: [], // 지원서폼 리스트
     }),
     actions: {
         // 지원서 폼 저장 로직
@@ -53,7 +53,30 @@ export const UseCustomFormStore = defineStore('customform', {
                 toast.error('폼 저장에 실패하였습니다. ' + error.response.data.message);
             }
 
-        }
+        },
+
+        // 지원서 폼 조회
+        async readForm(announcementIdx) {
+            try {
+                const response = await axios.get(
+                    `${backend}/announcement/custom-form/read?announcementIdx=${announcementIdx}`,
+                    {
+                        headers: { 'Content-Type': 'application/json' },
+                        withCredentials: true
+                    });
+
+                if(response && response.data && response.data.result) {
+                    this.custom = response.data.result; // 백엔드에서 가져온 데이터를 저장  
+                    // console.log(this.custom);
+                }
+
+            } catch (error) {
+                console.error('폼 조회 중 오류 발생:', error);
+
+                throw new Error(error.response.data.message); // 에러 메시지 예외 처리로 던지기
+
+            }
+        },
 
     }
 });
