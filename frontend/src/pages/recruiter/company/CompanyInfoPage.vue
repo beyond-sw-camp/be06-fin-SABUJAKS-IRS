@@ -156,9 +156,9 @@ onMounted(async () => {
 
 <template>
   <MainHeaderComponent />
-  <div class="container padding-100 0 0 0" style="margin: 150px 0 200px 200px;">
+  <div class="container" style="margin: 150px 0 200px 200px;">
     <MainSideBarComponent />
-    <div id="content" style="padding: 100px 100px;">
+    <div id="content" style="padding: 50px 158px 100px 158px;">
       <!-- 기업 정보 등록 섹션 -->
       <div v-if="companyStore.companyInfo.saved === 'N'" id="createSections">
         <h1>기업 정보 등록</h1>
@@ -285,7 +285,7 @@ onMounted(async () => {
       </div>
 
       <!-- 기업 정보 조회 섹션 -->
-      <div v-else id="readSections" style="margin: 0 0 100px 0;">
+      <div v-else id="readSections">
         <h1>{{ companyStore.companyInfo.name }} 기업 정보</h1>
         <div class="image-preview-container">
           <!-- 이미지 리스트를 보여줌 -->

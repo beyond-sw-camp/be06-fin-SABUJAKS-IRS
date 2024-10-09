@@ -577,8 +577,8 @@ export default {
               </div>
             </div>
           </div>
-          <p style="font-size: large;">이미지 업로드 양식 - 이미지를 업로드 하고 템플릿 작성 양식으로 이동하여 *필수*값을 꼭 입력한 후 등록해 주세요. <br>
-            템플릿 작성 양식 - 템플릿의 정보를 모두 작성 후 등록해 주세요. </p>
+          <p style="font-size: large;">📢 이미지 업로드 양식 - 이미지를 업로드 하고 템플릿 작성 양식으로 이동하여 *필수*값을 꼭 입력한 후 등록해 주세요. <br>
+            📢 템플릿 작성 양식 - 템플릿의 정보를 모두 작성 후 등록해 주세요. </p>
         </div>
 
         <hr style="border: 0.5px solid #abadb8; margin: 30px 0;">
@@ -1010,7 +1010,7 @@ export default {
 
         <!-- 다음 스텝 버튼 -->
         <div class="submit-section">
-          <p style="font-size: large;">이미지 업로드 시, 템플릿 작성 양식으로 이동하여 *필수*값을 꼭 입력한 후 등록해 주세요.</p>
+          <p style="font-size: large;">📢 이미지 업로드 시, 템플릿 작성 양식으로 이동하여 *필수*값을 꼭 입력한 후 등록해 주세요.</p>
           <button @click="alreadyFun" id="buildFormBtn">공고 등록 후 지원서 폼 조립하기</button>
         </div>
       </div>
@@ -1075,8 +1075,8 @@ input[type="number"] {
 }
 
 .container-regi {
-  width: 90%;
-  margin: 0px 50px 40px 50px;
+  width: 80%;
+  margin: 0px 50px 40px 158px;
   background-color: white;
   padding: 20px;
   /* border-radius: 10px; */
