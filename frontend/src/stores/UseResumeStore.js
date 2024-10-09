@@ -477,7 +477,6 @@ export const UseResumeStore = defineStore('resume', {
                     withCredentials: true
                 });
                 this.resumeIntegrated = response.data.result;
-                // console.log(response.data.result);
             } catch (error) {
                 // console.log(error.response.data);
                 toast.error(error.response.data.message);

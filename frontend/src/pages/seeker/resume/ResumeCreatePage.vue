@@ -192,8 +192,10 @@
 import { ref, onMounted  } from 'vue';
 import { UseResumeStore } from '@/stores/UseResumeStore';
 import { useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
 
 const router = useRouter();
+const toast = useToast();
 
 import SeekerHeaderComponent from '@/components/seeker/SeekerHeaderComponent.vue' // 헤더
 import PersonalInfoComponent from '@/components/seeker/PersonalInfoComponent.vue'; // 인적사항
@@ -498,31 +500,31 @@ const handlePortfolioUpdate = (index, data) => {
 
 const handleCreate = async () => {
   if(resumeStore.personalInfo.name == null) {
-    alert("이름을 입력해주세요.");
+    toast.error("이름을 입력해주세요.");
     return;
   }
   if(resumeStore.personalInfo.birth == null) {
-    alert("생년월일을 선택해주세요.");
+    toast.error("생년월일을 선택해주세요.");
     return;
   }
   if(resumeStore.personalInfo.gender == '') {
-    alert("성별을 선택해주세요.");
+    toast.error("성별을 선택해주세요.");
     return;
   }
   if(resumeStore.personalInfo.email == null) {
-    alert("이메일을 입력해주세요.");
+    toast.error("이메일을 입력해주세요.");
     return;
   }
   if(resumeStore.personalInfo.phone == null) {
-    alert("휴대폰번호를 입력해주세요.");
+    toast.error("휴대폰번호를 입력해주세요.");
     return;
   }
   if(resumeStore.personalInfo.address == null) {
-    alert("주소를 입력해주세요.");
+    toast.error("주소를 입력해주세요.");
     return;
   }
   if(resumeStore.file == null) {
-    alert("증명사진을 선택해주세요.");
+    toast.error("증명사진을 선택해주세요.");
     return;
   }
   resumeStore.updateShowEducation(showEducation.value);
@@ -530,7 +532,7 @@ const handleCreate = async () => {
       for (let i = 0; i < resumeStore.educations.length; i++) {
           const education = resumeStore.educations[i];
           if (!education || (education.schoolDiv === '' || !education.schoolName)) {
-            alert(`학력 ${i + 1}: 필수값을 입력해주세요.`);
+            toast.error(`학력 ${i + 1}: 필수값을 입력해주세요.`);
             return;
           }
       }
@@ -540,7 +542,7 @@ const handleCreate = async () => {
       for (let i = 0; i < resumeStore.personalHistories.length; i++) {
           const personalHistory = resumeStore.personalHistories[i];
           if (!personalHistory || (!personalHistory.companyName || !personalHistory.enteredAt || !personalHistory.job)) {
-            alert(`경력 ${i + 1}: 필수값을 입력해주세요.`);
+            toast.error(`경력 ${i + 1}: 필수값을 입력해주세요.`);
             return;
           }
       }
@@ -550,7 +552,7 @@ const handleCreate = async () => {
       for (let i = 0; i < resumeStore.internsActivities.length; i++) {
           const internsActivity = resumeStore.internsActivities[i];
           if (!internsActivity || (internsActivity.activityDiv === '' || !internsActivity.organization)) {
-            alert(`인턴 및 대외활동 ${i + 1}: 필수값을 입력해주세요.`);
+            toast.error(`인턴 및 대외활동 ${i + 1}: 필수값을 입력해주세요.`);
             return;
           }
       }
@@ -560,7 +562,7 @@ const handleCreate = async () => {
       for (let i = 0; i < resumeStore.studyingAbroads.length; i++) {
           const studyingAbroad = resumeStore.studyingAbroads[i];
           if (!studyingAbroad || (!studyingAbroad.countryName)) {
-            alert(`해외경험 ${i + 1}: 필수값을 입력해주세요.`);
+            toast.error(`해외경험 ${i + 1}: 필수값을 입력해주세요.`);
             return;
           }
       }
@@ -570,7 +572,7 @@ const handleCreate = async () => {
       for (let i = 0; i < resumeStore.languages.length; i++) {
           const language = resumeStore.languages[i];
           if (!language || (language.testDiv === '' || language.languageName === '')) {
-            alert(`어학 ${i + 1}: 필수값을 입력해주세요.`);
+            toast.error(`어학 ${i + 1}: 필수값을 입력해주세요.`);
             return;
           }
       }
@@ -580,7 +582,7 @@ const handleCreate = async () => {
       for (let i = 0; i < resumeStore.certifications.length; i++) {
           const certification = resumeStore.certifications[i];
           if (!certification || (!certification.certName)) {
-            alert(`자격증 ${i + 1}: 필수값을 입력해주세요.`);
+            toast.error(`자격증 ${i + 1}: 필수값을 입력해주세요.`);
             return;
           }
       }
@@ -590,7 +592,7 @@ const handleCreate = async () => {
       for (let i = 0; i < resumeStore.trainings.length; i++) {
           const training = resumeStore.trainings[i];
           if (!training || (!training.trainingName)) {
-            alert(`교육이수 ${i + 1}: 필수값을 입력해주세요.`);
+            toast.error(`교육이수 ${i + 1}: 필수값을 입력해주세요.`);
             return;
           }
       }
@@ -600,7 +602,7 @@ const handleCreate = async () => {
       for (let i = 0; i < resumeStore.awards.length; i++) {
           const award = resumeStore.awards[i];
           if (!award || (!award.awardName)) {
-            alert(`수상 ${i + 1}: 필수값을 입력해주세요.`);
+            toast.error(`수상 ${i + 1}: 필수값을 입력해주세요.`);
             return;
           }
       }
@@ -610,7 +612,7 @@ const handleCreate = async () => {
       for (let i = 0; i < resumeStore.customLetters.length; i++) {
           const customLetter = resumeStore.customLetters[i];
           if (!customLetter || (!customLetter.title || !customLetter.contents)) {
-            alert(`자기소개서 ${i + 1}: 필수값을 입력해주세요.`);
+            toast.error(`자기소개서 ${i + 1}: 필수값을 입력해주세요.`);
             return;
           }
       }
@@ -620,7 +622,7 @@ const handleCreate = async () => {
       for (let i = 0; i < resumeStore.portfolios.length; i++) {
           const portfolio = resumeStore.portfolios[i];
           if (!portfolio || (portfolio.portfolioDiv === '' || portfolio.portfolioType === '') || (!portfolio.portfolioUrl && !portfolio.portfolioFile)) {
-            alert(`포트폴리오 ${i + 1}: 필수값을 입력해주세요.`);
+            toast.error(`포트폴리오 ${i + 1}: 필수값을 입력해주세요.`);
             return;
           }
       }
@@ -641,8 +643,8 @@ const handleCreate = async () => {
 
 .resume-sidebar {
   position: fixed;
-  top: 200px;
-  right: 220px;
+  top: 170px;
+  right: 200px;
   width: 200px;
   background-color: #ffffff;
   padding: 15px;
@@ -658,11 +660,15 @@ const handleCreate = async () => {
 
 .resume-sidebar li {
   display: flex;
-  align-items: center; /* 세로 정렬을 맞추기 위해 align-items 설정 */
-  margin-bottom: 15px;
-  position: relative; /* 버튼을 항목 텍스트와 띄우기 위해 relative 위치 설정 */
-  padding-right: 40px; /* 버튼 공간을 위한 패딩 */
-  text-align: left; /* 항목 텍스트 왼쪽 정렬 */
+  align-items: center;
+  /* 세로 정렬을 맞추기 위해 align-items 설정 */
+  margin-bottom: 10px;
+  position: relative;
+  /* 버튼을 항목 텍스트와 띄우기 위해 relative 위치 설정 */
+  padding-right: 40px;
+  /* 버튼 공간을 위한 패딩 */
+  text-align: left;
+  /* 항목 텍스트 왼쪽 정렬 */
 }
 
 .resume-sidebar li .span-scroll {

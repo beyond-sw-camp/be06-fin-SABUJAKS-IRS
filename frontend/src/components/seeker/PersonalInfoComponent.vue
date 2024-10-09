@@ -27,7 +27,7 @@
 
             <div class="form-item">
                 <label for="email">이메일 <span class="required">*</span></label>
-                <input type="email" id="email" v-model="email" />
+                <input type="email" id="email" v-model="email" readonly />
             </div>
         </div>
     </div>
@@ -45,7 +45,8 @@
     </div>
 
     <div class="form-item">
-        <label for="address">주소 <span class="required">*</span></label>
+        <label for="address">주소 <span class="required">*</span><span style="font-size: 12px;"> (상세주소를 이어서
+            작성해주세요)</span></label>
         <input
         type="text"
         id="address"
@@ -73,8 +74,10 @@
 <script setup>
 import { ref, defineEmits, onMounted, watch, defineProps } from 'vue';
 import { UseResumeStore } from '@/stores/UseResumeStore';
+import { UseAuthStore } from '@/stores/UseAuthStore';
 
 const store = UseResumeStore();
+const authStore = UseAuthStore();
 const props = defineProps({
     data: {
         type: Object
@@ -93,8 +96,8 @@ const personalInfo = props.data || {
 
 const name = ref(personalInfo.name);
 const birth = ref(personalInfo.birth);
-const gender = ref(personalInfo.gender);
-const email = ref(personalInfo.email);
+const gender = ref(personalInfo.gender ? personalInfo.gender: '');
+const email = ref(authStore.userInfo.email);
 const phone = ref(personalInfo.phone);
 const tel = ref(personalInfo.tel);
 const address = ref(personalInfo.address);

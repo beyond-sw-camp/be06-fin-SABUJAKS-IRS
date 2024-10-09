@@ -12,7 +12,7 @@
                         <h1>공고별 지원서 관리</h1>
                     </div>
 
-                    <div class="content-info">
+                    <div class="content">
                         <!-- 지원서 항목 리스트 -->
                         <div v-for="(announceResume, index) in paginatedResumes" :key="index" class="application-item">
                             <div class="status">{{ checkApplicationResult(
@@ -80,21 +80,6 @@ const totalPages = computed(() => {
 const formatDate = (dateString) => {
     return dateString.split('T')[0];
 }
-
-// // 모집 상태를 확인하는 함수
-// const checkAnnouncementStatus = (start, end) => {
-//     const currentDate = new Date();
-//     const announcementStart = new Date(start);
-//     const announcementEnd = new Date(end);
-
-//     if (currentDate >= announcementStart && currentDate <= announcementEnd) {
-//         return '진행중';
-//     } else if (currentDate > announcementEnd) {
-//         return '마감';
-//     } else {
-//         return '시작 전';
-//     }
-// };
 
 // 결과를 확인하는 함수
 const checkApplicationResult = (resumeResult, interviewOneResult, interviewTwoResult, finalResult) => {
@@ -243,7 +228,7 @@ nav ul li a {
     margin-bottom: 20px;
 }
 
-.content-info {
+.content {
     background-color: white;
     border-radius: 10px;
     padding: 20px;
@@ -331,73 +316,6 @@ nav ul li a {
 }
 
 
-/* 홈 메뉴에서 썼던 스타일 */
-/* .main-content {
-    width: 80%;
-    padding: 30px;
-    border-radius: 10px;
-    background-color: white;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.header h1 {
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.announce-profile {
-    background-color: #212b36;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.announce-profile:hover {
-    background-color: #212b36;
-}
-
-.content {
-    background-color: #f9fafb;
-    padding: 20px;
-    border-radius: 10px;
-}
-
-.info-section {
-    margin-bottom: 20px;
-}
-
-.info-section h2 {
-    font-size: 18px;
-    margin-bottom: 10px;
-}
-
-.info-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-}
-
-.label {
-    font-weight: bold;
-    color: #333;
-}
-
-.value {
-    color: #555;
-} */
-
-
-/*  */
-
 /* 드롭다운 메뉴 스타일 */
 .dropdown-menu {
     display: none;
@@ -428,17 +346,18 @@ nav ul li a {
 }
 
 .pagination {
-    display: flex;
-    justify-content: center;
-    margin: 50px 10px 0;
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
 }
 
 .pagination button {
-    background-color: #f1f1f1;
-    border: none;
-    padding: 10px 15px;
-    margin: 0 5px;
-    cursor: pointer;
+  background-color: #f1f1f1;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  margin: 0 5px;
+  cursor: pointer;
 }
 
 .pagination button.active {
