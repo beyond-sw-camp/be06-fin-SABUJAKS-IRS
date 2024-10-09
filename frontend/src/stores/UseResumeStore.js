@@ -454,7 +454,7 @@ export const UseResumeStore = defineStore('resume', {
                 }
             }
         },
-        async readSubmitInfo(announcementIdx) {
+        async readSubmitInfo(router, announcementIdx) {
             const toast = useToast();
             try {
                 const response = await axios.get(`${backend}/resume/read/submit-info?announcementIdx=${announcementIdx}`, {
@@ -464,6 +464,11 @@ export const UseResumeStore = defineStore('resume', {
                 return response.data;
             } catch (error) {
                 toast.error(error.response.data.message);
+                if(error.response.data.code === 2007) {
+                    router.push(`/seeker/announce/detail/${announcementIdx}`);
+                } else {
+                    router.push('/');
+                }
             }
         },
         async readIntegrated(router) {
