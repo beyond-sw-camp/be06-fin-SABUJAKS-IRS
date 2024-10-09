@@ -5,8 +5,10 @@ import com.sabujaks.irs.domain.company.repository.CompanyRepository;
 import com.sabujaks.irs.domain.resume.model.entity.Resume;
 import com.sabujaks.irs.domain.resume.model.response.ResumeReadAllRecruiterRes;
 import com.sabujaks.irs.domain.resume.repository.ResumeRepository;
+import com.sabujaks.irs.domain.total_process.model.entity.TotalProcess;
+import com.sabujaks.irs.domain.total_process.repository.TotalProcessRepository;
 import com.sabujaks.irs.global.security.CustomUserDetails;
-import com.sabujaks.irs.global.utils.email.model.response.ResumeRejectRes;
+import com.sabujaks.irs.global.utils.email.model.response.ResumeResultRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,29 +21,27 @@ public class EmailService {
 
     private final ResumeRepository resumeRepository;
     private final CompanyRepository companyRepository;
+    private final TotalProcessRepository totalProcessRepository;
 
-    public List<ResumeRejectRes> getRejectInfo(CustomUserDetails customUserDetails, List<ResumeReadAllRecruiterRes> resumeList) {
-
+    public List<ResumeResultRes> getInfo(CustomUserDetails customUserDetails, List<ResumeReadAllRecruiterRes> resumeList) {
         Company company = companyRepository.findByRecruiterIdx(customUserDetails.getIdx()).get();
 
-        List<ResumeRejectRes> resumeRejectResList = new ArrayList<>();
-        for(ResumeReadAllRecruiterRes res: resumeList) {
-            Resume resume;
-            if(res.getResumeResult()) {
-                resume = resumeRepository.findByResumeIdx(res.getResumeIdx()).get();
-            } else {
-                continue;
-            }
+        List<ResumeResultRes> resumeResultResList = new ArrayList<>();
 
-            resumeRejectResList.add(ResumeRejectRes.builder()
+        for(ResumeReadAllRecruiterRes res: resumeList) {
+            Resume resume = resumeRepository.findByResumeIdx(res.getResumeIdx()).get();
+
+            resumeResultResList.add(ResumeResultRes.builder()
                             .seekerIdx(resume.getSeeker().getIdx())
                             .seekerName(resume.getSeeker().getName())
                             .seekerEmail(resume.getSeeker().getEmail())
                             .companyName(company.getName())
                             .announcementTitle(resume.getAnnouncement().getTitle())
+                            .resumeIdx(resume.getIdx())
+                            .announcementIdx(resume.getAnnouncement().getIdx())
                             .build());
         }
 
-        return resumeRejectResList;
+        return resumeResultResList;
     }
 }

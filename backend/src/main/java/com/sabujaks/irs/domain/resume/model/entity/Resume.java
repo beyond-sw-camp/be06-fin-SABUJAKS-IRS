@@ -1,5 +1,6 @@
 package com.sabujaks.irs.domain.resume.model.entity;
 
+import com.sabujaks.irs.domain.alarm.model.entity.Alarm;
 import com.sabujaks.irs.domain.announcement.model.entity.Announcement;
 import com.sabujaks.irs.domain.auth.model.entity.Seeker;
 import com.sabujaks.irs.global.common.exception.BaseException;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Builder
@@ -45,4 +47,8 @@ public class Resume {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seeker_idx")
     private Seeker seeker;
+
+    // 알람 테이블과 1:n
+    @OneToMany(mappedBy = "resume")
+    private List<Alarm> alarm;
 }

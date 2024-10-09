@@ -2,6 +2,7 @@ package com.sabujaks.irs.domain.alarm.model.entity;
 
 import com.sabujaks.irs.domain.auth.model.entity.Seeker;
 import com.sabujaks.irs.domain.interview_schedule.model.entity.InterviewSchedule;
+import com.sabujaks.irs.domain.resume.model.entity.Resume;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,6 +41,10 @@ public class Alarm {
     @ManyToOne
     @JoinColumn(name = "interview_schedule_idx")
     private InterviewSchedule interviewSchedule;
+
+    @ManyToOne
+    @JoinColumn(name = "resume")
+    private Resume resume;
 
     public void setStatus(Boolean status) {
         this.status = status;
