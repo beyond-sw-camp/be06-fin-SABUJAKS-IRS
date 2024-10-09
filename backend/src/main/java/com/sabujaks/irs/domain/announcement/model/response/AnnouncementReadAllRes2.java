@@ -49,6 +49,9 @@ public class AnnouncementReadAllRes2 {
     // UUID 인증코드
     private String uuid;
 
+    private Integer countInterviewSchedule;
+    private Integer countReSchedule;
+
     // 관계 데이터
     private RecruiterRes recruiterRes;
 }

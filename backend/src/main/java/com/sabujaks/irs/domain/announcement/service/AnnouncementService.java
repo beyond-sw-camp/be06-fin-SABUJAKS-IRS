@@ -17,6 +17,9 @@ import com.sabujaks.irs.domain.company.model.entity.Company;
 import com.sabujaks.irs.domain.company.repository.CompanyBenefitsRepository;
 import com.sabujaks.irs.domain.company.repository.CompanyRepository;
 import com.sabujaks.irs.domain.company.service.CompanyService;
+import com.sabujaks.irs.domain.interview_schedule.model.entity.InterviewSchedule;
+import com.sabujaks.irs.domain.interview_schedule.repository.InterviewScheduleRepository;
+import com.sabujaks.irs.domain.interview_schedule.repository.ReScheduleRepository;
 import com.sabujaks.irs.domain.resume.model.entity.Resume;
 import com.sabujaks.irs.domain.system.model.entity.BaseInfo;
 import com.sabujaks.irs.domain.system.model.response.BaseInfoReadRes;
@@ -48,6 +51,8 @@ public class AnnouncementService {
     private final ResumeRepository resumeRepository;
     private final CompanyService companyService;
     private final BaseInfoService baseInfoService;
+    private final InterviewScheduleRepository interviewScheduleRepository;
+    private final ReScheduleRepository reScheduleRepository;
 
 
     /*******채용담당자 공고 등록 (step1)***********/
@@ -297,6 +302,7 @@ public class AnnouncementService {
         Optional<Recruiter> recruiter = recruiterRepository.findByRecruiterIdx(recruiterIdx);
         Page<Announcement> result;
 
+        // 공고 리스트
         if(careerBase.equals("전체")) {
             result = announcementDslRepository.findByRecruiterIdx(recruiterIdx, pageable);
         } else {
@@ -305,6 +311,18 @@ public class AnnouncementService {
 
         List<AnnouncementReadAllRes2> announcementList = new ArrayList<>();
         for(Announcement announcement : result) {
+            // 해당 공고에 생성된 인터뷰 일정 리스트
+
+
+
+            Integer countInterviewSchedule = interviewScheduleRepository.countInterviewScheduleByAnnouncementIdx(announcement.getIdx());
+            List<InterviewSchedule> interviewScheduleList = interviewScheduleRepository.findByAnnouncementIdx(announcement.getIdx()).get();
+            Integer countReSchedule = 0;
+            if(careerBase.equals("전체")) {
+                for(InterviewSchedule interviewSchedule : interviewScheduleList) {
+                    countReSchedule += reScheduleRepository.countReScheduleByInterviewIdx(interviewSchedule.getIdx());
+                }
+            }
             announcementList.add(AnnouncementReadAllRes2.builder()
                     .idx(announcement.getIdx())
                     .title(announcement.getTitle())
@@ -326,6 +344,8 @@ public class AnnouncementService {
                     .process(announcement.getProcess())
                     .note(announcement.getNote())
                     .uuid(announcement.getUuid())
+                    .countInterviewSchedule(countInterviewSchedule)
+                    .countReSchedule(countReSchedule)
                     .recruiterRes(RecruiterRes.builder()
                             .email(recruiter.get().getEmail())
                             .name(recruiter.get().getName())
