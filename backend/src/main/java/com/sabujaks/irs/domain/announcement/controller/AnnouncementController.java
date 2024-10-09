@@ -105,4 +105,15 @@ public class AnnouncementController {
         );
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.ANNOUNCEMENT_READ_ALL_SUCCESS, response));
     }
+
+    // 지원서 폼 조회
+    @GetMapping("/custom-form/read")
+    public ResponseEntity<BaseResponse<CustomFormReadAllRes>> readCustomForm(
+        @AuthenticationPrincipal CustomUserDetails customUserDetails,
+        Long announcementIdx) throws BaseException {
+        CustomFormReadAllRes response = announcementService.readCustomForm(customUserDetails,announcementIdx);
+
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.ANNOUNCEMENT_READ_CUSTOM_FORM_SUCCESS, response));
+    }
+
 }

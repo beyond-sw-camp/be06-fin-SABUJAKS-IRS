@@ -381,4 +381,40 @@ public class AnnouncementService {
 
     }
 
+    // 지원서 폼 조회
+    public CustomFormReadAllRes readCustomForm(CustomUserDetails customUserDetails, Long announcementIdx) throws BaseException {
+        // 채용담당자 유저가 아닐 때
+        Long recruiterIdx = customUserDetails.getIdx();
+        Optional<Recruiter> resultRecruiter = recruiterRepository.findByRecruiterIdx(recruiterIdx);
+        if(resultRecruiter.isEmpty()) {
+            throw new BaseException(BaseResponseMessage.ANNOUNCEMENT_REGISTER_STEP_ONE_FAIL_NOT_RECRUITER);
+        }
+
+        List<CustomForm> resultCustomForm = customFormRepository.findAllByAnnouncementIdx(announcementIdx);
+        if(resultCustomForm.isEmpty()) {
+            // 저장된 폼이 없으면
+            throw new BaseException(BaseResponseMessage.ANNOUNCEMENT_READ_CUSTOM_FORM_FAIL);
+        }
+
+        // 저장된 폼이 있으면, 폼 코드로 설명 찾아서 저장
+        List<String> customFormList = new ArrayList<>();
+        for(CustomForm customForm : resultCustomForm) {
+            customFormList.add((baseInfoRepository.findByCode(customForm.getCode())).getDescription());
+        }
+
+        // 자기소개서도 저장
+        List<CustomLetterForm> resultLetterForm = letterFormRepository.findAllByAnnouncementIdx(announcementIdx);
+
+        List<String> customLetterList = new ArrayList<>();
+        for(CustomLetterForm customLetterForm : resultLetterForm) {
+            customLetterList.add(customLetterForm.getTitle()+" / "+customLetterForm.getChatLimit());
+        }
+
+        CustomFormReadAllRes customFormReadAllRes = CustomFormReadAllRes.builder()
+                .customFormList(customFormList)
+                .customLetterList(customLetterList)
+                .build();
+
+        return customFormReadAllRes;
+    }
 }
