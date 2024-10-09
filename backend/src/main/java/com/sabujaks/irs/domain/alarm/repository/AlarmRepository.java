@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface AlarmRepository extends JpaRepository<Alarm, Long> {
 
     Optional<List<Alarm>> findBySeekerIdx(Long seekerIdx);
+
+    Optional<Alarm> findByResumeIdx(Long resumeIdx);
 }

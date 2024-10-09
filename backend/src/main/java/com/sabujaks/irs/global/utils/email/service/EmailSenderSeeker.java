@@ -8,11 +8,14 @@ import com.sabujaks.irs.domain.auth.model.response.SeekerInfoGetRes;
 import com.sabujaks.irs.domain.auth.repository.SeekerRepository;
 import com.sabujaks.irs.domain.interview_schedule.model.entity.InterviewSchedule;
 import com.sabujaks.irs.domain.interview_schedule.model.response.InterviewScheduleRes;
+import com.sabujaks.irs.domain.resume.model.entity.Resume;
+import com.sabujaks.irs.domain.total_process.model.entity.TotalProcess;
+import com.sabujaks.irs.domain.total_process.repository.TotalProcessRepository;
 import com.sabujaks.irs.domain.video_interview.model.response.VideoInterviewCreateRes;
 import com.sabujaks.irs.global.common.exception.BaseException;
 import com.sabujaks.irs.global.common.responses.BaseResponse;
 import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
-import com.sabujaks.irs.global.utils.email.model.response.ResumeRejectRes;
+import com.sabujaks.irs.global.utils.email.model.response.ResumeResultRes;
 import freemarker.template.Template;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +32,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +44,7 @@ public class EmailSenderSeeker {
     private final AlarmRepository alarmRepository;
     private final SeekerRepository seekerRepository;
     private final View error;
+    private final TotalProcessRepository totalProcessRepository;
 
     public void sendSubmitResumeEmail() throws RuntimeException {
         try {
@@ -49,43 +54,59 @@ public class EmailSenderSeeker {
         }
     }
 
-    public void sendResumeResultEmail(List<ResumeRejectRes> rejectInfo) throws RuntimeException {
+    public void sendResumeResultEmail(List<ResumeResultRes> getInfo) throws RuntimeException {
         try {
-            for(ResumeRejectRes dto : rejectInfo) {
-                MimeMessage message = mailSender.createMimeMessage();
-                MimeMessageHelper helper = new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
-                helper.setTo(dto.getSeekerEmail());
-                helper.setSubject("[IRS] 서류전형 결과 안내");
+            for(ResumeResultRes dto : getInfo) {
+                Optional<Alarm> optionalAlarm = alarmRepository.findByResumeIdx(dto.getResumeIdx());
+                if (optionalAlarm.isPresent()) {
+                    continue; // checkAlarm이 존재하면 continue
+                } else {
+                    MimeMessage message = mailSender.createMimeMessage();
+                    MimeMessageHelper helper = new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
+                    helper.setTo(dto.getSeekerEmail());
+                    helper.setSubject("[IRS] 서류전형 결과 안내");
 
-                // 템플릿 내부에서 처리한 변수값 매핑
-                Map<String, Object> model = new HashMap<>();
-                model.put("name", dto.getSeekerName());
-                model.put("companyName", dto.getCompanyName());
-                model.put("announcementTitle", dto.getAnnouncementTitle());
+                    // 템플릿 내부에서 처리한 변수값 매핑
+                    Map<String, Object> model = new HashMap<>();
+                    model.put("name", dto.getSeekerName());
+                    model.put("companyName", dto.getCompanyName());
+                    model.put("announcementTitle", dto.getAnnouncementTitle());
 
-                // 메일로 전송할 템플릿 렌더링
-                // 디렉토리 지정한 configure파일에서 객체 얻어와서 해당 객체로 템플릿 찾아서 얻어온다.
-                Template template = freemarkerConfigurer.getConfiguration().getTemplate("ResumeRejectEmail.html");
+                    // 메일로 전송할 템플릿 렌더링
+                    // 디렉토리 지정한 configure파일에서 객체 얻어와서 해당 객체로 템플릿 찾아서 얻어온다.
+                    TotalProcess totalProcess = totalProcessRepository.findByAnnouncementIdxAndSeekerIdx(dto.getAnnouncementIdx(), dto.getSeekerIdx()).get();
+                    Template template = null;
+                    if(totalProcess != null) {
+                        if(totalProcess.getResumeResult()) {
+                            template = freemarkerConfigurer.getConfiguration().getTemplate("ResumeAcceptEmail.html");
+                        } else {
+                            template = freemarkerConfigurer.getConfiguration().getTemplate("ResumeRejectEmail.html");
+                        }
+                    }
 
-                String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
-                helper.setText(html, true); // Set HTML content
+                    String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
+                    helper.setText(html, true); // Set HTML content
 
-                // Alarm 저장 로직
-                Seeker seeker = seekerRepository.findBySeekerIdx(dto.getSeekerIdx())
-                        .orElseThrow(() -> new BaseException(BaseResponseMessage.MEMBER_NOT_FOUND));
+                    // Alarm 저장 로직
+                    Seeker seeker = seekerRepository.findBySeekerIdx(dto.getSeekerIdx())
+                            .orElseThrow(() -> new BaseException(BaseResponseMessage.MEMBER_NOT_FOUND));
 
-                Alarm alarm = Alarm.builder()
-                        .type("서류전형 결과 안내")
-                        .status(false)
-                        .message(html)
-                        .seeker(seeker)
-                        .createdAt(LocalDateTime.now())
-                        .build();
+                    Alarm alarm = Alarm.builder()
+                            .type("서류전형 결과 안내")
+                            .status(false)
+                            .message(html)
+                            .seeker(seeker)
+                            .createdAt(LocalDateTime.now())
+                            .resume(Resume.builder()
+                                    .idx(dto.getResumeIdx())
+                                    .build())
+                            .build();
 
-                alarmRepository.save(alarm);
+                    alarmRepository.save(alarm);
 
 
-                mailSender.send(message);
+                    mailSender.send(message);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

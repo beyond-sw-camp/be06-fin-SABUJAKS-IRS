@@ -5,10 +5,12 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class ResumeRejectRes {
+public class ResumeResultRes {
     private Long seekerIdx;
     private String seekerName;
     private String seekerEmail;
     private String companyName;
     private String announcementTitle;
+    private Long resumeIdx;
+    private Long announcementIdx;
 }
