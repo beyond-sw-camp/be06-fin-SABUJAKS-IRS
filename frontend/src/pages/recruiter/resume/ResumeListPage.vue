@@ -52,10 +52,12 @@ import MainHeaderComponent from "@/components/recruiter/MainHeaderComponent.vue"
 import { onMounted, ref, computed } from 'vue';
 import { UseResumeStore } from '@/stores/UseResumeStore';
 import { useRoute, useRouter } from 'vue-router';
+import { useToast } from "vue-toastification";
 
 const resumeStore = UseResumeStore();
 const route = useRoute();
 const router = useRouter();
+const toast = useToast();
 
 const currentPage = ref(1);
 const pageSize = 10;
@@ -66,7 +68,7 @@ onMounted(async () => {
 
 const fetchResumes = async (page) => {
     currentPage.value = page;
-    await resumeStore.readAllRecruiter(route.params.announcementIdx, page - 1, pageSize);
+    await resumeStore.readAllRecruiter(router, route.params.announcementIdx, page - 1, pageSize);
 };
 
 const paginatedResumes = computed(() => {
@@ -99,7 +101,7 @@ const sendResult = async () => {
         if (await resumeStore.sendResult(resumeStore.resumeList)) {
             window.location.reload();
         } else {
-            alert("일괄 처리 과정에서 오류가 발생했습니다. 관리자에게 문의하십시오.")
+          toast.error("일괄 처리 과정에서 오류가 발생했습니다. 관리자에게 문의하십시오.")
         }
     }
 }
@@ -112,12 +114,12 @@ const sendResult = async () => {
 }
 
 #content {
-    flex: 1;
-    margin-left: 200px; /* 사이드바 너비만큼 왼쪽 여백 추가 */
-    padding: 0 0 150px 0;
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
+  flex: 1;
+  margin-left: 200px; /* 사이드바 너비만큼 왼쪽 여백 추가 */
+  padding: 150px 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
 }
 
 #content table {
@@ -162,21 +164,22 @@ th {
 }
 
 .pagination {
-    display: flex;
-    justify-content: center;
-    margin: 20px 0;
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
 }
 
 .pagination button {
-    background-color: #f1f1f1;
-    border: none;
-    padding: 10px 15px;
-    margin: 0 5px;
-    cursor: pointer;
+  background-color: #f1f1f1;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  margin: 0 5px;
+  cursor: pointer;
 }
 
-.pagination button.active {
+/* .pagination button.active {
     background-color: #212b36;
     color: white;
-}
+} */
 </style>
