@@ -52,12 +52,10 @@ import MainHeaderComponent from "@/components/recruiter/MainHeaderComponent.vue"
 import { onMounted, ref, computed } from 'vue';
 import { UseResumeStore } from '@/stores/UseResumeStore';
 import { useRoute, useRouter } from 'vue-router';
-import { useToast } from "vue-toastification";
 
 const resumeStore = UseResumeStore();
 const route = useRoute();
 const router = useRouter();
-const toast = useToast();
 
 const currentPage = ref(1);
 const pageSize = 10;
@@ -98,11 +96,7 @@ const checkApplicationResult = (resumeResult) => {
 
 const sendResult = async () => {
     if (confirm("서류결과를 일괄 전송하시겠습니까?")) {
-        if (await resumeStore.sendResult(resumeStore.resumeList)) {
-            window.location.reload();
-        } else {
-          toast.error("일괄 처리 과정에서 오류가 발생했습니다. 관리자에게 문의하십시오.")
-        }
+        await resumeStore.sendResult(router, resumeStore.resumeList);
     }
 }
 </script>
