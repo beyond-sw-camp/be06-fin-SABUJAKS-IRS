@@ -4,6 +4,7 @@ package com.sabujaks.irs.global.utils.email.service;
 import com.sabujaks.irs.domain.alarm.model.entity.Alarm;
 import com.sabujaks.irs.domain.alarm.repository.AlarmRepository;
 import com.sabujaks.irs.domain.auth.model.entity.Seeker;
+import com.sabujaks.irs.domain.auth.model.response.AuthSignupRes;
 import com.sabujaks.irs.domain.auth.model.response.SeekerInfoGetRes;
 import com.sabujaks.irs.domain.auth.repository.SeekerRepository;
 import com.sabujaks.irs.domain.interview_schedule.model.entity.InterviewSchedule;
@@ -17,6 +18,7 @@ import com.sabujaks.irs.global.common.responses.BaseResponse;
 import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
 import com.sabujaks.irs.global.utils.email.model.response.ResumeResultRes;
 import freemarker.template.Template;
+import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -27,12 +29,10 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -45,6 +45,43 @@ public class EmailSenderSeeker {
     private final SeekerRepository seekerRepository;
     private final View error;
     private final TotalProcessRepository totalProcessRepository;
+
+    public void signupEmail(AuthSignupRes response, String uuid) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
+            helper.setTo(response.getEmail());
+
+            if(Objects.equals(response.getRole(),"ROLE_RECRUITER")){
+                if(!response.getEmail_auth() && !response.getInactive()){
+                    helper.setSubject("IRS - 채용 담당자로 가입하신걸 환영합니다.");
+                } else {
+                    helper.setSubject("IRS - 채용 담당자 계정 복구 이메일 검증");
+                }
+            } else if (Objects.equals(response.getRole(), "ROLE_SEEKER")) {
+                if(!response.getEmail_auth() && !response.getInactive()){
+                    helper.setSubject("IRS - 지원자로 가입하신걸 환영합니다.");
+                } else {
+                    helper.setSubject("IRS - 지원자 계정 복구 이메일 검증");
+                }
+            } else {
+                throw new BaseException(BaseResponseMessage.AUTH_EMAIL_VERIFY_FAIL_INVALID_ROLE);
+            }
+
+            // 템플릿 내부에서 처리한 변수값 매핑
+            Map<String, Object> model = new HashMap<>();
+            model.put("name", response.getEmail());
+            model.put("emailVerifyUrl", "https://www.sabujaks-irs.kro.kr/api/api/auth/email-verify?email="+response.getEmail()+"&role="+response.getRole()+"&uuid="+uuid);
+
+            Template template = freemarkerConfigurer.getConfiguration().getTemplate("SignupEmail.html");
+            String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
+            helper.setText(html, true); // Set HTML content
+            mailSender.send(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+            new BaseResponse<>(BaseResponseMessage.EMAIL_SEND_FAIL);
+        }
+    }
 
     public void sendSubmitResumeEmail() throws RuntimeException {
         try {
