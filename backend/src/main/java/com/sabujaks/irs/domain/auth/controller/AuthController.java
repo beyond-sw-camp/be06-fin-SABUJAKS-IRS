@@ -57,7 +57,7 @@ public class AuthController {
             headers.setLocation(URI.create("https://www.sabujaks-irs/seeker/login"));
             return new ResponseEntity<>(headers, HttpStatus.FOUND);
         } else {
-            headers.setLocation(URI.create("https://www.sabujaks-irs/seeker/login?error=true"));
+            headers.setLocation(URI.create("https://www.sabujaks-irs.kro.kr/seeker/login?error=true"));
             return new ResponseEntity<>(headers, HttpStatus.FOUND);
         }
     }
