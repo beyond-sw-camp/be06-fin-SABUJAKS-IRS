@@ -38,7 +38,10 @@
                         <h4 style="margin-bottom: 10px;" class="ad-text2">기업정보</h4>
                         <div class="ad-logo">
                             <a href="">
-                                <img src="">
+                                <!-- companyStore.imgUrlList에 이미지가 있을 때만 img 태그를 렌더링 -->
+                                <img v-if="companyStore.imgUrlList && companyStore.imgUrlList.length > 0"
+                                    :src="companyStore.imgUrlList[0]" alt="기업 로고" class="center-cropped-image"
+                                    style="width: 90px; height: 90px; object-fit: cover; border-radius: 5px;">
                             </a>
                         </div>
                         <div class="ad-list">
@@ -98,14 +101,10 @@
 
             </section>
             <div class="ad-apply">
-                <button type="button" class="ad-bgbtn" @click="goToSubmitPage(announcementDetail.announcementIdx)">
-                    <img src="announce-detail-check.png" alt="">
-                    <span>&nbsp;즉시지원</span>
+                <button type="button" class="ad-bgbtn" :disabled="remainingTime === '지원기간이 마감되었습니다.'"
+                    @click="remainingTime !== '지원기간이 마감되었습니다.' && goToSubmitPage(announcementDetail.announcementIdx)">
+                    <span>&nbsp;{{ remainingTime === '지원기간이 마감되었습니다.' ? '지원 마감' : '즉시지원' }}</span>
                 </button>
-                <!-- <button type="button" class="ad-bgbtn">
-                    <img src="announce-detail-star-fill.png" alt="">
-                    <span>&nbsp;스크랩</span>
-                </button> -->
             </div>
             <!-- 공고 이미지가 있을 때 -->
             <div class="image-display-container" v-if="announcementDetail.imgUrl">
@@ -117,8 +116,9 @@
                 <h4 class="add-title">상세요강</h4>
                 <br>
                 <div class="image-preview-container">
-                    <!-- 이미지 리스트를 보여줌 -->
-                    <div v-for="(imgUrl, index) in companyStore.imgUrlList" :key="index" class="image-preview">
+                    <!-- 이미지 리스트 중 두 번째 요소부터 보여줌 -->
+                    <div v-for="(imgUrl, index) in companyStore.imgUrlList.slice(1)" :key="index + 1"
+                        class="image-preview">
                         <img :src="imgUrl" alt="Company Image" />
                     </div>
                 </div>
@@ -278,11 +278,11 @@ const fetchAnnouncementDetail = async () => {
 
 // 즉시지원 페이지로 이동하는 함수
 const goToSubmitPage = (announcementIdx) => {
-  if (announcementIdx) {
-    router.push(`/seeker/resume/submit/${announcementIdx}`);
-  } else {
-    console.error('Announcement ID가 유효하지 않습니다.');
-  }
+    if (announcementIdx) {
+        router.push(`/seeker/resume/submit/${announcementIdx}`);
+    } else {
+        console.error('Announcement ID가 유효하지 않습니다.');
+    }
 };
 
 // 컴포넌트가 로드될 때 데이터를 가져옴
@@ -479,10 +479,11 @@ onUnmounted(() => {
     position: absolute;
     top: 0;
     right: 0;
-    width: 228px;
-    height: 111px;
-    padding: 0;
-    margin: 0;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin: 18px 18px 0 0;
+    padding: 0 0 10px 0;
     display: flex;
     justify-content: center;
     align-items: center;

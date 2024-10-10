@@ -171,6 +171,7 @@ onMounted(async () => {
               <div class="flex flex-col">
                 <img src="@/assets/img/img_upload.png" style="width: 80px; height: 80px" />
                 <p id="image-count">{{ imageCount }} / 10</p>
+                <p>📢 첫번째는 기업 로고이미지, 두번째는 공고 목록에 사용할 기업 대표이미지를 넣어주세요. 그 이후는 자유롭게 넣어주세요.</p>
               </div>
             </label>
           </div>
@@ -268,7 +269,7 @@ onMounted(async () => {
           <h2>기업 복리후생 추가</h2>
           <!-- 대분류 및 소분류 복리후생 -->
           <div style="padding: 10px 10px;">
-            <div v-for="(category, index) in categories" :key="index" class="category-box">
+            <div v-for="(category, index) in categories" :key="index" class="category-box" style="margin-bottom: 26px;">
               <h3>{{ category.description }}</h3>
               <div class="subcategories">
                 <button class="button-be" v-for="(subcategory, subIndex) in category.subcategories" :key="subIndex"
