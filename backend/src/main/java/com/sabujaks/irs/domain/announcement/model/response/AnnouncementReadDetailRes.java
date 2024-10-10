@@ -65,5 +65,6 @@ public class AnnouncementReadDetailRes {
     private String companyUrl; // 홈페이지url
     private String companyAddress; // 기업주소
     private List<BenefitCategory> companyBenefitsDataList; // 복리후생 카테고리 리스트
+    private List<String> imgList; // 기업이미지 url 리스트
 
 }
