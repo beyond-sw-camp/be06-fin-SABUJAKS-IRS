@@ -2,7 +2,7 @@
   <div class="body-arp">
     <SeekerHeaderComponent></SeekerHeaderComponent>
     <section class="main-content">
-<!--    <section id="wrap">-->
+      <!--    <section id="wrap">-->
       <h2>직무 전체</h2>
       <div class="filter-section">
         <!-- 기업형태 필터 -->
@@ -37,11 +37,11 @@
           <button class="dropdown-btn" @click.stop="toggleDropdown('모집직무')">모집직무</button>
           <div class="filter-dropdown" v-show="dropdownOpen['모집직무']">
             <!-- 큰 카테고리 이름을 동적으로 렌더링 -->
-            <div v-for="category in categoryData" :key="category">
+            <div v-for="category in categoryData" :key="category.code">
               <label>
-                <input type="checkbox" :value="category" v-model="checkedFilters['모집직무']"
+                <input type="checkbox" :value="category.code" v-model="checkedFilters['모집직무']"
                   @change="updateFilters('모집직무', category); closeDropdown('모집직무')" />
-                {{ category }}
+                {{ category.description }}
               </label>
             </div>
           </div>
@@ -79,11 +79,17 @@
       <div class="selected-filters pb-30">
         <div id="selected-filters-list">
           <span v-for="filter in selectedFilters" :key="filter.name + filter.value" @click="removeFilter(filter)">
-            {{ filter.name }}: {{ filter.value }} ✕
+            {{ filter.name }}:
+            <span v-if="filter.name === '모집직무'">
+              {{ getCategoryDescription(filter.value) }}
+            </span>
+            <span v-else>
+              {{ filter.value }}
+            </span> ✕
           </span>
         </div>
-        <a href="#" id="reset-filters" class="reset-filters" @click.prevent="resetFilters"> 필터 초기화🔄️</a>
-        <p> 키워드로 검색 시, 토글을 초기화 해주세요. 필터로 검색 시, 카테고리당 하나의 필터만 추가하세요.</p>
+        <a href="#" id="reset-filters" class="reset-filters" @click.prevent="resetFilters"> 🔄️ 필터 초기화</a>
+        <p> 📢 키워드로 검색 시, 필터를 초기화 해주세요. 필터로 검색 시, 카테고리당 하나의 필터만 추가하세요.</p>
       </div>
 
       <!-- 검색 결과 -->
@@ -107,7 +113,7 @@
           <div id="searchList" class="recruitList">
             <ul data-pageno="1" data-count="20" data-totalcount="3641" data-totalcounttext="3,641">
               <li class="option" v-for="(announcement) in announcementStore.announcements2"
-                  :key="announcement.announcementIdx" @click="goToDetailPage(announcement.announcementIdx)">
+                :key="announcement.announcementIdx" @click="goToDetailPage(announcement.announcementIdx)">
                 <a href="" class="listCell" data-gno="45672569">
                   <div class="rLogo">
                     <img src="@/assets/img/announce/no-background.jpg" alt="㈜365위더스">
@@ -120,12 +126,12 @@
                     <div class="rTit">{{ announcement.announcementTitle }}</div>
                     <div class="rInfo">
                       <span class="rPart">
-                          {{ announcement.jobTitle }}
+                        {{ announcement.jobTitle }}
                       </span>
                     </div>
                     <div class="rSkillBox">
                       <span class="rSkill">
-                          <span class="rAddress">{{ announcement.region }}</span>
+                        <span class="rAddress">{{ announcement.region }}</span>
                       </span>
                     </div>
 
@@ -133,7 +139,8 @@
                   <div class="listFoot">
 
                     <div class="dead-line">
-                      <span class="rPeriod">{{ announcement.announcementStart }} ~ {{ announcement.announcementEnd }}</span>
+                      <span class="rPeriod">{{ announcement.announcementStart }} ~ {{ announcement.announcementEnd
+                        }}</span>
                     </div>
                   </div>
                 </a>
@@ -182,36 +189,36 @@ const dropdownOpen = ref({
 });
 
 const categoryData = ref([
-  "기획·전략",
-  "교육",
-  "고객상담·TM",
-  "IT·개발",
-  "마케팅",
-  "영업",
-  "인사",
-  "재무·회계",
-  "법무",
-  "홍보·PR",
-  "디자인",
-  "생산·제조",
-  "연구개발(R&D)",
-  "물류",
-  "구매",
-  "건설·토목",
-  "의료",
-  "연구",
-  "법무·특허",
-  "서비스",
-  "비서·총무",
-  "전략기획",
-  "엔지니어",
-  "유통·판매",
-  "리스크관리",
-  "품질관리",
-  "공공행정",
-  "광고·미디어",
-  "항공",
-  "호텔·외식"
+  { code: "job_001", description: "기획·전략" },
+  { code: "job_002", description: "교육" },
+  { code: "job_003", description: "고객상담·TM" },
+  { code: "job_004", description: "IT·개발" },
+  { code: "job_005", description: "마케팅" },
+  { code: "job_006", description: "영업" },
+  { code: "job_007", description: "인사" },
+  { code: "job_008", description: "재무·회계" },
+  { code: "job_009", description: "법무" },
+  { code: "job_010", description: "홍보·PR" },
+  { code: "job_011", description: "디자인" },
+  { code: "job_012", description: "생산·제조" },
+  { code: "job_013", description: "연구개발(R&D)" },
+  { code: "job_014", description: "물류" },
+  { code: "job_015", description: "구매" },
+  { code: "job_016", description: "건설·토목" },
+  { code: "job_017", description: "의료" },
+  { code: "job_018", description: "연구" },
+  { code: "job_019", description: "법무·특허" },
+  { code: "job_020", description: "서비스" },
+  { code: "job_021", description: "비서·총무" },
+  { code: "job_022", description: "전략기획" },
+  { code: "job_023", description: "엔지니어" },
+  { code: "job_024", description: "유통·판매" },
+  { code: "job_025", description: "리스크관리" },
+  { code: "job_026", description: "품질관리" },
+  { code: "job_027", description: "공공행정" },
+  { code: "job_028", description: "광고·미디어" },
+  { code: "job_029", description: "항공" },
+  { code: "job_030", description: "호텔·외식" }
 ]);
 
 
@@ -238,24 +245,28 @@ document.addEventListener('click', (event) => {
   }
 });
 
-// 필터 업데이트 함수 (드롭다운 이름과 필터 값 함께 저장)
+
+// 필터 업데이트 함수
 const updateFilters = (filterName, filterValue) => {
-  const exists = selectedFilters.value.find(f => f.name === filterName && f.value === filterValue);
+  // 모집직무 필터에서 filterValue가 객체일 경우 code 값만 사용
+  const filterCode = typeof filterValue === 'object' ? filterValue.code : filterValue;
+
+  // 필터가 이미 선택되어 있는지 확인
+  const exists = selectedFilters.value.find(f => f.name === filterName && f.value === filterCode);
 
   if (!exists) {
-    selectedFilters.value.push({ name: filterName, value: filterValue });
+    selectedFilters.value.push({ name: filterName, value: filterCode });
   } else {
-    selectedFilters.value = selectedFilters.value.filter(f => !(f.name === filterName && f.value === filterValue));
+    selectedFilters.value = selectedFilters.value.filter(f => !(f.name === filterName && f.value === filterCode));
   }
 };
 
-
 // 필터 제거 함수
 const removeFilter = (filter) => {
-  // 선택된 필터 리스트에서 제거
+  // 선택된 필터 리스트에서 해당 필터 제거
   selectedFilters.value = selectedFilters.value.filter(item => !(item.name === filter.name && item.value === filter.value));
 
-  // 체크박스 상태도 해제
+  // checkedFilters 상태 업데이트하여 체크 해제
   checkedFilters.value[filter.name] = checkedFilters.value[filter.name].filter(f => f !== filter.value);
 };
 
@@ -265,6 +276,11 @@ const resetFilters = () => {
   Object.keys(checkedFilters.value).forEach(key => {
     checkedFilters.value[key] = [];
   });
+};
+
+const getCategoryDescription = (code) => {
+  const category = categoryData.value.find(cat => cat.code === code);
+  return category ? category.description : code;
 };
 
 
@@ -294,12 +310,6 @@ const handleSearch = () => {
   }
 };
 
-// watch로 선택된 필터가 변경되었을 때 자동으로 백엔드에 요청
-// watch(selectedFilters, (newFilters) => {
-//   if (!searchKeyword.value && newFilters.length) {
-//     handleSearch();
-//   }
-// });
 
 
 // 오른쪽 최신순 필터 기능
@@ -466,7 +476,7 @@ h2 {
 
 .dropdown-btn:hover,
 .dropdown-btn:active,
-.dropdown-btn:focus{
+.dropdown-btn:focus {
   background-color: #232b36;
   color: white;
 }
@@ -1422,15 +1432,16 @@ body.celebrate_renew .recruitWrap .recruitList ul li {
   margin: 0;
 }
 
-.recruitWrap .recruitList ul > li:nth-child(4n + 1) {
+.recruitWrap .recruitList ul>li:nth-child(4n + 1) {
   margin-left: 0;
 }
 
-.recruitWrap .recruitList ul > li {
+.recruitWrap .recruitList ul>li {
   margin: 0 16px 32px;
 }
 
-li, ul {
+li,
+ul {
   list-style: none;
 }
 
@@ -1451,12 +1462,18 @@ recruitWrap .recruitList ul .listCell {
   transition: 0.3s;
 }
 
-a, a:active, a:focus, a:hover, a:link, a:visited {
+a,
+a:active,
+a:focus,
+a:hover,
+a:link,
+a:visited {
   color: #333;
   text-decoration: none;
 }
 
-a, img {
+a,
+img {
   display: block;
 }
 
@@ -1509,7 +1526,8 @@ a, img {
   overflow: inherit;
 }
 
-.recruitWrap .rIcon.heart_off, .recruitWrap .rIcon .tplBtnFavOff {
+.recruitWrap .rIcon.heart_off,
+.recruitWrap .rIcon .tplBtnFavOff {
   width: 16px;
   height: 14px;
 }
@@ -1568,16 +1586,20 @@ a, img {
   transform: translateY(-50%);
   content: '';
 }
+
 .recruitWrap .recruitList ul .listCell .listCont .rInfo span:last-child:after {
   display: none;
 }
+
 .recruitWrap .recruitList ul .listCell .listCont .rInfo .rPeriod {
   padding: 0 8px 0 0;
 }
+
 .recruitWrap .recruitList ul .listCell .listCont .rInfo .rAddress,
 .recruitWrap .recruitList ul .listCell .listCont .rInfo .rSkill {
   padding: 0 0 0 8px;
 }
+
 .recruitWrap .recruitList ul .listCell .listCont .rSkillBox {
   overflow: hidden;
   display: -webkit-box;
@@ -1593,50 +1615,31 @@ a, img {
   height: 16px;
   margin: 12px 0 0;
 }
+
 .recruitWrap .recruitList ul .listCell .listCont .rSkillBox .rSkill {
   display: inline-block;
   max-width: 236px;
   font-size: 0;
 }
+
 .recruitWrap .recruitList ul .listCell .listCont .rSkillBox .rSkill .tag {
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.recruitWrap
-.recruitList
-ul
-.listCell
-.listCont
-.rSkillBox
-.rSkill
-.tag
-+ .tag {
+
+.recruitWrap .recruitList ul .listCell .listCont .rSkillBox .rSkill .tag+.tag {
   margin-left: 8px;
 }
-.recruitWrap
-.recruitList
-ul
-.listCell
-.listCont
-.rSkillBox
-.rSkill
-.tag-skil
-+ .tag-benefit {
+
+.recruitWrap .recruitList ul .listCell .listCont .rSkillBox .rSkill .tag-skil+.tag-benefit {
   position: relative;
   margin-left: 0;
   padding-left: 17px;
 }
-.recruitWrap
-.recruitList
-ul
-.listCell
-.listCont
-.rSkillBox
-.rSkill
-.tag-skil
-+ .tag-benefit:before {
+
+.recruitWrap .recruitList ul .listCell .listCont .rSkillBox .rSkill .tag-skil+.tag-benefit:before {
   display: inline-block;
   position: absolute;
   top: 50%;
@@ -1651,6 +1654,7 @@ ul
   transform: translateY(-50%);
   content: '';
 }
+
 .recruitWrap .recruitList ul .listCell .listCont .rSkillBox span {
   display: inline-block;
   font-size: 12px;
@@ -1659,11 +1663,13 @@ ul
   line-height: 16px;
   color: #9e9e9e;
 }
+
 .recruitWrap .recruitList ul .listCell .listFoot {
   margin: 0 24px;
   padding: 16px 0 24px;
   border-top: 1px solid #e8e8e8;
 }
+
 .recruitWrap .recruitList ul .listCell .listFoot .rAssist {
   font-size: 14px;
   letter-spacing: 0;
@@ -1684,6 +1690,7 @@ ul
   line-height: 22px;
   color: #171717;
 }
+
 .recruitWrap .recruitList ul .listCell .listFoot .rAssist:before {
   display: inline-block;
   position: absolute;
@@ -1701,18 +1708,22 @@ ul
   transform: translateY(-50%);
   content: '';
 }
+
 .recruitWrap .recruitList ul .listCell .listFoot .rPeriod {
   font-size: 12px;
   letter-spacing: 0;
   line-height: 16px;
   color: #6a6a6a;
 }
+
 .recruitWrap .recruitList ul .listCell .rIcon {
   overflow: inherit;
 }
+
 .recruitWrap .recruitList ul .listCell .rIcon:hover:before {
   display: block;
 }
+
 .recruitWrap .recruitList ul .listCell .rIcon:before {
   display: none;
   position: absolute;
@@ -1733,18 +1744,21 @@ ul
   transform: translateX(-50%);
   content: '공고 스크랩';
 }
-.recruitWrap .recruitList .none > p {
+
+.recruitWrap .recruitList .none>p {
   font-weight: 500;
   font-size: 18px;
   letter-spacing: 0;
   color: #9e9e9e;
 }
-.recruitWrap .recruitList .none > p:last-child {
+
+.recruitWrap .recruitList .none>p:last-child {
   font-size: 14px;
   letter-spacing: 0;
   margin-top: 8px;
   font-weight: 400;
 }
+
 .recruitWrap .rIcon {
   display: inline-block;
   position: relative;
@@ -1757,11 +1771,13 @@ ul
   vertical-align: middle;
   white-space: nowrap;
 }
+
 .recruitWrap .rIcon.heart_off,
 .recruitWrap .rIcon .tplBtnFavOff {
   width: 16px;
   height: 14px;
 }
+
 .recruitWrap .rIcon,
 .recruitWrap .rIcon {
   position: absolute;
@@ -1772,6 +1788,7 @@ ul
   width: 20px;
   height: 19px;
 }
+
 .recruitWrap .rIcon,
 .recruitWrap .rIcon,
 .recruitWrap .rIcon {
@@ -1781,24 +1798,31 @@ ul
   width: 20px;
   height: 19px;
 }
+
 .recruitWrap {
   margin: 80px 0;
 }
+
 .recruitWrap .foot_banner a {
   display: block;
 }
+
 .recruitWrap .foot_banner img {
   width: 100%;
 }
-.recruitWrap .recruitList ul > li {
+
+.recruitWrap .recruitList ul>li {
   margin: 0 16px 32px;
 }
-.recruitWrap .recruitList ul > li:nth-child(4n + 1) {
+
+.recruitWrap .recruitList ul>li:nth-child(4n + 1) {
   margin-left: 0;
 }
-.recruitWrap .recruitList ul > li:nth-child(4n) {
+
+.recruitWrap .recruitList ul>li:nth-child(4n) {
   margin-right: 0;
 }
+
 .recruitWrap .recruitList ul .listCell {
   position: relative;
   -webkit-box-sizing: border-box;
@@ -1815,6 +1839,7 @@ ul
   -moz-transition: 0.3s;
   transition: 0.3s;
 }
+
 .recruitWrap .recruitList ul .listCell:hover {
   -webkit-transform: translateY(-8px);
   -moz-transform: translateY(-8px);
@@ -1832,6 +1857,7 @@ ul
   margin: 0;
 }
 
-.dead-line {float: inline-end;}
-
+.dead-line {
+  float: inline-end;
+}
 </style>
