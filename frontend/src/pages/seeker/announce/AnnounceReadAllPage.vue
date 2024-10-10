@@ -89,7 +89,7 @@
           </span>
         </div>
         <a href="#" id="reset-filters" class="reset-filters" @click.prevent="resetFilters"> 🔄️ 필터 초기화</a>
-        <p> 📢 키워드로 검색 시, 필터를 초기화 해주세요. 필터로 검색 시, 카테고리당 하나의 필터만 추가하세요.</p>
+        <p> 📢 키워드로 검색 시, 필터를 초기화 해주세요.</p>
       </div>
 
       <!-- 검색 결과 -->
@@ -116,7 +116,11 @@
                 :key="announcement.announcementIdx" @click="goToDetailPage(announcement.announcementIdx)">
                 <a href="" class="listCell" data-gno="45672569">
                   <div class="rLogo">
-                    <img src="@/assets/img/announce/no-background.jpg" alt="㈜365위더스">
+                    <!-- 이미지가 있으면 해당 URL을 사용하고, 없으면 기본 이미지 경로 사용 -->
+                    <img :src="announcement.imgList && announcement.imgList.length > 0
+                      ? announcement.imgList[1]
+                      : require('@/assets/img/announce/no-background.jpg')" alt="㈜365위더스"
+                      class="center-cropped-image">
                   </div>
 
                   <div class="listCont">
@@ -247,19 +251,34 @@ document.addEventListener('click', (event) => {
 
 
 // 필터 업데이트 함수
+// const updateFilters = (filterName, filterValue) => {
+//   // 모집직무 필터에서 filterValue가 객체일 경우 code 값만 사용
+//   const filterCode = typeof filterValue === 'object' ? filterValue.code : filterValue;
+
+//   // 필터가 이미 선택되어 있는지 확인
+//   const exists = selectedFilters.value.find(f => f.name === filterName && f.value === filterCode);
+
+//   if (!exists) {
+//     selectedFilters.value.push({ name: filterName, value: filterCode });
+//   } else {
+//     selectedFilters.value = selectedFilters.value.filter(f => !(f.name === filterName && f.value === filterCode));
+//   }
+// };
+
+// 필터 업데이트 함수 (중복 업데이트 버전)
 const updateFilters = (filterName, filterValue) => {
-  // 모집직무 필터에서 filterValue가 객체일 경우 code 값만 사용
   const filterCode = typeof filterValue === 'object' ? filterValue.code : filterValue;
 
-  // 필터가 이미 선택되어 있는지 확인
-  const exists = selectedFilters.value.find(f => f.name === filterName && f.value === filterCode);
+  // 필터에서 동일한 filterName을 가진 기존 항목을 제거
+  selectedFilters.value = selectedFilters.value.filter(f => f.name !== filterName);
 
-  if (!exists) {
-    selectedFilters.value.push({ name: filterName, value: filterCode });
-  } else {
-    selectedFilters.value = selectedFilters.value.filter(f => !(f.name === filterName && f.value === filterCode));
-  }
+  // 새로운 필터를 추가
+  selectedFilters.value.push({ name: filterName, value: filterCode });
+
+  // checkedFilters 상태 업데이트: 기존 체크 해제 후 새로 체크
+  checkedFilters.value[filterName] = [filterCode];
 };
+
 
 // 필터 제거 함수
 const removeFilter = (filter) => {
@@ -382,6 +401,13 @@ onMounted(() => {
 
 }
 
+.center-cropped-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;       /* 이미지가 영역에 맞도록 크기 조절 */
+  object-position: center; /* 이미지의 가운데 부분을 표시 */
+}
+
 .body-arp {
   font-family: Arial, sans-serif;
   line-height: 1.6;
@@ -465,7 +491,7 @@ h2 {
 }
 
 .dropdown-btn {
-  padding: 8px 15px;
+  padding: 10px 15px;
   width: 130px;
   border: 1px solid #d2d2d2;
   background-color: #fff;
@@ -523,8 +549,8 @@ h2 {
 .selected-filters span {
   background-color: #e0e0e0;
   padding: 5px 10px;
-  margin-right: 10px;
-  margin-bottom: 10px;
+  /* margin-right: 10px;
+  margin-bottom: 10px; */
   border-radius: 20px;
   display: inline-block;
   font-size: 14px;
