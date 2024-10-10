@@ -14,6 +14,7 @@ import com.sabujaks.irs.domain.auth.model.entity.Recruiter;
 import com.sabujaks.irs.domain.auth.model.response.RecruiterRes;
 import com.sabujaks.irs.domain.auth.repository.RecruiterRepository;
 import com.sabujaks.irs.domain.company.model.entity.Company;
+import com.sabujaks.irs.domain.company.model.entity.CompanyImg;
 import com.sabujaks.irs.domain.company.repository.CompanyBenefitsRepository;
 import com.sabujaks.irs.domain.company.repository.CompanyRepository;
 import com.sabujaks.irs.domain.company.service.CompanyService;
@@ -206,6 +207,13 @@ public class AnnouncementService {
         for (Announcement am : resultAnnouncementList) {
             Company company = companyRepository.findByRecruiterIdx(am.getRecruiter().getIdx())
                     .orElseThrow(()-> new BaseException(BaseResponseMessage.COMPANY_INFO_FAIL_NOT_REGISTER));
+
+            // 기업 이미지 url 리스트 넣기
+            List<String> imgList = new ArrayList<>();
+            for(CompanyImg ci : company.getCompanyImgList()){
+                imgList.add(ci.getUrl());
+            }
+
             resultReadAllResList.add(
                     AnnouncementReadAllRes.builder()
                             .announcementIdx(am.getIdx())
@@ -216,6 +224,7 @@ public class AnnouncementService {
                             .careerBase(am.getCareerBase())
                             .region(am.getRegion())
                             .announcementEnd(am.getAnnouncementEnd())
+                            .imgList(imgList)
                             .build()
             );
         }
