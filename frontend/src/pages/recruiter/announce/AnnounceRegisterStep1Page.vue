@@ -952,10 +952,10 @@ export default {
                   <select style="margin-right: 15px;" v-model="announcementStore.formData.endTimeRegi">
                     <option v-for="time in times" :key="time" :value="time">{{ time }}</option>
                   </select>
-                  <select v-model="announcementStore.formData.recruitmentType">
+                  <!-- <select v-model="announcementStore.formData.recruitmentType">
                     <option value="마감일지정">마감일지정</option>
                     <option value="상시모집">상시모집</option>
-                  </select>
+                  </select> -->
                 </div>
               </div>
             </div>

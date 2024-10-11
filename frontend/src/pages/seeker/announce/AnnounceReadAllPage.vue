@@ -69,7 +69,7 @@
         <div class="search-container">
           <!-- <input type="text" id="search-input" placeholder="공고명, 기업, 직무, 키워드 검색" />
           <button id="search-btn">검색</button> -->
-          <input ref="searchInput" type="text" v-model="searchKeyword" placeholder="공고명&모집분야 키워드 검색"
+          <input ref="searchInput" type="text" v-model="searchKeyword" placeholder="공고명 & 모집분야 & 기업명 키워드 검색"
             @keyup.enter="handleSearch" class="search-input" />
           <button @click="handleSearch" class="search-btn">검색</button>
         </div>
