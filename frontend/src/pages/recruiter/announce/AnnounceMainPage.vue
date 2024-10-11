@@ -101,7 +101,7 @@ const totalPages = computed(() => {
 #content {
   flex: 1;
   margin-left: 200px; /* 사이드바 너비만큼 왼쪽 여백 추가 */
-  padding: 0 0 150px 0;
+  padding: 150px 0;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -166,21 +166,22 @@ th {
 }
 
 .pagination {
-    display: flex;
-    justify-content: center;
-    margin: 20px 0;
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
 }
 
 .pagination button {
-    background-color: #f1f1f1;
-    border: none;
-    padding: 10px 15px;
-    margin: 0 5px;
-    cursor: pointer;
+  background-color: #f1f1f1;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  margin: 0 5px;
+  cursor: pointer;
 }
 
-.pagination button.active {
+/* .pagination button.active {
     background-color: #212b36;
     color: white;
-}
+} */
 </style>

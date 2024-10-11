@@ -23,4 +23,5 @@ public class InterviewScheduleRes {
     private Long teamIdx;
     private String companyName;
     private String announcementTitle;
+    private Integer countInterviewSchedule;
 }

@@ -14,9 +14,13 @@ import com.sabujaks.irs.domain.auth.model.entity.Recruiter;
 import com.sabujaks.irs.domain.auth.model.response.RecruiterRes;
 import com.sabujaks.irs.domain.auth.repository.RecruiterRepository;
 import com.sabujaks.irs.domain.company.model.entity.Company;
+import com.sabujaks.irs.domain.company.model.entity.CompanyImg;
 import com.sabujaks.irs.domain.company.repository.CompanyBenefitsRepository;
 import com.sabujaks.irs.domain.company.repository.CompanyRepository;
 import com.sabujaks.irs.domain.company.service.CompanyService;
+import com.sabujaks.irs.domain.interview_schedule.model.entity.InterviewSchedule;
+import com.sabujaks.irs.domain.interview_schedule.repository.InterviewScheduleRepository;
+import com.sabujaks.irs.domain.interview_schedule.repository.ReScheduleRepository;
 import com.sabujaks.irs.domain.resume.model.entity.Resume;
 import com.sabujaks.irs.domain.system.model.entity.BaseInfo;
 import com.sabujaks.irs.domain.system.model.response.BaseInfoReadRes;
@@ -48,6 +52,8 @@ public class AnnouncementService {
     private final ResumeRepository resumeRepository;
     private final CompanyService companyService;
     private final BaseInfoService baseInfoService;
+    private final InterviewScheduleRepository interviewScheduleRepository;
+    private final ReScheduleRepository reScheduleRepository;
 
 
     /*******채용담당자 공고 등록 (step1)***********/
@@ -201,6 +207,13 @@ public class AnnouncementService {
         for (Announcement am : resultAnnouncementList) {
             Company company = companyRepository.findByRecruiterIdx(am.getRecruiter().getIdx())
                     .orElseThrow(()-> new BaseException(BaseResponseMessage.COMPANY_INFO_FAIL_NOT_REGISTER));
+
+            // 기업 이미지 url 리스트 넣기
+            List<String> imgList = new ArrayList<>();
+            for(CompanyImg ci : company.getCompanyImgList()){
+                imgList.add(ci.getUrl());
+            }
+
             resultReadAllResList.add(
                     AnnouncementReadAllRes.builder()
                             .announcementIdx(am.getIdx())
@@ -211,6 +224,7 @@ public class AnnouncementService {
                             .careerBase(am.getCareerBase())
                             .region(am.getRegion())
                             .announcementEnd(am.getAnnouncementEnd())
+                            .imgList(imgList)
                             .build()
             );
         }
@@ -297,6 +311,7 @@ public class AnnouncementService {
         Optional<Recruiter> recruiter = recruiterRepository.findByRecruiterIdx(recruiterIdx);
         Page<Announcement> result;
 
+        // 공고 리스트
         if(careerBase.equals("전체")) {
             result = announcementDslRepository.findByRecruiterIdx(recruiterIdx, pageable);
         } else {
@@ -305,6 +320,18 @@ public class AnnouncementService {
 
         List<AnnouncementReadAllRes2> announcementList = new ArrayList<>();
         for(Announcement announcement : result) {
+            // 해당 공고에 생성된 인터뷰 일정 리스트
+
+
+
+            Integer countInterviewSchedule = interviewScheduleRepository.countInterviewScheduleByAnnouncementIdx(announcement.getIdx());
+            List<InterviewSchedule> interviewScheduleList = interviewScheduleRepository.findByAnnouncementIdx(announcement.getIdx()).get();
+            Integer countReSchedule = 0;
+            if(careerBase.equals("전체")) {
+                for(InterviewSchedule interviewSchedule : interviewScheduleList) {
+                    countReSchedule += reScheduleRepository.countReScheduleByInterviewIdx(interviewSchedule.getIdx());
+                }
+            }
             announcementList.add(AnnouncementReadAllRes2.builder()
                     .idx(announcement.getIdx())
                     .title(announcement.getTitle())
@@ -326,6 +353,8 @@ public class AnnouncementService {
                     .process(announcement.getProcess())
                     .note(announcement.getNote())
                     .uuid(announcement.getUuid())
+                    .countInterviewSchedule(countInterviewSchedule)
+                    .countReSchedule(countReSchedule)
                     .recruiterRes(RecruiterRes.builder()
                             .email(recruiter.get().getEmail())
                             .name(recruiter.get().getName())
@@ -381,4 +410,40 @@ public class AnnouncementService {
 
     }
 
+    // 지원서 폼 조회
+    public CustomFormReadAllRes readCustomForm(CustomUserDetails customUserDetails, Long announcementIdx) throws BaseException {
+        // 채용담당자 유저가 아닐 때
+        Long recruiterIdx = customUserDetails.getIdx();
+        Optional<Recruiter> resultRecruiter = recruiterRepository.findByRecruiterIdx(recruiterIdx);
+        if(resultRecruiter.isEmpty()) {
+            throw new BaseException(BaseResponseMessage.ANNOUNCEMENT_REGISTER_STEP_ONE_FAIL_NOT_RECRUITER);
+        }
+
+        List<CustomForm> resultCustomForm = customFormRepository.findAllByAnnouncementIdx(announcementIdx);
+        if(resultCustomForm.isEmpty()) {
+            // 저장된 폼이 없으면
+            throw new BaseException(BaseResponseMessage.ANNOUNCEMENT_READ_CUSTOM_FORM_FAIL);
+        }
+
+        // 저장된 폼이 있으면, 폼 코드로 설명 찾아서 저장
+        List<String> customFormList = new ArrayList<>();
+        for(CustomForm customForm : resultCustomForm) {
+            customFormList.add((baseInfoRepository.findByCode(customForm.getCode())).getDescription());
+        }
+
+        // 자기소개서도 저장
+        List<CustomLetterForm> resultLetterForm = letterFormRepository.findAllByAnnouncementIdx(announcementIdx);
+
+        List<String> customLetterList = new ArrayList<>();
+        for(CustomLetterForm customLetterForm : resultLetterForm) {
+            customLetterList.add(customLetterForm.getTitle()+" / "+customLetterForm.getChatLimit());
+        }
+
+        CustomFormReadAllRes customFormReadAllRes = CustomFormReadAllRes.builder()
+                .customFormList(customFormList)
+                .customLetterList(customLetterList)
+                .build();
+
+        return customFormReadAllRes;
+    }
 }

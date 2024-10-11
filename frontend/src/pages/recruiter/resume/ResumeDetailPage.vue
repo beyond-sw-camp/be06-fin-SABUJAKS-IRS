@@ -387,10 +387,11 @@ import MainSideBarComponent from "@/components/recruiter/MainSideBarComponent.vu
 
 import { ref, onMounted } from 'vue';
 import { UseResumeStore } from '@/stores/UseResumeStore';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 const resumeStore = UseResumeStore();
 const route = useRoute();
+const router = useRouter();
 
 const showPersonalInfo = ref(false);
 const showEducation = ref(false);
@@ -409,17 +410,19 @@ onMounted(async () => {
     await resumeStore.read(route.params.resumeIdx);
 
     showPersonalInfo.value = true;
-    showEducation.value = resumeStore.resumeDetail.codes.includes("resume_001");
-    showPersonalHistory.value = resumeStore.resumeDetail.codes.includes("resume_002");
-    showInternsActivity.value = resumeStore.resumeDetail.codes.includes("resume_003");
-    showTraining.value = resumeStore.resumeDetail.codes.includes("resume_004");
-    showCertification.value = resumeStore.resumeDetail.codes.includes("resume_005");
-    showAward.value = resumeStore.resumeDetail.codes.includes("resume_006");
-    showStudyingAbroad.value = resumeStore.resumeDetail.codes.includes("resume_007");
-    showLanguage.value = resumeStore.resumeDetail.codes.includes("resume_008");
-    showPortfolio.value = resumeStore.resumeDetail.codes.includes("resume_009");
-    showPreferentialEmp.value = resumeStore.resumeDetail.codes.includes("resume_010");
-    showCustomLetter.value = resumeStore.resumeDetail.codes.includes("resume_011");
+    if(resumeStore.resumeDetail && resumeStore.resumeDetail.codes) {
+        showEducation.value = resumeStore.resumeDetail.codes.includes("resume_001");
+        showPersonalHistory.value = resumeStore.resumeDetail.codes.includes("resume_002");
+        showInternsActivity.value = resumeStore.resumeDetail.codes.includes("resume_003");
+        showTraining.value = resumeStore.resumeDetail.codes.includes("resume_004");
+        showCertification.value = resumeStore.resumeDetail.codes.includes("resume_005");
+        showAward.value = resumeStore.resumeDetail.codes.includes("resume_006");
+        showStudyingAbroad.value = resumeStore.resumeDetail.codes.includes("resume_007");
+        showLanguage.value = resumeStore.resumeDetail.codes.includes("resume_008");
+        showPortfolio.value = resumeStore.resumeDetail.codes.includes("resume_009");
+        showPreferentialEmp.value = resumeStore.resumeDetail.codes.includes("resume_010");
+        showCustomLetter.value = resumeStore.resumeDetail.codes.includes("resume_011");
+    }
     
 });
 
@@ -474,7 +477,7 @@ const formatDate = (dateString) => {
 };
 
 const updateDocPassed = async (docPassedValue) => {
-    await resumeStore.updateDocPassed(docPassedValue);
+    await resumeStore.updateDocPassed(router, docPassedValue);
 };
 
 </script>

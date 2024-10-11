@@ -13,7 +13,7 @@
           <!-- <button class="btn edit-profile">내 프로필 수정하기</button> -->
         </div>
 
-        <div class="content-info">
+        <div class="content">
           <!-- 기본 정보 -->
           <div class="info-section">
             <h2>기본 정보</h2>
@@ -82,8 +82,7 @@ onMounted(async () => {
   if (response.success) {
     readSeeker.value = response.result;
   } else {
-    toast.console.error();
-    (response.message);
+    toast.error(response.message);
     router.push('/seeker/login');
   }
 });
@@ -161,7 +160,7 @@ onMounted(async () => {
   background-color: #212b36;
 }
 
-.content-info {
+.content {
   background-color: white;
   padding: 20px;
   border-radius: 10px;

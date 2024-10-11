@@ -22,7 +22,7 @@
             v-for="(resume, index) in paginatedResumes"
             :key="index"
             @click="handleRowClick(resume)"
-            style="cursor: pointer"
+            class="hoverable-row"
           >
             <td>{{ resumeStore.resumeListPage.totalElements - ((currentPage - 1) * pageSize + index) }}</td>
             <td>{{ resume.seekerName }}</td>
@@ -66,7 +66,7 @@ onMounted(async () => {
 
 const fetchResumes = async (page) => {
     currentPage.value = page;
-    await resumeStore.readAllRecruiter(route.params.announcementIdx, page - 1, pageSize);
+    await resumeStore.readAllRecruiter(router, route.params.announcementIdx, page - 1, pageSize);
 };
 
 const paginatedResumes = computed(() => {
@@ -96,11 +96,7 @@ const checkApplicationResult = (resumeResult) => {
 
 const sendResult = async () => {
     if (confirm("서류결과를 일괄 전송하시겠습니까?")) {
-        if (await resumeStore.sendResult(resumeStore.resumeList)) {
-            window.location.reload();
-        } else {
-            alert("일괄 처리 과정에서 오류가 발생했습니다. 관리자에게 문의하십시오.")
-        }
+        await resumeStore.sendResult(router, resumeStore.resumeList);
     }
 }
 </script>
@@ -112,12 +108,12 @@ const sendResult = async () => {
 }
 
 #content {
-    flex: 1;
-    margin-left: 200px; /* 사이드바 너비만큼 왼쪽 여백 추가 */
-    padding: 0 0 150px 0;
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
+  flex: 1;
+  margin-left: 200px; /* 사이드바 너비만큼 왼쪽 여백 추가 */
+  padding: 150px 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
 }
 
 #content table {
@@ -161,22 +157,33 @@ th {
     border-radius: 5px;
 }
 
+/* 테이블 행 hover 시 색깔 변화 */
+.hoverable-row {
+  transition: background-color 0.3s ease;
+}
+
+.hoverable-row:hover {
+  background-color: #f6f6f6; /* 마우스 올렸을 때 약간 어둡게 변경 */
+  cursor: pointer;
+}
+
 .pagination {
-    display: flex;
-    justify-content: center;
-    margin: 20px 0;
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
 }
 
 .pagination button {
-    background-color: #f1f1f1;
-    border: none;
-    padding: 10px 15px;
-    margin: 0 5px;
-    cursor: pointer;
+  background-color: #f1f1f1;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  margin: 0 5px;
+  cursor: pointer;
 }
 
-.pagination button.active {
+/* .pagination button.active {
     background-color: #212b36;
     color: white;
-}
+} */
 </style>

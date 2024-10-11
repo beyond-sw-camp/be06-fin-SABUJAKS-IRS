@@ -247,7 +247,7 @@ export const UseResumeStore = defineStore('resume', {
                     portfolios: this.portfolios
                 };
 
-                console.log(resumeCreateReq);
+                // console.log(resumeCreateReq);
 
                 const jsonBlob = new Blob([JSON.stringify(resumeCreateReq)], { type: 'application/json' });
                 formData.append('dto', jsonBlob);
@@ -418,7 +418,7 @@ export const UseResumeStore = defineStore('resume', {
                     customLetters: this.customLetters,
                     portfolios: this.portfolios
                 };
-                console.log(resumeSubmitReq);
+                // console.log(resumeSubmitReq);
 
                 const jsonBlob = new Blob([JSON.stringify(resumeSubmitReq)], { type: 'application/json' });
                 formData.append('dto', jsonBlob);
@@ -433,7 +433,6 @@ export const UseResumeStore = defineStore('resume', {
                         formData.append("portfolioFiles", file);
                     });
                 }
-                console.log(resumeSubmitReq);
 
                 const response = await axios.post(`${backend}/resume/submit`, formData, {
                     headers: {
@@ -449,24 +448,27 @@ export const UseResumeStore = defineStore('resume', {
                     router.push(`/seeker/resume/detail/${response.data.result.resumeIdx}`);
                 }
             } catch (error) {
-                console.log(error);
                 toast.error(error.response.data.message);
                 if (error.response.data.code === 2007) {
                     router.push('/seeker/mypage/annouce-resume');
                 }
             }
         },
-        async readSubmitInfo(announcementIdx) {
+        async readSubmitInfo(router, announcementIdx) {
             const toast = useToast();
             try {
                 const response = await axios.get(`${backend}/resume/read/submit-info?announcementIdx=${announcementIdx}`, {
                     headers: { 'Content-Type': 'application/json', },
                     withCredentials: true
                 });
-                console.log(response);
                 return response.data;
             } catch (error) {
                 toast.error(error.response.data.message);
+                if(error.response.data.code === 2007) {
+                    router.push(`/seeker/announce/detail/${announcementIdx}`);
+                } else {
+                    router.push('/');
+                }
             }
         },
         async readIntegrated(router) {
@@ -477,7 +479,6 @@ export const UseResumeStore = defineStore('resume', {
                     withCredentials: true
                 });
                 this.resumeIntegrated = response.data.result;
-                // console.log(response.data.result);
             } catch (error) {
                 // console.log(error.response.data);
                 toast.error(error.response.data.message);
@@ -508,14 +509,14 @@ export const UseResumeStore = defineStore('resume', {
                 });
                 this.announceResumeList = response.data.result.content;
                 this.announceResumeListPage = response.data.result;
-                console.log(this.announceResumeListPage);
+                // console.log(this.announceResumeListPage);
             } catch (error) {
-                console.log(error.response.data.message);
+                // console.log(error.response.data);
                 toast.error('공고별 지원서 조회에 실패하였습니다.');
                 router.push('/seeker/mypage');
             }
         },
-        async updateDocPassed(docPassedValue) {
+        async updateDocPassed(router, docPassedValue) {
             const toast = useToast();
             try {
                 const response = await axios.post(`${backend}/total-process/create`, {
@@ -530,13 +531,15 @@ export const UseResumeStore = defineStore('resume', {
                     }
                 );
                 // 합격/불합격 처리 성공
-                toast.success(response.data.message);
-                location.reload();
+                if(response.data.success) {
+                    toast.success('서류 합격/불합격 처리에 성공하였습니다.');
+                    router.push(`/recruiter/resume/list/${this.resumeDetail.announcementIdx}`);
+                }
             } catch (error) {
                 toast.error(error.response.data.message);
             }
         },
-        async readAllRecruiter(announcementIdx, page, size) {
+        async readAllRecruiter(router, announcementIdx, page, size) {
             const toast = useToast();
             try {
                 const response = await axios.get(`${backend}/resume/recruiter/read-all?announcementIdx=${announcementIdx}&page=${page}&size=${size}`, {
@@ -549,10 +552,11 @@ export const UseResumeStore = defineStore('resume', {
 
             } catch (error) {
                 toast.error(error.response.data.message);
+                router.push('/recruiter/resume');
             }
         },
 
-        async sendResult(resumeList) {
+        async sendResult(router, resumeList) {
             const toast = useToast();
             try {
                 const response = await axios.post(`${backend}/resume/recruiter/send-result`,
@@ -562,9 +566,13 @@ export const UseResumeStore = defineStore('resume', {
                         withCredentials: true
                     });
 
-                console.log("resume result send email response : ", response);
-
-                return response.data.result;
+                if (response.data.success) {
+                    toast.success("일괄 전송에 성공했습니다.")
+                    router.push(`/recruiter/resume/list/${this.announcementIdx}`);
+                } else {
+                    toast.error("일괄 처리 과정에서 오류가 발생했습니다. 관리자에게 문의하십시오.")
+                }
+                return response.data.success;
 
             } catch (error) {
                 toast.error(error.response.data.message);

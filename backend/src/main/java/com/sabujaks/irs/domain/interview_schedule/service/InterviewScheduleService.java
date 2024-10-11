@@ -196,7 +196,7 @@ public class InterviewScheduleService {
                 List<EstimatorInfoGetRes> estimatorInfoGetResList = new ArrayList<>();
                 List<InterviewParticipate> participateResult = interviewParticipateRepository.findByInterviewScheduleIdxAndStatus(interviewSchedule.getIdx(), true).orElseThrow(() ->
                         new BaseException(BaseResponseMessage.INTERVIEW_PARTICIPATE_NOT_FOUND));
-
+                Integer count = interviewScheduleRepository.countInterviewScheduleByAnnouncementIdx(interviewSchedule.getAnnouncement().getIdx());
                 for(InterviewParticipate interviewParticipate : participateResult) {
                     Seeker seeker = seekerRepository.findBySeekerIdx(interviewParticipate.getSeeker().getIdx()).orElseThrow(()->new BaseException(BaseResponseMessage.MEMBER_NOT_FOUND));
                     Estimator estimator = estimatorRepository.findByEstimatorIdx(interviewParticipate.getEstimator().getIdx()).orElseThrow(()->new BaseException(BaseResponseMessage.ESTIMATOR_NOT_FOUND));
@@ -225,6 +225,7 @@ public class InterviewScheduleService {
                         .estimatorList(estimatorInfoGetResList)
                         .companyName(company.getName())
                         .announcementTitle(announcement.getTitle())
+                        .countInterviewSchedule(count)
                         .build());
             }
         }

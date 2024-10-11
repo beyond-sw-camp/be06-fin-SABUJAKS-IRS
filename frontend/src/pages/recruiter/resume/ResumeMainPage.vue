@@ -17,7 +17,7 @@
                     v-for="(announcement, index) in paginatedAnnouncements"
                     :key="index"
                     @click="handleRowClick(announcement)"
-                    style="cursor: pointer"
+                    class="hoverable-row"
                 >
                 <td>{{ announcementStore.announcementsPage.totalElements - ((currentPage - 1) * pageSize + index) }}</td>
                 <td>{{ formatDate(announcement.announcementStart) }} - {{ formatDate(announcement.announcementEnd) }}</td>
@@ -93,6 +93,7 @@ const handleRowClick = (announcement) => {
 #content {
   flex: 1;
   margin-left: 200px; /* 사이드바 너비만큼 왼쪽 여백 추가 */
+  padding: 150px 0;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -167,22 +168,33 @@ th {
   background-color: #ddd;
 }
 
+/* 테이블 행 hover 시 색깔 변화 */
+.hoverable-row {
+  transition: background-color 0.3s ease;
+}
+
+.hoverable-row:hover {
+  background-color: #f6f6f6; /* 마우스 올렸을 때 약간 어둡게 변경 */
+  cursor: pointer;
+}
+
 .pagination {
-    display: flex;
-    justify-content: center;
-    margin: 20px 0;
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
 }
 
 .pagination button {
-    background-color: #f1f1f1;
-    border: none;
-    padding: 10px 15px;
-    margin: 0 5px;
-    cursor: pointer;
+  background-color: #f1f1f1;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  margin: 0 5px;
+  cursor: pointer;
 }
 
-.pagination button.active {
+/* .pagination button.active {
     background-color: #212b36;
     color: white;
-}
+} */
 </style>

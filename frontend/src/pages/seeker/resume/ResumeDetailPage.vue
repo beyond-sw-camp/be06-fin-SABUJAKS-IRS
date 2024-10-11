@@ -392,17 +392,19 @@ onMounted(async () => {
     await resumeStore.read(route.params.resumeIdx);
 
     showPersonalInfo.value = true;
-    showEducation.value = resumeStore.resumeDetail.codes.includes("resume_001");
-    showPersonalHistory.value = resumeStore.resumeDetail.codes.includes("resume_002");
-    showInternsActivity.value = resumeStore.resumeDetail.codes.includes("resume_003");
-    showTraining.value = resumeStore.resumeDetail.codes.includes("resume_004");
-    showCertification.value = resumeStore.resumeDetail.codes.includes("resume_005");
-    showAward.value = resumeStore.resumeDetail.codes.includes("resume_006");
-    showStudyingAbroad.value = resumeStore.resumeDetail.codes.includes("resume_007");
-    showLanguage.value = resumeStore.resumeDetail.codes.includes("resume_008");
-    showPortfolio.value = resumeStore.resumeDetail.codes.includes("resume_009");
-    showPreferentialEmp.value = resumeStore.resumeDetail.codes.includes("resume_010");
-    showCustomLetter.value = resumeStore.resumeDetail.codes.includes("resume_011");
+    if(resumeStore.resumeDetail && resumeStore.resumeDetail.codes) {
+        showEducation.value = resumeStore.resumeDetail.codes.includes("resume_001");
+        showPersonalHistory.value = resumeStore.resumeDetail.codes.includes("resume_002");
+        showInternsActivity.value = resumeStore.resumeDetail.codes.includes("resume_003");
+        showTraining.value = resumeStore.resumeDetail.codes.includes("resume_004");
+        showCertification.value = resumeStore.resumeDetail.codes.includes("resume_005");
+        showAward.value = resumeStore.resumeDetail.codes.includes("resume_006");
+        showStudyingAbroad.value = resumeStore.resumeDetail.codes.includes("resume_007");
+        showLanguage.value = resumeStore.resumeDetail.codes.includes("resume_008");
+        showPortfolio.value = resumeStore.resumeDetail.codes.includes("resume_009");
+        showPreferentialEmp.value = resumeStore.resumeDetail.codes.includes("resume_010");
+        showCustomLetter.value = resumeStore.resumeDetail.codes.includes("resume_011");
+    }
     
 });
 

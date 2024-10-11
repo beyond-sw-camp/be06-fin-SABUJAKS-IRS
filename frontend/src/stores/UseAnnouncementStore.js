@@ -170,7 +170,7 @@ export const UseAnnouncementStore = defineStore('announcement', {
 
 
         // 공고 등록 함수
-        async createAnnouncement(selectedCategories, fields, fields2, router) {
+        async createAnnouncement(jobCategory, fields, fields2, router) {
             try {
                 const formDataCreate = new FormData();
 
@@ -214,26 +214,26 @@ export const UseAnnouncementStore = defineStore('announcement', {
 
                 // 상태 객체를 toRaw로 비반응형으로 변환
                 const rawFormData = toRaw(this.formData);
-                const rawSelectedCategories = toRaw(selectedCategories.value);
+                // const rawSelectedCategories = toRaw(selectedCategories.value);
 
-                // 대분류와 소분류를 결합한 형태로 변환
-                const jobCategoryList = Object.keys(rawSelectedCategories).reduce((acc, category) => {
-                    const subcategories = rawSelectedCategories[category];
-                    subcategories.forEach(subcategory => {
-                        acc.push(`${category} > ${subcategory}`);
-                    });
-                    return acc;
-                }, []);
+                // // 대분류와 소분류를 결합한 형태로 변환
+                // const jobCategoryList = Object.keys(rawSelectedCategories).reduce((acc, category) => {
+                //     const subcategories = rawSelectedCategories[category];
+                //     subcategories.forEach(subcategory => {
+                //         acc.push(`${category} > ${subcategory}`);
+                //     });
+                //     return acc;
+                // }, []);
 
-                // 리스트를 쉼표로 구분된 문자열로 변환
-                const jobCategoryString = jobCategoryList.join(", ");
+                // // 리스트를 쉼표로 구분된 문자열로 변환
+                // const jobCategoryString = jobCategoryList.join(", ");
 
                 // 전송할 AnnouncementCreateReq 객체 생성
                 const AnnouncementCreateReq = {
                     title: rawFormData.title, // 공고제목
                     selectForm: 0, // 양식선택
 
-                    jobCategoryList: jobCategoryString, // 직무 카테고리에서 .value로 접근하여 일반 데이터로 변환
+                    jobCategoryList: jobCategory, // 직무 카테고리에서 .value로 접근하여 일반 데이터로 변환
                     jobTitle: rawFormData.recruitmentFieldName, // 모집분야명
                     recruitedNum: rawFormData.numberOfRecruit, // 모집인원
                     careerBase: rawFormData.isNewbie ? "신입" : rawFormData.isExperienced ? "경력" : "", // 경력

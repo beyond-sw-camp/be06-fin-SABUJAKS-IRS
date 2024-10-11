@@ -156,9 +156,9 @@ onMounted(async () => {
 
 <template>
   <MainHeaderComponent />
-  <div class="container padding-100 0 0 0">
+  <div class="container" style="margin: 150px 0 200px 200px;">
     <MainSideBarComponent />
-    <div id="content">
+    <div id="content" style="padding: 50px 158px 100px 158px;">
       <!-- 기업 정보 등록 섹션 -->
       <div v-if="companyStore.companyInfo.saved === 'N'" id="createSections">
         <h1>기업 정보 등록</h1>
@@ -171,6 +171,7 @@ onMounted(async () => {
               <div class="flex flex-col">
                 <img src="@/assets/img/img_upload.png" style="width: 80px; height: 80px" />
                 <p id="image-count">{{ imageCount }} / 10</p>
+                <p>📢 첫번째는 기업 로고이미지, 두번째는 공고 목록에 사용할 기업 대표이미지를 넣어주세요. 그 이후는 자유롭게 넣어주세요.</p>
               </div>
             </label>
           </div>
@@ -268,7 +269,7 @@ onMounted(async () => {
           <h2>기업 복리후생 추가</h2>
           <!-- 대분류 및 소분류 복리후생 -->
           <div style="padding: 10px 10px;">
-            <div v-for="(category, index) in categories" :key="index" class="category-box">
+            <div v-for="(category, index) in categories" :key="index" class="category-box" style="margin-bottom: 26px;">
               <h3>{{ category.description }}</h3>
               <div class="subcategories">
                 <button class="button-be" v-for="(subcategory, subIndex) in category.subcategories" :key="subIndex"
@@ -285,7 +286,7 @@ onMounted(async () => {
       </div>
 
       <!-- 기업 정보 조회 섹션 -->
-      <div v-else id="readSections" style="margin: 0 0 100px 0;">
+      <div v-else id="readSections">
         <h1>{{ companyStore.companyInfo.name }} 기업 정보</h1>
         <div class="image-preview-container">
           <!-- 이미지 리스트를 보여줌 -->

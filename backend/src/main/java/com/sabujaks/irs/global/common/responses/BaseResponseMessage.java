@@ -81,6 +81,8 @@ public enum BaseResponseMessage {
     ANNOUNCEMENT_REGISTER_STEP_TWO_FAIL_NOT_FOUND(false, 3101, "공고가 저장되지 않아 찾을 수 없습니다."),
     ANNOUNCEMENT_REGISTER_STEP_TWO_FAIL_ALREADY(false, 3102, "이미 지원서 폼이 저장된 공고입니다."),
     ANNOUNCEMENT_REGISTER_STEP_TWO_FAIL(false, 3103, "지원서 폼 조립에 실패하였습니다." ),
+    ANNOUNCEMENT_READ_CUSTOM_FORM_FAIL(false, 3104, "조립된 지원서 폼이 없습니다." ),
+    ANNOUNCEMENT_READ_CUSTOM_FORM_SUCCESS(true, 3105, "조립된 지원서 폼 조회에 성공했습니다." ),
     ANNOUNCEMENT_READ_ALL_SUCCESS(true, 3200, "공고 전체조회에 성공했습니다."),
     ANNOUNCEMENT_SEARCH_SUCCESS(true, 3300, "공고 조회에 성공했습니다."),
     ANNOUNCEMENT_SEARCH_FAIL(false, 3301, "공고 조회에 실패했습니다."),
@@ -135,8 +137,9 @@ public enum BaseResponseMessage {
     RESCHEDULE_CREATE_SUCCESS(true, 8005, "면접 조율 신청 생성 완료"),
     RESCHEDULE_NOT_FOUND(false, 8006, "면접 조율 내역을 찾을 수 없습니다."),
     RESCHEDULE_SEARCH_ALL_SUCCESS(true, 8007, "면접 조율 내역 조회에 성공했습니다."),
+    INTERVIEW_SCHEDULE_COUNT_SUCCESS(true, 8008, "공고별 생성 면접 개수 조회에 성공했습니다."),
 
-    INTERVIEW_PARTICIPATE_NOT_FOUND(false, 8008, "면접 연관 정보를 찾을 수 없습니다."),
+    INTERVIEW_PARTICIPATE_NOT_FOUND(false, 8009, "면접 연관 정보를 찾을 수 없습니다."),
 
     // VIDEO_INTERVIEW 화상 면접 8100 ~ 8199
     VIDEO_INTERVIEW_CREATE_SUCCESS(true, 8100, "화상 면접 방 생성에 성공했습니다."),

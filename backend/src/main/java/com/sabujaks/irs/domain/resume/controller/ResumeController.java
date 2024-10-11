@@ -10,7 +10,7 @@ import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
 import com.sabujaks.irs.global.security.CustomUserDetails;
 import com.sabujaks.irs.global.utils.CloudFileUpload;
 import com.sabujaks.irs.global.utils.email.service.EmailService;
-import com.sabujaks.irs.global.utils.email.model.response.ResumeRejectRes;
+import com.sabujaks.irs.global.utils.email.model.response.ResumeResultRes;
 import com.sabujaks.irs.global.utils.email.service.EmailSenderSeeker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -152,8 +152,8 @@ public class ResumeController {
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestBody List<ResumeReadAllRecruiterRes> resumeList) throws BaseException {
 
-        List<ResumeRejectRes> rejectInfo = emailService.getRejectInfo(customUserDetails, resumeList);
-        emailSenderSeeker.sendResumeResultEmail(rejectInfo);
+        List<ResumeResultRes> resultInfo = emailService.getInfo(customUserDetails, resumeList);
+        emailSenderSeeker.sendResumeResultEmail(resultInfo);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.RESUME_READ_SUCCESS_RESUMED));
     }
 
