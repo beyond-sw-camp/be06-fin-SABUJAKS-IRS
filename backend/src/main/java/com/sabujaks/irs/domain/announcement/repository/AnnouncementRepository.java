@@ -26,8 +26,10 @@ public interface AnnouncementRepository extends JpaRepository<Announcement, Long
     @Query("SELECT a FROM Announcement a WHERE a.recruiter.idx = :recruiterIdx ORDER BY a.idx DESC")
     Page<Announcement> findByRecruiterIdx(Long recruiterIdx, Pageable pageable);
 
-    @Query("SELECT a FROM Announcement a WHERE a.title LIKE %:keyword% OR a.jobTitle LIKE %:keyword1%")
-    Optional<List<Announcement>> findAllByTitleContainingOrjobTitleContaining(String keyword, String keyword1);
+    @Query("SELECT a FROM Announcement a " +
+            "JOIN Company c ON a.recruiter = c.recruiter " +
+            "WHERE (a.title LIKE %:keyword% OR a.jobTitle LIKE %:keyword% OR c.name LIKE %:keyword%)")
+    Optional<List<Announcement>> findAllByKeywordInTitleOrJobTitleOrCompanyName(String keyword);
 
 
     // 검색
