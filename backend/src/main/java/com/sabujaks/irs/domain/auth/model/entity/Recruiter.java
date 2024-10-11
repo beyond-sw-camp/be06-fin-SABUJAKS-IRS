@@ -27,7 +27,7 @@ public class Recruiter {
     private String email; // 이메일
 
     @Setter
-    @Column(nullable = false, length = 100, unique = true)
+    @Column(nullable = false, length = 100)
     private String password; // 비밀번호
     private String name; // 가입자명
     private String phoneNumber; // 사업자 등록 번호

@@ -43,7 +43,6 @@ public class EmailSenderSeeker {
     private final FreeMarkerConfigurer freemarkerConfigurer;
     private final AlarmRepository alarmRepository;
     private final SeekerRepository seekerRepository;
-    private final View error;
     private final TotalProcessRepository totalProcessRepository;
 
     public void signupEmail(AuthSignupRes response, String uuid) {
