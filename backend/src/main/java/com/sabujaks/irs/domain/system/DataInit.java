@@ -170,78 +170,78 @@ public class DataInit {
             }
         }
 
+
         // 모집직무 job_category
-        if(baseInfoRepository.findById(62L).isEmpty()){
-            // 모집직무 카테고리 대분류 추가
-            String groupName = "job_category";
-            String[] descriptions = {
-                    "기획&전략", "교육", "고객상담&TM", "IT&개발", "마케팅",
-                    "영업", "인사", "재무&회계", "법무", "홍보&PR",
-                    "디자인", "생산&제조", "연구개발(R&D)", "물류", "구매",
-                    "건설&토목", "의료", "연구", "법무&특허", "서비스",
-                    "비서&총무", "전략기획", "엔지니어", "유통&판매", "리스크관리",
-                    "품질관리", "공공행정", "광고&미디어", "항공", "호텔&외식"
-            };
 
-            // 소분류 데이터
-            Map<String, String[]> subCategories = new HashMap<>();
-            subCategories.put("기획&전략", new String[]{"사업기획", "전략수립", "경영기획", "프로젝트관리", "사업분석", "시장조사", "리스크관리"});
-            subCategories.put("교육", new String[]{"교육기획", "학습상담", "학원생관리", "교육운영", "교육컨설팅", "교육콘텐츠기획"});
-            subCategories.put("고객상담&TM", new String[]{"고객상담", "TM상담", "해피콜", "클레임관리", "고객데이터관리", "서비스품질관리"});
-            subCategories.put("IT&개발", new String[]{"프론트엔드개발", "백엔드개발", "모바일개발", "웹개발", "데이터베이스관리", "시스템엔지니어", "소프트웨어테스트"});
-            subCategories.put("마케팅", new String[]{"디지털마케팅", "콘텐츠마케팅", "마케팅전략", "브랜드관리", "광고기획", "소셜미디어관리", "시장분석"});
-            subCategories.put("영업", new String[]{"B2B영업", "B2C영업", "영업기획", "영업관리", "신규사업개발", "영업지원", "채널관리"});
-            subCategories.put("인사", new String[]{"인사기획", "채용", "인재육성", "조직문화관리", "노무관리", "성과관리", "복리후생"});
-            subCategories.put("재무&회계", new String[]{"재무관리", "회계", "세무", "재무기획", "자금관리", "리스크관리", "재무분석"});
-            subCategories.put("법무", new String[]{"법무지원", "계약관리", "소송관리", "기업법무", "지적재산권관리", "컴플라이언스", "규제대응"});
-            subCategories.put("홍보&PR", new String[]{"미디어관리", "언론대응", "홍보전략", "브랜드PR", "내부커뮤니케이션", "이벤트기획"});
-            subCategories.put("디자인", new String[]{"그래픽디자인", "UI/UX디자인", "웹디자인", "광고디자인", "브랜드디자인", "제품디자인", "패키지디자인"});
-            subCategories.put("생산&제조", new String[]{"생산관리", "공정관리", "설비관리", "품질관리", "자재관리", "안전관리", "생산계획"});
-            subCategories.put("연구개발(R&D)", new String[]{"제품개발", "기술연구", "시장조사", "특허관리", "신제품기획", "기술기획", "기술동향분석"});
-            subCategories.put("물류", new String[]{"물류관리", "재고관리", "유통기획", "운송관리", "창고관리", "국제물류", "SCM관리"});
-            subCategories.put("구매", new String[]{"구매관리", "원가관리", "공급업체관리", "구매계약", "수입관리", "원자재구매"});
-            subCategories.put("건설&토목", new String[]{"건축설계", "토목설계", "현장관리", "공사관리", "안전관리", "프로젝트관리", "자재관리"});
-            subCategories.put("의료", new String[]{"간호", "진료지원", "의료기기관리", "환자관리", "의료코디네이터", "약사", "의무기록관리"});
-            subCategories.put("연구", new String[]{"임상연구", "바이오연구", "의약품연구", "화학분석", "기초과학연구", "실험실관리", "기술연구"});
-            subCategories.put("법무&특허", new String[]{"특허출원", "지식재산권관리", "법무상담", "계약관리", "소송대응", "컴플라이언스"});
-            subCategories.put("서비스", new String[]{"고객서비스", "서비스기획", "리셉션", "클레임처리", "CS운영", "서비스교육"});
-            subCategories.put("비서&총무", new String[]{"비서업무", "일정관리", "총무관리", "사무지원", "자산관리", "문서관리", "회의관리"});
-            subCategories.put("전략기획", new String[]{"사업전략수립", "시장분석", "재무분석", "위험관리", "프로젝트관리", "경쟁사분석", "장기계획수립"});
-            subCategories.put("엔지니어", new String[]{"기계설계", "전기설계", "시스템엔지니어", "자동화설비관리", "설비보전", "기술지원", "제품개발"});
-            subCategories.put("유통&판매", new String[]{"판매관리", "매장관리", "상품기획", "유통기획", "재고관리", "프로모션기획", "매출분석"});
-            subCategories.put("리스크관리", new String[]{"금융리스크관리", "재무리스크관리", "위험분석", "규제대응", "자산운용", "보안관리"});
-            subCategories.put("품질관리", new String[]{"QC", "QA", "품질보증", "제품검사", "공정관리", "불량분석", "고객불만처리"});
-            subCategories.put("공공행정", new String[]{"행정기획", "정책분석", "공공사업관리", "국제협력", "정책평가", "공공서비스개선"});
-            subCategories.put("광고&미디어", new String[]{"광고기획", "미디어플래닝", "방송제작", "광고대행", "PR전략", "콘텐츠기획", "미디어구매"});
-            subCategories.put("항공", new String[]{"항공기정비", "승무원", "공항운영", "화물운송", "비행기정비", "항공사운영"});
-            subCategories.put("호텔&외식", new String[]{"호텔운영", "레스토랑운영", "조리", "객실관리", "외식기획", "행사기획", "프론트관리"});
+        // 모집직무 카테고리 대분류 추가
+        String groupName = "job_category";
+        String[] descriptions = {
+                "기획&전략", "교육", "고객상담&TM", "IT&개발", "마케팅",
+                "영업", "인사", "재무&회계", "법무", "홍보&PR",
+                "디자인", "생산&제조", "연구개발(R&D)", "물류", "구매",
+                "건설&토목", "의료", "연구", "법무&특허", "서비스",
+                "비서&총무", "전략기획", "엔지니어", "유통&판매", "리스크관리",
+                "품질관리", "공공행정", "광고&미디어", "항공", "호텔&외식"
+        };
+
+        // 소분류 데이터
+        Map<String, String[]> subCategories = new HashMap<>();
+        subCategories.put("기획&전략", new String[]{"사업기획", "전략수립", "경영기획", "프로젝트관리", "사업분석", "시장조사", "리스크관리"});
+        subCategories.put("교육", new String[]{"교육기획", "학습상담", "학원생관리", "교육운영", "교육컨설팅", "교육콘텐츠기획"});
+        subCategories.put("고객상담&TM", new String[]{"고객상담", "TM상담", "해피콜", "클레임관리", "고객데이터관리", "서비스품질관리"});
+        subCategories.put("IT&개발", new String[]{"프론트엔드개발", "백엔드개발", "모바일개발", "웹개발", "데이터베이스관리", "시스템엔지니어", "소프트웨어테스트"});
+        subCategories.put("마케팅", new String[]{"디지털마케팅", "콘텐츠마케팅", "마케팅전략", "브랜드관리", "광고기획", "소셜미디어관리", "시장분석"});
+        subCategories.put("영업", new String[]{"B2B영업", "B2C영업", "영업기획", "영업관리", "신규사업개발", "영업지원", "채널관리"});
+        subCategories.put("인사", new String[]{"인사기획", "채용", "인재육성", "조직문화관리", "노무관리", "성과관리", "복리후생"});
+        subCategories.put("재무&회계", new String[]{"재무관리", "회계", "세무", "재무기획", "자금관리", "리스크관리", "재무분석"});
+        subCategories.put("법무", new String[]{"법무지원", "계약관리", "소송관리", "기업법무", "지적재산권관리", "컴플라이언스", "규제대응"});
+        subCategories.put("홍보&PR", new String[]{"미디어관리", "언론대응", "홍보전략", "브랜드PR", "내부커뮤니케이션", "이벤트기획"});
+        subCategories.put("디자인", new String[]{"그래픽디자인", "UI/UX디자인", "웹디자인", "광고디자인", "브랜드디자인", "제품디자인", "패키지디자인"});
+        subCategories.put("생산&제조", new String[]{"생산관리", "공정관리", "설비관리", "품질관리", "자재관리", "안전관리", "생산계획"});
+        subCategories.put("연구개발(R&D)", new String[]{"제품개발", "기술연구", "시장조사", "특허관리", "신제품기획", "기술기획", "기술동향분석"});
+        subCategories.put("물류", new String[]{"물류관리", "재고관리", "유통기획", "운송관리", "창고관리", "국제물류", "SCM관리"});
+        subCategories.put("구매", new String[]{"구매관리", "원가관리", "공급업체관리", "구매계약", "수입관리", "원자재구매"});
+        subCategories.put("건설&토목", new String[]{"건축설계", "토목설계", "현장관리", "공사관리", "안전관리", "프로젝트관리", "자재관리"});
+        subCategories.put("의료", new String[]{"간호", "진료지원", "의료기기관리", "환자관리", "의료코디네이터", "약사", "의무기록관리"});
+        subCategories.put("연구", new String[]{"임상연구", "바이오연구", "의약품연구", "화학분석", "기초과학연구", "실험실관리", "기술연구"});
+        subCategories.put("법무&특허", new String[]{"특허출원", "지식재산권관리", "법무상담", "계약관리", "소송대응", "컴플라이언스"});
+        subCategories.put("서비스", new String[]{"고객서비스", "서비스기획", "리셉션", "클레임처리", "CS운영", "서비스교육"});
+        subCategories.put("비서&총무", new String[]{"비서업무", "일정관리", "총무관리", "사무지원", "자산관리", "문서관리", "회의관리"});
+        subCategories.put("전략기획", new String[]{"사업전략수립", "시장분석", "재무분석", "위험관리", "프로젝트관리", "경쟁사분석", "장기계획수립"});
+        subCategories.put("엔지니어", new String[]{"기계설계", "전기설계", "시스템엔지니어", "자동화설비관리", "설비보전", "기술지원", "제품개발"});
+        subCategories.put("유통&판매", new String[]{"판매관리", "매장관리", "상품기획", "유통기획", "재고관리", "프로모션기획", "매출분석"});
+        subCategories.put("리스크관리", new String[]{"금융리스크관리", "재무리스크관리", "위험분석", "규제대응", "자산운용", "보안관리"});
+        subCategories.put("품질관리", new String[]{"QC", "QA", "품질보증", "제품검사", "공정관리", "불량분석", "고객불만처리"});
+        subCategories.put("공공행정", new String[]{"행정기획", "정책분석", "공공사업관리", "국제협력", "정책평가", "공공서비스개선"});
+        subCategories.put("광고&미디어", new String[]{"광고기획", "미디어플래닝", "방송제작", "광고대행", "PR전략", "콘텐츠기획", "미디어구매"});
+        subCategories.put("항공", new String[]{"항공기정비", "승무원", "공항운영", "화물운송", "비행기정비", "항공사운영"});
+        subCategories.put("호텔&외식", new String[]{"호텔운영", "레스토랑운영", "조리", "객실관리", "외식기획", "행사기획", "프론트관리"});
 
 
-            for (int i = 0; i < descriptions.length; i++) {
-                String code = String.format("job_%03d", i + 1);
-                String groupName1 = descriptions[i];
+        for (int i = 0; i < descriptions.length; i++) {
+            String code = String.format("job_%03d", i + 1);
+            String groupName1 = descriptions[i];
 
-                // 대분류 저장
-                BaseInfo baseInfo = BaseInfo.builder()
-                        .groupName(groupName)
-                        .code(code)
-                        .description(groupName1)
-                        .parentCode(null)
-                        .build();
-                baseInfoRepository.save(baseInfo);
+            // 대분류 저장
+            BaseInfo baseInfo = BaseInfo.builder()
+                    .groupName(groupName)
+                    .code(code)
+                    .description(groupName1)
+                    .parentCode(null)
+                    .build();
+            baseInfoRepository.save(baseInfo);
 
-                // 소분류 추가
-                String[] subCategoryDescriptions = subCategories.get(groupName1);
-                if (subCategoryDescriptions != null) {
-                    for (int j = 0; j < subCategoryDescriptions.length; j++) {
-                        BaseInfo subBaseInfo = BaseInfo.builder()
-                                .groupName(groupName1)
-                                .code(String.format("%s_%03d", code, j + 1))
-                                .description(subCategoryDescriptions[j])
-                                .parentCode(code)
-                                .build();
-                        baseInfoRepository.save(subBaseInfo);
-                    }
+            // 소분류 추가
+            String[] subCategoryDescriptions = subCategories.get(groupName1);
+            if (subCategoryDescriptions != null) {
+                for (int j = 0; j < subCategoryDescriptions.length; j++) {
+                    BaseInfo subBaseInfo = BaseInfo.builder()
+                            .groupName(groupName1)
+                            .code(String.format("%s_%03d", code, j + 1))
+                            .description(subCategoryDescriptions[j])
+                            .parentCode(code)
+                            .build();
+                    baseInfoRepository.save(subBaseInfo);
                 }
             }
         }
