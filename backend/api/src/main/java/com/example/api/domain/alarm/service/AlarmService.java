@@ -1,0 +1,75 @@
+package com.example.api.domain.alarm.service;
+
+import com.example.api.domain.alarm.model.request.AlarmReq;
+import com.example.api.domain.alarm.model.response.AlarmRes;
+import com.example.api.global.common.exception.BaseException;
+import com.example.api.global.common.responses.BaseResponseMessage;
+import com.example.common.domain.alarm.model.entity.Alarm;
+import com.example.common.domain.alarm.repository.AlarmRepository;
+import com.example.common.domain.interview_schedule.repository.InterviewScheduleRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+public class AlarmService {
+
+    private final AlarmRepository alarmRepository;
+    private final InterviewScheduleRepository interviewScheduleRepository;
+
+    public AlarmService(AlarmRepository alarmRepository, InterviewScheduleRepository interviewScheduleRepository) {
+        this.alarmRepository = alarmRepository;
+        this.interviewScheduleRepository = interviewScheduleRepository;
+    }
+
+    public AlarmRes create(AlarmReq dto) throws BaseException {
+        Alarm alarm = alarmRepository.save(Alarm.builder()
+                .type(dto.getType())
+                .status(dto.getStatus())
+                .message(dto.getMessage())
+                .build());
+
+        return AlarmRes.builder()
+                .idx(alarm.getIdx())
+                .type(alarm.getType())
+                .status(alarm.getStatus())
+                .message(alarm.getMessage())
+                .createdAt(alarm.getCreatedAt())
+                .build();
+    }
+
+    public List<AlarmRes> readAll(Long idx) throws BaseException {
+
+        List<Alarm> result = alarmRepository.findBySeekerIdx(idx)
+                                .orElseThrow(() -> new BaseException(BaseResponseMessage.ALARM_SEARCH_FAIL));
+        List<AlarmRes> alarmResult = new ArrayList<>();
+        for (Alarm alarm : result) {
+            AlarmRes.AlarmResBuilder alarmResBuilder = AlarmRes.builder()
+                    .idx(alarm.getIdx())
+                    .type(alarm.getType())
+                    .status(alarm.getStatus())
+                    .message(alarm.getMessage())
+                    .createdAt(alarm.getCreatedAt());
+
+            // alarm.getInterviewSchedule()이 null이 아니면 interviewScheduleIdx 설정
+            if (alarm.getInterviewSchedule() != null) {
+                alarmResBuilder.interviewScheduleIdx(alarm.getInterviewSchedule().getIdx());
+            }
+
+            alarmResult.add(alarmResBuilder.build());
+        }
+
+        return alarmResult;
+    }
+
+    public Boolean updateStatus(Long idx) throws BaseException {
+        Alarm alarm = alarmRepository.findById(idx)
+                        .orElseThrow(() -> new BaseException(BaseResponseMessage.ALARM_SEARCH_FAIL));
+
+        alarm.setStatus(true);
+        alarmRepository.save(alarm);
+
+        return true;
+    }
+}
