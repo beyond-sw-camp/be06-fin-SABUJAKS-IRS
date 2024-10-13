@@ -1,6 +1,5 @@
 package com.example.api.domain.company.model.request;
 
-import com.example.api.domain.company.model.entity.CompanyBenefits;
 import lombok.*;
 
 import java.util.ArrayList;
