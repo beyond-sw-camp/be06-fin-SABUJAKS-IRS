@@ -26,30 +26,9 @@ public interface AnnouncementRepository extends JpaRepository<Announcement, Long
     @Query("SELECT a FROM Announcement a WHERE a.recruiter.idx = :recruiterIdx ORDER BY a.idx DESC")
     Page<Announcement> findByRecruiterIdx(Long recruiterIdx, Pageable pageable);
 
-    @Query("SELECT a FROM Announcement a " +
-            "JOIN Company c ON a.recruiter = c.recruiter " +
-            "WHERE (a.title LIKE %:keyword% OR a.jobTitle LIKE %:keyword% OR c.name LIKE %:keyword%)")
-    Optional<List<Announcement>> findAllByKeywordInTitleOrJobTitleOrCompanyName(String keyword);
+    @Query("SELECT a FROM Announcement a WHERE a.recruiter.idx = :recruiterIdx")
+    Page<Announcement> findAllByRecruiterIdx(Long recruiterIdx, Pageable pageable);
 
-
-    // 검색
-    List<Announcement> findAllByCareerBase(String careerBase);
-
-    @Query("SELECT a FROM Announcement a WHERE a.jobCategory LIKE %:jobCategory%")
-    List<Announcement> findAllByJobCategoryContaining(String jobCategory);
-
-    @Query("SELECT a FROM Announcement a WHERE a.region LIKE %:region%")
-    List<Announcement> findAllByRegionContaining(String region);
-
-    @Query("SELECT a FROM Announcement a WHERE a.careerBase = :careerBase AND a.jobCategory LIKE %:jobCategory%")
-    List<Announcement> findAllByCareerBaseAndJobCategoryContaining(String careerBase, String jobCategory);
-
-    @Query("SELECT a FROM Announcement a WHERE a.careerBase = :careerBase AND a.region LIKE %:region%")
-    List<Announcement> findAllByCareerBaseAndRegionContaining(String careerBase, String region);
-
-    @Query("SELECT a FROM Announcement a WHERE a.jobCategory LIKE %:jobCategory% AND a.region LIKE %:region%")
-    List<Announcement> findAllByJobCategoryContainingAndRegionContaining(String jobCategory, String region);
-
-    @Query("SELECT a FROM Announcement a WHERE a.careerBase = :careerBase AND a.jobCategory LIKE %:jobCategory% AND a.region LIKE %:region%")
-    List<Announcement> findAllByCareerBaseAndJobCategoryContainingAndRegionContaining(String careerBase, String jobCategory, String region);
+    @Query("SELECT a FROM Announcement a WHERE a.recruiter.idx = :recruiterIdx AND a.careerBase = :careerBase")
+    Page<Announcement> findAllByRecruiterIdxAndCareerBase(Long recruiterIdx, String careerBase, Pageable pageable);
 }
