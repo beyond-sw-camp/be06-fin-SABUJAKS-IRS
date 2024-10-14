@@ -18,6 +18,7 @@ import com.sabujaks.irs.domain.resume.model.response.*;
 import com.sabujaks.irs.domain.resume.repository.*;
 import com.sabujaks.irs.domain.total_process.model.entity.TotalProcess;
 import com.sabujaks.irs.domain.total_process.repository.TotalProcessRepository;
+import com.sabujaks.irs.global.common.annotation.ExeTimer;
 import com.sabujaks.irs.global.common.exception.BaseException;
 import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
 import com.sabujaks.irs.global.security.CustomUserDetails;
@@ -1011,6 +1012,7 @@ public class ResumeService {
 
     }
 
+    @ExeTimer
     @Transactional
     public ResumeReadRes read(Long resumeIdx) throws BaseException {
         Optional<Resume> resultResume = resumeRepository.findByResumeIdx(resumeIdx);
