@@ -15,8 +15,7 @@ public class ExecutionTimeAspect {
     private static final Logger logger = LoggerFactory.getLogger(ExecutionTimeAspect.class);
 
     @Pointcut("@annotation(com.sabujaks.irs.global.common.annotation.ExeTimer)")
-    private void timePointCut() {
-    }
+    private void timePointCut() {}
 
     @Around("timePointCut()")
     public Object traceTime(ProceedingJoinPoint joinPoint) throws Throwable {
