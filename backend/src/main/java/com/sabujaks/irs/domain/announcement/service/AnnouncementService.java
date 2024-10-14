@@ -27,6 +27,7 @@ import com.sabujaks.irs.domain.system.model.response.BaseInfoReadRes;
 import com.sabujaks.irs.domain.system.repository.BaseInfoRepository;
 import com.sabujaks.irs.domain.resume.repository.ResumeRepository;
 import com.sabujaks.irs.domain.system.service.BaseInfoService;
+import com.sabujaks.irs.global.common.annotation.ExeTimer;
 import com.sabujaks.irs.global.common.exception.BaseException;
 import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
 import com.sabujaks.irs.global.security.CustomUserDetails;
@@ -200,6 +201,7 @@ public class AnnouncementService {
 
 
     /*******공고 전체 조회***********/
+    @ExeTimer
     public List<AnnouncementReadAllRes> readAllSee() throws BaseException {
         List<Announcement> resultAnnouncementList = announcementRepository.findAll();
 
