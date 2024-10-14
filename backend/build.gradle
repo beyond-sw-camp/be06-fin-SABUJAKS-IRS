@@ -58,6 +58,8 @@ dependencies {
 
 	//freeMarker
 	implementation 'org.springframework.boot:spring-boot-starter-freemarker'
+
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 
 dependencyManagement {
