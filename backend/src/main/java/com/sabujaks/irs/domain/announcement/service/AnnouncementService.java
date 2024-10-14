@@ -315,9 +315,9 @@ public class AnnouncementService {
 
         // 공고 리스트
         if(careerBase.equals("전체")) {
-            result = announcementDslRepository.findByRecruiterIdx(recruiterIdx, pageable);
+            result = announcementRepository.findAllByRecruiterIdx(recruiterIdx, pageable);
         } else {
-            result = announcementDslRepository.findByRecruiterIdxAndCareerBase(recruiterIdx, careerBase, pageable);
+            result = announcementRepository.findAllByRecruiterIdxAndCareerBase(recruiterIdx, careerBase, pageable);
         }
 
         List<AnnouncementReadAllRes2> announcementList = new ArrayList<>();
