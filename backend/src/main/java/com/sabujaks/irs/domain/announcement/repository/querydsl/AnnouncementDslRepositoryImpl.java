@@ -87,7 +87,7 @@ public class AnnouncementDslRepositoryImpl implements AnnouncementDslRepository 
             predicate = keywordContains(searchReq.getKeyword());
         }
 
-        if (searchReq.getCareerBase() != null) {
+        if (searchReq.getCareerBase() != null && !searchReq.getCareerBase().isBlank()) {
             predicate = (predicate == null) ? careerBaseEq(searchReq.getCareerBase()) : predicate.and(careerBaseEq(searchReq.getCareerBase()));
         }
 

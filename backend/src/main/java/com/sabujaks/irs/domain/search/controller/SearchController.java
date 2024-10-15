@@ -11,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/search")
@@ -19,10 +18,9 @@ import java.util.List;
 public class SearchController {
     private final SearchService searchService;
 
-    @PostMapping("/announcement")
+    @GetMapping("/announcement")
     public ResponseEntity<BaseResponse<AnnouncementReadAllRes>> search(
-            @RequestBody SearchReq dto) throws BaseException {
-        // 필터 데이터를 서비스로 전달하여 공고 검색
+            SearchReq dto) throws BaseException {
         Page<AnnouncementReadAllRes> response = searchService.search(dto);
 
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.ANNOUNCEMENT_SEARCH_SUCCESS, response));
