@@ -1,11 +1,12 @@
 package com.sabujaks.irs.global.config;
 
+import com.sabujaks.irs.domain.auth.repository.RefreshTokenRepository;
+import com.sabujaks.irs.global.security.CustomUserDetailService;
 import com.sabujaks.irs.global.security.exception.CustomAccessDeniedHandler;
 import com.sabujaks.irs.global.security.exception.CustomAuthenticationEntryPoint;
 import com.sabujaks.irs.global.security.exception.CustomLoginFailureHandler;
 import com.sabujaks.irs.global.security.filter.JwtFilter;
 import com.sabujaks.irs.global.security.filter.LoginFilter;
-import com.sabujaks.irs.global.security.oauth2.CustomOAuth2UserDetails;
 import com.sabujaks.irs.global.security.oauth2.CustomOAuth2UserService;
 import com.sabujaks.irs.global.security.oauth2.OAuth2AuthenticationSuccessHandler;
 import com.sabujaks.irs.global.utils.JwtUtil;
@@ -26,8 +27,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.firewall.DefaultHttpFirewall;
-import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -44,6 +43,8 @@ public class SecurityConfig {
     private final CustomAccessDeniedHandler accessDeniedHandler;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final CustomUserDetailService customUserDetailService;
 
     @Bean
     public CorsFilter corsFilter() {
@@ -81,6 +82,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/video-interview/search-all").access(this::hasVideoInterviewAuthorities)
                                 .requestMatchers("/api/auth/seeker/read").hasAuthority("ROLE_SEEKER")
                                 .requestMatchers("/api/auth/**").permitAll()
+                                .requestMatchers("/api/announcement/read-all/see").permitAll()
                                 .requestMatchers("/interview-schedule/**").permitAll()
                                 .anyRequest().permitAll()
         );
@@ -92,7 +94,7 @@ public class SecurityConfig {
         http.logout((auth) ->
                 auth
                         .logoutUrl("/api/auth/logout")
-                        .deleteCookies("ATOKEN", "UTOKEN")
+                        .deleteCookies("ATOKEN", "RTOKEN", "UTOKEN")
                         .addLogoutHandler((request, response, authentication) -> {
                             // 요청에서 쿠키 배열을 가져옴
                             Cookie[] cookies = request.getCookies();
@@ -116,8 +118,8 @@ public class SecurityConfig {
         );
         http.addFilter(corsFilter());
         http.exceptionHandling(e ->e.authenticationEntryPoint(authenticationEntryPoint).accessDeniedHandler(accessDeniedHandler));
-        http.addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class);
-        LoginFilter loginFilter = new LoginFilter(jwtUtil, authenticationManager(authenticationConfiguration));
+        http.addFilterBefore(new JwtFilter(jwtUtil, customUserDetailService, refreshTokenRepository), LoginFilter.class);
+        LoginFilter loginFilter = new LoginFilter(jwtUtil, authenticationManager(authenticationConfiguration), refreshTokenRepository);
         loginFilter.setFilterProcessesUrl("/api/auth/login");
         loginFilter.setAuthenticationFailureHandler(customLoginFailureHandler);
         http.addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);

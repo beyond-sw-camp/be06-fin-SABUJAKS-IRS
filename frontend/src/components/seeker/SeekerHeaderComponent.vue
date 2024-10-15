@@ -1,27 +1,26 @@
 <template>
-  <header class="header-cp">
-    <div v-if="authStore.isLoggedIn && authStore.userInfo.role=='ROLE_SEEKER'" class="header-container">
+  <header class="header-cp" v-if="authStore.isLoggedIn && authStore.userInfo">
+    <div v-if="authStore.userInfo.role=='ROLE_SEEKER'" class="header-container">
       <a href="/">
         <img class="header-logo" src="../../assets/img/irs_white.png">
       </a>
       <div class="header-right">
         <a href="#" @click="goAndReload('/seeker/mypage')">마이페이지</a>
-        <!-- <a href="#">알림</a> -->
-        <a >{{ displayName }}</a>
+        <a>{{ displayName }}</a>
         <a @click="handleLogout" class="logout-btn">로그아웃</a>
       </div>
     </div>
-    <div v-if="authStore.isLoggedIn && authStore.userInfo.role=='ROLE_RECRUITER'" class="header-container">
+    <div v-if="authStore.userInfo.role=='ROLE_RECRUITER'" class="header-container">
       <a href="/">
         <img class="header-logo" src="../../assets/img/irs_white.png">
       </a>
       <div class="header-right">
         <a href="/recruiter/announce">채용 관리</a>
-        <a >{{ displayName }}</a>
+        <a>{{ displayName }}</a>
         <a @click="handleLogout" class="logout-btn">로그아웃</a>
       </div>
     </div>
-    <div v-if="authStore.isLoggedIn && authStore.userInfo.role=='ROLE_ESTIMATOR'" class="header-container">
+    <div v-if="authStore.userInfo.role=='ROLE_ESTIMATOR'" class="header-container">
       <a href="/">
         <img class="header-logo" src="../../assets/img/irs_white.png">
       </a>
@@ -30,7 +29,9 @@
         <a @click="handleLogout" class="logout-btn">로그아웃</a>
       </div>
     </div>
-    <div v-if="!authStore.isLoggedIn" class="header-container">
+  </header>
+  <header class="header-cp" v-else>
+    <div class="header-container">
       <a href="/">
         <img class="header-logo" src="../../assets/img/irs_white.png">
       </a>
@@ -42,11 +43,13 @@
   </header>
 </template>
 
+
 <script setup>
 import { UseAuthStore } from "../../stores/UseAuthStore"
 import { ref, onMounted } from "vue";
 import { useToast } from "vue-toastification";
 import {useRouter} from 'vue-router';
+import { watch } from 'vue';
 const router = useRouter();
 const toast = useToast();
 
@@ -56,10 +59,16 @@ const getUserInfoResult = ref({})
 const displayName = ref('')
 
 onMounted( async() => {
-  if(authStore.isLoggedIn == true){
+  if (authStore.isLoggedIn) {
     await handleGetUserInfo();
   }
-})
+});
+
+watch(() => authStore.isLoggedIn, async (newVal) => {
+  if (newVal) {
+    await handleGetUserInfo();
+  }
+});
 
 const goAndReload = (path) => {
   router.replace(path).then(() => {
@@ -69,8 +78,8 @@ const goAndReload = (path) => {
 
 const handleGetUserInfo = async() => {
   if(authStore.isLoggedIn && authStore.userInfo.email != null){
-    const response = await authStore.getUserInfo();
-    if(response.success){
+    // const response = await authStore.getUserInfo();
+    if(authStore.userInfo != null){
       getUserInfoResult.value = authStore.userInfo
       if(authStore.userInfo.name == null){
         displayName.value = authStore.userInfo.nickName
@@ -81,7 +90,8 @@ const handleGetUserInfo = async() => {
     else {
       toast.error("회원정보를 불러오는데 실패했습니다.")
     }
-  } else if (authStore.userInfo && authStore.isLoggedIn){
+  } 
+  else if (authStore.userInfo && authStore.isLoggedIn){
     getUserInfoResult.value = authStore.userInfo
   }
 }

@@ -1,5 +1,6 @@
 package com.sabujaks.irs.global.utils;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.ComponentScan;
@@ -52,8 +53,13 @@ public class JwtUtil {
 
     // 토큰 만료 시간 확인
     public Boolean isExpired(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
+        try{
+            return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
+        } catch (ExpiredJwtException expiredJwtException){
+            return true;
+        }
     }
+
 
     // 멤버 토큰 생성
     public String createToken(Long id, String username, String role) {
@@ -62,7 +68,17 @@ public class JwtUtil {
                 .claim("username", username)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 60 * 100000))
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 30)) // 3분
+                .signWith(secretKey)
+                .compact();
+    }
+
+    // 리프레시 토큰 생성
+    public String createRefreshToken(String email) {
+        return Jwts.builder()
+                .claim("email", email)
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 10)) // 20분
                 .signWith(secretKey)
                 .compact();
     }

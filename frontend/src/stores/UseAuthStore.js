@@ -24,7 +24,10 @@ export const UseAuthStore = defineStore('auth', {
                 );
                 if(response) {
                     this.isLoggedIn = true;
-                    return true
+                    this.getUserInfo(); // 추가
+                    if(this.userInfo.name != null) {
+                        return true
+                    }
                 }
             } catch (error) {
                 this.isLoggedIn = false;

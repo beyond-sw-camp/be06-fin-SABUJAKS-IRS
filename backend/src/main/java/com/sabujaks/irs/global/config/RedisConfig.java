@@ -17,7 +17,7 @@ import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
-@EnableRedisRepositories
+@EnableRedisRepositories // 레디스 레포지토리를 사용하기 위해
 public class RedisConfig {
     @Value("${REDIS_HOST}")
     private String host;
@@ -25,13 +25,13 @@ public class RedisConfig {
     @Value("${REDIS_PORT}")
     private int port;
 
-//    @Value("${REDIS_PW}")
-//    private String redisPassword;
+    @Value("${REDIS_PW}")
+    private String redisPassword;
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(host, port);
-//        config.setPassword(redisPassword);
+        config.setPassword(redisPassword);
         return new LettuceConnectionFactory(config);
     }
 
