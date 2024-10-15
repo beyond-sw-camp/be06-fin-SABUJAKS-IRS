@@ -137,14 +137,11 @@
         </div>
       </section>
       <div class="pagination">
-        <button 
-          v-for="page in totalPages" 
-          :key="page" 
-          @click="fetchAnnouncements(page)" 
-          :class="{ active: currentPage === page }"
-        >
+        <button @click="prevGroup" :disabled="currentGroup === 0">◀</button>
+        <button v-for="page in displayedPages" :key="page" @click="fetchAnnouncements(page)" :class="{ active: currentPage === page }">
           {{ page }}
         </button>
+        <button @click="nextGroup" :disabled="(currentGroup + 1) * pagesPerGroup >= totalPages">▶</button>
       </div>
       <SeekerFooterComponent></SeekerFooterComponent>
     </div>
@@ -161,7 +158,7 @@
   const announcementStore = UseAnnouncementStore();
   
   // announcements2 리스트의 길이 = 공고 수를 계산
-  const announcementCount = computed(() => announcementStore.announcements2.length);
+  const announcementCount = computed(() => announcementStore.announcements2Page.totalElements);
   
   // 검색 키워드와 선택된 필터 저장
   const searchKeyword = ref('');
@@ -323,6 +320,7 @@ const sortAnnouncements = async (option) => {
     default:
       break;
   }
+  currentPage.value = 1;
   await fetchAnnouncements(currentPage.value);
 };
   
@@ -331,61 +329,93 @@ const sortAnnouncements = async (option) => {
     router.push(`/seeker/announce/detail/${announcementIdx}`);
   };
   
-  
+
   const currentPage = ref(1);
   const pageSize = 24;
-  const keyword = ref('');
-  const careerBase = ref('');
-  const jobCategory = ref('');
-  const region = ref('');
-  const sort = ref('');
-  
-  onMounted(async () => {
-      await fetchAnnouncements(currentPage.value);
-  });
-  
-  const fetchAnnouncements = async (page) => {
-      currentPage.value = page;
-      await announcementStore.search(page - 1, pageSize, 
-        keyword.value, careerBase.value, jobCategory.value, region.value, sort.value);
-  };
-  
-  const paginatedAnnouncements = computed(() => {
-      return announcementStore.announcements2;
-  });
-  
-  const totalPages = computed(() => {
-      return announcementStore.announcements2Page.totalPages || 0;
+
+  const pagesPerGroup = 10;
+
+  const currentGroup = computed(() => Math.floor((currentPage.value - 1) / pagesPerGroup));
+
+  // 현재 페이지 그룹에 따라 표시할 페이지 목록
+  const displayedPages = computed(() => {
+    const startPage = currentGroup.value * pagesPerGroup + 1;
+    const endPage = Math.min(startPage + pagesPerGroup - 1, totalPages.value);
+    const pages = [];
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+    return pages;
   });
 
-  // 검색
-  const handleSearch = async () => {
-    // 키워드
-    if (searchKeyword.value) {
-      keyword.value = searchKeyword.value;
-    } else {
-        keyword.value = '';
-    }
-    
-    // 필터링
-    if (selectedFilters.value.length > 0) {
-        console.log(selectedFilters.value);
-        selectedFilters.value.forEach(filter => {
-            switch (filter.name) {
-                case '채용형태': // 신입/경력
-                    careerBase.value = filter.value;
-                    break;
-                case '모집직무': // 직무 카테고리
-                    jobCategory.value = filter.value;
-                    break;
-                case '근무지역': // 지역
-                    region.value = filter.value;
-                    break;
-            }
-        });
-    }
+// 이전 그룹으로 이동 후 첫 번째 페이지 선택
+const prevGroup = () => {
+  if (currentGroup.value > 0) {
+    currentPage.value = (currentGroup.value - 1) * pagesPerGroup + pagesPerGroup;
+    fetchAnnouncements(currentPage.value); // 이동 후 페이지 선택 효과
+  }
+};
+
+// 다음 그룹으로 이동 후 마지막 페이지 선택
+const nextGroup = () => {
+  if ((currentGroup.value + 1) * pagesPerGroup < totalPages.value) {
+    currentPage.value = (currentGroup.value + 1) * pagesPerGroup + 1;
+    fetchAnnouncements(currentPage.value); // 이동 후 페이지 선택 효과
+  }
+};
+const keyword = ref('');
+const careerBase = ref('');
+const jobCategory = ref('');
+const region = ref('');
+const sort = ref('');
+
+onMounted(async () => {
     await fetchAnnouncements(currentPage.value);
-  };
+});
+
+const fetchAnnouncements = async (page) => {
+    currentPage.value = page;
+    await announcementStore.search(page - 1, pageSize, 
+      keyword.value, careerBase.value, jobCategory.value, region.value, sort.value);
+};
+
+const paginatedAnnouncements = computed(() => {
+    return announcementStore.announcements2;
+});
+
+const totalPages = computed(() => {
+    return announcementStore.announcements2Page.totalPages || 0;
+});
+
+// 검색
+const handleSearch = async () => {
+  // 키워드
+  if (searchKeyword.value) {
+    keyword.value = searchKeyword.value;
+  } else {
+      keyword.value = '';
+  }
+  
+  // 필터링
+  if (selectedFilters.value.length > 0) {
+      console.log(selectedFilters.value);
+      selectedFilters.value.forEach(filter => {
+          switch (filter.name) {
+              case '채용형태': // 신입/경력
+                  careerBase.value = filter.value;
+                  break;
+              case '모집직무': // 직무 카테고리
+                  jobCategory.value = filter.value;
+                  break;
+              case '근무지역': // 지역
+                  region.value = filter.value;
+                  break;
+          }
+      });
+  }
+  currentPage.value = 1;
+  await fetchAnnouncements(currentPage.value);
+};
 
 </script>
 
