@@ -8,6 +8,7 @@ import com.sabujaks.irs.domain.company.model.entity.Company;
 import com.sabujaks.irs.domain.company.model.entity.CompanyImg;
 import com.sabujaks.irs.domain.company.repository.CompanyRepository;
 import com.sabujaks.irs.domain.search.model.request.SearchReq;
+import com.sabujaks.irs.global.common.annotation.ExeTimer;
 import com.sabujaks.irs.global.common.exception.BaseException;
 import com.sabujaks.irs.global.common.responses.BaseResponseMessage;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +28,7 @@ public class SearchService {
     private final CompanyRepository companyRepository;
 
     // 키워드로 공고 검색
+    @ExeTimer
     public Page<AnnouncementReadAllRes> search(SearchReq searchReq) throws BaseException {
         Pageable pageable = PageRequest.of(searchReq.getPage(), searchReq.getSize());
 
