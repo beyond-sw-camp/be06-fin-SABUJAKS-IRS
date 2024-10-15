@@ -12,11 +12,13 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaAuditing
 @EnableFeignClients
 @EnableJpaRepositories(basePackages = {
-        "com.example.common"
+        "com.example.common",
+        "com.example.api"
 })
 
 @EntityScan(basePackages = {
-        "com.example.common"
+        "com.example.common",
+        "com.example.api"
 })
 
 @ComponentScan(basePackages = {

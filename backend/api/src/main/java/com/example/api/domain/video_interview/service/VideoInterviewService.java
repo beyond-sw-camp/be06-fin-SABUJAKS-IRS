@@ -15,7 +15,6 @@ import com.example.api.global.common.exception.BaseException;
 import com.example.api.global.common.responses.BaseResponseMessage;
 import com.example.api.global.security.CustomUserDetails;
 import io.openvidu.java.client.*;
-import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;

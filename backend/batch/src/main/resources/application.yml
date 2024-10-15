@@ -5,6 +5,12 @@ spring:
     multipart:
       max-file-size: 2MB
       max-request-size: 2MB
+  batch:
+    job:
+      enabled: false
+      name: ${BATCH_JOB_NAME}
+    jdbc:
+      initialize-schema: always
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}

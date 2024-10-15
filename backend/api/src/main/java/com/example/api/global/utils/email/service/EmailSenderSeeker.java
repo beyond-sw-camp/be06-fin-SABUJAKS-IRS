@@ -1,5 +1,6 @@
 package com.example.api.global.utils.email.service;
 
+import com.example.api.domain.alarm.service.AlarmService;
 import com.example.api.domain.auth.model.response.AuthSignupRes;
 import com.example.api.domain.auth.model.response.SeekerInfoGetRes;
 import com.example.api.domain.interview_schedule.model.response.InterviewScheduleRes;
@@ -24,11 +25,14 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @Async
@@ -39,13 +43,16 @@ public class EmailSenderSeeker {
     private final AlarmRepository alarmRepository;
     private final SeekerRepository seekerRepository;
     private final TotalProcessRepository totalProcessRepository;
+    private final AlarmService alarmService; // AlarmService 추가
 
-    public EmailSenderSeeker(JavaMailSender mailSender, FreeMarkerConfigurer freemarkerConfigurer, AlarmRepository alarmRepository, SeekerRepository seekerRepository, TotalProcessRepository totalProcessRepository) {
+
+    public EmailSenderSeeker(JavaMailSender mailSender, FreeMarkerConfigurer freemarkerConfigurer, AlarmRepository alarmRepository, SeekerRepository seekerRepository, TotalProcessRepository totalProcessRepository, AlarmService alarmService) {
         this.mailSender = mailSender;
         this.freemarkerConfigurer = freemarkerConfigurer;
         this.alarmRepository = alarmRepository;
         this.seekerRepository = seekerRepository;
         this.totalProcessRepository = totalProcessRepository;
+        this.alarmService = alarmService;
     }
 
     public void signupEmail(AuthSignupRes response, String uuid) {
@@ -212,6 +219,8 @@ public class EmailSenderSeeker {
 
                 alarmRepository.save(alarm);
 
+                // 알람 전송
+                alarmService.sendAlarm(seekerInfoGetRes.getIdx(), "면접 일정 안내 알림 전송");
 
                 mailSender.send(message);
             }
@@ -293,6 +302,27 @@ public class EmailSenderSeeker {
 
         } catch (Exception e) {
             new BaseResponse<>(BaseResponseMessage.EMAIL_SEND_FAIL);
+        }
+    }
+
+    // 클라이언트별로 SseEmitter를 저장하는 Map
+    private final Map<Long, SseEmitter> emitters = new ConcurrentHashMap<>();
+
+    public void sendAlarm(Long seekerIdx, String message) {
+        SseEmitter emitter = emitters.get(seekerIdx);
+        System.out.println("seekerIdx: " + seekerIdx);
+        System.out.println("message: " + message);
+        if (emitter != null) {
+            try {
+                System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@");
+                System.out.println("send Alarm start");
+                emitter.send(SseEmitter.event()
+                        .name("alarm")
+                        .data(message));
+                System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@");
+            } catch (IOException e) {
+                emitters.remove(seekerIdx);
+            }
         }
     }
 }

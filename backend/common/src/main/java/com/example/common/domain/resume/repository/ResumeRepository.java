@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -24,4 +25,7 @@ public interface ResumeRepository extends JpaRepository<Resume, Long> {
 
     @Query("SELECT r FROM Resume r WHERE r.announcement.idx = :announcementIdx ORDER BY r.idx DESC")
     Page<Resume> findAllByAnnouncementIdx(Long announcementIdx, Pageable pageable);
+
+    @Query("SELECT r FROM Resume r WHERE r.announcement.idx = :announcementIdx")
+    Optional<List<Resume>> findAllByAnnouncementIdx(Long announcementIdx);
 }

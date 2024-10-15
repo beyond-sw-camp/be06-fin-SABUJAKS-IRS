@@ -11,6 +11,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-freemarker'
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // OpenVidu
+    implementation 'io.openvidu:openvidu-java-client:2.30.0'
 }
 
 bootJar {

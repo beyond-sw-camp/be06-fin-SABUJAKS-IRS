@@ -18,12 +18,10 @@ public class EmailService {
 
     private final ResumeRepository resumeRepository;
     private final CompanyRepository companyRepository;
-    private final TotalProcessRepository totalProcessRepository;
 
-    public EmailService(ResumeRepository resumeRepository, CompanyRepository companyRepository, TotalProcessRepository totalProcessRepository) {
+    public EmailService(ResumeRepository resumeRepository, CompanyRepository companyRepository) {
         this.resumeRepository = resumeRepository;
         this.companyRepository = companyRepository;
-        this.totalProcessRepository = totalProcessRepository;
     }
 
     public List<ResumeResultRes> getInfo(CustomUserDetails customUserDetails, List<ResumeReadAllRecruiterRes> resumeList) {

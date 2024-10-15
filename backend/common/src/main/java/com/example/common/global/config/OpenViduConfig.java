@@ -1,4 +1,4 @@
-package com.example.api.global.config;
+package com.example.common.global.config;
 
 import io.openvidu.java.client.OpenVidu;
 import org.springframework.beans.factory.annotation.Value;

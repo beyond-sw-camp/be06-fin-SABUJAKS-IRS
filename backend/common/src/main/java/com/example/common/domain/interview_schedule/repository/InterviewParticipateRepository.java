@@ -28,4 +28,9 @@ public interface InterviewParticipateRepository extends JpaRepository<InterviewP
 
     @Query("SELECT ip FROM InterviewParticipate ip WHERE ip.interviewSchedule.idx = :interviewScheduleIdx AND ip.status = :status")
     Optional<List<InterviewParticipate>> findByInterviewScheduleIdxAndStatus(Long interviewScheduleIdx, Boolean status);
+
+    @Query("SELECT ip FROM InterviewParticipate ip WHERE ip.interviewSchedule.idx = :interviewScheduleIdx")
+    Optional<List<InterviewParticipate>> findAllByInterviewScheduleIdx(Long interviewScheduleIdx);
+
+
 }

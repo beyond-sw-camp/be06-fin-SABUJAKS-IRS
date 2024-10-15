@@ -57,4 +57,8 @@ public interface InterviewScheduleRepository extends JpaRepository<InterviewSche
 
     @Query("SELECT COUNT(is) FROM InterviewSchedule is WHERE is.announcement.idx = :announcementIdx")
     Integer countInterviewScheduleByAnnouncementIdx(Long announcementIdx);
+
+    @Query("SELECT is FROM InterviewSchedule is WHERE is.announcement.idx = :announcementIdx")
+    Optional<List<InterviewSchedule>> findAllByAnnouncementIdx(Long announcementIdx);
+
 }

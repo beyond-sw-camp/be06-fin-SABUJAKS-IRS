@@ -23,16 +23,21 @@ public class AlarmController {
 
     private final AlarmService alarmService;
 
-//    @GetMapping(value = "/subscribe", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-//    public SseEmitter subscribe(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-//        Long seekerIdx = customUserDetails.getIdx();
-//        return alarmService.subscribe(seekerIdx);
-//    }
+    @GetMapping(value = "/subscribe/{receiverIdx}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter subscribe(@PathVariable Long receiverIdx) {
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        System.out.println(receiverIdx);
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
+        return alarmService.subscribe(receiverIdx);
+    }
 
     @PostMapping("/create")
     public ResponseEntity<BaseResponse<AlarmReq>> create (
-            @RequestBody AlarmReq dto) throws BaseException {
-        AlarmRes response = alarmService.create(dto);
+            @RequestBody AlarmReq dto,
+            @AuthenticationPrincipal CustomUserDetails customUserDetails) throws BaseException {
+        Long seekerIdx = customUserDetails.getIdx();
+        AlarmRes response = alarmService.create(dto, seekerIdx);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.ALARM_REGISTER_SUCCESS, response));
     }
 
