@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 @EnableJpaAuditing
-@EnableFeignClients
+@EnableFeignClients(basePackages = "com.example.api.global.feign_client")
 @EnableJpaRepositories(basePackages = {
         "com.example.common",
         "com.example.api"

@@ -10,6 +10,7 @@ import com.example.common.domain.alarm.model.entity.Alarm;
 import com.example.common.domain.announcement.model.entity.Announcement;
 import com.example.common.domain.interview_schedule.model.entity.InterviewSchedule;
 import com.example.common.domain.video_interview.model.entity.VideoInterview;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -21,8 +22,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import java.util.List;
+
 @Slf4j
 @Configuration
+@RequiredArgsConstructor
 public class VideoInterviewConfig {
 
     private final JobRepository jobRepository;
@@ -32,22 +36,6 @@ public class VideoInterviewConfig {
     private final VideoInterviewWriter videoInterviewWriter;
     private final EmailConfirmInterviewScheduleProcessor emailConfirmInterviewScheduleProcessor;
     private final EmailWriter emailWriter;
-
-    public VideoInterviewConfig(JobRepository jobRepository,
-                                PlatformTransactionManager transactionManager,
-                                VideoInterviewReader videoInterviewReader,
-                                VideoInterviewProcessor videoInterviewProcessor,
-                                VideoInterviewWriter videoInterviewWriter,
-                                EmailConfirmInterviewScheduleProcessor emailConfirmInterviewScheduleProcessor,
-                                EmailWriter emailWriter) {
-        this.jobRepository = jobRepository;
-        this.transactionManager = transactionManager;
-        this.videoInterviewReader = videoInterviewReader;
-        this.videoInterviewProcessor = videoInterviewProcessor;
-        this.videoInterviewWriter = videoInterviewWriter;
-        this.emailConfirmInterviewScheduleProcessor = emailConfirmInterviewScheduleProcessor;
-        this.emailWriter = emailWriter;
-    }
 
     @Bean
     public Job videoInterviewJob() {
@@ -72,7 +60,7 @@ public class VideoInterviewConfig {
     @Bean
     public Step emailSendStep() {
         return new StepBuilder("emailSendStep", jobRepository)
-                .<InterviewSchedule, Alarm>chunk(10, transactionManager)
+                .<InterviewSchedule, List<Alarm>>chunk(10, transactionManager)
                 .reader(videoInterviewReader.reader()) // 이 부분은 아래에서 설명할게요.
                 .processor(emailConfirmInterviewScheduleProcessor)
                 .writer(emailWriter)

@@ -26,14 +26,12 @@ import java.util.List;
 public class InterviewScheduleController {
 
     private final InterviewScheduleService interviewScheduleService;
-    private final EmailSenderSeeker emailSenderSeeker;
 
     @PostMapping("/create")
     public ResponseEntity<BaseResponse<InterviewScheduleReq>> create (
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestBody InterviewScheduleReq dto) throws BaseException {
         InterviewScheduleRes response = interviewScheduleService.create(customUserDetails, dto);
-        emailSenderSeeker.sendNotiInterviewScheduleEmail(response);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_SCHEDULE_CREATE_SUCCESS, response));
     }
 

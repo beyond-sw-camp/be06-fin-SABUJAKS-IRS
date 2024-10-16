@@ -24,14 +24,11 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
-public class EmailResumeResultProcessor implements ItemProcessor<Announcement, Alarm> {
+public class EmailResumeResultProcessor implements ItemProcessor<Announcement, List<Alarm>> {
 
     private final ResumeRepository resumeRepository;
     private final CompanyRepository companyRepository;
@@ -41,9 +38,9 @@ public class EmailResumeResultProcessor implements ItemProcessor<Announcement, A
     private final FreeMarkerConfigurer freeMarkerConfigurer;
 
     @Override
-    public Alarm process(Announcement announcement) throws Exception {
+    public List<Alarm> process(Announcement announcement) throws Exception {
         Optional<List<Resume>> resumeList = resumeRepository.findAllByAnnouncementIdx(announcement.getIdx());
-
+        List<Alarm> alarms = new ArrayList<>();
         if (resumeList.isPresent()) {
             for(Resume resume : resumeList.get()) {
                 Optional<Alarm> optionalAlarm = alarmRepository.findByResumeIdx(resume.getIdx());
@@ -79,7 +76,7 @@ public class EmailResumeResultProcessor implements ItemProcessor<Announcement, A
 
                     mailSender.send(message);
 
-                    return Alarm.builder()
+                    alarms.add(Alarm.builder()
                             .type("서류전형 결과 안내")
                             .status(false)
                             .message(html)
@@ -88,7 +85,7 @@ public class EmailResumeResultProcessor implements ItemProcessor<Announcement, A
                             .resume(Resume.builder()
                                     .idx(resume.getIdx())
                                     .build())
-                            .build();
+                            .build());
                 }
             }
         }

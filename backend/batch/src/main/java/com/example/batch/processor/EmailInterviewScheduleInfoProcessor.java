@@ -19,14 +19,11 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
-public class EmailInterviewScheduleInfoProcessor implements ItemProcessor<InterviewSchedule, Alarm> {
+public class EmailInterviewScheduleInfoProcessor implements ItemProcessor<InterviewSchedule, List<Alarm>> {
 
     private final AlarmRepository alarmRepository;
     private final JavaMailSender mailSender;
@@ -35,19 +32,22 @@ public class EmailInterviewScheduleInfoProcessor implements ItemProcessor<Interv
     private final FreeMarkerConfigurer freeMarkerConfigurer;
 
     @Override
-    public Alarm process(InterviewSchedule interviewSchedule) throws Exception {
+    public List<Alarm> process(InterviewSchedule interviewSchedule) throws Exception {
         Optional<List<InterviewParticipate>> interviewParticipateList = interviewParticipateRepository.findAllByInterviewScheduleIdx(interviewSchedule.getIdx());
-
-        if(interviewParticipateList.isPresent()) {
-            for(InterviewParticipate participate : interviewParticipateList.get()) {
+        List<Alarm> alarmList = new ArrayList<>();
+        if (interviewParticipateList.isPresent()) {
+            for (InterviewParticipate participate : interviewParticipateList.get()) {
                 Optional<Alarm> optionalAlarm = alarmRepository.findByInterviewScheduleIdx(participate.getInterviewSchedule().getIdx());
 
                 if (optionalAlarm.isPresent()) {
-                    continue;
+                    continue;  // 이미 알람이 존재하면 건너뜀
                 } else {
                     MimeMessage message = mailSender.createMimeMessage();
                     MimeMessageHelper helper = new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
                     helper.setTo(participate.getSeeker().getEmail());
+                    System.out.println("@@@@@@@@@@@@@@@@");
+                    System.out.println(participate.getSeeker().getEmail());
+                    System.out.println("@@@@@@@@@@@@@@@@");
                     helper.setSubject("[IRS] 인터뷰 일정 안내");
 
                     // 템플릿 내부에서 처리한 변수값 매핑
@@ -60,38 +60,34 @@ public class EmailInterviewScheduleInfoProcessor implements ItemProcessor<Interv
                     model.put("companyName", company.getName());
                     model.put("announcementTitle", participate.getInterviewSchedule().getAnnouncement().getTitle());
 
-                    if(participate.getInterviewSchedule().getIsOnline()) {
-                        model.put("isOnline", "온라인");
-                    } else {
-                        model.put("isOnline", "오프라인");
-                    }
+                    model.put("isOnline", participate.getInterviewSchedule().getIsOnline() ? "온라인" : "오프라인");
 
                     // 메일로 전송할 템플릿 렌더링
-                    // 디렉토리 지정한 configure파일에서 객체 얻어와서 해당 객체로 템플릿 찾아서 얻어온다.
-                    Template template = null;
-                    if(participate.getInterviewSchedule().getCareerBase().equals("경력")) {
-                        template = freeMarkerConfigurer.getConfiguration().getTemplate("InterviewExpEmail.html");
-                    } else {
-                        template = freeMarkerConfigurer.getConfiguration().getTemplate("InterviewNewEmail.html");
-                    }
+                    Template template = freeMarkerConfigurer.getConfiguration()
+                            .getTemplate(participate.getInterviewSchedule().getCareerBase().equals("경력") ? "InterviewExpEmail.html" : "InterviewNewEmail.html");
 
                     String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
-                    helper.setText(html, true); // Set HTML content
+                    helper.setText(html, true);  // HTML 내용 설정
+                    System.out.println("@@@@@@@@@@@@@@@@");
+                    System.out.println("메일전송");
+                    mailSender.send(message);  // 메일 전송
+                    System.out.println("@@@@@@@@@@@@@@@@");
 
-                    mailSender.send(message);
+                    // 알람 객체 생성
 
-                    return Alarm.builder()
+                    alarmList.add(Alarm.builder()
                             .type("인터뷰 일정 안내")
                             .status(false)
                             .message(html)
                             .seeker(participate.getSeeker())
                             .interviewSchedule(participate.getInterviewSchedule())
                             .createdAt(LocalDateTime.now())
-                            .build();
+                            .build());
                 }
             }
+            return alarmList;
         }
 
-        return null;
+        return null;  // 더 이상 처리할 알람이 없으면 null 반환
     }
 }

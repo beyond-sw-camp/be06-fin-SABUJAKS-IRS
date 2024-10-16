@@ -94,6 +94,8 @@ public class AnnouncementService {
                         .announcementStart(dto.getAnnouncementStart()) // 시작날
                         .announcementEnd(dto.getAnnouncementEnd()) // 종료날
                         .interviewNum(dto.getInterviewNum()) // 면접횟수
+                        .deadlineDocument(dto.getDeadlineDocument()) // 서류전형 마감날
+                        .deadlineFinal(dto.getDeadlineFinal()) // 전체전형 마감날
                         .imgUrl(fileUrl)
                         .build();
                 announcementRepository.save(announcement);
@@ -126,6 +128,8 @@ public class AnnouncementService {
                         .announcementStart(dto.getAnnouncementStart())
                         .announcementEnd(dto.getAnnouncementEnd())
                         .interviewNum(dto.getInterviewNum())
+                        .deadlineDocument(dto.getDeadlineDocument()) // 서류전형 마감날
+                        .deadlineFinal(dto.getDeadlineFinal()) // 전체전형 마감날
                         .note(dto.getNote())
                         .build();
                 announcementRepository.save(announcement);
@@ -291,6 +295,8 @@ public class AnnouncementService {
                         .announcementEnd(announcement.getAnnouncementEnd())
                         .interviewNum(announcement.getInterviewNum())
                         .process(announcement.getProcess())
+                        .deadlineDocument(announcement.getDeadlineDocument()) // 서류전형 마감날
+                        .deadlineFinal(announcement.getDeadlineFinal()) // 전체전형 마감날
                         .note(announcement.getNote())
 
                         .companyIndustry(company.getIndustry())
@@ -326,9 +332,9 @@ public class AnnouncementService {
 
         // 공고 리스트
         if(careerBase.equals("전체")) {
-            result = announcementDslRepository.findByRecruiterIdx(recruiterIdx, pageable);
+            result = announcementRepository.findAllByRecruiterIdx(recruiterIdx, pageable);
         } else {
-            result = announcementDslRepository.findByRecruiterIdxAndCareerBase(recruiterIdx, careerBase, pageable);
+            result = announcementRepository.findAllByRecruiterIdxAndCareerBase(recruiterIdx, careerBase, pageable);
         }
 
         List<AnnouncementReadAllRes2> announcementList = new ArrayList<>();

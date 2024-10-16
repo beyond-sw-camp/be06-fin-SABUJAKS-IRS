@@ -10,6 +10,7 @@ import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilde
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
@@ -24,7 +25,7 @@ public class EmailReader {
     // 인터뷰일정 안내는 interviewDate가 생성되면 5일전에 처리
     // 최종결과는 finalResultDate 날짜에 처리
     private String getCurrentDateString() {
-        return java.time.LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        return LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
     @Bean
@@ -47,7 +48,7 @@ public class EmailReader {
         return new JpaPagingItemReaderBuilder<InterviewSchedule>()
                 .name("interviewScheduleReader")
                 .entityManagerFactory(entityManagerFactory)
-                .queryString("SELECT is FROM InterviewSchedule is WHERE is.interviewStart = :currentDate")
+                .queryString("SELECT is FROM InterviewSchedule is WHERE is.interviewDate = :currentDate")
                 .parameterValues(Map.of("currentDate", getCurrentDateString()))
                 .pageSize(10)
                 .build();

@@ -1,2 +1,4 @@
 rootProject.name = 'backend'
-include 'api', 'batch', 'common'
+include 'api'
+include 'batch'
+include 'common'

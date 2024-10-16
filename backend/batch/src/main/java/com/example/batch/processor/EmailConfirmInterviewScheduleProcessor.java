@@ -22,14 +22,11 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
-public class EmailConfirmInterviewScheduleProcessor implements ItemProcessor<InterviewSchedule, Alarm> {
+public class EmailConfirmInterviewScheduleProcessor implements ItemProcessor<InterviewSchedule, List<Alarm>> {
 
     private final AlarmRepository alarmRepository;
     private final JavaMailSender mailSender;
@@ -40,8 +37,9 @@ public class EmailConfirmInterviewScheduleProcessor implements ItemProcessor<Int
 
 
     @Override
-    public Alarm process(InterviewSchedule interviewSchedule) throws Exception {
+    public List<Alarm> process(InterviewSchedule interviewSchedule) throws Exception {
         Optional<List<InterviewParticipate>> interviewParticipateList = interviewParticipateRepository.findAllByInterviewScheduleIdx(interviewSchedule.getIdx());
+        List<Alarm> alarmList = new ArrayList<>();
         if(interviewParticipateList.isPresent()) {
             for(InterviewParticipate participate : interviewParticipateList.get()) {
                 Optional<Alarm> optionalAlarm = alarmRepository.findByInterviewScheduleIdx(participate.getInterviewSchedule().getIdx());
@@ -86,16 +84,17 @@ public class EmailConfirmInterviewScheduleProcessor implements ItemProcessor<Int
 
                     mailSender.send(message);
 
-                    return Alarm.builder()
+                    alarmList.add(Alarm.builder()
                             .type("인터뷰 일정 상세 안내")
                             .status(false)
                             .message(html)
                             .seeker(participate.getSeeker())
                             .interviewSchedule(participate.getInterviewSchedule())
                             .createdAt(LocalDateTime.now())
-                            .build();
+                            .build());
                 }
             }
+            return alarmList;
         }
         return null;
     }
