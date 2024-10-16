@@ -35,6 +35,8 @@ import InterviewScheduleListPage from "@/pages/recruiter/interview-schedule/Inte
 import InterviewEvaluateFormCreatePage from '@/pages/recruiter/interview-evaluate/InterviewEvaluateFormCreatePage.vue';
 import ReScheduleListPage from "@/pages/recruiter/interview-schedule/ReScheduleListPage.vue";
 import ReScheduleDetailPage from "@/pages/recruiter/interview-schedule/ReScheduleDetailPage.vue";
+import TotalProcessMainPage from "@/pages/recruiter/total-process/TotalProcessMainPage.vue";
+import TotalProcessListPage from "@/pages/recruiter/total-process/TotalProcessListPage.vue";
 
 const requireRecruiterLogin = async (to, from, next) => {
     const authStore = UseAuthStore();
@@ -87,6 +89,9 @@ const router = createRouter({
         { path: '/recruiter/resume', component: ResumeMainPage, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/resume/list/:announcementIdx', component: ResumeListPage, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/resume/detail/:resumeIdx', component: RecruiterResumeDetailPage, beforeEnter: requireRecruiterLogin },
+
+        { path: '/recruiter/total-process', component: TotalProcessMainPage, beforeEnter: requireRecruiterLogin },
+        { path: '/recruiter/total-process/list/:announcementIdx', component: TotalProcessListPage, beforeEnter: requireRecruiterLogin },
 
         { path: '/recruiter/interview-evaluate/form', component: InterviewEvaluateFormCreatePage, beforeEnter: requireRecruiterLogin },
         { path: '/recruiter/interview-evaluate/result', component: InterviewEvaluateResultPage, beforeEnter: requireRecruiterLogin },
