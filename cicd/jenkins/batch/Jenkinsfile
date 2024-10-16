@@ -21,14 +21,14 @@ pipeline {
         // 2. 권한 추가
         stage('Add Permission') {
             steps {
-                sh 'chmod +x /var/lib/jenkins/workspace/sabujaks-batch-api/backend/batch/gradlew'
+                sh 'chmod +x /var/lib/jenkins/workspace/sabujaks-batch/backend/batch/gradlew'
             }
         }
 
         // 3. gradle 빌드
         stage('Build') {
             steps {
-                dir('/var/lib/jenkins/workspace/sabujaks-batch-api/backend/batch') {
+                dir('/var/lib/jenkins/workspace/sabujaks-batch/backend/batch') {
                     sh './gradlew bootJar'
                 }
             }
