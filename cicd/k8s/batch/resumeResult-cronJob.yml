@@ -4,7 +4,7 @@ metadata:
   name: resumeResult-batch-job
   namespace: batch-resumeResult
 spec:
-  schedule: "0 16 * * *"  # 매일 오후 4시에 실행
+  schedule: "* * * * *"  # 매일 오후 4시에 실행
   jobTemplate:
     spec:
       template:
