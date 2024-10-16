@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: msa-interview-svc
+spec:
+  selector:
+    app: msa-interview
+  ports:
+    - port: 9007
+      targetPort: 9007
+  type: LoadBalancer
+
+
+

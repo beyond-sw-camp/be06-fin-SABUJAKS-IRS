@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: msa-resume-svc
+spec:
+  selector:
+    app: msa-resume
+  ports:
+    - port: 9005
+      targetPort: 9005
+  type: LoadBalancer

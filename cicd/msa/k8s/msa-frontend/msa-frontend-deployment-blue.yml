@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-api-deployment-blue
+spec:
+  selector:
+    matchLabels:
+      type: frontend-api
+      deployment: blue
+  replicas: 2
+  revisionHistoryLimit: 5
+  strategy:
+    type: RollingUpdate
+  minReadySeconds: 10
+  template:
+    metadata:
+      labels:
+        type: frontend-api
+        deployment: blue
+    spec:
+      containers:
+        - name: frontend-api-blue
+          image: sabujaks/frontend-api:latest
+          volumeMounts:
+            - name: config
+              mountPath: /etc/nginx/conf.d
+            - name: tls-secret-volume
+              mountPath: /etc/nginx/ssl
+              readOnly: true
+          readinessProbe:
+            tcpSocket:
+              port: 443
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            successThreshold: 3
+            failureThreshold: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 443
+              scheme: HTTPS
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            failureThreshold: 5
+      volumes:
+        - name: config
+          configMap:
+            name: frontend-cm
+            items:
+              - key: default_conf
+                path: default.conf
+        - name: tls-secret-volume
+          secret:
+            secretName: tls-secret
+            items:
+              - key: tls.crt
+                path: certificate.crt
+              - key: tls.key
+                path: private.key
+      terminationGracePeriodSeconds: 0

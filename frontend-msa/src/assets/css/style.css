@@ -1,0 +1,363 @@
+/*body {*/
+/*    font-family: Arial, sans-serif;*/
+/*    margin: 0;*/
+/*    padding: 0;*/
+/*    background-color: #f8f9fa;*/
+/*}*/
+
+/*.container {*/
+/*    width: 80%;*/
+/*    margin: 0 auto;*/
+/*}*/
+
+/*.sidebar {*/
+/*    width: 200px;*/
+/*    height: 100%; !* 사이드바가 전체 높이를 차지하도록 *!*/
+/*    background-color: #212b36;*/
+/*    color: white;*/
+/*    padding-top: 20px;*/
+/*    box-sizing: border-box;*/
+/*    position: fixed; !* 사이드바를 고정하여 화면 왼쪽 끝까지 차지하도록 *!*/
+/*    top: 100px; !* header 높이만큼 아래에 위치하도록 *!*/
+/*    left: 0;*/
+/*}*/
+
+/*.sidebar img {*/
+/*    width: 40px;*/
+/*    margin-bottom: 20px;*/
+/*}*/
+
+/*.sidebar a {*/
+/*    color: #ffffff;*/
+/*    text-decoration: none;*/
+/*    margin: 10px 0;*/
+/*    font-size: 18px;*/
+/*}*/
+
+/*#content {*/
+/*    margin-left: 200px;*/
+/*    padding: 20px;*/
+/*}*/
+
+/*#content h1 {*/
+/*    font-size: 24px;*/
+/*    margin: 50px 0;*/
+/*}*/
+
+/*table {*/
+/*    width: 100%;*/
+/*    border-collapse: collapse;*/
+/*    margin-bottom: 40px;*/
+/*}*/
+
+/*table, th, td {*/
+/*    border: 1px solid #ddd;*/
+/*}*/
+
+/*th, td {*/
+/*    padding: 25px;*/
+/*    text-align: left;*/
+/*}*/
+
+/*th {*/
+/*    background-color: #f1f1f1;*/
+/*}*/
+
+/*#size-buttons {*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*}*/
+
+/*#size-buttons button {*/
+/*    margin-right: 10px;*/
+/*    padding: 10px;*/
+/*    border: none;*/
+/*    border-radius: 5px;*/
+/*    cursor: pointer;*/
+/*}*/
+
+/*#size-buttons button:hover {*/
+/*    background-color: #ddd;*/
+/*}*/
+
+/*#user-profile {*/
+/*    position: absolute;*/
+/*    top: 20px;*/
+/*    right: 20px;*/
+/*    color: #ffffff;*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*}*/
+
+/*#user-profile span {*/
+/*    margin-right: 10px;*/
+/*}*/
+
+/*#user-profile a {*/
+/*    color: #ffffff;*/
+/*    text-decoration: none;*/
+/*    border: 1px solid #ffffff;*/
+/*    padding: 5px 10px;*/
+/*    border-radius: 5px;*/
+/*}*/
+
+/*.header {*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    justify-content: space-between;*/
+/*    height: 100px;*/
+/*    width: 100%;*/
+/*    background-color: #212b36;*/
+/*    padding: 0 20px;*/
+/*    box-sizing: border-box;*/
+/*    position: fixed;*/
+/*    z-index: 999;*/
+/*}*/
+/*.logo {*/
+/*    color: white;*/
+/*    font-size: 24px;*/
+/*    font-weight: bold;*/
+/*}*/
+/*.user-info {*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*}*/
+/*.user-name {*/
+/*    color: white;*/
+/*    margin-right: 20px;*/
+/*    font-size: 18px;*/
+/*}*/
+/*.logout-button {*/
+/*    background-color: #ffffff;*/
+/*    color: #212b36;*/
+/*    border: none;*/
+/*    padding: 10px 20px;*/
+/*    cursor: pointer;*/
+/*    font-size: 16px;*/
+/*}*/
+
+/*.sidebar {*/
+/*    width: 200px;*/
+/*    background-color: #212b36;*/
+/*    color: white;*/
+/*    padding-top: 20px;*/
+/*    box-sizing: border-box;*/
+/*}*/
+
+/*.sidebar ul {*/
+/*    list-style-type: none;*/
+/*    padding: 0;*/
+/*    margin: 0;*/
+/*}*/
+
+/*.sidebar li {*/
+/*    padding: 15px 20px;*/
+/*    cursor: pointer;*/
+/*}*/
+
+/*.sidebar li:hover {*/
+/*    background-color: #1a232d;*/
+/*}*/
+
+/*#content {*/
+/*    flex: 1;*/
+/*    margin-left: 200px; !* 사이드바 너비만큼 왼쪽 여백 추가 *!*/
+/*    padding: 150px 0;*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    box-sizing: border-box;*/
+/*}*/
+
+/*#content table {*/
+/*    width: 100%; !* 테이블이 남은 공간을 여유롭게 차지하도록 *!*/
+/*    border-collapse: collapse;*/
+/*}*/
+
+/*.register-button {*/
+/*    width: 100px;*/
+/*    background-color: #f1f1f1; !* 버튼 배경색 *!*/
+/*    border: 1px solid #ddd;*/
+/*    border-radius: 10px; !* 모서리 둥글게 *!*/
+/*    padding: 10px 20px; !* 안쪽 여백 *!*/
+/*    font-size: 0.8rem;*/
+/*    font-weight: bold; !* 글자 크기 *!*/
+/*    color: #000; !* 글자 색상 *!*/
+/*    cursor: pointer; !* 마우스 포인터 *!*/
+/*    transition: background-color 0.3s; !* 배경색 전환 효과 *!*/
+/*}*/
+
+/*.register-button:hover {*/
+/*    background-color: #e0e6ed; !* 호버 시 배경색 변경 *!*/
+/*}*/
+
+/*.small-buttons {*/
+/*    display: flex;*/
+/*    justify-content: center; !* 가운데 정렬 *!*/
+/*    gap: 20px; !* 버튼 간격 *!*/
+/*}*/
+
+/*.button-container {*/
+/*    display: flex;*/
+/*    justify-content: flex-end; !* 버튼을 오른쪽으로 이동 *!*/
+/*    margin-bottom: 40px; !* 버튼 간격 조정 *!*/
+/*}*/
+
+/*.review-table th:nth-child(1) { !* 첫 번째 열 (번호) *!*/
+/*    width: 20%; !* 비율 조정 *!*/
+/*}*/
+
+/*.review-table th:nth-child(2) { !* 두 번째 열 (신입/경력) *!*/
+/*    width: 80%; !* 비율 조정 *!*/
+/*}*/
+/*!* 공통 모달*/
+
+/**!*/
+/*!******** 면접 일정 모달창 CSS *********!*/
+/*.modal {*/
+/*    display: none;*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+/*    position: fixed;*/
+/*    top: 0;*/
+/*    left: 0;*/
+/*    width: 100%;*/
+/*    height: 100%;*/
+/*    background-color: rgba(0, 0, 0, 0.5);*/
+/*}*/
+
+/*.modal-content {*/
+/*    background-color: white;*/
+/*    padding: 20px;*/
+/*    border-radius: 8px;*/
+/*    width: 80%;*/
+/*    height: 80%;*/
+/*}*/
+
+/*.modal-section {*/
+/*    height: 90%;*/
+/*}*/
+
+/*.close {*/
+/*    color: #aaa;*/
+/*    float: right;*/
+/*    font-size: 28px;*/
+/*    font-weight: bold;*/
+/*}*/
+/*.close:hover,*/
+/*.close:focus {*/
+/*    color: black;*/
+/*    text-decoration: none;*/
+/*    cursor: pointer;*/
+/*}*/
+
+/*h2 {*/
+/*    margin: 0 0 20px;*/
+/*}*/
+
+/*.form-group {*/
+/*    margin-bottom: 25px;*/
+/*}*/
+
+/*label {*/
+/*    display: block;*/
+/*    margin-bottom: 15px;*/
+/*    font-size: 1.1rem;*/
+/*    font-weight: 600;*/
+/*}*/
+
+/*label .subtitle {*/
+/*    font-weight: 400 !important;*/
+/*}*/
+
+/*input[type="text"] {*/
+/*    width: calc(100% - 40px);*/
+/*    padding: 10px;*/
+/*    border: 1px solid #ccc;*/
+/*    border-radius: 4px;*/
+/*}*/
+
+/*.add-button, .add-email {*/
+/*    padding: 10px;*/
+/*    background-color: #232b16;*/
+/*    color: white;*/
+/*    border: none;*/
+/*    border-radius: 4px;*/
+/*    cursor: pointer;*/
+/*}*/
+
+/*.required {*/
+/*    color: red;*/
+/*}*/
+
+/*.calendar {*/
+/*    margin-top: 20px;*/
+/*}*/
+
+/*.calendar-grid {*/
+/*    display: grid;*/
+/*    grid-template-columns: repeat(7, 1fr);*/
+/*    gap: 5px;*/
+/*    margin-top: 10px;*/
+/*}*/
+
+/*.calendar-grid div {*/
+/*    padding: 10px;*/
+/*    text-align: center;*/
+/*    border: 1px solid #ccc;*/
+/*    border-radius: 4px;*/
+/*}*/
+
+/*.submit-button {*/
+/*    width: 100%;*/
+/*    margin-top: 20px;*/
+/*    padding: 10px;*/
+/*    background-color: #232b16;*/
+/*    color: white;*/
+/*    border: none;*/
+/*    border-radius: 4px;*/
+/*    cursor: pointer;*/
+/*}*/
+
+/*.add-button-section {*/
+/*    display: flex !important;*/
+/*    flex-direction: column;*/
+/*    justify-content: end;*/
+/*}*/
+
+/*#interview-date, .interview-calender {*/
+/*    width: 100%;*/
+/*    height: 30px;*/
+/*    text-align: center;*/
+/*    font-size: 1rem;*/
+/*}*/
+
+/*#interviewer {*/
+/*    display: none;*/
+/*    overflow: auto;*/
+/*    height: 100%;*/
+/*}*/
+
+/*#interviewers-list {*/
+/*    max-height: 40%;*/
+/*    overflow-y: auto;*/
+/*    padding: 10px;*/
+/*    border: 1px solid #ccc;*/
+/*}*/
+
+/*#selected-filters-list, #selected-emails-list {*/
+/*    margin-bottom: 20px;*/
+/*}*/
+
+/*#selected-filters-list span, #selected-emails-list span{*/
+/*    background-color: #e0e0e0;*/
+/*    padding: 5px 10px;*/
+/*    margin-right: 10px;*/
+/*    margin-bottom: 10px;*/
+/*    border-radius: 20px;*/
+/*    display: inline-block;*/
+/*    font-size: 14px;*/
+/*    color: #333;*/
+/*    cursor: pointer;*/
+/*}*/
+
+/*!*********************************************!*/

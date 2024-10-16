@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: msa-announcement-svc
+spec:
+  selector:
+    app: msa-announcement
+  ports:
+    - port: 9006
+      targetPort: 9006
+  type: LoadBalancer

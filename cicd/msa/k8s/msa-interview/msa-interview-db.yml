@@ -1,0 +1,113 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mariadb
+spec:
+  selector:
+    matchLabels:
+      app: mariadb
+      app.kubernetes.io/name: mariadb
+  serviceName: mariadb
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: mariadb
+        app.kubernetes.io/name: mariadb
+    spec:
+      initContainers:
+        - name: init-mariadb
+          image: mariadb:10.5
+          command:
+            - bash
+            - "-c"
+            - |
+              set -ex
+              [[ $HOSTNAME =~ -([0-9]+)$ ]] || exit 1
+              ordinal=${BASH_REMATCH[1]}
+              if [[ $ordinal -eq 0 ]]; then
+                cp /mnt/config-map/master.cnf /mnt/conf.d/
+                echo "CREATE USER 'root'@'%' IDENTIFIED BY '${MARIADB_ROOT_PASSWORD}';" > /mnt/conf.d/init.sql
+                echo "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';" >> /mnt/conf.d/init.sql
+                echo "CREATE DATABASE IF NOT EXISTS ${MARIADB_DATABASE};" >> /mnt/conf.d/init.sql
+              else
+                cp /mnt/config-map/slave.cnf /mnt/conf.d/
+              fi
+          env:
+            - name: MARIADB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-secret
+                  key: MYSQL_ROOT_PASSWORD
+            - name: MARIADB_DATABASE
+              value: sabujaks
+          volumeMounts:
+            - name: conf
+              mountPath: /mnt/conf.d
+            - name: config-map
+              mountPath: /mnt/config-map
+          resources:
+            requests:
+              cpu: 500m
+              memory: 2Gi
+            limits:
+              cpu: 1
+              memory: 2Gi
+      containers:
+        - name: mariadb
+          image: mariadb:10.5
+          env:
+            - name: MARIADB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-secret
+                  key: MYSQL_ROOT_PASSWORD
+            - name: MARIADB_DATABASE
+              value: sabujaks
+          ports:
+            - name: mariadb
+              containerPort: 3306
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/mysql
+              subPath: mariadb
+            - name: conf
+              mountPath: /etc/mysql/conf.d
+          resources:
+            requests:
+              cpu: 500m
+              memory: 2Gi
+            limits:
+              cpu: 1
+              memory: 2Gi
+          livenessProbe:
+            exec:
+              command: ["mysqladmin", "ping", "-u", "root", "-p${MARIADB_ROOT_PASSWORD}"]
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - "-c"
+                - |
+                  mysql -u root -p${MARIADB_ROOT_PASSWORD} -e "SELECT 1"
+            initialDelaySeconds: 30
+            periodSeconds: 2
+            timeoutSeconds: 1
+      volumes:
+        - name: conf
+          emptyDir: {}
+        - name: config-map
+          configMap:
+            name: mariadb
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 2Gi
+        storageClassName: longhorn
