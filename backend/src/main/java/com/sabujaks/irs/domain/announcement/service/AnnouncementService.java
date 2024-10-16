@@ -82,6 +82,8 @@ public class AnnouncementService {
                         .announcementStart(dto.getAnnouncementStart()) // 시작날
                         .announcementEnd(dto.getAnnouncementEnd()) // 종료날
                         .interviewNum(dto.getInterviewNum()) // 면접횟수
+                        .deadlineDocument(dto.getDeadlineDocument()) // 서류전형 마감날
+                        .deadlineFinal(dto.getDeadlineFinal()) // 전체전형 마감날
                         .imgUrl(fileUrl)
                         .build();
                 announcementRepository.save(announcement);
@@ -114,6 +116,8 @@ public class AnnouncementService {
                         .announcementStart(dto.getAnnouncementStart())
                         .announcementEnd(dto.getAnnouncementEnd())
                         .interviewNum(dto.getInterviewNum())
+                        .deadlineDocument(dto.getDeadlineDocument())
+                        .deadlineFinal(dto.getDeadlineFinal())
                         .note(dto.getNote())
                         .build();
                 announcementRepository.save(announcement);
@@ -280,6 +284,8 @@ public class AnnouncementService {
                         .announcementEnd(announcement.getAnnouncementEnd())
                         .interviewNum(announcement.getInterviewNum())
                         .process(announcement.getProcess())
+                        .deadlineDocument(announcement.getDeadlineDocument())
+                        .deadlineFinal(announcement.getDeadlineFinal())
                         .note(announcement.getNote())
 
                         .companyIndustry(company.getIndustry())

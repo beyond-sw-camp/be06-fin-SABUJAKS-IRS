@@ -47,6 +47,8 @@ public class AnnouncementReadDetailRes {
     private String announcementEnd; // 모집마감
     private Integer interviewNum; // 면접횟수
     private String process; // 전형절차
+    private String deadlineDocument; // 서류전형 마감날짜
+    private String deadlineFinal; // 전체전형 마감날짜
 
     // 유의사항
     private String note; // 유의사항
