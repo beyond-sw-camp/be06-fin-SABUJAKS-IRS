@@ -19,10 +19,10 @@
                         <span class="social-kakao-logo"></span>
                         <span class="social-label">카카오 로그인</span>
                     </a>
-                    <a class="social-button" @click.prevent="handleSocialLogin('naver')">
+                    <!-- <a class="social-button" @click.prevent="handleSocialLogin('naver')">
                         <span class="social-naver-logo"></span>
                         <span class="social-label">네이버 로그인</span>
-                    </a>
+                    </a> -->
                     <a class="social-button" @click.prevent="handleSocialLogin('google')">
                         <span class="social-google-logo"></span>
                         <span class="social-label">구글 로그인</span>

@@ -64,7 +64,7 @@
                             <span class="ad-text3">주요사업 <span class="ad-text4">{{ announcementDetail.companyBusiness
                                     }}</span></span>
                             <span class="ad-text3">홈페이지
-                                <a href="기업홈페이지URL" class="ad-link">{{ announcementDetail.companyUrl }}</a>
+                                <a :href="announcementDetail.companyUrl" target="_blank" class="ad-link">{{ announcementDetail.companyUrl }}</a>
                             </span>
                             <span class="ad-text3">기업주소 <span class="ad-text4">{{ announcementDetail.companyAddress
                                     }}</span></span>
@@ -168,7 +168,9 @@
                 <p class="add-desc">
                     <br>
                     면접 횟수 : {{ announcementDetail.interviewNum }}<br>
-                    절차 : {{ announcementDetail.process }}
+                    절차 : {{ announcementDetail.process }}<br>
+                    서류전형 마감기한 : {{ announcementDetail.deadlineDocument}}<br>
+                    전체전형 마감기한 : {{ announcementDetail.deadlineFinal}}
                 </p>
                 <br>
                 <p class="add-heading">
