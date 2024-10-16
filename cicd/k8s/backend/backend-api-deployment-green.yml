@@ -1,11 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend-deployment-green
+  name: backend-api-deployment-green
 spec:
   selector:
     matchLabels:
-      type: backend
+      type: backend-api
       deployment: green
   replicas: 2
   revisionHistoryLimit: 5
@@ -15,15 +15,15 @@ spec:
   template:
     metadata:
       labels:
-        type: backend
+        type: backend-api
         deployment: green
     spec:
       containers:
-        - name: backend-green
-          image: sabujaks/backend:latest
+        - name: backend-api-green
+          image: sabujaks/backend-api:latest
           envFrom:
             - configMapRef:
-                name: backend-cm
+                name: backend-api-cm
           readinessProbe:
             httpGet:
               path: /api/system-health

@@ -21,14 +21,14 @@ pipeline {
         // 2. 권한 추가
         stage('Add Permission') {
             steps {
-                sh 'chmod +x /var/lib/jenkins/workspace/sabujaks-backend/backend/gradlew'
+                sh 'chmod +x /var/lib/jenkins/workspace/sabujaks-backend/backend/api/gradlew'
             }
         }
 
         // 3. gradle 빌드
         stage('Build') {
             steps {
-                dir('/var/lib/jenkins/workspace/sabujaks-backend/backend') {
+                dir('/var/lib/jenkins/workspace/sabujaks-backend/backend/api') {
                     sh './gradlew bootJar'
                 }
             }
@@ -38,7 +38,7 @@ pipeline {
         stage('Docker Build') {
             steps {
                 script {
-                    sh 'docker build -f cicd/jenkins/backend/Dockerfile -t sabujaks/backend:1.$BUILD_ID .'
+                    sh 'docker build -f cicd/jenkins/backend/Dockerfile -t sabujaks/backend-api:1.$BUILD_ID .'
                 }
             }
         }
@@ -52,7 +52,7 @@ pipeline {
                         sh "docker login -u ${DOCKER_EMAIL} -p ${DOCKER_PASSWORD}"
                     }
                     // Docker Push
-                    sh 'docker push sabujaks/backend:1.$BUILD_ID'
+                    sh 'docker push sabujaks/backend-api:1.$BUILD_ID'
                 }
             }
         }
@@ -62,8 +62,8 @@ pipeline {
             steps {
                 script {
                     def isOdd = (BUILD_ID.toInteger() % 2 != 0)
-                    def deploymentFile = isOdd ? 'backend-deployment-blue.yml' : 'backend-deployment-green.yml'
-                    def otherDeployment = isOdd ? 'backend-deployment-green' : 'backend-deployment-blue'
+                    def deploymentFile = isOdd ? 'backend-api-deployment-blue.yml' : 'backend-api-deployment-green.yml'
+                    def otherDeployment = isOdd ? 'backend-api-deployment-green' : 'backend-api-deployment-blue'
                     def newSelector = isOdd ? 'blue' : 'green'
                     def serviceName = 'backend-svc'
 
@@ -95,9 +95,9 @@ pipeline {
 
                                             kubectl scale deployment ${deploymentName} --replicas=2
 
-                                            kubectl wait --for=condition=ready pod -l deployment=${newSelector},type=backend --timeout=300s
+                                            kubectl wait --for=condition=ready pod -l deployment=${newSelector},type=backend-api --timeout=300s
 
-                                            kubectl patch service ${serviceName} -p '{"spec":{"selector":{"deployment":"${newSelector}","type":"backend"}}}'
+                                            kubectl patch service ${serviceName} -p '{"spec":{"selector":{"deployment":"${newSelector}","type":"backend-api"}}}'
 
                                             kubectl scale deployment ${otherDeployment} --replicas=0
                                         """
