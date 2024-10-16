@@ -81,14 +81,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         aToken.setHttpOnly(true);
         aToken.setSecure(true);
         aToken.setPath("/");
-        aToken.setMaxAge(60 * 10);
         response.addCookie(aToken);
 
         Cookie rToken = new Cookie("RTOKEN", refreshToken);
         rToken.setHttpOnly(true);
         rToken.setSecure(true);
         rToken.setPath("/");
-        rToken.setMaxAge(60 * 10); // 리프레시 토큰은 더 긴 만료 시간으로 설정
         response.addCookie(rToken);
     }
 }

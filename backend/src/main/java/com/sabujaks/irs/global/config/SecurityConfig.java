@@ -63,28 +63,28 @@ public class SecurityConfig {
         http.httpBasic((auth) -> auth.disable());
         http.sessionManagement((auth) -> auth.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.authorizeHttpRequests((auth) ->
-                        auth
-                                .requestMatchers("/api/test/ex03").hasAuthority("ROLE_RECRUITER")
-                                .requestMatchers("/api/video-interview/create").hasAuthority("ROLE_RECRUITER")
-                                .requestMatchers("/api/interview-evaluate/create-form").hasAuthority("ROLE_RECRUITER")
-                                .requestMatchers("/api/interview-evaluate/search-form").hasAnyAuthority("ROLE_RECRUITER" ,"ROLE_ESTIMATOR")
-                                .requestMatchers("/api/resume/create").hasAuthority("ROLE_SEEKER")
-                                .requestMatchers("/api/resume/submit").hasAuthority("ROLE_SEEKER")
-                                .requestMatchers("/api/resume/read").hasAnyAuthority("ROLE_SEEKER", "ROLE_RECRUITER")
-                                .requestMatchers("/api/resume/read/submit-info").hasAuthority("ROLE_SEEKER")
-                                .requestMatchers("/api/resume/read/integrated").hasAuthority("ROLE_SEEKER")
-                                .requestMatchers("/api/resume/read-all").hasAuthority("ROLE_SEEKER")
-                                .requestMatchers("/api/resume/recruiter/read-all").hasAuthority("ROLE_RECRUITER")
-                                .requestMatchers("/api/resume/update/docPassed/{resumeIdx}").hasAuthority("ROLE_RECRUITER")
-                                .requestMatchers("/api/announcement/recruiter/read-all/resume").hasAuthority("ROLE_RECRUITER")
-                                .requestMatchers("/api/announcement/create-step1").hasAuthority("ROLE_RECRUITER")
-                                .requestMatchers("/api/announcement/create-step2").hasAuthority("ROLE_RECRUITER")
-                                .requestMatchers("/api/video-interview/search-all").access(this::hasVideoInterviewAuthorities)
-                                .requestMatchers("/api/auth/seeker/read").hasAuthority("ROLE_SEEKER")
-                                .requestMatchers("/api/auth/**").permitAll()
-                                .requestMatchers("/api/announcement/read-all/see").permitAll()
-                                .requestMatchers("/interview-schedule/**").permitAll()
-                                .anyRequest().permitAll()
+                auth
+                        .requestMatchers("/api/test/ex03").hasAuthority("ROLE_RECRUITER")
+                        .requestMatchers("/api/video-interview/create").hasAuthority("ROLE_RECRUITER")
+                        .requestMatchers("/api/interview-evaluate/create-form").hasAuthority("ROLE_RECRUITER")
+                        .requestMatchers("/api/interview-evaluate/search-form").hasAnyAuthority("ROLE_RECRUITER" ,"ROLE_ESTIMATOR")
+                        .requestMatchers("/api/resume/create").hasAuthority("ROLE_SEEKER")
+                        .requestMatchers("/api/resume/submit").hasAuthority("ROLE_SEEKER")
+                        .requestMatchers("/api/resume/read").hasAnyAuthority("ROLE_SEEKER", "ROLE_RECRUITER")
+                        .requestMatchers("/api/resume/read/submit-info").hasAuthority("ROLE_SEEKER")
+                        .requestMatchers("/api/resume/read/integrated").hasAuthority("ROLE_SEEKER")
+                        .requestMatchers("/api/resume/read-all").hasAuthority("ROLE_SEEKER")
+                        .requestMatchers("/api/resume/recruiter/read-all").hasAuthority("ROLE_RECRUITER")
+                        .requestMatchers("/api/resume/update/docPassed/{resumeIdx}").hasAuthority("ROLE_RECRUITER")
+                        .requestMatchers("/api/announcement/recruiter/read-all/resume").hasAuthority("ROLE_RECRUITER")
+                        .requestMatchers("/api/announcement/create-step1").hasAuthority("ROLE_RECRUITER")
+                        .requestMatchers("/api/announcement/create-step2").hasAuthority("ROLE_RECRUITER")
+                        .requestMatchers("/api/video-interview/search-all").access(this::hasVideoInterviewAuthorities)
+                        .requestMatchers("/api/auth/seeker/read").hasAuthority("ROLE_SEEKER")
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/announcement/read-all/see").permitAll()
+                        .requestMatchers("/interview-schedule/**").permitAll()
+                        .anyRequest().permitAll()
         );
         http.addFilter(corsFilter());
         http.oauth2Login((config) -> {
@@ -116,7 +116,7 @@ public class SecurityConfig {
                             response.getWriter().flush();
                         }))
         );
-        http.addFilter(corsFilter());
+//        http.addFilter(corsFilter());
         http.exceptionHandling(e ->e.authenticationEntryPoint(authenticationEntryPoint).accessDeniedHandler(accessDeniedHandler));
         http.addFilterBefore(new JwtFilter(jwtUtil, customUserDetailService, refreshTokenRepository), LoginFilter.class);
         LoginFilter loginFilter = new LoginFilter(jwtUtil, authenticationManager(authenticationConfiguration), refreshTokenRepository);
@@ -132,12 +132,12 @@ public class SecurityConfig {
         System.out.println(object.getRequest().getRequestURI());
         String seekerAuthority =
                 "ROLE_SEEKER|" + object.getRequest().getParameter("announceUUID")
-                + '|' + object.getRequest().getParameter("videoInterviewUUID");
+                        + '|' + object.getRequest().getParameter("videoInterviewUUID");
         String recruiterAuthority =
                 "ROLE_RECRUITER|" + object.getRequest().getParameter("announceUUID");
         String estimatorAuthority =
                 "ROLE_ESTIMATOR|" + object.getRequest().getParameter("announceUUID")
-                + '|' + object.getRequest().getParameter("videoInterviewUUID");
+                        + '|' + object.getRequest().getParameter("videoInterviewUUID");
 
         boolean hasAnnounceUUID = authentication.get().getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -148,9 +148,9 @@ public class SecurityConfig {
                 .anyMatch(authority -> authority.split("\\|")[1].equals(object.getRequest().getParameter("announceUUID")));
 
         if( authentication.get().getAuthorities().contains(new SimpleGrantedAuthority(seekerAuthority))
-            || authentication.get().getAuthorities().contains(new SimpleGrantedAuthority(recruiterAuthority))
-            || authentication.get().getAuthorities().contains(new SimpleGrantedAuthority(estimatorAuthority))
-            || hasAnnounceUUID) {
+                || authentication.get().getAuthorities().contains(new SimpleGrantedAuthority(recruiterAuthority))
+                || authentication.get().getAuthorities().contains(new SimpleGrantedAuthority(estimatorAuthority))
+                || hasAnnounceUUID) {
             return new AuthorizationDecision(true);
         } else {
             return new AuthorizationDecision(false);

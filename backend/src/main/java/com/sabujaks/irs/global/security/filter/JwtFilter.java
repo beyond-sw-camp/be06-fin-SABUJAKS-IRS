@@ -39,13 +39,13 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String accessAuthorization = null;
+        String accessToken = null;
         String refreshToken = null;
         List<String> vidioInterviewAuthorizationList = new ArrayList<>();
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
                 if (cookie.getName().equals("ATOKEN")) {
-                    accessAuthorization = cookie.getValue();
+                    accessToken = cookie.getValue();
                 }
                 if (cookie.getName().equals("RTOKEN")) {
                     refreshToken = cookie.getValue();
@@ -57,60 +57,44 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         // 처음 로그인할 때
-        if (accessAuthorization == null && refreshToken == null) {
+        if (accessToken == null && refreshToken == null) {
             filterChain.doFilter(request, response);
             return;
         }
 
         // Access Token 만료 여부 확인
-        if (accessAuthorization != null && jwtUtil.isExpired(accessAuthorization)) {
-//            String refreshToken = extractRefreshToken(request);
+        if (jwtUtil.isExpired(accessToken)) {
 
             // Refresh Token이 존재하고 유효한 경우(저장된 Refresh Token과 일치하면) Access Token과 Refresh Token 재발급
-            if (refreshToken != null && validateRefreshToken(refreshToken)) {
-                String email = jwtUtil.getEmail(refreshToken);
-
-                CustomUserDetails userDetails = (CustomUserDetails) customUserDetailService.loadUserByUsername(email);
-
-                // 새로운 Access Token과 Refresh Token 생성
-                String newAccessToken = jwtUtil.createToken(userDetails.getIdx(), userDetails.getEmail(), userDetails.getRole());
-                String newRefreshToken = jwtUtil.createRefreshToken(userDetails.getEmail());
-
-                // Redis에 저장된 Refresh Token 갱신
-                RefreshToken updatedRefreshToken = new RefreshToken(email, newRefreshToken);
-                refreshTokenRepository.save(updatedRefreshToken);
-
-                // 새 토큰을 쿠키로 설정, 예시) Access Token 만료 시간 3분 설정 시, 쿠키도 3분으로 설정
-                setTokenCookie(response, "ATOKEN", newAccessToken, 60 * 10);
-                setTokenCookie(response, "RTOKEN", newRefreshToken, 60 * 10);
-
-                // 새로운 Access Token을 기반으로 인증 정보 설정
-                Authentication authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-
-                // 응답 상태를 200으로 변경
-//                response.setStatus(HttpServletResponse.SC_OK);
-
-                // 필터 체인 진행
+            if (refreshToken == null || jwtUtil.isExpired(refreshToken) || !validateRefreshToken(refreshToken)) {
                 filterChain.doFilter(request, response);
                 return;
-
-            } else {
-                // 유효하지 않은 Refresh Token이거나 Redis에서 찾지 못한 경우
-//                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//                response.setContentType("application/json;charset=UTF-8");
-//                response.getWriter().write("{\"success\": false, \"message\": \"세션이 유효하지 않습니다. 로그인을 다시 해 주세요.\"}");
-//                response.getWriter().flush();
-                sendUnauthorizedResponse(response, "세션이 만료되었습니다.");
-                return;
             }
+            String email = jwtUtil.getEmail(refreshToken);
+
+            CustomUserDetails userDetails = (CustomUserDetails) customUserDetailService.loadUserByUsername(email);
+
+            // 새로운 Access Token과 Refresh Token 생성
+            String newAccessToken = jwtUtil.createToken(userDetails.getIdx(), userDetails.getEmail(), userDetails.getRole());
+            String newRefreshToken = jwtUtil.createRefreshToken(userDetails.getEmail());
+
+            // Redis에 저장된 Refresh Token 갱신
+            RefreshToken updatedRefreshToken = new RefreshToken(email, newRefreshToken);
+            refreshTokenRepository.save(updatedRefreshToken);
+
+            setTokenCookie(response, "ATOKEN", newAccessToken);
+            setTokenCookie(response, "RTOKEN", newRefreshToken);
+
+            // 새로운 Access Token을 기반으로 인증 정보 설정
+            Authentication authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authToken);
 
         } else {
             // Access Token이 유효한 경우
             try {
-                Long idx = jwtUtil.getIdx(accessAuthorization);
-                String email = jwtUtil.getUsername(accessAuthorization);
-                String role = jwtUtil.getRole(accessAuthorization);
+                Long idx = jwtUtil.getIdx(accessToken);
+                String email = jwtUtil.getUsername(accessToken);
+                String role = jwtUtil.getRole(accessToken);
                 Set<SimpleGrantedAuthority> authorities = new HashSet<>();
                 SimpleGrantedAuthority defaultRole = new SimpleGrantedAuthority(role);
                 authorities.add(defaultRole);
@@ -187,6 +171,15 @@ public class JwtFilter extends OncePerRequestFilter {
         cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setMaxAge(maxAge);
+        response.addCookie(cookie);
+    }
+
+    // 쿠키 설정 메소드
+    private void setTokenCookie(HttpServletResponse response, String name, String token) {
+        Cookie cookie = new Cookie(name, token);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
         response.addCookie(cookie);
     }
 
