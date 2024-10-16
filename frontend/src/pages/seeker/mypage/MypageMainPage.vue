@@ -79,12 +79,14 @@ const readSeeker = ref({});
 
 onMounted(async () => {
   const response = await authStore.readSeeker();
-  if (response.success) {
-    readSeeker.value = response.result;
-  } else {
-    // authStore.logout();
-    toast.error(response.message);
+  if (response.status == 200) {
+    readSeeker.value = response.data.result;
+  } else if(response.status == 401) {
+    toast.error(response.data.message);
+    await authStore.logout();
     router.push('/seeker/login');
+  } else {
+    toast.error(response.data.message);
   }
 });
 

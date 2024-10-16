@@ -71,7 +71,7 @@ const goAndReload = (path) => {
 const handleGetUserInfo = async() => {
   if(authStore.isLoggedIn && authStore.userInfo.email != null){
     const response = await authStore.getUserInfo();
-    if(response.success){
+    if(response){
       getUserInfoResult.value = authStore.userInfo
       if(authStore.userInfo.name == null){
         displayName.value = authStore.userInfo.nickName

@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
 import { backend } from '@/const';
+import router from '@/router';
+
 
 
 export const UseAuthStore = defineStore('auth', {
@@ -12,18 +14,18 @@ export const UseAuthStore = defineStore('auth', {
             nickName: ''
         },
         isLoggedIn: false,
-     }),
+    }),
     persist: { storage: sessionStorage, },
     actions: {
         async login(requestBody) {
             try {
                 const response = await axios.post(
-                    `${backend}/auth/login`, 
+                    `${backend}/auth/login`,
                     requestBody,
-                    { headers: { 'Content-Type': 'application/json', },}
+                    { headers: { 'Content-Type': 'application/json', }, }
                 );
                 console.log(response);
-                if(response) {
+                if (response) {
                     this.isLoggedIn = true;
                     // this.getUserInfo(); // 추가
                     // if(this.userInfo.name != null) {
@@ -36,11 +38,11 @@ export const UseAuthStore = defineStore('auth', {
                 return false;
             }
         },
-        async logout(){
+        async logout() {
             try {
                 const response = await axios.get(
                     `${backend}/auth/logout`,
-                    { 
+                    {
                         headers: { 'Content-Type': 'application/json', },
                         withCredentials: true
                     }
@@ -68,11 +70,11 @@ export const UseAuthStore = defineStore('auth', {
                 return error.response.data;
             }
         },
-        async getAuthorities(){
+        async getAuthorities() {
             try {
                 const response = await axios.get(
                     `${backend}/test/ex02`,
-                    { 
+                    {
                         headers: { 'Content-Type': 'application/json', },
                         withCredentials: true
                     }
@@ -83,40 +85,45 @@ export const UseAuthStore = defineStore('auth', {
             }
         },
         async getUserInfo() {
-            // try {
+            try {
                 const response = await axios.get(
                     `${backend}/auth/user-info`,
-                    { 
+                    {
                         headers: { 'Content-Type': 'application/json', },
                         withCredentials: true
                     }
                 );
                 const { email, name, role, nickName } = response.data.result;
                 this.userInfo = { email, name, role, nickName };
-                return response.data
-            // } catch (error) {
-            //     return error.response.data;
-            // }
+                return response.data;
+            } catch (error) {
+                if (error.response.status == 401) {
+                    await this.logout();
+                    router.push("/");
+                } else {
+                    return error.response.data;
+                }
+            }
         },
         async readSeeker() {
-            // try {
+            try {
                 const response = await axios.get(
                     `${backend}/auth/seeker/read`,
-                    { 
+                    {
                         headers: { 'Content-Type': 'application/json', },
                         withCredentials: true
                     }
                 );
-                return response.data;
-            // } catch (error) {
-            //     return error.response.data;
-            // }
+                return response;
+            } catch (error) {
+                return error.response;
+            }
         },
         async companyVerify(requestBody) {
             try {
                 const response = await axios.post(
                     `${backend}/auth/company-verify`, requestBody,
-                    { 
+                    {
                         headers: { 'Content-Type': 'application/json', },
                         withCredentials: true
                     }
