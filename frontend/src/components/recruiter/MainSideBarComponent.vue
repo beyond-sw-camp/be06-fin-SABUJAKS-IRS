@@ -54,6 +54,9 @@ const goAndReload = (path) => {
       </li>
       </ul>
 
+      <li @click="goAndReload('/recruiter/total-process')">
+        최종결과
+      </li>
       <li @click="goAndReload('/recruiter/mypage')">
         마이페이지
       </li>
@@ -73,7 +76,7 @@ const goAndReload = (path) => {
   top: 100px; /* header 높이만큼 아래에 위치하도록 */
   left: 0;
   border-radius: 0;
-  z-index: 1000;
+  z-index: 10;
 }
 
 .sidebar img {

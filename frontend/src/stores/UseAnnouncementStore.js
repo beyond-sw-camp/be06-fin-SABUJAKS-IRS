@@ -68,6 +68,8 @@ export const UseAnnouncementStore = defineStore('announcement', {
             interviewCount: '선택해 주세요', // 면접 횟수
             recruitmentType: '마감일지정', // 모집 유형
             processSteps: '', // 전형절차
+            deadlineDocument: '', // 서류 마감
+            deadlineFinal: '', // 전체 마감
 
             // 6. 유의사항
             precautions: '',  // 유의사항 데이터
@@ -77,6 +79,7 @@ export const UseAnnouncementStore = defineStore('announcement', {
         announcementsPage: {}, // 페이징 처리 정보
 
         announcements2: [], // 공고 전체 조회 (지원자페이지 홈)
+        announcements2Page: {},
 
         announcementDetail: {}, // 공고 상세 조회 (지원자페이지 공고 아이템 클릭시)
 
@@ -254,6 +257,8 @@ export const UseAnnouncementStore = defineStore('announcement', {
                     announcementStart: rawFormData.announcementStart, // 모집시작
                     announcementEnd: rawFormData.announcementEnd, // 모집마감
                     interviewNum: rawFormData.interviewCount, // 면접횟수
+                    deadlineDocument: rawFormData.deadlineDocument, // 서류 마감날
+                    deadlineFinal: rawFormData.deadlineFinal, // 전체 마감날
                     process: rawFormData.processSteps, // 전형절차
 
                     note: rawFormData.precautions, // 유의사항
@@ -321,59 +326,28 @@ export const UseAnnouncementStore = defineStore('announcement', {
                 toast.error(error.response.data.message);
             }
         },
-
-
-        // 공고 전체 조회 함수 (지원자 페이지)
-        async readAll() {
+        async search(page, size, keyword, careerBase, jobCategory, region, sort) {
             try {
                 const response = await axios.get(
-                    `${backend}/announcement/read-all/see`,
-                    {
-                        headers: { 'Content-Type': 'application/json' },
-                        // withCredentials: true
-                    });
-                this.announcements2 = response.data.result; // 백엔드에서 가져온 데이터를 저장
-                console.log(this.announcements2)
+                    `${backend}/search/announcement`, {
+                    params: {
+                        page: page,              // 페이지 번호
+                        size: size,              // 페이지 크기
+                        keyword: keyword,        // 검색 키워드
+                        careerBase: careerBase,  // 신입/경력
+                        jobCategory: jobCategory, // 직무 카테고리
+                        region: region,          // 지역
+                        sort: sort               // 정렬 방식
+                    },
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                this.announcements2 = response.data.result.content;
+                this.announcements2Page = response.data.result;
+                // console.log(this.announcements2)
             } catch (error) {
                 console.error('공고 목록을 불러오는 중 오류 발생:', error);
-            }
-        },
-
-
-        // 공고명과 모집분야에서 키워드 검색
-        async searchAnnouncements(searchKeyword) {
-            try {
-                const response = await axios.get(`${backend}/search/keyword?keyword=${searchKeyword}`,
-                    {
-                        headers: { 'Content-Type': 'application/json' },
-                        // withCredentials: true
-                    });
-                this.announcements2 = response.data.result;
-                console.log(this.announcements2)
-            } catch (error) {
-                console.error('검색 결과를 불러오지 못했습니다.', error);
-            }
-        },
-
-        // 전체 공고에서 필터 검색
-        async filterAnnouncementsByFilters(selectedFilters) {
-            try {
-                const dto = {
-                    filters: selectedFilters // selectedFilters를 JSON 형식으로 감싸서 보냄
-                };
-
-                const response = await axios.post(`${backend}/search/filter`, dto,
-                    {
-                        headers: { 'Content-Type': 'application/json' },
-                        // withCredentials: true
-                    });
-
-                this.announcements2 = response.data.result;
-                console.log(this.announcements2)
-
-                return console.log(dto);
-            } catch (error) {
-                console.error('검색 결과를 불러오지 못했습니다.', error);
             }
         },
     }
