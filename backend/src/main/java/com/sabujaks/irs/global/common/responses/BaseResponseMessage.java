@@ -125,8 +125,9 @@ public enum BaseResponseMessage {
     BASE_INFO_BENEFIT_CATEGORY_SEARCH_SUCCESS(true, 7000, "기준정보 중 카테고리 조회에 성공했습니다."),
 
     TOTAL_PROCESS_CREATE_SUCCESS(true, 8000, "통합 지원 프로세스 생성에 성공했습니다."),
-    TOTAL_PROCESS_CREATE_FAIL(true, 8001, "통합 지원 프로세스 생성에 실패했습니다."),
-    TOTAL_PROCESS_READ_FAIL(true, 8002, "통합 지원 프로세스 조회에 실패했습니다."),
+    TOTAL_PROCESS_CREATE_FAIL(false, 8001, "통합 지원 프로세스 생성에 실패했습니다."),
+    TOTAL_PROCESS_READ_SUCCESS(true, 8002, "통합 지원 프로세스 조회에 성공했습니다."),
+    TOTAL_PROCESS_READ_FAIL(false, 8003, "통합 지원 프로세스 조회에 실패했습니다."),
 
     // INTERVIEW_SCHEDULE 면접 일정 8000 ~ 8099
     INTERVIEW_SCHEDULE_CREATE_SUCCESS(true, 8000, "면접 일정 등록에 성공했습니다."),
