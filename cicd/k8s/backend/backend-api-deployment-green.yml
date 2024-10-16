@@ -23,7 +23,7 @@ spec:
           image: sabujaks/backend-api:latest
           envFrom:
             - configMapRef:
-                name: backend-api-cm
+                name: backend-cm
           readinessProbe:
             httpGet:
               path: /api/system-health

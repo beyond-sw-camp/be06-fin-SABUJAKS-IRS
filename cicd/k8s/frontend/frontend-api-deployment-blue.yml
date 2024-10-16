@@ -1,12 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend-deployment-green
+  name: frontend-api-deployment-blue
 spec:
   selector:
     matchLabels:
-      type: frontend
-      deployment: green
+      type: frontend-api
+      deployment: blue
   replicas: 2
   revisionHistoryLimit: 5
   strategy:
@@ -15,12 +15,12 @@ spec:
   template:
     metadata:
       labels:
-        type: frontend
-        deployment: green
+        type: frontend-api
+        deployment: blue
     spec:
       containers:
-        - name: frontend-green
-          image: sabujaks/frontend:latest
+        - name: frontend-api-blue
+          image: sabujaks/frontend-api:latest
           volumeMounts:
             - name: config
               mountPath: /etc/nginx/conf.d
