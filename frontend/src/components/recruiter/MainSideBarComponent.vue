@@ -54,6 +54,9 @@ const goAndReload = (path) => {
       </li>
       </ul>
 
+      <li @click="goAndReload('/recruiter/total-process')">
+        최종결과
+      </li>
       <li @click="goAndReload('/recruiter/mypage')">
         마이페이지
       </li>
