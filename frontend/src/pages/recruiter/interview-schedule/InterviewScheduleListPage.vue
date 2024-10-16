@@ -556,7 +556,7 @@ th {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 9;
+  z-index: 12;
 }
 
 .modal-content {

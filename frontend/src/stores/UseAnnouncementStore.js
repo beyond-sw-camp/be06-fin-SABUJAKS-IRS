@@ -68,6 +68,8 @@ export const UseAnnouncementStore = defineStore('announcement', {
             interviewCount: '선택해 주세요', // 면접 횟수
             recruitmentType: '마감일지정', // 모집 유형
             processSteps: '', // 전형절차
+            deadlineDocument: '', // 서류 마감
+            deadlineFinal: '', // 전체 마감
 
             // 6. 유의사항
             precautions: '',  // 유의사항 데이터
@@ -255,6 +257,8 @@ export const UseAnnouncementStore = defineStore('announcement', {
                     announcementStart: rawFormData.announcementStart, // 모집시작
                     announcementEnd: rawFormData.announcementEnd, // 모집마감
                     interviewNum: rawFormData.interviewCount, // 면접횟수
+                    deadlineDocument: rawFormData.deadlineDocument, // 서류 마감날
+                    deadlineFinal: rawFormData.deadlineFinal, // 전체 마감날
                     process: rawFormData.processSteps, // 전형절차
 
                     note: rawFormData.precautions, // 유의사항
