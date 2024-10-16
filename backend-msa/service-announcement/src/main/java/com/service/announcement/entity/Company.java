@@ -1,0 +1,74 @@
+package com.service.announcement.entity;
+
+import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@EntityListeners(AuditingEntityListener.class)
+public class Company {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idx;
+    private Long recruiterIdx;
+    private String recruiterEmail; // msa_member
+
+    @Column(length = 30)
+    private String ceoName; // 대표자 명
+    private String crn; // 사업자 등록 번호
+    private String openedAt; // 개업일자
+
+    private String industry; // 산업
+
+    @Column(length = 30)
+    private String name; // 기업 명
+
+    @Column(length = 20)
+    private String type; // 기업구분
+
+    @Column(columnDefinition = "TEXT")
+    private String companyInfo; // 기업소개
+
+    private String capital; // 자본금
+
+    @Column(length = 100)
+    private String totalEmp; // 사원수
+
+    private String establishDate; // 설립일
+
+    private String sales; // 매출액
+
+    private String business; // 주요사업
+
+    private String url; // 홈페이지url
+
+    @Column(columnDefinition = "TEXT")
+    private String address; // 기업주소
+
+    @CreatedDate
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
+
+    // msa_member -> recruiterIdx
+    // @OneToOne(fetch = FetchType.LAZY)
+    // private Recruiter recruiter; // 채용담당자 테이블과 1:1
+
+    @OneToMany(mappedBy = "company" ,fetch = FetchType.LAZY)
+    private List<CompanyImg> companyImgList; // 기업이미지 테이블과 관계
+
+    @OneToMany(mappedBy = "company" ,fetch = FetchType.LAZY)
+    private List<CompanyBenefits> companyBenefitsList; // 복리후생 테이블과 관계
+}

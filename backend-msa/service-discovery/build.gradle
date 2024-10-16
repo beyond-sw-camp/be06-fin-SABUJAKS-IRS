@@ -1,0 +1,11 @@
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+dependencies {
+    // MSA CONFIG
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
+}
+

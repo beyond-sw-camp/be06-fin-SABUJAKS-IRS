@@ -1,0 +1,9 @@
+server:
+  port: 8003
+spring:
+  application:
+    name: service-member
+  profiles:
+    active: local
+  config:
+    import: optional:configserver:http://localhost:8002

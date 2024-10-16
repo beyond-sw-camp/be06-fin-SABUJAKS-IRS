@@ -1,0 +1,9 @@
+server:
+  port: 8006
+spring:
+  application:
+    name: service-announcement
+  profiles:
+    active: local
+  config:
+    import: optional:configserver:http://localhost:8002

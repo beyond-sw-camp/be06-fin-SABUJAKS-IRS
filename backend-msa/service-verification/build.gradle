@@ -1,0 +1,31 @@
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+dependencies {
+    // COMMON
+    implementation project(':service-common')
+    // SWAGGER
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.2.0'
+    // SPRING WEB
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    // SPRING SECURITY
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    // MAIL
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    // MARIADB
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+    // MSA COMMUNICATION
+    implementation 'org.springframework.kafka:spring-kafka'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    // MSA CONFIG
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    implementation 'org.springframework.cloud:spring-cloud-config-client'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+

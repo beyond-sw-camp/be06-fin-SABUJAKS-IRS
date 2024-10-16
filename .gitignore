@@ -2,6 +2,9 @@ HELP.md
 backend/.gradle
 backend/build/
 backend/!gradle/wrapper/gradle-wrapper.jar
+backend-msa/.gradle
+backend-msa/build/
+backend-msa/!gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
 
@@ -14,6 +17,14 @@ backend/.settings
 backend/.springBeans
 backend/.sts4-cache
 backend/bin/
+backend-msa/.apt_generated
+backend-msa/.classpath
+backend-msa/.factorypath
+backend-msa/.project
+backend-msa/.settings
+backend-msa/.springBeans
+backend-msa/.sts4-cache
+backend-msa/bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 
@@ -23,18 +34,25 @@ backend/bin/
 *.iml
 *.ipr
 backend/out/
+backend-msa/out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 
 ### NetBeans ###
 backend/nbproject/private/
+backend-msa/nbproject/private/
 backend/nbbuild/
+backend-msa/nbbuild/
 backend/dist/
+backend-msa/dist/
 backend/nbdist/
+backend-msa/nbdist/
 backend/.nb-gradle/
+backend-msa/.nb-gradle/
 
 ### VS Code ###
 backend/.vscode/
+backend-msa/.vscode/
 
 
 
@@ -72,3 +90,34 @@ frontend/*.tsbuildinfo
 frontend/vite.config.js
 /cicd/mariadb/**
 /cicd/.env
+/cicd/monolithic/mariadb/**
+/cicd/monolithic/.env
+/cicd/msa/.env
+
+backend-msa/service-config/src/main/resources
+backend-msa/service-member/build
+backend-msa/service-member/.gradle
+
+backend-msa/service-config/build
+backend-msa/service-config/.gradle
+
+backend-msa/service-interview/build
+backend-msa/service-interview/.gradle
+
+backend-msa/service-verification/build
+backend-msa/service-verification/.gradle
+
+backend-msa/service-announcement/build
+backend-msa/service-announcement/.gradle
+
+backend-msa/service-discovery/build
+backend-msa/service-discovery/.gradle
+
+backend-msa/service-gateway/build
+backend-msa/service-gateway/.gradle
+
+backend-msa/service-resume/build
+backend-msa/service-resume/.gradle
+
+backend-msa/service-common/build
+backend-msa/service-common/.gradle

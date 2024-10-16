@@ -1,0 +1,9 @@
+server:
+  port: 8004
+spring:
+  application:
+    name: service-verification
+  profiles:
+    active: local
+  config:
+    import: optional:configserver:http://localhost:8002
