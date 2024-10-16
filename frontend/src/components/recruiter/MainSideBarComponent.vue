@@ -76,7 +76,7 @@ const goAndReload = (path) => {
   top: 100px; /* header 높이만큼 아래에 위치하도록 */
   left: 0;
   border-radius: 0;
-  z-index: 1000;
+  z-index: 10;
 }
 
 .sidebar img {

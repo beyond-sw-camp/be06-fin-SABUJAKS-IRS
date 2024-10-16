@@ -89,6 +89,8 @@
                 <p v-if="announcementDetail.interviewNum"><strong>면접 횟수:</strong> {{ announcementDetail.interviewNum }}
                 </p>
                 <p v-if="announcementDetail.process"><strong>전형 절차:</strong> {{ announcementDetail.process }}</p>
+                <p v-if="announcementDetail.deadlineDocument"><strong>서류전형 마감기한:</strong> {{ announcementDetail.deadlineDocument }}</p>
+                <p v-if="announcementDetail.deadlineFinal"><strong>전체전형 마감기한:</strong> {{ announcementDetail.deadlineFinal }}</p>
 
                 <br>
                 <h2>유의 사항</h2>

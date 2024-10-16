@@ -437,6 +437,25 @@ export default {
       // 예: this.$bvModal.msgBoxOk(message, { title: '에러 발생' });
     };
 
+    watch(
+      () => announcementStore.formData.endDate,
+      (newEndDate) => {
+        if (newEndDate) {
+          const endDate = new Date(newEndDate);
+          const deadlineDocument = new Date(endDate);
+          const deadlineFinal = new Date(endDate);
+
+          // 서류전형 마감일을 일주일 뒤로 설정
+          deadlineDocument.setDate(endDate.getDate() + 7);
+          announcementStore.formData.deadlineDocument = formatDate(deadlineDocument);
+
+          // 전체전형 마감일을 삼주일 뒤로 설정
+          deadlineFinal.setDate(endDate.getDate() + 21);
+          announcementStore.formData.deadlineFinal = formatDate(deadlineFinal);
+        }
+      }
+    );
+
 
     // 컴포넌트가 마운트될 때 실행
     onMounted(async () => {
@@ -562,14 +581,14 @@ export default {
         <div class="section">
           <h2>공고 기본 설정</h2>
           <div class="required-parents-div">
-            <label class="required required2">공고 제목</label>
+            <label class="required required2">공고 제목 </label>
             <div class="required-child-div">
               <input v-model="announcementStore.formData.title" type="text"
                 placeholder="직무명이 포함된 공고 제목을 지원자들이 선호해요. (ex. 하반기 기계조작원 신입채용)">
             </div>
           </div>
           <div class="required-parents-div">
-            <label class="required required2">양식 선택</label>
+            <label class="required required2">양식 선택 </label>
             <div class="required-child-div">
               <div class="btn-group">
                 <button :class="{ active: isImageUpload }" @click="selectFormType(true)">공고 이미지 업로드</button>
@@ -616,7 +635,7 @@ export default {
 
             <!-- 직무 카테고리 -->
             <div class="required-parents-div">
-              <label class="required required2">직무 카테고리</label>
+              <label class="required required2">직무 카테고리 </label>
               <div class="required-child-div">
                 <div class="category-group">
                   <div class="category-box">
@@ -664,7 +683,7 @@ export default {
 
             <!-- 모집분야명 -->
             <div class="required-parents-div">
-              <label class="required required2">모집분야명</label>
+              <label class="required required2">모집분야명 </label>
               <div class="required-child-div">
                 <input type="text" v-model="announcementStore.formData.recruitmentFieldName"
                   placeholder="oo시스템 IT 교육(부트캠프) 운영 매니저 채용" />
@@ -673,7 +692,7 @@ export default {
 
             <!-- 모집인원 -->
             <div class="required-parents-div">
-              <label class="required required2">모집인원</label>
+              <label class="required required2">모집인원 </label>
               <div class="required-child-div">
                 <input type="number" v-model.number="announcementStore.formData.numberOfRecruit" min="0"
                   style="width: 100px; padding: 10px;" /> 명 모집
@@ -682,7 +701,7 @@ export default {
 
             <!-- 경력 -->
             <div class="required-parents-div">
-              <label class="required required2">경력</label>
+              <label class="required required2">경력 </label>
               <div class="required-child-div">
                 <input type="checkbox" id="newbie" v-model="announcementStore.formData.isNewbie"
                   @change="exclusiveCheckbox('isNewbie', 'isExperienced')" /> 신입
@@ -746,7 +765,7 @@ export default {
 
             <!-- 근무지역 -->
             <div class="required-parents-div">
-              <label class="required required2">근무지역</label>
+              <label class="required required2">근무지역 </label>
               <div class="required-child-div">
                 <input type="checkbox" v-model="announcementStore.formData.isOverseas" /> 해외지역
                 <input type="checkbox" v-model="announcementStore.formData.isReworkPossible"
@@ -936,7 +955,7 @@ export default {
 
             <!-- 지원 접수 기간 -->
             <div class="required-parents-div">
-              <label class="required required2">지원 접수 기간</label>
+              <label class="required required2">지원 접수 기간 </label>
               <div class="required-child-div"
                 style="display: flex; justify-content: left; flex-direction: column; align-items:start">
                 <div class="btn-group" style="margin-bottom: 20px;">
@@ -962,7 +981,7 @@ export default {
 
             <!-- 면접 횟수 -->
             <div class="required-parents-div">
-              <label class="required required2">면접 횟수</label>
+              <label class="required required2">면접 횟수 </label>
               <div class="required-child-div">
                 <select v-model="announcementStore.formData.interviewCount" @change="updateProcessSteps">
                   <option value="선택해 주세요">선택해 주세요</option>
@@ -985,6 +1004,34 @@ export default {
                 </div>
               </div>
             </div>
+
+            <!-- 서류 전형 마감날 -->
+            <div class="required-parents-div">
+              <label class="required required2">서류전형 마감 </label>
+              <div class="required-child-div"
+                style="display: flex; justify-content: left; flex-direction: column; align-items:start">
+                <div style="display: flex; align-items: center;">
+                  <input type="date" v-model="announcementStore.formData.deadlineDocument" />
+                  <p>기본 : 지원접수 기간 마감날 1주일 뒤</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- 전체 전형 마감날 -->
+            <div class="required-parents-div">
+              <label class="required required2">전체전형 마감 </label>
+              <div class="required-child-div"
+                style="display: flex; justify-content: left; flex-direction: column; align-items:start">
+                <div style="display: flex; align-items: center;">
+                  <input type="date" v-model="announcementStore.formData.deadlineFinal" />
+                  <p>기본 : 지원접수 기간 마감날 3주일 뒤</p>
+                </div>
+              </div>
+            </div>
+
+            <p>📢 서류전형과 전체전형 마감날은 지원접수 기간의 마감날에 따라 실시간으로 달라집니다. 
+              <br>📢 마지막에 지원접수 기간 마감날을 바꾸었다면 등록 전 각 전형 마감날을 다시 확인해주세요.</p>
+
 
             <!-- 백엔드로 보낼 hidden input -->
             <input type="hidden" :value="formattedProcessSteps" name="processSteps" />
