@@ -22,16 +22,18 @@ export const UseAuthStore = defineStore('auth', {
                     requestBody,
                     { headers: { 'Content-Type': 'application/json', },}
                 );
+                console.log(response);
                 if(response) {
                     this.isLoggedIn = true;
-                    this.getUserInfo(); // 추가
-                    if(this.userInfo.name != null) {
-                        return true
-                    }
+                    // this.getUserInfo(); // 추가
+                    // if(this.userInfo.name != null) {
+                    //     return true
+                    // }
+                    return true;
                 }
             } catch (error) {
                 this.isLoggedIn = false;
-                return false
+                return false;
             }
         },
         async logout(){
@@ -81,7 +83,7 @@ export const UseAuthStore = defineStore('auth', {
             }
         },
         async getUserInfo() {
-            try {
+            // try {
                 const response = await axios.get(
                     `${backend}/auth/user-info`,
                     { 
@@ -92,12 +94,12 @@ export const UseAuthStore = defineStore('auth', {
                 const { email, name, role, nickName } = response.data.result;
                 this.userInfo = { email, name, role, nickName };
                 return response.data
-            } catch (error) {
-                return error.response.data
-            }
+            // } catch (error) {
+            //     return error.response.data;
+            // }
         },
         async readSeeker() {
-            try {
+            // try {
                 const response = await axios.get(
                     `${backend}/auth/seeker/read`,
                     { 
@@ -106,9 +108,9 @@ export const UseAuthStore = defineStore('auth', {
                     }
                 );
                 return response.data;
-            } catch (error) {
-                return error.response.data;
-            }
+            // } catch (error) {
+            //     return error.response.data;
+            // }
         },
         async companyVerify(requestBody) {
             try {

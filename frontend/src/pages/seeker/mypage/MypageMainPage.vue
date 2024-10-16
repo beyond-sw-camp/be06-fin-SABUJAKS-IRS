@@ -82,6 +82,7 @@ onMounted(async () => {
   if (response.success) {
     readSeeker.value = response.result;
   } else {
+    // authStore.logout();
     toast.error(response.message);
     router.push('/seeker/login');
   }

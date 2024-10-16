@@ -165,16 +165,6 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     // 쿠키 설정 메소드
-    private void setTokenCookie(HttpServletResponse response, String name, String token, int maxAge) {
-        Cookie cookie = new Cookie(name, token);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(maxAge);
-        response.addCookie(cookie);
-    }
-
-    // 쿠키 설정 메소드
     private void setTokenCookie(HttpServletResponse response, String name, String token) {
         Cookie cookie = new Cookie(name, token);
         cookie.setHttpOnly(true);

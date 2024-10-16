@@ -31,6 +31,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String username = oAuth2Member.getUsername();
         String role = oAuth2Member.getSeeker().getRole();
         String token = jwtUtil.createToken(idx, username, role);
+        String refreshToken = jwtUtil.createRefreshToken(username);
         Collection<? extends GrantedAuthority> authorities = oAuth2Member.getAuthorities();
         for (GrantedAuthority authority : authorities){
             if(Objects.equals(authority.toString(), role)){
@@ -49,6 +50,14 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         aToken.setPath("/");
         aToken.setMaxAge(60 * 60);
         response.addCookie(aToken);
+
+        Cookie rToken = new Cookie("RTOKEN", refreshToken);
+        aToken.setHttpOnly(true);
+        aToken.setSecure(true);
+        aToken.setPath("/");
+        aToken.setMaxAge(60 * 60);
+        response.addCookie(rToken);
+
         getRedirectStrategy().sendRedirect(request, response, "https://www.sabujaks-irs.kro.kr/");
     }
 }

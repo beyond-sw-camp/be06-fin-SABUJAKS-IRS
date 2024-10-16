@@ -6,7 +6,7 @@ import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
-@RedisHash(value = "refreshToken", timeToLive = 60 * 10) // TTL 1시간 = 3600, 3일
+@RedisHash(value = "refreshToken", timeToLive = 60 * 1) // TTL 1시간 = 3600, 3일
 @AllArgsConstructor
 @Getter
 @ToString

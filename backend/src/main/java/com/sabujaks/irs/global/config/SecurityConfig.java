@@ -79,10 +79,12 @@ public class SecurityConfig {
                         .requestMatchers("/api/announcement/recruiter/read-all/resume").hasAuthority("ROLE_RECRUITER")
                         .requestMatchers("/api/announcement/create-step1").hasAuthority("ROLE_RECRUITER")
                         .requestMatchers("/api/announcement/create-step2").hasAuthority("ROLE_RECRUITER")
+                        .requestMatchers("/api/announcement/read-all/see").permitAll()
+                        .requestMatchers("/api/alarm/read-all").hasAuthority("ROLE_SEEKER")
                         .requestMatchers("/api/video-interview/search-all").access(this::hasVideoInterviewAuthorities)
                         .requestMatchers("/api/auth/seeker/read").hasAuthority("ROLE_SEEKER")
+                        .requestMatchers("/api/auth/user-info").hasAnyAuthority("ROLE_SEEKER", "ROLE_RECRUITER", "ROLE_ESTIMATOR")
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/announcement/read-all/see").permitAll()
                         .requestMatchers("/interview-schedule/**").permitAll()
                         .anyRequest().permitAll()
         );
