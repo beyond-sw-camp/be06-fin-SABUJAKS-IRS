@@ -52,7 +52,7 @@ pipeline {
                         sh "docker login -u ${DOCKER_EMAIL} -p ${DOCKER_PASSWORD}"
                     }
                     // Docker Push
-                    sh 'docker push sabujaks/backend-msa-discovery:1.$BUILD_ID'
+                    sh 'docker push sabujaks/msa-discovery:1.$BUILD_ID'
                 }
             }
         }
@@ -61,7 +61,7 @@ pipeline {
         stage('SSH transfer') {
             steps {
                 script {
-                    def deploymentFile = 'backend-api-deployment-blue.yml' : 'backend-api-deployment-green.yml'
+                    def deploymentFile = 'msa-discovery-deployment.yml'
                     // SSH 전송 플러그인 사용
                     sshPublisher(
                         // 오류 발생 시 진행을 멈춤
@@ -78,21 +78,15 @@ pipeline {
                                 transfers: [
                                     sshTransfer(
                                         // 전송할 파일 지정
-                                        sourceFiles: "cicd/k8s/backend/${deploymentFile}",
+                                        sourceFiles: "cicd/msa/k8s/msa-config/${deploymentFile}",
                                         // 원격 디렉토리 지정 ( 원격서버로 파일을 전송할 위치 )
                                         remoteDirectory: "/home/test/",
                                         // 전송 후 야멜 파일의 VERSION을 파이프라인 빌드 숫자로 변경
                                         execCommand: """
-                                            sed -i "s/latest/1.${BUILD_ID}/g" /home/test/cicd/k8s/backend/${deploymentFile}
-                                            kubectl apply -f /home/test/cicd/k8s/backend/${deploymentFile}
-
-                                            kubectl scale deployment ${deploymentName} --replicas=2
-
-                                            kubectl wait --for=condition=ready pod -l deployment=${newSelector},type=backend-api --timeout=300s
-
-                                            kubectl patch service ${serviceName} -p '{"spec":{"selector":{"deployment":"${newSelector}","type":"backend-api"}}}'
-
-                                            kubectl scale deployment ${otherDeployment} --replicas=0
+                                            mkdir -p /home/test/cicd/msa/k8s/msa-discovery/
+                                            cp /var/lib/jenkins/workspace/sabujaks-msa-discovery/cicd/msa/k8s/msa-discovery/${deploymentFile} /home/test/cicd/msa/k8s/msa-discovery/
+                                            sed -i "s/latest/1.${BUILD_ID}/g" /home/test/cicd/msa/k8s/msa-discovery/${deploymentFile}
+                                            kubectl apply -f /home/test/cicd/msa/k8s/msa-discovery/${deploymentFile}
                                         """
                                     )
                                 ]
