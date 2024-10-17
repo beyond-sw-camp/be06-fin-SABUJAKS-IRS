@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: videoInterview-batch-job
 spec:
-  schedule: "0 16 * * *"  # 매일 오후 4시에 실행
+  schedule: "0 16 * * *"  # 매일 오후 4시에 실행!
   jobTemplate:
     spec:
       template:
