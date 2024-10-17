@@ -20,10 +20,8 @@ public class EmailReader {
 
     private final EntityManagerFactory entityManagerFactory;
 
-    //TODO
-    // 인터뷰일정 안내는 interviewDate가 생성되면 5일전에 처리
-    private String getCurrentDateString() {
-        return LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    private String getDateAfter7DaysString() {
+        return LocalDate.now().plusDays(7).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
     private String DeadlineDateString() {
@@ -51,7 +49,7 @@ public class EmailReader {
                 .name("interviewScheduleReader")
                 .entityManagerFactory(entityManagerFactory)
                 .queryString("SELECT is FROM InterviewSchedule is WHERE is.interviewDate = :currentDate")
-                .parameterValues(Map.of("currentDate", getCurrentDateString()))
+                .parameterValues(Map.of("currentDate", getDateAfter7DaysString()))
                 .pageSize(10)
                 .build();
     }
