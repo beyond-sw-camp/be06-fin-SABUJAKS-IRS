@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: interviewInfo-batch-job
+  name: interviewinfo-batch-job
 spec:
   schedule: "* * * * *"  # 매일 오후 4시에 실행
   jobTemplate:
@@ -9,7 +9,7 @@ spec:
       template:
         spec:
           containers:
-            - name: interviewInfo-batch
+            - name: interviewinfo-batch
               image: sabujaks/batch:latest
               env:
                 - name: BATCH_JOB_NAME
