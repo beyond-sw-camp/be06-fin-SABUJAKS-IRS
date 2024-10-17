@@ -32,6 +32,6 @@ public class TotalProcess {
     private Seeker seeker;
 
     // 알람 테이블과 1:n
-    @OneToMany(mappedBy = "resume")
+    @OneToMany(mappedBy = "totalProcess")
     private List<Alarm> alarm;
 }
