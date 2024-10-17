@@ -82,6 +82,8 @@ pipeline {
                                         remoteDirectory: "/home/test/",
                                         // 전송 후 야멜 파일의 VERSION을 파이프라인 빌드 숫자로 변경
                                         execCommand: """
+                                            mkdir -p /home/test/cicd/msa/k8s/msa-config/
+                                            cp /var/lib/jenkins/workspace/sabujaks-msa-config/cicd/msa/k8s/msa-config/${deploymentFile} /home/test/cicd/msa/k8s/msa-config/
                                             sed -i "s/latest/1.${BUILD_ID}/g" /home/test/cicd/msa/k8s/msa-config/${deploymentFile}
                                             kubectl apply -f /home/test/cicd/msa/k8s/msa-config/${deploymentFile}
                                         """
