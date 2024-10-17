@@ -84,11 +84,11 @@ pipeline {
                                         '''
                                     ),
                                     sshTransfer(
-                                        sourceFiles: "cicd/k8s/batch/interviewScheduleInfo-cronJob.yml",
+                                        sourceFiles: "cicd/k8s/batch/interviewInfo-cronJob.yml",
                                         remoteDirectory: "/home/test",
                                         execCommand: '''
-                                            sed -i "s/latest/1.$BUILD_ID/g" cicd/k8s/batch/interviewScheduleInfo-cronJob.yml
-                                            kubectl apply -f /home/test/cicd/k8s/batch/interviewScheduleInfo-cronJob.yml
+                                            sed -i "s/latest/1.$BUILD_ID/g" cicd/k8s/batch/interviewInfo-cronJob.yml
+                                            kubectl apply -f /home/test/cicd/k8s/batch/interviewInfo-cronJob.yml
                                         '''
                                     ),
                                     sshTransfer(
