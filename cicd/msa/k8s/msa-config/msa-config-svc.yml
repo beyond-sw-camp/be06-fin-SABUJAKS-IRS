@@ -4,7 +4,7 @@ metadata:
   name: msa-config-svc
 spec:
   selector:
-    app: msa-config
+      type: msa-config
   ports:
     - port: 9002
       targetPort: 9002
