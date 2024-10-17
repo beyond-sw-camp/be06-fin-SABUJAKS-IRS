@@ -54,7 +54,7 @@ pipeline {
                     def deploymentFile = isOdd ? 'frontend-api-deployment-blue.yml' : 'frontend-api-deployment-green.yml'
                     def otherDeployment = isOdd ? 'frontend-api-deployment-green' : 'frontend-api-deployment-blue'
                     def newSelector = isOdd ? 'blue' : 'green'
-                    def serviceName = 'frontend-api-svc'
+                    def serviceName = 'frontend-svc'
                     def deploymentName = deploymentFile.replace('.yml', '')
 
                     // SSH 전송 플러그인 사용
