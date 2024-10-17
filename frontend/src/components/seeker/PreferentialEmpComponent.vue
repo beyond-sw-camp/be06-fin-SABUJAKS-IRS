@@ -8,6 +8,7 @@
         class="form-item"
         :class="{ selected: selectedOptions.includes(option) }"
         @click="toggleOption(option)"
+        style="height: 100px;"
       >
         <!-- 체크박스 대신 스프라이트 이미지 사용 -->
         <div class="custom-checkbox" :class="{ checked: selectedOptions.includes(option) }"></div>
@@ -175,6 +176,7 @@ const updateData = () => {
     militaryRank: militaryRank.value,
     militaryType: militaryType.value
   };
+  console.log(data);
   emit('updateData', data);
 };
 
@@ -192,6 +194,7 @@ const toggleOption = (option) => {
   } else {
     selectedOptions.value.push(option);
   }
+  updateData();
 };
 
 const handleMilitaryClassChange = () => {
