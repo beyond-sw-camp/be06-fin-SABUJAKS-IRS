@@ -4,11 +4,8 @@ metadata:
   name: msa-discovery-svc
 spec:
   selector:
-    app: msa-discovery
+    type: msa-discovery
   ports:
   - port: 9001
     targetPort: 9001
   type: LoadBalancer
-
-
-

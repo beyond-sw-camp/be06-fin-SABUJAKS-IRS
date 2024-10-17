@@ -1,12 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: msa-discovery-deployment
+  name: msa-gateway-deployment
 spec:
   selector:
     matchLabels:
-      type: msa-discovery
-  replicas: 2
+      type: msa-gateway
+  replicas: 1
   revisionHistoryLimit: 5
   strategy:
     type: RollingUpdate
@@ -14,20 +14,20 @@ spec:
   template:
     metadata:
       labels:
-        type: msa-discovery
+        type: msa-gateway
     spec:
       containers:
-        - name: msa-discovery
-          image: sabujaks/msa-discovery:latest
+        - name: msa-gateway
+          image: sabujaks/msa-gateway:latest
           readinessProbe:
             tcpSocket:
-              port: 9001
+              port: 9090
             initialDelaySeconds: 20
             periodSeconds: 10
             successThreshold: 3
           livenessProbe:
             tcpSocket:
-              port: 9001
+              port: 9090
             initialDelaySeconds: 20
             periodSeconds: 10
       terminationGracePeriodSeconds: 0

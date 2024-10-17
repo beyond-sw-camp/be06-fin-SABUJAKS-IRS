@@ -1,9 +1,9 @@
 server:
-  port: 8080
+  port: 9090
 spring:
   application:
     name: service-gateway
   profiles:
-    active: local
+    active: prod
   config:
-    import: optional:configserver:http://localhost:8002
+    import: optional:configserver:http://msa-config-svc:9002
