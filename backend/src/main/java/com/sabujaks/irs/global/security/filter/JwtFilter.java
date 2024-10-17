@@ -33,15 +33,15 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String accessAuthorization = null;
-        List<String> vidioInterviewAuthorizationList = new ArrayList<>();
+//        List<String> vidioInterviewAuthorizationList = new ArrayList<>();
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
                 if (cookie.getName().equals("ATOKEN")) {
                     accessAuthorization = cookie.getValue();
                 }
-                if (cookie.getName().startsWith("VITOKEN")) {
-                    vidioInterviewAuthorizationList.add(cookie.getValue());
-                }
+//                if (cookie.getName().startsWith("VITOKEN")) {
+//                    vidioInterviewAuthorizationList.add(cookie.getValue());
+//                }
             }
         }
         if (accessAuthorization == null) {
@@ -56,10 +56,10 @@ public class JwtFilter extends OncePerRequestFilter {
             Set<SimpleGrantedAuthority> authorities = new HashSet<>();
             SimpleGrantedAuthority defaultRole = new SimpleGrantedAuthority(role);
             authorities.add(defaultRole);
-            for (String videoInterviewAuthorization : vidioInterviewAuthorizationList) {
-                SimpleGrantedAuthority videoInterviewRole = new SimpleGrantedAuthority(jwtUtil.getGrantedAuthority(videoInterviewAuthorization));
-                authorities.add(videoInterviewRole);
-            }
+//            for (String videoInterviewAuthorization : vidioInterviewAuthorizationList) {
+//                SimpleGrantedAuthority videoInterviewRole = new SimpleGrantedAuthority(jwtUtil.getGrantedAuthority(videoInterviewAuthorization));
+//                authorities.add(videoInterviewRole);
+//            }
             CustomUserDetails customUserDetails = null;
             if (Objects.equals(role, "ROLE_SEEKER")) {
                 Seeker seeker = Seeker.builder()
