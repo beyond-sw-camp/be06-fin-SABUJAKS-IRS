@@ -1,9 +1,12 @@
 package com.example.common.domain.total_process.model.entity;
 
+import com.example.common.domain.alarm.model.entity.Alarm;
 import com.example.common.domain.announcement.model.entity.Announcement;
 import com.example.common.domain.auth.model.entity.Seeker;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -28,4 +31,7 @@ public class TotalProcess {
     @JoinColumn(name = "seeker_idx")
     private Seeker seeker;
 
+    // 알람 테이블과 1:n
+    @OneToMany(mappedBy = "resume")
+    private List<Alarm> alarm;
 }
