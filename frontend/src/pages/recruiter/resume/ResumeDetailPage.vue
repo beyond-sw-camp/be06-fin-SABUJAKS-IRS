@@ -305,9 +305,14 @@
                                 <tr v-for="(portfolio, index) in resumeStore.resumeDetail.portfolios" :key="index" >
                                     <th>{{ portfolio.portfolioDiv }}</th>
                                     <td>
-                                        <a :href="portfolio.portfolioUrl" target="_blank">
+                                        <a :href="portfolio.portfolioUrl" target="_blank" style="text-decoration: underline;">
                                             <i class="icon url" aria-hidden="true"></i>
-                                            <div class="name">{{ portfolio.portfolioUrl }}</div>
+                                            <div v-if="portfolio.portfolioType === '파일'" class="name">
+                                                파일보기
+                                            </div>
+                                            <div v-else class="name">
+                                                {{ portfolio.portfolioUrl }}
+                                            </div>
                                         </a>
                                     </td>
                                 </tr>
