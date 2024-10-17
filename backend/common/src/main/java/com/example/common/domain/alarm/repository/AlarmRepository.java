@@ -16,4 +16,6 @@ public interface AlarmRepository extends JpaRepository<Alarm, Long> {
     Optional<Alarm> findByResumeIdx(Long resumeIdx);
 
     Optional<Alarm> findByInterviewScheduleIdx(Long interviewScheduleIdx);
+
+    Optional<Alarm> findByTotalProcessIdx(Long totalProcessIdx);
 }
