@@ -2,7 +2,6 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: finalResult-batch-job
-  namespace: batch-finalResult
 spec:
   schedule: "0 16 * * *"  # 매일 오후 4시에 실행
   jobTemplate:

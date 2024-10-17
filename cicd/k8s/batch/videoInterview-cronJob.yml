@@ -2,7 +2,6 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: videoInterview-batch-job
-  namespace: batch-videoInterview
 spec:
   schedule: "0 16 * * *"  # 매일 오후 4시에 실행
   jobTemplate:
