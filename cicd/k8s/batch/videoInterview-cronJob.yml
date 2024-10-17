@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: videoInterview-batch-job
+  name: videointerview-batch-job
 spec:
   schedule: "0 16 * * *"  # 매일 오후 4시에 실행!
   jobTemplate:
@@ -9,7 +9,7 @@ spec:
       template:
         spec:
           containers:
-            - name: videoInterview-batch
+            - name: videointerview-batch
               image: sabujaks/batch:latest
               env:
                 - name: BATCH_JOB_NAME
