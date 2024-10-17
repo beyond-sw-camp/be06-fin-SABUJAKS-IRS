@@ -8,7 +8,7 @@ pipeline {
     }
     stages {
 
-        // 1. 깃 클론
+        // 1. 깃 클론!
         stage('Git clone') {
             steps {
                 script {
