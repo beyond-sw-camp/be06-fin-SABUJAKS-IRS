@@ -7,6 +7,7 @@ import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -17,11 +18,13 @@ public class EmailWriter implements ItemWriter<List<Alarm>> {
 
     @Override
     public void write(Chunk<? extends List<Alarm>> chunk) throws Exception {
-        // Chunk에서 받은 Alarm 객체들을 저장
-        for (List<Alarm> alarmList : chunk.getItems()) {
-            for(Alarm alarm : alarmList) {
-                alarmRepository.save(alarm);
-            }
+        // Chunk에서 받은 List<Alarm>을 하나의 리스트로 병합
+        List<Alarm> alarmsToSave = new ArrayList<>();
+        for (List<Alarm> alarmList : chunk) {
+            alarmsToSave.addAll(alarmList);
         }
+
+        // AlarmRepository를 통해 저장
+        alarmRepository.saveAll(alarmsToSave);
     }
 }
