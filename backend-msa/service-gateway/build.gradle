@@ -3,7 +3,9 @@ configurations {
         extendsFrom annotationProcessor
     }
 }
-
+bootJar {
+    archiveFileName = "service-gateway.jar"
+}
 dependencies {
     // COMMON
     implementation project(':service-common')

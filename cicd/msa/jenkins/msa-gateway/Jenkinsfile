@@ -38,7 +38,7 @@ pipeline {
         stage('Docker Build') {
             steps {
                 script {
-                    sh 'docker build -f cicd/msa/jenkins/msa-config/Dockerfile -t sabujaks/msa-gateway:1.$BUILD_ID .'
+                    sh 'docker build -f cicd/msa/jenkins/msa-gateway/Dockerfile -t sabujaks/msa-gateway:1.$BUILD_ID .'
                 }
             }
         }
