@@ -21,11 +21,13 @@ public class EmailReader {
     private final EntityManagerFactory entityManagerFactory;
 
     //TODO
-    // 서류전형은 resumeDeadline 날짜에 맞으면 처리
     // 인터뷰일정 안내는 interviewDate가 생성되면 5일전에 처리
-    // 최종결과는 finalResultDate 날짜에 처리
     private String getCurrentDateString() {
         return LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    }
+
+    private String DeadlineDateString() {
+        return LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
     @Bean
@@ -35,8 +37,8 @@ public class EmailReader {
         return new JpaPagingItemReaderBuilder<Announcement>()
                 .name("resumeDeadLineReader")
                 .entityManagerFactory(entityManagerFactory)
-                .queryString("SELECT a FROM Announcement a WHERE a.resumeDeadline = :currentDate")
-                .parameterValues(Map.of("currentDate", getCurrentDateString()))
+                .queryString("SELECT a FROM Announcement a WHERE a.deadlineDocument = :currentDate")
+                .parameterValues(Map.of("currentDate", DeadlineDateString()))
                 .pageSize(10)
                 .build();
     }
@@ -60,8 +62,8 @@ public class EmailReader {
         return new JpaPagingItemReaderBuilder<Announcement>()
                 .name("finalResultReader")
                 .entityManagerFactory(entityManagerFactory)
-                .queryString("SELECT a FROM Announcement a WHERE a.totalResultDeadline = :currentDate")
-                .parameterValues(Map.of("currentDate", getCurrentDateString()))
+                .queryString("SELECT a FROM Announcement a WHERE a.deadlineFinal = :currentDate")
+                .parameterValues(Map.of("currentDate", DeadlineDateString()))
                 .pageSize(10)
                 .build();
     }
