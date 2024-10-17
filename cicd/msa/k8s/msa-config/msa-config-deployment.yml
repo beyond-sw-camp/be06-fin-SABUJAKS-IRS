@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: msa-config-deployment
+spec:
+  selector:
+    matchLabels:
+      type: msa-config
+  replicas: 2
+  revisionHistoryLimit: 5
+  strategy:
+    type: RollingUpdate
+  minReadySeconds: 10
+  template:
+    metadata:
+      labels:
+        type: msa-config
+    spec:
+      containers:
+        - name: msa-config
+          image: sabujaks/msa-config:latest
+          envFrom:
+            - configMapRef:
+                name: msa-cm
+          readinessProbe:
+            tcpSocket:
+              port: 9002
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            successThreshold: 3
+          livenessProbe:
+            tcpSocket:
+              port: 9002
+            initialDelaySeconds: 20
+            periodSeconds: 10
+      terminationGracePeriodSeconds: 0

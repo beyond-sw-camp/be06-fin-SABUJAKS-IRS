@@ -3,6 +3,9 @@ configurations {
         extendsFrom annotationProcessor
     }
 }
+bootJar {
+    archiveFileName = "service-discovery.jar"
+}
 
 dependencies {
     // MSA CONFIG

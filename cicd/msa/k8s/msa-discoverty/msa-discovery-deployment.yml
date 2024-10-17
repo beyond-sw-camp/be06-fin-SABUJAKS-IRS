@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: msa-discovery-deployment
+spec:
+  selector:
+    matchLabels:
+      type: msa-discovery
+  replicas: 2
+  revisionHistoryLimit: 5
+  strategy:
+    type: RollingUpdate
+  minReadySeconds: 10
+  template:
+    metadata:
+      labels:
+        type: msa-discovery
+    spec:
+      containers:
+        - name: msa-discovery
+          image: sabujaks/msa-discovery:latest
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            successThreshold: 3
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 10
+      terminationGracePeriodSeconds: 0
