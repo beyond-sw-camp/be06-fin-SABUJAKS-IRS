@@ -1,11 +1,11 @@
 server:
-  port: 8001
+  port: 9001
 spring:
   application:
     name: service-discovery
 eureka:
   instance:
-    hostname: localhost
+    hostname: service-discovery
   client:
     registerWithEureka: false
     fetchRegistry: false

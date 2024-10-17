@@ -121,7 +121,6 @@ frontend-msa/vite.config.js
 /cicd/monolithic/.env
 /cicd/msa/.env
 
-backend-msa/service-config/src/main/resources
 backend-msa/service-member/build
 backend-msa/service-member/.gradle
 backend-msa/service-config/build

@@ -4,9 +4,7 @@ pipeline {
             PULL_REQUEST_BASE_BRANCH = "${env.PULL_REQUEST_BASE_BRANCH}"
             PULL_REQUEST_REF_BRANCH = "${env.PULL_REQUEST_REF_BRANCH}"
             IF_MERGED = "${env.IF_MERGED}"
-            TARGET_MODULE1 ='service-discovery'
-            TARGET_MODULE2 = 'service-config'
-            TARGET_MODULE3 = 'service-gateway'
+            TARGET_MODULE ='service-discovery'
     }
     stages {
 
@@ -23,14 +21,14 @@ pipeline {
         // 2. 권한 추가
         stage('Add Permission') {
             steps {
-                sh 'chmod +x /var/lib/jenkins/workspace/sabujaks-msa-base/backend-msa/gradlew'
+                sh 'chmod +x /var/lib/jenkins/workspace/sabujaks-msa-discovery/backend-msa/gradlew'
             }
         }
 
         // 3. gradle 빌드
         stage('Build') {
             steps {
-                dir('/var/lib/jenkins/workspace/sabujaks-msa-base/backend-msa/') {
+                dir('/var/lib/jenkins/workspace/sabujaks-msa-discovery/backend-msa') {
                     sh "./gradlew :${TARGET_MODULE}:bootJar"
                 }
             }
@@ -40,7 +38,7 @@ pipeline {
         stage('Docker Build') {
             steps {
                 script {
-                    sh 'docker build -f cicd/msa/jenkins/msa-base/Dockerfile -t sabujaks/backend-msa-base:1.$BUILD_ID .'
+                    sh 'docker build -f cicd/msa/jenkins/msa-discovery/Dockerfile -t sabujaks/msa-discovery:1.$BUILD_ID .'
                 }
             }
         }
@@ -54,7 +52,7 @@ pipeline {
                         sh "docker login -u ${DOCKER_EMAIL} -p ${DOCKER_PASSWORD}"
                     }
                     // Docker Push
-                    sh 'docker push sabujaks/backend-api:1.$BUILD_ID'
+                    sh 'docker push sabujaks/backend-msa-discovery:1.$BUILD_ID'
                 }
             }
         }
@@ -63,14 +61,7 @@ pipeline {
         stage('SSH transfer') {
             steps {
                 script {
-                    def isOdd = (BUILD_ID.toInteger() % 2 != 0)
-                    def deploymentFile = isOdd ? 'backend-api-deployment-blue.yml' : 'backend-api-deployment-green.yml'
-                    def otherDeployment = isOdd ? 'backend-api-deployment-green' : 'backend-api-deployment-blue'
-                    def newSelector = isOdd ? 'blue' : 'green'
-                    def serviceName = 'backend-api-svc'
-
-                    def deploymentName = deploymentFile.replace('.yml', '')
-
+                    def deploymentFile = 'backend-api-deployment-blue.yml' : 'backend-api-deployment-green.yml'
                     // SSH 전송 플러그인 사용
                     sshPublisher(
                         // 오류 발생 시 진행을 멈춤
