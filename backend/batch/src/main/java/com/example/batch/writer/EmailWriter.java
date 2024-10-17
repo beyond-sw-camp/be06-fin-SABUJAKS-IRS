@@ -24,7 +24,6 @@ public class EmailWriter implements ItemWriter<List<Alarm>> {
             alarmsToSave.addAll(alarmList);
         }
 
-        // AlarmRepository를 통해 저장
         alarmRepository.saveAll(alarmsToSave);
     }
 }
