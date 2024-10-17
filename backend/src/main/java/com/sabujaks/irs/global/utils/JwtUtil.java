@@ -83,14 +83,14 @@ public class JwtUtil {
                 .compact();
     }
 
-    // 화상 면접 토큰 생성
-    public String createToken(String grantedAuthority) {
-        return Jwts.builder()
-                .claim("grantedAuthority", grantedAuthority)
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 60 * 100000))
-                .signWith(secretKey)
-                .compact();
-    }
+//    // 화상 면접 토큰 생성
+//    public String createToken(String grantedAuthority) {
+//        return Jwts.builder()
+//                .claim("grantedAuthority", grantedAuthority)
+//                .issuedAt(new Date(System.currentTimeMillis()))
+//                .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 60 * 100000))
+//                .signWith(secretKey)
+//                .compact();
+//    }
 
 }

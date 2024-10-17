@@ -1,15 +1,20 @@
 <template>
     <div class="login-wrapper">
-        <SeekerHeaderComponent></SeekerHeaderComponent>
+        <!-- <SeekerHeaderComponent></SeekerHeaderComponent> -->
         <div class="login-container">
             <div class="login-section">
-                <img class="logo" src="../../../assets/img/irs_black.png">
+                <!-- <img class="logo" src="../../../assets/img/irs_black.png"> -->
+                <router-link to="/">
+                    <img class="logo" src="../../../assets/img/irs_black.png" alt="Logo">
+                </router-link>
                 <form class="login-form" @submit.prevent="handleLogin">
                     <section class="input-section">
                         <label class="label-id">아이디</label>
-                        <input v-model="email" type="email" placeholder="아이디" size="16" maxlength="30" title="아이디 입력" required="">
+                        <input v-model="email" type="email" placeholder="아이디" size="16" maxlength="30" title="아이디 입력"
+                            required="">
                         <label class="label-pw">비밀번호</label>
-                        <input v-model="password" type="password" placeholder="비밀번호" size="16" title="비밀번호 입력" required="">
+                        <input v-model="password" type="password" placeholder="비밀번호" size="16" title="비밀번호 입력"
+                            required="">
                     </section>
                     <button type="submit" class="login-submitbtn">로그인</button>
                     <a href="/seeker/signup" class="redirect-signup">회원가입</a>
@@ -33,9 +38,9 @@
         <SeekerFooterComponent></SeekerFooterComponent>
     </div>
 </template>
-    
+
 <script setup>
-import SeekerHeaderComponent from "@/components/seeker/SeekerHeaderComponent.vue";
+// import SeekerHeaderComponent from "@/components/seeker/SeekerHeaderComponent.vue";
 import SeekerFooterComponent from "@/components/seeker/SeekerFooterComponent.vue"
 import { ref } from "vue"
 import { UseAuthStore } from "@/stores/UseAuthStore"
@@ -50,13 +55,13 @@ const authStore = UseAuthStore();
 const email = ref("")
 const password = ref("")
 
-const handleLogin = async() => {
+const handleLogin = async () => {
     const requestBody = {
         email: email.value,
         password: password.value
     }
     const response = await authStore.login(requestBody)
-    if(response && authStore.isLoggedIn){
+    if (response && authStore.isLoggedIn) {
         router.push("/")
         toast.success("로그인에 성공했습니다.")
     } else {
@@ -87,7 +92,7 @@ const handleSocialLogin = async (provider) => {
     padding: 0;
 }
 
-.login-container{
+.login-container {
     margin: 100px auto;
     padding: 0;
     background-color: #ff0000;
@@ -99,7 +104,7 @@ const handleSocialLogin = async (provider) => {
     justify-content: center;
     display: flex;
     align-items: center;
- 
+
 }
 
 .login-section {
@@ -125,7 +130,7 @@ const handleSocialLogin = async (provider) => {
     width: 150px;
 }
 
-.login-form{
+.login-form {
     border: 0 none;
     margin: 0;
     padding: 0;
@@ -182,7 +187,8 @@ const handleSocialLogin = async (provider) => {
     letter-spacing: 0px;
     font-weight: 400;
     line-height: 22px;
-    margin-bottom: 12px;;
+    margin-bottom: 12px;
+    ;
     outline: none;
 }
 
@@ -242,7 +248,7 @@ const handleSocialLogin = async (provider) => {
     margin-left: 20px;
 }
 
-.social-button{
+.social-button {
     flex: 1;
     border: 0 none;
     padding: 15px;
@@ -250,7 +256,8 @@ const handleSocialLogin = async (provider) => {
     justify-content: center;
     align-items: center;
     border-radius: 8px;
-    background-color: #212b36; ;
+    background-color: #212b36;
+    ;
     cursor: pointer;
     width: auto;
     height: auto;
@@ -320,8 +327,8 @@ const handleSocialLogin = async (provider) => {
     cursor: pointer;
 }
 
-a:hover, button:hover {
+a:hover,
+button:hover {
     opacity: 70%;
 }
-
 </style>

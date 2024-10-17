@@ -323,7 +323,13 @@ export const UseAnnouncementStore = defineStore('announcement', {
                 console.error('데이터 저장 실패:', error);
                 // alert('데이터 저장 중 오류가 발생했습니다.' + error.response.data.message);
                 const toast = useToast();
-                toast.error(error.response.data.message);
+                // toast.error(error.response.data.message);
+                if(error.response.status == 401) {
+                    toast.error("세션이 만료되어 로그인 페이지로 이동합니다.");
+                    router.push("/recruiter/login");
+                } else {
+                    toast.error(error.response.data.message);
+                }
             }
         },
         async search(page, size, keyword, careerBase, jobCategory, region, sort) {

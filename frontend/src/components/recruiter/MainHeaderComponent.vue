@@ -29,6 +29,7 @@ const logout = () => {
   sessionStorage.clear();
   authStore.logout();
   isLoggedIn.value = false;
+  toast.success(`로그아웃 했습니다.`)
   router.push('/recruiter/login'); // 로그아웃 후 로그인 페이지로 이동
 };
 

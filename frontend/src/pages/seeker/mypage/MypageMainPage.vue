@@ -68,8 +68,8 @@ import SeekerHeaderComponent from "@/components/seeker/SeekerHeaderComponent.vue
 import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.vue";
 import { ref, onMounted } from 'vue';
 import { UseAuthStore } from '@/stores/UseAuthStore';
+import { useToast } from "vue-toastification";
 import { useRouter } from 'vue-router';
-import {useToast} from "vue-toastification";
 
 const router = useRouter();
 const toast = useToast();
@@ -79,13 +79,29 @@ const readSeeker = ref({});
 
 onMounted(async () => {
   const response = await authStore.readSeeker();
-  if (response.success) {
-    readSeeker.value = response.result;
-  } else {
-    // authStore.logout();
-    toast.error(response.message);
-    router.push('/seeker/login');
+  console.log(response);
+  if (response && response.status == 200) {
+    readSeeker.value = response.data.result;
   }
+  
+  if(response == null) {
+    toast.error("세션이 만료되어 로그인 페이지로 이동합니다.");
+    router.push("/seeker/login");
+  }
+
+  // else if (response && response.status == 401) {
+  //   console.log("여긴마이페이지 온마운트");
+  //   // toast.error(response.data.message);
+
+  //   await authStore.logout();
+  //   // router.push('/seeker/login');
+
+  //   console.log(response.data.message);
+    
+  // } 
+  // else {
+  //   toast.error(response.data.message);
+  // }
 });
 
 </script>

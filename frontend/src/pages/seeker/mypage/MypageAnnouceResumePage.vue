@@ -52,16 +52,20 @@ import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.v
 
 import { onMounted, ref, computed } from 'vue';
 import { UseResumeStore } from '@/stores/UseResumeStore';
+import { UseAuthStore } from '@/stores/UseAuthStore';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const resumeStore = UseResumeStore();
+const authStore = UseAuthStore();
 
 const currentPage = ref(1);
 const pageSize = 10;
 
 onMounted(async () => {
-    await fetchResumes(currentPage.value);
+    if(authStore.userInfo) {
+        await fetchResumes(currentPage.value);
+    }
 });
 
 const fetchResumes = async (page) => {

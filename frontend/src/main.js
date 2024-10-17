@@ -4,11 +4,12 @@ import router from './router'
 import './App.css';
 import { createPinia } from 'pinia'
 import piniaPersistedState from 'pinia-plugin-persistedstate'
-import { Toast, useToast } from "vue-toastification";
+import Toast from "vue-toastification";
 // Import the CSS or use your own!
 import "vue-toastification/dist/index.css";
 import axios from 'axios'
-import { UseAuthStore } from '@/stores/UseAuthStore'; // UseAuthStore 임포트 추가
+import { UseAuthStore } from '@/stores/UseAuthStore';
+// import { useToast } from "vue-toastification";
 
 const app = createApp(App)
 const pinia = createPinia();
@@ -36,21 +37,20 @@ axios.interceptors.response.use(
     },
     async error => {
         if (error.response && error.response.status === 401) {
-            // 서버에서 '세션이 만료되었습니다.'라는 특정 메시지가 오면 로그아웃 처리
+            console.log("hhh");
+            // const toast = useToast();
+            const authStore = UseAuthStore();
 
-            const authStore = UseAuthStore(); // UseAuthStore 인스턴스 생성
-            await authStore.logout(); // 로그아웃 함수 호출
+            await authStore.logout();
 
-            const toast = useToast();
-
-            toast.error("세션이 유효하지 않습니다. 로그인을 다시 해 주세요.");
-            router.push('/'); // 메인 페이지로 리다이렉트
-
-            // 401 오류에 대해 Promise.reject가 아닌 빈 값을 반환하여 catch로 넘어가지 않게 처리
-            return;
-
-        }
+            // toast.error("세션이 만료되어 로그인 페이지로 이동합니다.");
+            
+            console.log("세션이 유효하지 않습니다!!!!!!!!!!!!!!!sfjkwpeifjslkvnlxkmvowejropjefkjsdflkmdlkz.,dmvlskfjpoqejrfojdklsnvlscxmkdjfpowejfoad;kfmlsvnx,c.alsldkfpowejfwsvn");
+            
+            return Promise.resolve();
+        }        
+        return Promise.reject(error);
     }
 );
 
-app.config.globalProperties.$axios = axios; // Axios 인스턴스를 전역 속성으로 등록
+// app.config.globalProperties.$axios = axios; // Axios 인스턴스를 전역 속성으로 등록

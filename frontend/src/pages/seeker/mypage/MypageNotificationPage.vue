@@ -17,11 +17,8 @@
               <!-- 알림 리스트 반복 출력 -->
               <div v-for="(alarm, index) in alarms" :key="alarm.idx" class="timeline-item">
                 <div class="timeline-date">{{ formatDate(alarm.createdAt) }}</div>
-                <div
-                    class="timeline-content row"
-                    :class="{ read: alarm.status === true }"
-                    @click="toggleDetail(index, alarm.idx)"
-                >
+                <div class="timeline-content row" :class="{ read: alarm.status === true }"
+                  @click="toggleDetail(index, alarm.idx)">
                   <div class="margin-v-auto">
                     {{ alarm.type }}
                   </div>
@@ -32,7 +29,9 @@
 
                 <!-- 상세 내용 (숨겨진 상태에서 애니메이션으로 열림) -->
                 <transition name="fade">
-                  <div :style="{ maxHeight: isDetailOpen(index) ? '100%' : '0px', padding: isDetailOpen(index) ? '50px 0' : '0px' }" class="timeline-detail">
+                  <div
+                    :style="{ maxHeight: isDetailOpen(index) ? '100%' : '0px', padding: isDetailOpen(index) ? '50px 0' : '0px' }"
+                    class="timeline-detail">
                     <div class="margin-v-auto" v-html="alarm.message"></div>
                   </div>
                 </transition>
@@ -73,11 +72,16 @@
 </template>
 
 <script setup>
-import {ref, onMounted} from 'vue';
+import { ref, onMounted } from 'vue';
 import SeekerHeaderComponent from "@/components/seeker/SeekerHeaderComponent.vue";
 import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.vue";
-import {UseMypageNotificationStore} from "@/stores/UseMypageNotificationStore";
-import {UseInterviewScheduleStore} from "@/stores/UseInterviewScheduleStore";
+import { UseMypageNotificationStore } from "@/stores/UseMypageNotificationStore";
+import { UseInterviewScheduleStore } from "@/stores/UseInterviewScheduleStore";
+import { UseAuthStore } from '@/stores/UseAuthStore';
+// import { useRouter } from 'vue-router';
+
+const authStore = UseAuthStore();
+// const router = useRouter();
 
 const mypageNotificationStore = UseMypageNotificationStore();
 const interviewScheduleStore = UseInterviewScheduleStore();
@@ -90,8 +94,14 @@ const selectedAlarm = ref(null);
 onMounted(async () => {
   alarms.value = await mypageNotificationStore.readAllAlarm();
 
-  // 최신순으로 정렬 (createdAt을 기준으로 내림차순)
-  alarms.value.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  if (authStore.isLoggedIn) {
+    if (alarms.value) {
+      // 최신순으로 정렬 (createdAt을 기준으로 내림차순)
+      alarms.value.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }
+  } 
+
+
 });
 
 // 모달 열기
@@ -156,7 +166,7 @@ const toggleDetail = async (index, alarmIdx) => {
   if (isUpdated) {
     // 상태가 업데이트되면, 로컬 상태를 업데이트
     alarms.value = alarms.value.map(alarm =>
-        alarm.idx === alarmIdx ? {...alarm, status: true} : alarm
+      alarm.idx === alarmIdx ? { ...alarm, status: true } : alarm
     );
   }
 };
@@ -302,7 +312,8 @@ const isDetailOpen = (index) => {
 }
 
 .modal-section {
-  flex: 1; /* 이 부분이 모달의 컨텐츠를 채우도록 설정 */
+  flex: 1;
+  /* 이 부분이 모달의 컨텐츠를 채우도록 설정 */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -348,7 +359,8 @@ input[type="text"] {
   border-radius: 4px;
 }
 
-.add-button, .add-email {
+.add-button,
+.add-email {
   padding: 10px;
   background-color: #232b16;
   color: white;
@@ -380,17 +392,22 @@ input[type="text"] {
   transition: max-height 0.5s ease, padding 0.5s ease;
 }
 
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: max-height 0.5s ease, padding 0.5s ease;
 }
 
-.fade-enter-from, .fade-leave-to {
-  max-height: 500px; /* 최대 높이를 조정 */
-  padding: 10px 0; /* 여백 추가 */
+.fade-enter-from,
+.fade-leave-to {
+  max-height: 500px;
+  /* 최대 높이를 조정 */
+  padding: 10px 0;
+  /* 여백 추가 */
 }
 
 .read {
-  color: gray;  /* 읽은 알림은 글자색이 회색으로 */
+  color: gray;
+  /* 읽은 알림은 글자색이 회색으로 */
 }
 
 .submit-button {
@@ -406,11 +423,11 @@ input[type="text"] {
 
 .main_div {
   width: 100%;
-  background-color: #ffffff; /* 배경색 설정 */
+  background-color: #ffffff;
+  /* 배경색 설정 */
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px 0;
 }
-
 </style>

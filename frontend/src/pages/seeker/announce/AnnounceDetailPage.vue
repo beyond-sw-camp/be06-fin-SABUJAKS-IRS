@@ -128,7 +128,7 @@
                     <span class="ad-text7">{{ announcementDetail.jobTitle }}</span>
                 </div>
                 <p class="add-intro">
-                    회사소개<br>
+                    소개<br>
                     {{ announcementDetail.intro }}
                 </p>
                 <br>
@@ -169,8 +169,8 @@
                     <br>
                     면접 횟수 : {{ announcementDetail.interviewNum }}<br>
                     절차 : {{ announcementDetail.process }}<br>
-                    서류전형 마감기한 : {{ announcementDetail.deadlineDocument}}<br>
-                    전체전형 마감기한 : {{ announcementDetail.deadlineFinal}}
+                    서류전형 발표일 : {{ announcementDetail.deadlineDocument}}<br>
+                    최종합격 발표일 : {{ announcementDetail.deadlineFinal}}
                 </p>
                 <br>
                 <p class="add-heading">

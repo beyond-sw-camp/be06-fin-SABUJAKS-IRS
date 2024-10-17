@@ -37,30 +37,70 @@ import ReScheduleListPage from "@/pages/recruiter/interview-schedule/ReScheduleL
 import ReScheduleDetailPage from "@/pages/recruiter/interview-schedule/ReScheduleDetailPage.vue";
 import TotalProcessMainPage from "@/pages/recruiter/total-process/TotalProcessMainPage.vue";
 import TotalProcessListPage from "@/pages/recruiter/total-process/TotalProcessListPage.vue";
+import { useToast } from "vue-toastification";
 
 const requireRecruiterLogin = async (to, from, next) => {
     const authStore = UseAuthStore();
+    const toast = useToast();
+
     try {
         await authStore.getUserInfo();
         const storedUserInfo = JSON.parse(sessionStorage.getItem('auth'));
         if (storedUserInfo && storedUserInfo.userInfo.role === "ROLE_RECRUITER") {
             return next();
         } else {
-            if (confirm("로그인이 필요합니다.")) {
-                return next("/recruiter/login");
-            }
+            toast.error("세션이 만료되어 로그인 페이지로 이동합니다.");
+            return next("/recruiter/login");
         }
     } catch (error) {
         console.error("Authentication check failed:", error);
+        toast.error("세션이 만료되어 로그인 페이지로 이동합니다.");
         next("/recruiter/login");
     }
 }
+
 const alreadyLogin = async (to, from, next) => {
     const authStore = UseAuthStore();
     if (!authStore.isLoggedIn) {
         return next();
     } else {
         return next("/");
+    }
+}
+
+const requireSeekerLogin = async (to, from, next) => {
+    console.log("인덱스!!!");
+    const authStore = UseAuthStore();
+    const toast = useToast();
+
+    // const response = await authStore.getUserInfo();
+    // if(response && response.status ) {
+    //     // const storedUserInfo = JSON.parse(sessionStorage.getItem('auth'));
+    //     if (authStore.userInfo && authStore.userInfo.role === "ROLE_SEEKER") {
+    //         return next();
+    //     } else {
+    //         toast.error("세션이 만료되어 로그인 페이지로 이동합니다.");
+    //         return next("/seeker/login");
+    //     }
+    // } else {
+
+    // }
+
+    try {
+        await authStore.getUserInfo();
+        const storedUserInfo = JSON.parse(sessionStorage.getItem('auth'));
+        if (storedUserInfo && storedUserInfo.userInfo.role === "ROLE_SEEKER") {
+            return next();
+        } else {
+            console.log("****************************************************************");
+            toast.error("세션이 만료되어 로그인 페이지로 이동합니다.");
+            return next("/seeker/login");
+        }
+    } catch (error) {
+        // console.error("Authentication check failed:", error);
+        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        toast.error("세션이 만료되어 로그인 페이지로 이동합니다.");
+        next("/seeker/login");
     }
 }
 
@@ -106,14 +146,14 @@ const router = createRouter({
         { path: '/seeker/announce/detail/:announcementIdx', component: AnnounceDetailPage },
 
         { path: '/seeker/mypage', component: MypageMainPage },
-        { path: '/seeker/mypage/schedule', component: MypageSchedulePage },
-        { path: '/seeker/mypage/annouce-resume', component: MypageAnnouceResumePage },
-        { path: '/seeker/mypage/integration-resume', component: MypageIntegrationeResumePage },
-        { path: '/seeker/mypage/notification', component: MypageNotificationPage },
+        { path: '/seeker/mypage/schedule', component: MypageSchedulePage, beforeEnter: requireSeekerLogin },
+        { path: '/seeker/mypage/annouce-resume', component: MypageAnnouceResumePage, beforeEnter: requireSeekerLogin },
+        { path: '/seeker/mypage/integration-resume', component: MypageIntegrationeResumePage, beforeEnter: requireSeekerLogin },
+        { path: '/seeker/mypage/notification', component: MypageNotificationPage, beforeEnter: requireSeekerLogin },
 
-        { path: '/seeker/resume/create', component: ResumeCreatePage },
-        { path: '/seeker/resume/submit/:announcementIdx', component: ResumeSubmitPage },
-        { path: '/seeker/resume/detail/:resumeIdx', component: SeekerResumeDetailPage },
+        { path: '/seeker/resume/create', component: ResumeCreatePage, beforeEnter: requireSeekerLogin },
+        { path: '/seeker/resume/submit/:announcementIdx', component: ResumeSubmitPage, beforeEnter: requireSeekerLogin },
+        { path: '/seeker/resume/detail/:resumeIdx', component: SeekerResumeDetailPage, beforeEnter: requireSeekerLogin },
 
         { path: '/video-interview/:announcementUUID', component: VideoInterviewMainPage, },
         { path: '/video-interview/:announcementUUID/:videoInterviewUUID', component: VideoInterviewRoomPage },

@@ -1,6 +1,10 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
 import { backend } from '@/const';
+// import router from '@/router';
+// import {useToast} from "vue-toastification";
+// const toast = useToast();
+
 
 
 export const UseAuthStore = defineStore('auth', {
@@ -23,9 +27,9 @@ export const UseAuthStore = defineStore('auth', {
                     { headers: { 'Content-Type': 'application/json', },}
                 );
                 console.log(response);
-                if(response) {
+                if (response) {
                     this.isLoggedIn = true;
-                    // this.getUserInfo(); // 추가
+                    await this.getUserInfo(); // 추가
                     // if(this.userInfo.name != null) {
                     //     return true
                     // }
@@ -83,7 +87,7 @@ export const UseAuthStore = defineStore('auth', {
             }
         },
         async getUserInfo() {
-            // try {
+            try {
                 const response = await axios.get(
                     `${backend}/auth/user-info`,
                     { 
@@ -93,13 +97,26 @@ export const UseAuthStore = defineStore('auth', {
                 );
                 const { email, name, role, nickName } = response.data.result;
                 this.userInfo = { email, name, role, nickName };
-                return response.data
-            // } catch (error) {
-            //     return error.response.data;
-            // }
+                return response.data;
+
+            } catch (error) {
+                if (error.response.status == 401) {
+                    console.log("여긴어스스토어 유저인포");
+                    // toast.error(error.response.data.message);
+                    console.log(error.response.data.message);
+                    // toast.error("세션이 만료되었습니다. 다시 로그인 해 주세요.");
+
+                    await this.logout();
+
+                    // router.push("/");
+
+                } else {
+                    return error.response.data;
+                }
+            }
         },
         async readSeeker() {
-            // try {
+            try {
                 const response = await axios.get(
                     `${backend}/auth/seeker/read`,
                     { 
@@ -107,10 +124,12 @@ export const UseAuthStore = defineStore('auth', {
                         withCredentials: true
                     }
                 );
-                return response.data;
-            // } catch (error) {
-            //     return error.response.data;
-            // }
+                console.log(response);
+                return response;
+            } catch (error) {
+                console.log(error);
+                return error.response;
+            }
         },
         async companyVerify(requestBody) {
             try {

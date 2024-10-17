@@ -32,18 +32,18 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String role = oAuth2Member.getSeeker().getRole();
         String token = jwtUtil.createToken(idx, username, role);
         String refreshToken = jwtUtil.createRefreshToken(username);
-        Collection<? extends GrantedAuthority> authorities = oAuth2Member.getAuthorities();
-        for (GrantedAuthority authority : authorities){
-            if(Objects.equals(authority.toString(), role)){
-                continue;
-            }
-            Cookie viToken = new Cookie("VITOKEN"+ UUID.randomUUID(), jwtUtil.createToken(authority.getAuthority()));
-            viToken.setHttpOnly(true);
-            viToken.setSecure(true);
-            viToken.setPath("/");
-            viToken.setMaxAge(60 * 60);
-            response.addCookie(viToken);
-        }
+//        Collection<? extends GrantedAuthority> authorities = oAuth2Member.getAuthorities();
+//        for (GrantedAuthority authority : authorities){
+//            if(Objects.equals(authority.toString(), role)){
+//                continue;
+//            }
+//            Cookie viToken = new Cookie("VITOKEN"+ UUID.randomUUID(), jwtUtil.createToken(authority.getAuthority()));
+//            viToken.setHttpOnly(true);
+//            viToken.setSecure(true);
+//            viToken.setPath("/");
+//            viToken.setMaxAge(60 * 60);
+//            response.addCookie(viToken);
+//        }
         Cookie aToken = new Cookie("ATOKEN", token);
         aToken.setHttpOnly(true);
         aToken.setSecure(true);

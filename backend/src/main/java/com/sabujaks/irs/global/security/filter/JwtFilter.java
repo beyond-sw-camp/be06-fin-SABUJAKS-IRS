@@ -41,7 +41,7 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String accessToken = null;
         String refreshToken = null;
-        List<String> vidioInterviewAuthorizationList = new ArrayList<>();
+//        List<String> vidioInterviewAuthorizationList = new ArrayList<>();
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
                 if (cookie.getName().equals("ATOKEN")) {
@@ -50,9 +50,9 @@ public class JwtFilter extends OncePerRequestFilter {
                 if (cookie.getName().equals("RTOKEN")) {
                     refreshToken = cookie.getValue();
                 }
-                if (cookie.getName().startsWith("VITOKEN")) {
-                    vidioInterviewAuthorizationList.add(cookie.getValue());
-                }
+//                if (cookie.getName().startsWith("VITOKEN")) {
+//                    vidioInterviewAuthorizationList.add(cookie.getValue());
+//                }
             }
         }
 
@@ -98,10 +98,10 @@ public class JwtFilter extends OncePerRequestFilter {
                 Set<SimpleGrantedAuthority> authorities = new HashSet<>();
                 SimpleGrantedAuthority defaultRole = new SimpleGrantedAuthority(role);
                 authorities.add(defaultRole);
-                for (String videoInterviewAuthorization : vidioInterviewAuthorizationList) {
-                    SimpleGrantedAuthority videoInterviewRole = new SimpleGrantedAuthority(jwtUtil.getGrantedAuthority(videoInterviewAuthorization));
-                    authorities.add(videoInterviewRole);
-                }
+//                for (String videoInterviewAuthorization : vidioInterviewAuthorizationList) {
+//                    SimpleGrantedAuthority videoInterviewRole = new SimpleGrantedAuthority(jwtUtil.getGrantedAuthority(videoInterviewAuthorization));
+//                    authorities.add(videoInterviewRole);
+//                }
 
                 CustomUserDetails customUserDetails = createCustomUserDetails(role, idx, email, authorities);
 
@@ -141,18 +141,6 @@ public class JwtFilter extends OncePerRequestFilter {
                     .role(role)
                     .build();
             return new CustomUserDetails(estimator, authorities);
-        }
-        return null;
-    }
-
-    // Refresh Token 추출
-    private String extractRefreshToken(HttpServletRequest request) {
-        if (request.getCookies() != null) {
-            for (Cookie cookie : request.getCookies()) {
-                if ("RTOKEN".equals(cookie.getName())) {
-                    return cookie.getValue();
-                }
-            }
         }
         return null;
     }
