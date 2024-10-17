@@ -46,7 +46,7 @@ pipeline {
                 }
             }
         }
-        // 5. SSH 전송 및 배포 관리
+        // 5. SSH 전송 및 배포 관리!
         stage('SSH transfer') {
             steps {
                 script {
