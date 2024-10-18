@@ -13,14 +13,10 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class EmailVerifyService {
     private final EmailSenderSeeker emailSenderSeeker;
     private final EmailVerifyRepository emailVerifyRepository;
-
-    public EmailVerifyService(EmailSenderSeeker emailSenderSeeker, EmailVerifyRepository emailVerifyRepository) {
-        this.emailSenderSeeker = emailSenderSeeker;
-        this.emailVerifyRepository = emailVerifyRepository;
-    }
 
     public Boolean isExist(String email, String uuid) throws BaseException {
         EmailVerify emailVerify = emailVerifyRepository.findByEmail(email)
