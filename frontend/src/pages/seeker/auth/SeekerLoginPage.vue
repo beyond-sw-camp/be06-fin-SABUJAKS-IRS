@@ -4,6 +4,9 @@
         <div class="login-container">
             <div class="login-section">
                 <img class="logo" src="../../../assets/img/irs_black.png">
+                <p>
+                  테스트 ID : test@test.com, PW : qwer1234
+                </p>
                 <form class="login-form" @submit.prevent="handleLogin">
                     <section class="input-section">
                         <label class="label-id">아이디</label>
@@ -37,7 +40,7 @@
 <script setup>
 import SeekerHeaderComponent from "@/components/seeker/SeekerHeaderComponent.vue";
 import SeekerFooterComponent from "@/components/seeker/SeekerFooterComponent.vue"
-import { ref } from "vue"
+import {onMounted, ref} from "vue"
 import { UseAuthStore } from "@/stores/UseAuthStore"
 import { useToast } from "vue-toastification";
 import { useRouter } from "vue-router"
@@ -49,6 +52,21 @@ const authStore = UseAuthStore();
 
 const email = ref("")
 const password = ref("")
+
+onMounted(() => {
+  const query = router.currentRoute.value.query;
+  const isError = query.error;
+  const isEmail = query.email;
+
+  // error=true가 있으면 실패 토스트 메시지 띄우기
+  if (isError) {
+    toast.error("이메일 인증에 실패했습니다. 다시 시도해주세요.");
+  }
+
+  if (isEmail) {
+    toast.success("이메일 인증에 성공했습니다.");
+  }
+})
 
 const handleLogin = async() => {
     const requestBody = {
