@@ -105,7 +105,7 @@ const formatDate = (datetime) => {
     </table>
 
     <div class="pagination">
-      <button v-for="page in totalPages" :key="page" @click="handlePageClick(page)">{{ page }}</button>
+      <button v-for="page in totalPages" :key="page" @click="handlePageClick(page)" :class="{ active: currentPage === page }">{{ page }}</button>
     </div>
   </div>
 
@@ -219,5 +219,10 @@ th {
 .review-table tr:hover {
   background-color: #e6e6e6;
   cursor: pointer;
+}
+
+.pagination button.active {
+  background-color: #212b36;
+  color: white;
 }
 </style>
