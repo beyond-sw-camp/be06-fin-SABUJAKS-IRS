@@ -120,9 +120,11 @@ public class ResumeController {
 
     // (지원자, 채용담당자) 지원서 상세 조회
     @GetMapping("/read")
-    public ResponseEntity<BaseResponse<ResumeReadRes>> read(Long resumeIdx) throws BaseException {
+    public ResponseEntity<BaseResponse<ResumeReadRes>> read(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            Long resumeIdx) throws BaseException {
 
-        ResumeReadRes response = resumeService.read(resumeIdx);
+        ResumeReadRes response = resumeService.read(customUserDetails, resumeIdx);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.RESUME_READ_SUCCESS, response));
     }
 
