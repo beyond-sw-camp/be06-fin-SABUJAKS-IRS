@@ -19,6 +19,9 @@ dependencies {
 
     // OpenVidu
     implementation 'io.openvidu:openvidu-java-client:2.30.0'
+
+    // redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 
 bootJar {

@@ -1,5 +1,6 @@
 package com.example.api.global.utils;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -49,7 +50,11 @@ public class JwtUtil {
 
     // 토큰 만료 시간 확인
     public Boolean isExpired(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
+        try{
+            return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
+        } catch (ExpiredJwtException expiredJwtException){
+            return true;
+        }
     }
 
     // 멤버 토큰 생성
@@ -59,19 +64,29 @@ public class JwtUtil {
                 .claim("username", username)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 60 * 100000))
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 1)) // 1시간 1000 * 60 * 60 * 1
                 .signWith(secretKey)
                 .compact();
     }
 
-    // 화상 면접 토큰 생성
-    public String createToken(String grantedAuthority) {
+    // 리프레시 토큰 생성
+    public String createRefreshToken(String email) {
         return Jwts.builder()
-                .claim("grantedAuthority", grantedAuthority)
+                .claim("email", email)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 60 * 100000))
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 5)) // 5일
                 .signWith(secretKey)
                 .compact();
     }
+
+//    // 화상 면접 토큰 생성
+//    public String createToken(String grantedAuthority) {
+//        return Jwts.builder()
+//                .claim("grantedAuthority", grantedAuthority)
+//                .issuedAt(new Date(System.currentTimeMillis()))
+//                .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 60 * 100000))
+//                .signWith(secretKey)
+//                .compact();
+//    }
 
 }

@@ -30,25 +30,34 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         Long idx = oAuth2Member.getIdx();
         String username = oAuth2Member.getUsername();
         String role = oAuth2Member.getSeeker().getRole();
-        String token = jwtUtil.createToken(idx, username, role);
-        Collection<? extends GrantedAuthority> authorities = oAuth2Member.getAuthorities();
-        for (GrantedAuthority authority : authorities){
-            if(Objects.equals(authority.toString(), role)){
-                continue;
-            }
-            Cookie viToken = new Cookie("VITOKEN"+ UUID.randomUUID(), jwtUtil.createToken(authority.getAuthority()));
-            viToken.setHttpOnly(true);
-            viToken.setSecure(true);
-            viToken.setPath("/");
-            viToken.setMaxAge(60 * 60);
-            response.addCookie(viToken);
-        }
-        Cookie aToken = new Cookie("ATOKEN", token);
+        String accessToken = jwtUtil.createToken(idx, username, role);
+        String refreshToken = jwtUtil.createRefreshToken(username);
+//        Collection<? extends GrantedAuthority> authorities = oAuth2Member.getAuthorities();
+//        for (GrantedAuthority authority : authorities){
+//            if(Objects.equals(authority.toString(), role)){
+//                continue;
+//            }
+//            Cookie viToken = new Cookie("VITOKEN"+ UUID.randomUUID(), jwtUtil.createToken(authority.getAuthority()));
+//            viToken.setHttpOnly(true);
+//            viToken.setSecure(true);
+//            viToken.setPath("/");
+//            viToken.setMaxAge(60 * 60);
+//            response.addCookie(viToken);
+//        }
+        Cookie aToken = new Cookie("ATOKEN", accessToken);
         aToken.setHttpOnly(true);
         aToken.setSecure(true);
         aToken.setPath("/");
-        aToken.setMaxAge(60 * 60);
+//        aToken.setMaxAge(60 * 60); // 만료 시간을 1시간으로 설정, accessToken과 동일
         response.addCookie(aToken);
+
+        Cookie rToken = new Cookie("RTOKEN", refreshToken);
+        rToken.setHttpOnly(true);
+        rToken.setSecure(true);
+        rToken.setPath("/");
+//        rToken.setMaxAge(60 * 60 * 24 * 5); // 만료 시간을 5일로 설정, refreshToken과 동일
+        response.addCookie(rToken);
+
         getRedirectStrategy().sendRedirect(request, response, "https://www.sabujaks-irs.kro.kr/");
     }
 }
