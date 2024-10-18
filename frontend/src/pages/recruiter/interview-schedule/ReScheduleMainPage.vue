@@ -297,4 +297,9 @@ input[type="text"] {
   flex-grow: 1;
 }
 
+.pagination button.active {
+  background-color: #212b36;
+  color: white;
+}
+
 </style>

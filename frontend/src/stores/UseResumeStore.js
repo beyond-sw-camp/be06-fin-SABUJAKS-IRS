@@ -562,28 +562,5 @@ export const UseResumeStore = defineStore('resume', {
                 router.push('/recruiter/resume');
             }
         },
-
-        async sendResult(router, resumeList) {
-            const toast = useToast();
-            try {
-                const response = await axios.post(`${backend}/resume/recruiter/send-result`,
-                    resumeList,
-                    {
-                        headers: { 'Content-Type': 'application/json' },
-                        withCredentials: true
-                    });
-
-                if (response.data.success) {
-                    toast.success("일괄 전송에 성공했습니다.")
-                    router.push(`/recruiter/resume/list/${this.announcementIdx}`);
-                } else {
-                    toast.error("일괄 처리 과정에서 오류가 발생했습니다. 관리자에게 문의하십시오.")
-                }
-                return response.data.success;
-
-            } catch (error) {
-                toast.error(error.response.data.message);
-            }
-        }
     },
 });
