@@ -1005,9 +1005,9 @@ export default {
               </div>
             </div>
 
-            <!-- 서류 전형 마감날 -->
+            <!-- 서류 전형 발표일 -->
             <div class="required-parents-div">
-              <label class="required required2">서류전형 마감 </label>
+              <label class="required required2">서류전형 발표일 </label>
               <div class="required-child-div"
                 style="display: flex; justify-content: left; flex-direction: column; align-items:start">
                 <div style="display: flex; align-items: center;">
@@ -1017,9 +1017,9 @@ export default {
               </div>
             </div>
 
-            <!-- 전체 전형 마감날 -->
+            <!-- 최종 합격 발표일 -->
             <div class="required-parents-div">
-              <label class="required required2">전체전형 마감 </label>
+              <label class="required required2">최종합격 발표일 </label>
               <div class="required-child-div"
                 style="display: flex; justify-content: left; flex-direction: column; align-items:start">
                 <div style="display: flex; align-items: center;">
@@ -1029,8 +1029,8 @@ export default {
               </div>
             </div>
 
-            <p>📢 서류전형과 전체전형 마감날은 지원접수 기간의 마감날에 따라 실시간으로 달라집니다. 
-              <br>📢 마지막에 지원접수 기간 마감날을 바꾸었다면 등록 전 각 전형 마감날을 다시 확인해주세요.</p>
+            <p>📢 서류전형과 최종합격 발표일은 지원접수 기간의 마감날에 따라 실시간으로 달라집니다. 
+              <br>📢 마지막에 지원접수 기간 마감날을 바꾸었다면 등록 전 각 전형 발표일을 다시 확인해주세요.</p>
 
 
             <!-- 백엔드로 보낼 hidden input -->

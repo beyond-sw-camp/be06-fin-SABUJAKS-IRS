@@ -79,12 +79,22 @@ const readSeeker = ref({});
 
 onMounted(async () => {
   const response = await authStore.readSeeker();
-  if (response.success) {
-    readSeeker.value = response.result;
-  } else {
-    toast.error(response.message);
-    router.push('/seeker/login');
+
+  if (response && response.status == 200) {
+    readSeeker.value = response.data.result;
   }
+  
+  if(response == null) {
+    toast.error("세션이 만료되어 로그인 페이지로 이동합니다.");
+    router.push("/seeker/login");
+  }
+
+  // if (response.success) {
+  //   readSeeker.value = response.result;
+  // } else {
+  //   toast.error(response.message);
+  //   router.push('/seeker/login');
+  // }
 });
 
 </script>

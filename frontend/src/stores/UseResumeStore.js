@@ -464,7 +464,7 @@ export const UseResumeStore = defineStore('resume', {
                 return response.data;
             } catch (error) {
                 toast.error(error.response.data.message);
-                if (error.response.data.code === 2007) {
+                if(error.response.data.code === 2007) {
                     router.push(`/seeker/announce/detail/${announcementIdx}`);
                 } else {
                     router.push('/');
@@ -512,8 +512,15 @@ export const UseResumeStore = defineStore('resume', {
                 // console.log(this.announceResumeListPage);
             } catch (error) {
                 // console.log(error.response.data);
-                toast.error('공고별 지원서 조회에 실패하였습니다.');
-                router.push('/seeker/mypage');
+                // toast.error('공고별 지원서 조회에 실패하였습니다.');
+                // router.push('/seeker/mypage');
+                if (error.response.data.code === 2105) {
+                    toast.error('지원한 공고가 없습니다.');
+                    // router.push('/seeker/mypage');
+                } else {
+                    toast.error('공고별 지원서 조회에 실패하였습니다.');
+                    // router.push('/seeker/mypage');
+                }
             }
         },
         async updateDocPassed(router, docPassedValue) {

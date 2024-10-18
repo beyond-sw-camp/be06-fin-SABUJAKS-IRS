@@ -24,6 +24,10 @@ export const UseAuthStore = defineStore('auth', {
                 );
                 if(response) {
                     this.isLoggedIn = true;
+                    await this.getUserInfo(); // 추가
+                    // if(this.userInfo.name != null) {
+                    //     return true
+                    // }
                     return true
                 }
             } catch (error) {
@@ -88,9 +92,24 @@ export const UseAuthStore = defineStore('auth', {
                 );
                 const { email, name, role, nickName } = response.data.result;
                 this.userInfo = { email, name, role, nickName };
-                return response.data
+                return response.data;
+
             } catch (error) {
-                return error.response.data
+                // return error.response.data
+
+                if (error.response.status == 401) {
+                    // console.log("여긴어스스토어 유저인포");
+                    // toast.error(error.response.data.message);
+                    console.log(error.response.data.message);
+                    // toast.error("세션이 만료되었습니다. 다시 로그인 해 주세요.");
+
+                    await this.logout();
+
+                    // router.push("/");
+
+                } else {
+                    return error.response.data;
+                }
             }
         },
         async readSeeker() {
@@ -102,9 +121,11 @@ export const UseAuthStore = defineStore('auth', {
                         withCredentials: true
                     }
                 );
-                return response.data;
+                console.log("정상: "+response);
+                return response;
             } catch (error) {
-                return error.response.data;
+                console.log("에러: "+error);
+                return error.response;
             }
         },
         async companyVerify(requestBody) {

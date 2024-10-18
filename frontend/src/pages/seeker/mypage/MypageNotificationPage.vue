@@ -78,7 +78,9 @@ import SeekerHeaderComponent from "@/components/seeker/SeekerHeaderComponent.vue
 import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.vue";
 import {UseMypageNotificationStore} from "@/stores/UseMypageNotificationStore";
 import {UseInterviewScheduleStore} from "@/stores/UseInterviewScheduleStore";
+import { UseAuthStore } from '@/stores/UseAuthStore';
 
+const authStore = UseAuthStore();
 const mypageNotificationStore = UseMypageNotificationStore();
 const interviewScheduleStore = UseInterviewScheduleStore();
 const alarms = ref([]);
@@ -90,8 +92,12 @@ const selectedAlarm = ref(null);
 onMounted(async () => {
   alarms.value = await mypageNotificationStore.readAllAlarm();
 
-  // 최신순으로 정렬 (createdAt을 기준으로 내림차순)
-  alarms.value.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  if (authStore.isLoggedIn) {
+    if (alarms.value) {
+      // 최신순으로 정렬 (createdAt을 기준으로 내림차순)
+      alarms.value.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }
+  }
 });
 
 // 모달 열기
