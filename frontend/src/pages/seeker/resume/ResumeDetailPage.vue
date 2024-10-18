@@ -6,7 +6,7 @@
                 <!-- 사이드 바 -->
                 <SeekerSideBarComponent></SeekerSideBarComponent>
                 <!-- 메인 컨텐츠 -->
-                <div class="main-content">
+                <div v-if="resumeStore.resumeDetail.personalInfo" class="main-content">
                     <div class="header">
                         <h1>{{ resumeStore.resumeDetail.resumeTitle }}</h1>
                     </div>

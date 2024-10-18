@@ -2,11 +2,11 @@
     <MainHeaderComponent></MainHeaderComponent>
     <div class="container-detail">
         <MainSideBarComponent></MainSideBarComponent>
-        <div id="content" class="ml-200">
+        <div v-if="resumeStore.resumeDetail.personalInfo"  id="content" class="ml-200">
             <div class="resume-view-wrapper">
                 <div class="resume-view-container">
                     <div class="resume-subject">
-                        <div>
+                        <div style="font-size: 40px;">
                             {{ resumeStore.resumeDetail.resumeTitle }}
                         </div>
                         <div v-if="resumeStore.resumeDetail.docPassed == null" id="size-buttons">
@@ -780,7 +780,7 @@ body.resume-preview .resume-page {
     display: flex;
     justify-content: space-between;
     margin-bottom: 24px;
-    font-size: 40px;
+    /* font-size: 40px; */
     letter-spacing: -0.5px;
     color: #000;
     line-height: 1.4;
@@ -1612,7 +1612,6 @@ ul.list-introduction {
     color: white;
     border: none;
     padding: 12px 20px;
-    /* 버튼 크기 키움 */
     margin-right: 10px;
     border-radius: 5px;
     cursor: pointer;
