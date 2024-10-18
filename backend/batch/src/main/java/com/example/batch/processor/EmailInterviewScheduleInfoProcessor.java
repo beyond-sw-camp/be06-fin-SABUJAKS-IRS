@@ -45,9 +45,6 @@ public class EmailInterviewScheduleInfoProcessor implements ItemProcessor<Interv
                     MimeMessage message = mailSender.createMimeMessage();
                     MimeMessageHelper helper = new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
                     helper.setTo(participate.getSeeker().getEmail());
-                    System.out.println("@@@@@@@@@@@@@@@@");
-                    System.out.println(participate.getSeeker().getEmail());
-                    System.out.println("@@@@@@@@@@@@@@@@");
                     helper.setSubject("[IRS] 인터뷰 일정 안내");
 
                     // 템플릿 내부에서 처리한 변수값 매핑
@@ -68,10 +65,8 @@ public class EmailInterviewScheduleInfoProcessor implements ItemProcessor<Interv
 
                     String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
                     helper.setText(html, true);  // HTML 내용 설정
-                    System.out.println("@@@@@@@@@@@@@@@@");
-                    System.out.println("메일전송");
+
                     mailSender.send(message);  // 메일 전송
-                    System.out.println("@@@@@@@@@@@@@@@@");
 
                     // 알람 객체 생성
 

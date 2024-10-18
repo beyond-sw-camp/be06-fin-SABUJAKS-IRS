@@ -88,6 +88,7 @@ public class EmailResumeResultProcessor implements ItemProcessor<Announcement, L
                             .build());
                 }
             }
+            return alarms;
         }
 
         return null;

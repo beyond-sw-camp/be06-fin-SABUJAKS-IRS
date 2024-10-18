@@ -25,4 +25,7 @@ public interface TotalProcessRepository extends JpaRepository<TotalProcess, Long
 
     @Query("SELECT tp FROM TotalProcess tp WHERE tp.announcement.idx = :announcementIdx ORDER BY tp.idx DESC")
     Page<TotalProcess> findAllByAnnouncementIdx(Long announcementIdx, Pageable pageable);
+
+    @Query("SELECT tp FROM TotalProcess tp WHERE tp.announcement.idx = :announcementIdx")
+    Optional<List<TotalProcess>> findAllByAnnouncementIdx(Long announcementIdx);
 }

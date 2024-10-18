@@ -21,14 +21,14 @@ pipeline {
         // 2. 권한 추가
         stage('Add Permission') {
             steps {
-                sh 'chmod +x /var/lib/jenkins/workspace/sabujaks-backend-api/backend/api/gradlew'
+                sh 'chmod +x /var/lib/jenkins/workspace/sabujaks-batch-backend/backend/api/gradlew'
             }
         }
 
         // 3. gradle 빌드
         stage('Build') {
             steps {
-                dir('/var/lib/jenkins/workspace/sabujaks-backend-api/backend/api') {
+                dir('/var/lib/jenkins/workspace/sabujaks-batch-backend/backend/api') {
                     sh './gradlew bootJar'
                 }
             }
@@ -65,7 +65,7 @@ pipeline {
                     def deploymentFile = isOdd ? 'backend-api-deployment-blue.yml' : 'backend-api-deployment-green.yml'
                     def otherDeployment = isOdd ? 'backend-api-deployment-green' : 'backend-api-deployment-blue'
                     def newSelector = isOdd ? 'blue' : 'green'
-                    def serviceName = 'backend-api-svc'
+                    def serviceName = 'backend-svc'
 
                     def deploymentName = deploymentFile.replace('.yml', '')
 
