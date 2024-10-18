@@ -1,9 +1,9 @@
-//package com.sabujaks.irs.domain.system;
+//package com.example.api.domain.system;
 //
-//import com.sabujaks.irs.domain.system.model.entity.BaseInfo;
-//import com.sabujaks.irs.domain.system.repository.BaseInfoRepository;
-//import com.sabujaks.irs.domain.interview_schedule.model.entity.Team;
-//import com.sabujaks.irs.domain.interview_schedule.repository.TeamRepository;
+//import com.example.common.domain.interview_schedule.model.entity.Team;
+//import com.example.common.domain.interview_schedule.repository.TeamRepository;
+//import com.example.common.domain.system.model.entity.BaseInfo;
+//import com.example.common.domain.system.repository.BaseInfoRepository;
 //import jakarta.annotation.PostConstruct;
 //import lombok.RequiredArgsConstructor;
 //import org.springframework.stereotype.Component;
