@@ -2,6 +2,7 @@ package com.example.api.domain.resume.service;
 
 import com.example.api.domain.resume.model.request.*;
 import com.example.api.domain.resume.model.response.*;
+import com.example.api.global.common.annotation.ExeTimer;
 import com.example.api.global.common.exception.BaseException;
 import com.example.api.global.common.responses.BaseResponseMessage;
 import com.example.api.global.security.CustomUserDetails;
@@ -1034,6 +1035,7 @@ public class ResumeService {
 
     }
 
+    @ExeTimer
     @Transactional
     public ResumeReadRes read(Long resumeIdx) throws BaseException {
         Optional<Resume> resultResume = resumeRepository.findByResumeIdx(resumeIdx);
