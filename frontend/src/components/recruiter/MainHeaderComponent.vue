@@ -39,13 +39,26 @@ onMounted(async() => {
 <template>
   <header class="header">
     <div class="logo pl-25">
-      <img src="@/assets/img/irs_white.png" >
+      <a href="/recruiter/announce">
+        <img src="@/assets/img/irs_white.png">
+      </a>
     </div>
     <div v-if="authStore.isLoggedIn" class="user-info">
+      <div class="user-name">
+        <a href="/">
+          메인페이지
+        </a>
+      </div>
       <!-- 로그인된 상태라면 사용자 이름 표시 -->
-      <div class="user-name" >{{ userName }}</div>
+      <div class="user-name">
+        <a>
+          {{ userName }}
+        </a>
+      </div>
       <!-- 로그인이 된 상태에서만 로그아웃 버튼 표시 -->
-      <button class="logout-button" @click="logout">Logout</button>
+      <div class="user-name">
+        <a class="logout-button" @click="logout">로그아웃</a>
+      </div>
     </div>
   </header>
 </template>
@@ -86,20 +99,31 @@ header {
 .user-info {
   display: flex;
   align-items: center;
+  padding-right: 50px;
 }
 
 .user-name {
-  color: white;
+  color: #f1f1f1;
   margin-right: 20px;
-  font-size: 18px;
+}
+
+.user-name a {
+  cursor: pointer;
+  text-decoration: none;
+  color: #e6e6e6;
+  font-size: 15px;
+}
+
+.user-name a:hover {
+  opacity: 70%;
 }
 
 .logout-button {
-  background-color: #ffffff;
-  color: #212b36;
+  background-color: #212b36;
+  color: #f1f1f1;
   border: none;
-  padding: 10px 20px;
+  padding: 15px 10px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 15px;
 }
 </style>
