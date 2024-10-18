@@ -180,8 +180,8 @@ th {
   cursor: pointer;
 }
 
-/* .pagination button.active {
+.pagination button.active {
     background-color: #212b36;
     color: white;
-} */
+}
 </style>

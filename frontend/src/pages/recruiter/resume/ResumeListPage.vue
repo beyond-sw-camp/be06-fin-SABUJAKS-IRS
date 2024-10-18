@@ -5,9 +5,6 @@
     <div id="content">
       <h1>지원자 리스트</h1>
       <div class="col-12">
-        <div class="interview-add">
-          <button @click="sendResult()">서류결과전송</button>
-        </div>
       </div>
       <table>
         <tbody>
@@ -93,12 +90,6 @@ const checkApplicationResult = (resumeResult) => {
         return '서류 합격';
     }
 };
-
-const sendResult = async () => {
-    if (confirm("서류결과를 일괄 전송하시겠습니까?")) {
-        await resumeStore.sendResult(router, resumeStore.resumeList);
-    }
-}
 </script>
 
 <style scoped>
@@ -182,8 +173,8 @@ th {
   cursor: pointer;
 }
 
-/* .pagination button.active {
+.pagination button.active {
     background-color: #212b36;
     color: white;
-} */
+}
 </style>

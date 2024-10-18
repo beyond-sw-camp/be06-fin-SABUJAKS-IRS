@@ -38,7 +38,7 @@ onMounted(async() => {
 
 <template>
   <header class="header">
-    <div class="logo">
+    <div class="logo pl-25">
       <img src="@/assets/img/irs_white.png" >
     </div>
     <div v-if="authStore.isLoggedIn" class="user-info">
@@ -76,11 +76,11 @@ header {
 
 .logo {
   color: white;
-  font-size: 24px;
   font-weight: bold;
 }
 .logo img {
-  width: 150px;
+  width: 100px;
+  height: 100px;
 }
 
 .user-info {

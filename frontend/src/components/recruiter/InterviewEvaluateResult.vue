@@ -21,7 +21,7 @@
       </table>
   
       <div id="size-buttons">
-        <button v-for="page in totalPages" :key="page" @click="handlePageClick(page)">{{ page }}</button>
+        <button v-for="page in totalPages" :key="page" @click="handlePageClick(page)" :class="{ active: currentPage === page }">{{ page }}</button>
       </div>
     </div>
   
@@ -218,6 +218,11 @@
   
   .createbtn:hover {
       background-color: #B4C7D0;
+  }
+
+  #size-buttons button.active {
+    background-color: #212b36;
+    color: white;
   }
   </style>
   

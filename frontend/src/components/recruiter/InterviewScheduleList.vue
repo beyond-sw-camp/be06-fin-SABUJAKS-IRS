@@ -80,20 +80,12 @@ const getUniqueSeekers = (seekerList) => {
 const handleScheduleClick = (schedule) => {
   router.push(`/recruiter/interview-schedule/detail/${schedule.idx}`);
 }
-
-const handleCreateAllVideoInterview = () => {
-  // emit('createAllVideoInterview', paginatedInterviewSchedules, props.announcementUuid);
-  emit('createAllVideoInterview');
-}
 </script>
 
 <template>
   <div id="content">
     <h1>{{ props.title }}</h1>
     <div class="col-12">
-      <div class="interview-add">
-        <button @click="handleCreateAllVideoInterview()">면접방일괄생성</button>
-      </div>
       <div class="interview-add mr-10">
         <button @click="handleRowClick('경력')">면접일정생성</button>
       </div>
@@ -130,7 +122,7 @@ const handleCreateAllVideoInterview = () => {
     </table>
 
     <div class="pagination">
-      <button v-for="page in totalPages" :key="page" @click="handlePageClick(page)">{{ page }}</button>
+      <button v-for="page in totalPages" :key="page" @click="handlePageClick(page)" :class="{ active: currentPage === page }">{{ page }}</button>
     </div>
   </div>
 </template>
@@ -269,5 +261,10 @@ th {
   color: white;
   padding: 10px;
   border-radius: 5px;
+}
+
+.pagination button.active {
+  background-color: #212b36;
+  color: white;
 }
 </style>
