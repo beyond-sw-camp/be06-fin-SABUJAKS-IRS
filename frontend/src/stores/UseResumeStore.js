@@ -464,7 +464,7 @@ export const UseResumeStore = defineStore('resume', {
                 return response.data;
             } catch (error) {
                 toast.error(error.response.data.message);
-                if(error.response.data.code === 2007) {
+                if (error.response.data.code === 2007) {
                     router.push(`/seeker/announce/detail/${announcementIdx}`);
                 } else {
                     router.push('/');
@@ -531,7 +531,7 @@ export const UseResumeStore = defineStore('resume', {
                     }
                 );
                 // 합격/불합격 처리 성공
-                if(response.data.success) {
+                if (response.data.success) {
                     toast.success('서류 합격/불합격 처리에 성공하였습니다.');
                     router.push(`/recruiter/resume/list/${this.resumeDetail.announcementIdx}`);
                 }

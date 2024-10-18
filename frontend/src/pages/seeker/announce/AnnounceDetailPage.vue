@@ -34,7 +34,7 @@
                             </span>
                         </div>
                     </div>
-                    <div class="ads-company-info">
+                    <div class="ads-announce-info">
                         <h4 style="margin-bottom: 10px;" class="ad-text2">기업정보</h4>
                         <div class="ad-logo">
                             <a href="">
@@ -103,6 +103,7 @@
             <div class="ad-apply">
                 <button type="button" class="ad-bgbtn" :disabled="remainingTime === '지원기간이 마감되었습니다.'"
                     @click="remainingTime !== '지원기간이 마감되었습니다.' && goToSubmitPage(announcementDetail.announcementIdx)">
+                    <img src="../../../assets/img/announce/check-mark.png" alt="icon" class="btn-icon">
                     <span>&nbsp;{{ remainingTime === '지원기간이 마감되었습니다.' ? '지원 마감' : '즉시지원' }}</span>
                 </button>
             </div>
@@ -123,18 +124,12 @@
                     </div>
                 </div>
                 <div class="add-header">
-                    <span class="ad-text6">{{ announcementDetail.companyName }}</span>
-                    <span class="ad-text6">{{ announcementDetail.title }}</span>
                     <span class="ad-text7">{{ announcementDetail.jobTitle }}</span>
                 </div>
-                <p class="add-intro">
-                    회사소개<br>
-                    {{ announcementDetail.intro }}
-                </p>
                 <br>
                 <p class="add-heading">
                     <img src="../../../assets/img/announce/check-circle.png">
-                    <span>포지션 및 자격요건</span>
+                    <span> 포지션 및 자격요건</span>
                 </p>
                 <p class="add-desc">
                     <br>
@@ -143,9 +138,11 @@
                     </span>
                 </p>
                 <br>
+                <br>
+                <br>
                 <p class="add-heading">
                     <img src="../../../assets/img/announce/check-circle.png">
-                    <span>근무 조건</span>
+                    <span> 근무 조건</span>
                 </p>
                 <p class="add-desc">
                     <br>
@@ -153,29 +150,39 @@
                         {{ condition.trim() }}<br />
                     </span>
                 </p>
+                <p v-if="announcementDetail.intro" class="add-intro">
+                    회사소개 :
+                    {{ announcementDetail.intro }}
+                </p>
+                <br>
+                <br>
                 <br>
                 <p class="add-heading">
                     <img src="../../../assets/img/announce/check-circle.png">
-                    <span>추가 복지 및 혜택</span>
+                    <span> 추가 복지 및 혜택</span>
                 </p>
                 <p class="add-desc"><br>{{ announcementDetail.benefits }}
                 </p>
                 <br>
+                <br>
+                <br>
                 <p class="add-heading">
                     <img src="../../../assets/img/announce/check-circle.png">
-                    <span>전형 절차</span>
+                    <span> 전형 절차</span>
                 </p>
                 <p class="add-desc">
                     <br>
                     면접 횟수 : {{ announcementDetail.interviewNum }}<br>
                     절차 : {{ announcementDetail.process }}<br>
-                    서류전형 마감기한 : {{ announcementDetail.deadlineDocument}}<br>
-                    전체전형 마감기한 : {{ announcementDetail.deadlineFinal}}
+                    서류전형 발표일 : {{ announcementDetail.deadlineDocument}}<br>
+                    최종합격 발표일 : {{ announcementDetail.deadlineFinal}}
                 </p>
+                <br>
+                <br>
                 <br>
                 <p class="add-heading">
                     <img src="../../../assets/img/announce/check-circle.png">
-                    <span>인사담당자 정보</span>
+                    <span> 인사담당자 정보</span>
                 </p>
                 <p class="add-desc">
                     <br>
@@ -184,12 +191,17 @@
                     인사담당자 이메일 : {{ announcementDetail.managerEmail }}<br>
                 </p>
                 <br>
+                <br>
+                <br>
                 <p class="add-heading">
                     <img src="../../../assets/img/announce/check-circle.png">
-                    <span>유의 사항</span>
+                    <span> 유의 사항</span>
                 </p>
                 <p class="add-desc"><br>{{ announcementDetail.note }}
                 </p>
+                <br>
+                <br>
+                <br>        
             </div>
         </section>
         <SeekerFooterComponent></SeekerFooterComponent>
@@ -568,6 +580,8 @@ onUnmounted(() => {
 .add-header {
     padding: 50px;
     display: flex;
+    justify-content: center;
+    align-items: center;
     flex-direction: column;
     background-repeat: no-repeat;
     background-size: 100%;
@@ -575,13 +589,13 @@ onUnmounted(() => {
 
 .ad-text6 {
     color: black;
-    font-size: 40px;
+    font-size: 20px;
     font-weight: 500;
 }
 
 .ad-text7 {
     color: black;
-    font-size: 50px;
+    font-size: 38px;
     font-weight: 700;
 }
 
@@ -595,7 +609,7 @@ onUnmounted(() => {
     line-height: 1.2;
     display: inline;
     -webkit-box-align: center;
-    font-size: 30px;
+    font-size: 25px;
     letter-spacing: -.5px;
     align-items: center;
     color: #333;
