@@ -58,3 +58,12 @@ services:
     environment:
       - OPENVIDU_SECRET=${OPENVIDU_SECRET}
 
+  redis:
+    image: redis:7.2-alpine
+    ports:
+      - "6379:6379"
+    command: >
+      sh -c "echo 'requirepass qwer1234' > /usr/local/etc/redis/redis.conf && 
+      exec redis-server /usr/local/etc/redis/redis.conf"
+    volumes:
+      - ./redis:/usr/local/etc/redis

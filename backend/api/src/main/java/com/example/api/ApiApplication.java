@@ -7,13 +7,14 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 
 @SpringBootApplication
 @EnableJpaAuditing
 @EnableFeignClients(basePackages = "com.example.api.global.feign_client")
 @EnableJpaRepositories(basePackages = {
         "com.example.common",
-        "com.example.api"
+        "com.example.api",
 })
 
 @EntityScan(basePackages = {
@@ -25,6 +26,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         "com.example.common",
         "com.example.api"
 })
+@EnableRedisRepositories(basePackages = "com.example.common.domain.auth.repository")
 public class ApiApplication {
 
     public static void main(String[] args) {

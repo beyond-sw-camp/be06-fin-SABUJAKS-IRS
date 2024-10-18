@@ -1,5 +1,7 @@
 package com.example.api.global.security.filter;
 
+import com.example.common.domain.auth.model.entity.RefreshToken;
+import com.example.common.domain.auth.repository.RefreshTokenRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.example.api.domain.auth.model.request.AuthLoginReq;
 import com.example.api.global.security.CustomUserDetails;
@@ -29,6 +31,7 @@ import java.util.*;
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -52,23 +55,40 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         Long idx = member.getIdx();
         String email = member.getEmail();
         String role = member.getRole();
-        Collection<? extends GrantedAuthority> authorities = authResult.getAuthorities();
-        for (GrantedAuthority authority : authorities){
-            if(Objects.equals(authority.toString(), role)){
-                continue;
-            }
-            Cookie viToken = new Cookie("VITOKEN"+ UUID.randomUUID(), jwtUtil.createToken(authority.getAuthority()));
-            viToken.setHttpOnly(true);
-            viToken.setSecure(true);
-            viToken.setPath("/");
-            viToken.setMaxAge(60 * 60);
-            response.addCookie(viToken);
-        }
-        Cookie aToken = new Cookie("ATOKEN", jwtUtil.createToken(idx, email, role));
+//        Collection<? extends GrantedAuthority> authorities = authResult.getAuthorities();
+//        for (GrantedAuthority authority : authorities){
+//            if(Objects.equals(authority.toString(), role)){
+//                continue;
+//            }
+//            Cookie viToken = new Cookie("VITOKEN"+ UUID.randomUUID(), jwtUtil.createToken(authority.getAuthority()));
+//            viToken.setHttpOnly(true);
+//            viToken.setSecure(true);
+//            viToken.setPath("/");
+//            viToken.setMaxAge(60 * 60);
+//            response.addCookie(viToken);
+//        }
+
+        // 새로운 AT와 RT 발급
+        String accessToken = jwtUtil.createToken(idx, email, role);
+        String refreshToken = jwtUtil.createRefreshToken(email);
+
+        // Redis에 리프레시 토큰 저장
+        RefreshToken refreshTokenEntity = new RefreshToken(email, refreshToken);
+        refreshTokenRepository.save(refreshTokenEntity);
+
+        // AT와 RT를 쿠키로 설정
+        Cookie aToken = new Cookie("ATOKEN", accessToken);
         aToken.setHttpOnly(true);
         aToken.setSecure(true);
         aToken.setPath("/");
-        aToken.setMaxAge(60 * 60);
+//        aToken.setMaxAge(60 * 60); // 만료 시간을 1시간으로 설정, accessToken과 동일
         response.addCookie(aToken);
+
+        Cookie rToken = new Cookie("RTOKEN", refreshToken);
+        rToken.setHttpOnly(true);
+        rToken.setSecure(true);
+        rToken.setPath("/");
+//        rToken.setMaxAge(60 * 60 * 24 * 5); // 만료 시간을 5일로 설정, refreshToken과 동일
+        response.addCookie(rToken);
     }
 }

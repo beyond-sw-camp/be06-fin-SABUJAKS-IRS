@@ -33,6 +33,18 @@ spring:
           starttls.enable: true
           pool: true
           pool.size: 5
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PW}
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+        shutdown-timeout: 100ms
+        timeout: 5000ms # 연결 타임아웃 시간
 openvidu:
     url: ${OPENVIDU_URL}
     secret: ${OPENVIDU_SECRET}
