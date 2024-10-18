@@ -426,8 +426,9 @@ import SeekerSideBarComponent from "@/components/seeker/SeekerSideBarComponent.v
 import { ref, onMounted } from 'vue';
 import { UseResumeStore } from '@/stores/UseResumeStore';
 import { useRouter } from 'vue-router';
+import { UseAuthStore } from '@/stores/UseAuthStore';
 
-
+const authStore = UseAuthStore();   
 const resumeStore = UseResumeStore();
 const router = useRouter();
 
@@ -445,7 +446,10 @@ const showAward = ref(false);
 const showCustomLetter = ref(false);
 
 onMounted(async () => {
-    await resumeStore.readIntegrated(router);
+    // await resumeStore.readIntegrated(router);
+    if(authStore.userInfo) {
+        await resumeStore.readIntegrated(router);
+    }
 
     showPersonalInfo.value = true;
     if (resumeStore.resumeIntegrated && resumeStore.resumeIntegrated.codes) {

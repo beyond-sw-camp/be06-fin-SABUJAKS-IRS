@@ -91,7 +91,7 @@ export const UseCompanyStore = defineStore('company', {
 
             } catch (error) {
                 console.error('기업 정보를 불러오지 못했습니다.', error);
-                throw new Error(error.response?.data?.message || '기업 정보 조회 실패');
+                // throw new Error(error.response?.data?.message || '기업 정보 조회 실패');
             }
         },
 

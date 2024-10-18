@@ -17,8 +17,10 @@ const checkLoginStatus = async() => {
       toast.error("로그인하지 않은 사용자는 접근할 수 없습니다.")
       router.push('/recruiter/login')
     }
-    authStore.getUserInfo();
-    userName.value = authStore.userInfo.name; // name 값 셋팅
+    // authStore.getUserInfo();
+    if(authStore.userInfo != null) {
+      userName.value = authStore.userInfo.name; // name 값 셋팅
+    }
 };
 
 
