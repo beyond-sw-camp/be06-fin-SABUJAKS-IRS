@@ -2,7 +2,7 @@
     <MainHeaderComponent></MainHeaderComponent>
     <div class="container-detail">
         <MainSideBarComponent></MainSideBarComponent>
-        <div id="content">
+        <div id="content" class="ml-200">
             <div class="resume-view-wrapper">
                 <div class="resume-view-container">
                     <div class="resume-subject">
