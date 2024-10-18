@@ -13,7 +13,8 @@
       <h1>Welcome to IRS</h1>
       <form method="post" name="login" action="" @submit.prevent="handleLogin">
         <div>
-          <label class="app-sign-in-register__form-label" for="j_username">사용자 이름</label>
+          <label class="app-sign-in-register__form-label" for="j_username">사용자 이름
+          </label>
           <input
               autocorrect="off"
               autocomplete="off"
@@ -35,6 +36,8 @@
               class="jenkins-input custom-input"
               v-model="password"
           />
+          <br>
+          <h5>TEST ID : recruiter@test.com, PW : qwer1234</h5>
         </div>
         <div class="jenkins-checkbox">
           <input type="checkbox" id="remember_me" name="remember_me" />

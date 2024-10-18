@@ -77,6 +77,7 @@ nav ul {
 
 nav ul li {
     margin-bottom: 15px;
+    cursor: pointer;
 }
 
 nav ul li a {
