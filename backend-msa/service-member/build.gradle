@@ -3,7 +3,9 @@ configurations {
         extendsFrom annotationProcessor
     }
 }
-
+bootJar {
+    archiveFileName = "service-member.jar"
+}
 dependencies {
     // COMMON
     implementation project(':service-common')

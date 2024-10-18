@@ -1,13 +1,74 @@
 services:
+  msa-discovery:
+    image: openjdk:17-jdk
+    container_name: msa-discovery
+    ports:
+      - "9001:9001"
+    environment:
+      - DISCOVERY_HOSTNAME=${DISCOVERY_HOSTNAME}
+    volumes:
+      - ../backend-msa/service-discovery/build/libs/service-discovery.jar:/service-discovery.jar
+    command: java -jar /service-discovery.jar
+
+  msa-config:
+    image: openjdk:17-jdk
+    container_name: msa-config
+    ports:
+      - "9002:9002"
+    environment:
+      - DISCOVERY_URL=${DISCOVERY_URL}
+      - GITHUB_USERNAME=${GITHUB_USERNAME}
+      - GITHUB_PASSWORD=${GITHUB_PASSWORD}
+    volumes:
+      - ../backend-msa/service-config/build/libs/service-config.jar:/service-config.jar
+    command: java -jar /service-config.jar
+
+  msa-gateway:
+    image: openjdk:17-jdk
+    container_name: msa-gateway
+    ports:
+      - "9090:9090"
+    environment:
+      - JWT_SECRET=${JWT_SECRET}
+      - DISCOVERY_URL=${DISCOVERY_URL}
+      - SERVER_PROFILE=${SERVER_PROFILE}
+      - CONFIG_SERVER_URL=${CONFIG_SERVER_URL}
+    volumes:
+      - ../backend-msa/service-gateway/build/libs/service-gateway.jar:/service-gateway.jar
+    command: java -jar /service-gateway.jar
 
   msa-member:
     image: openjdk:17-jdk
-    container_name: member01
+    container_name: msa-member
     ports:
-      - "8081:8081"
+      - "9003:9003"
+    environment:
+      - DISCOVERY_URL=${DISCOVERY_URL}
+      - SERVER_PROFILE=${SERVER_PROFILE}
+      - CONFIG_SERVER_URL=${CONFIG_SERVER_URL}
     volumes:
-      - ./member-api/build/libs/member-api-0.0.1-SNAPSHOT.jar:/member-api-0.0.1-SNAPSHOT.jar
-    command: java -jar /member-api-0.0.1-SNAPSHOT.jar
+      - ../backend-msa/service-member/build/libs/service-member.jar:/service-member.jar
+    command: java -jar /service-member.jar
+
+  msa-member-mariadb:
+    container_name: msa-member-mariadb
+    ports:
+      - "9303:3306"
+    image: mariadb:latest
+    environment:
+      - MARIADB_DATABASE=msa_member
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+    volumes:
+      - ../cicd-msa/mariadb/msa-member:/var/lib/mysql
+
+  msa-frontend:
+    container_name: msa-frontend
+    ports:
+      - 80:80
+    image: nginx:latest
+    volumes:
+      - ../frontend/dist:/usr/share/nginx/html
+      - ../cicd-msa/nginx:/etc/nginx/conf.d
 
   mariadb:
     container_name: mariadb

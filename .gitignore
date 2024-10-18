@@ -115,12 +115,9 @@ frontend-msa/*.sw?
 frontend-msa/*.tsbuildinfo
 frontend-msa/vite.config.js
 
-/cicd/mariadb/**
-/cicd/.env
-/cicd/monolithic/mariadb/**
-/cicd/monolithic/.env
-/cicd/msa/.env
-
+/cicd/mariadb
+/cicd-msa/mariadb
+/cicd-msa/.env
 backend-msa/service-member/build
 backend-msa/service-member/.gradle
 backend-msa/service-config/build

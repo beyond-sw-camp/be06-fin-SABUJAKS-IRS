@@ -1,9 +1,18 @@
 server:
   port: 9090
 spring:
+  jwt:
+    secret: ${JWT_SECRET}
   application:
     name: service-gateway
   profiles:
-    active: prod
+    active: ${SERVER_PROFILE}
   config:
-    import: optional:configserver:http://msa-config-svc:9002
+    import: optional:configserver:${CONFIG_SERVER_URL}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${DISCOVERY_URL}
+    registerWithEureka: true
+    fetchRegistry: true

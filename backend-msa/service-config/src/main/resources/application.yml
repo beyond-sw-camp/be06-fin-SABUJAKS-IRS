@@ -9,13 +9,12 @@ spring:
       server:
         git:
           uri: https://github.com/okqkrwhdtjd/IRS-MSA-CONFIG
-          username: ${GIT_USERNAME}
-          password: ${GIT_PASSWORD}
+          username: ${GITHUB_USERNAME}
+          password: ${GITHUB_PASSWORD}
           default-label: main
-
 eureka:
   client:
     service-url:
-      defaultZone: ${K8S_DISCOVERY_URL}
+      defaultZone: ${DISCOVERY_URL}
     registerWithEureka: true
     fetchRegistry: true
