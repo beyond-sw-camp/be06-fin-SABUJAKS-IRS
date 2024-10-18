@@ -67,7 +67,7 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         // Access Token 만료 여부 확인
-        if (jwtUtil.isExpired(accessToken)) {
+        if (accessToken == null || jwtUtil.isExpired(accessToken)) {
 
             // Refresh Token이 존재하고 유효한 경우(저장된 Refresh Token과 일치하면) Access Token과 Refresh Token 재발급
             if (refreshToken == null || jwtUtil.isExpired(refreshToken) || !validateRefreshToken(refreshToken)) {

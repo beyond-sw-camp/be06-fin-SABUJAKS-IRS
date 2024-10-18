@@ -74,7 +74,7 @@ public class JwtUtil {
         return Jwts.builder()
                 .claim("email", email)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 5)) // 5일
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 5 )) // 5일 1000 * 60 * 60 * 24 * 5
                 .signWith(secretKey)
                 .compact();
     }
