@@ -1037,9 +1037,22 @@ public class ResumeService {
 
     @ExeTimer
     @Transactional
-    public ResumeReadRes read(Long resumeIdx) throws BaseException {
+    public ResumeReadRes read(CustomUserDetails customUserDetails, Long resumeIdx) throws BaseException {
+        Long userIdx = customUserDetails.getIdx();
         Optional<Resume> resultResume = resumeRepository.findByResumeIdx(resumeIdx);
         if(resultResume.isPresent()) {
+
+            // 해당 지원서에 대한 접근 권한 확인
+            if(customUserDetails.getRole().equals("ROLE_SEEKER")) {
+                if(!resultResume.get().getSeeker().getIdx().equals(userIdx)) {
+                    throw new BaseException(BaseResponseMessage.ACCESS_DENIED);
+                }
+            } else if(customUserDetails.getRole().equals("ROLE_RECRUITER")) {
+                if(!resultResume.get().getAnnouncement().getRecruiter().getIdx().equals(userIdx)) {
+                    throw new BaseException(BaseResponseMessage.ACCESS_DENIED);
+                }
+            }
+
             ResumeReadRes.ResumeReadResBuilder responseBuilder = ResumeReadRes.builder();
 
             responseBuilder.resumeTitle(resultResume.get().getResumeTitle());
