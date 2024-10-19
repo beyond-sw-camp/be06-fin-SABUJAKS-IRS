@@ -45,7 +45,6 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String accessToken = null;
         String refreshToken = null;
-//        List<String> vidioInterviewAuthorizationList = new ArrayList<>();
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
                 if (cookie.getName().equals("ATOKEN")) {
@@ -54,9 +53,6 @@ public class JwtFilter extends OncePerRequestFilter {
                 if (cookie.getName().equals("RTOKEN")) {
                     refreshToken = cookie.getValue();
                 }
-//                if (cookie.getName().startsWith("VITOKEN")) {
-//                    vidioInterviewAuthorizationList.add(cookie.getValue());
-//                }
             }
         }
 
@@ -99,19 +95,9 @@ public class JwtFilter extends OncePerRequestFilter {
                 Long idx = jwtUtil.getIdx(accessToken);
                 String email = jwtUtil.getUsername(accessToken);
                 String role = jwtUtil.getRole(accessToken);
-                Set<SimpleGrantedAuthority> authorities = new HashSet<>();
-                SimpleGrantedAuthority defaultRole = new SimpleGrantedAuthority(role);
-                authorities.add(defaultRole);
-//                for (String videoInterviewAuthorization : vidioInterviewAuthorizationList) {
-//                    SimpleGrantedAuthority videoInterviewRole = new SimpleGrantedAuthority(jwtUtil.getGrantedAuthority(videoInterviewAuthorization));
-//                    authorities.add(videoInterviewRole);
-//                }
-
-                CustomUserDetails customUserDetails = createCustomUserDetails(role, idx, email, authorities);
-
-                Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, authorities);
+                CustomUserDetails customUserDetails = createCustomUserDetails(role, idx, email);
+                Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authToken);
-
             } catch (ExpiredJwtException | UnsupportedJwtException | IllegalArgumentException | UsernameNotFoundException e) {
                 request.setAttribute("exception", e);
             }
@@ -121,14 +107,14 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     // CustomUserDetails 생성, 분리했음
-    private CustomUserDetails createCustomUserDetails(String role, Long idx, String email, Set<SimpleGrantedAuthority> authorities) {
+    private CustomUserDetails createCustomUserDetails(String role, Long idx, String email) {
         if (Objects.equals(role, "ROLE_SEEKER")) {
             Seeker seeker = Seeker.builder()
                     .idx(idx)
                     .email(email)
                     .role(role)
                     .build();
-            return new CustomUserDetails(seeker, authorities);
+            return new CustomUserDetails(seeker);
         }
         if (Objects.equals(role, "ROLE_RECRUITER")) {
             Recruiter recruiter = Recruiter.builder()
@@ -136,7 +122,7 @@ public class JwtFilter extends OncePerRequestFilter {
                     .email(email)
                     .role(role)
                     .build();
-            return new CustomUserDetails(recruiter, authorities);
+            return new CustomUserDetails(recruiter);
         }
         if (Objects.equals(role, "ROLE_ESTIMATOR")) {
             Estimator estimator = Estimator.builder()
@@ -144,7 +130,7 @@ public class JwtFilter extends OncePerRequestFilter {
                     .email(email)
                     .role(role)
                     .build();
-            return new CustomUserDetails(estimator, authorities);
+            return new CustomUserDetails(estimator);
         }
         return null;
     }

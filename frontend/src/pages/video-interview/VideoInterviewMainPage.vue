@@ -2,11 +2,11 @@
 <div>
     <VideoInterviewMainHeaderComponent></VideoInterviewMainHeaderComponent>
     <div class="wrapper">
-        <VideoInterviewMainSideBarComponent></VideoInterviewMainSideBarComponent>
+        <!-- <VideoInterviewMainSideBarComponent></VideoInterviewMainSideBarComponent> -->
         <div class="container">
             
             <h1 class="t1">공고 정보</h1>
-            <p class="t1">{{ videoInterviewList.length > 0 ? videoInterviewList[0].announcementTitle : '제목 없음' }}</p>
+            <p class="t2">{{ videoInterviewList.length > 0 ? videoInterviewList[0].announcementTitle : '제목 없음' }}</p>
             
             <h1 class="t1">참여자 정보</h1>
             <table class="table">
@@ -60,7 +60,7 @@ import { UseVideoInterviewStore } from '@/stores/UseVideoInterviewStore';
 import { UseAuthStore } from '@/stores/UseAuthStore';
 import { useRoute, useRouter } from 'vue-router';
 import VideoInterviewMainHeaderComponent from '@/components/video-interview/VideoInterviewHeaderComponent.vue';
-import VideoInterviewMainSideBarComponent from '@/components/video-interview/VideoInterviewSideBarComponent.vue';
+// import VideoInterviewMainSideBarComponent from '@/components/video-interview/VideoInterviewSideBarComponent.vue';
 import { useToast } from "vue-toastification";
 
 const route = useRoute()
@@ -79,18 +79,14 @@ onMounted( async() => {
 })
 
 const handleGetUserInfo = async() => {
-    const response = await authStore.getUserInfo();
-    if(response.success){ 
-        userInfo.value = authStore.userInfo 
-    } else {
-        toast.error("로그인이 필요한 접근입니다");
-        router.push("/") 
+    if (authStore.isLoggedIn && authStore.userInfo.email != null) {
+        userInfo.value = authStore.userInfo
     }
 }
 
 const handleGetVideoInterviewList = async (announcementUUID) => {
     const response = await videoInterviewStore.readAll(announcementUUID);
-    if(response.success){
+    if(response.success && authStore.isLoggedIn && authStore.userInfo.email != null){
         videoInterviewList.value = response.result;
         toast.success("면접방에 오신 걸 환영합니다.\n지원자는 정해진 시간에 정해진 면접방과 일정에 맞춰 참여 바랍니다.");
     } else {
@@ -189,5 +185,11 @@ th {
     font-weight: bold;
     text-align: -internal-center;
     unicode-bidi: isolate;
+}
+
+.t2 {
+    font-size: 20px;
+    margin: 20px 0;
+    font-weight: 600;
 }
 </style>

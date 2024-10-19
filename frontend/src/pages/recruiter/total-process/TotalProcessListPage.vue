@@ -27,10 +27,18 @@
         >
           <td>{{ totalProcessStore.totalProcessListPage.totalElements - ((currentPage - 1) * pageSize + index) }}</td>
           <td>{{ result.seekerName }}</td>
-          <td>{{ result.resumeResult === null ? '' : (result.resumeResult ? '합격' : '불합격') }}</td>
-          <td>{{ result.interviewOneResult === null ? '' : (result.interviewOneResult ? '합격' : '불합격') }}</td>
-          <td>{{ result.interviewTwoResult === null ? '' : (result.interviewTwoResult ? '합격' : '불합격') }}</td>
-          <td>{{ result.finalResult === null ? '' : (result.finalResult ? '합격' : '불합격') }}</td>
+          <td :class="result.resumeResult === null ? '' : (result.resumeResult ? 'pass' : 'fail')">
+            {{ result.resumeResult === null ? '' : (result.resumeResult ? '합격' : '불합격') }}
+          </td>
+          <td :class="result.interviewOneResult === null ? '' : (result.interviewOneResult ? 'pass' : 'fail')">
+            {{ result.interviewOneResult === null ? '' : (result.interviewOneResult ? '합격' : '불합격') }}
+          </td>
+          <td :class="result.interviewTwoResult === null ? '' : (result.interviewTwoResult ? 'pass' : 'fail')">
+            {{ result.interviewTwoResult === null ? '' : (result.interviewTwoResult ? '합격' : '불합격') }}
+          </td>
+          <td :class="result.finalResult === null ? '' : (result.finalResult ? 'pass' : 'fail')">
+            {{ result.finalResult === null ? '' : (result.finalResult ? '합격' : '불합격') }}
+          </td>
         </tr>
         </tbody>
       </table>
@@ -170,5 +178,13 @@ th {
 .pagination button.active {
     background-color: #212b36;
     color: white;
+}
+
+.pass {
+  color: blue; /* 합격은 파란색 */
+}
+
+.fail {
+  color: red; /* 불합격은 빨간색 */
 }
 </style>

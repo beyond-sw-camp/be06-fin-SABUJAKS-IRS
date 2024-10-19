@@ -104,17 +104,12 @@ public class TotalProcessService {
             if(dto.getInterviewNum() == 0) {
                 totalProcess = TotalProcess.builder()
                         .resumeResult(isPassFlag)
-                        .interviewOneResult(isPassFlag)
-                        .interviewTwoResult(isPassFlag)
-                        .finalResult(isPassFlag)
                         .announcement(announcement)
                         .seeker(seeker)
                         .build();
             } else if(dto.getInterviewNum() == 1) {
                 totalProcess = TotalProcess.builder()
                         .interviewOneResult(isPassFlag)
-                        .interviewTwoResult(isPassFlag)
-                        .finalResult(isPassFlag)
                         .announcement(announcement)
                         .seeker(seeker)
                         .build();

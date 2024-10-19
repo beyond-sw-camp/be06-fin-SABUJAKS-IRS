@@ -40,7 +40,6 @@ public class CustomUserDetailService implements UserDetailsService {
                     .password(seeker.getPassword())
                     .role(seeker.getRole())
                     .emailAuth(seeker.getEmailAuth())
-                    .interviewParticipateList(seeker.getInterviewParticipateList())
                     .build();
         }
         Optional<Estimator> estimatorOpt = estimatorRepository.findByEstimatorEmail(email);
@@ -66,7 +65,6 @@ public class CustomUserDetailService implements UserDetailsService {
                     .password(recruiter.getPassword())
                     .role(recruiter.getRole())
                     .emailAuth(recruiter.getEmailAuth())
-                    .announcementList(recruiter.getAnnouncementList())
                     .build();
         } else {
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");

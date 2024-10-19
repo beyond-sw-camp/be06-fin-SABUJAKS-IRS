@@ -25,11 +25,8 @@ public class CustomUserDetails implements UserDetails {
     private final String name;
     private final String password;
     private final Boolean emailAuth;
-    private List<Announcement> announcementList = new ArrayList<>();
-    private List<InterviewParticipate> interviewParticipateList = new ArrayList<>();
-    private Set<SimpleGrantedAuthority> authorities;
 
-    public CustomUserDetails(Seeker seeker, Recruiter recruiter, Estimator estimator, Long idx, String email, String role, String name, String password, Boolean emailAuth, List<Announcement> announcementList, List<InterviewParticipate> interviewParticipateList, Set<SimpleGrantedAuthority> authorities) {
+    public CustomUserDetails(Seeker seeker, Recruiter recruiter, Estimator estimator, Long idx, String email, String role, String name, String password, Boolean emailAuth) {
         this.seeker = seeker;
         this.recruiter = recruiter;
         this.estimator = estimator;
@@ -39,12 +36,9 @@ public class CustomUserDetails implements UserDetails {
         this.name = name;
         this.password = password;
         this.emailAuth = emailAuth;
-        this.announcementList = announcementList;
-        this.interviewParticipateList = interviewParticipateList;
-        this.authorities = authorities;
     }
 
-    public CustomUserDetails(Seeker seeker, Set<SimpleGrantedAuthority> authorities) {
+    public CustomUserDetails(Seeker seeker) {
         this.seeker = seeker;
         this.recruiter = null;
         this.estimator = null;
@@ -54,11 +48,9 @@ public class CustomUserDetails implements UserDetails {
         this.name = seeker.getName();
         this.password = seeker.getPassword();
         this.emailAuth = seeker.getEmailAuth();
-        this.interviewParticipateList = seeker.getInterviewParticipateList();
-        this.authorities = authorities;
     }
 
-    public CustomUserDetails(Recruiter recruiter, Set<SimpleGrantedAuthority> authorities) {
+    public CustomUserDetails(Recruiter recruiter) {
         this.seeker = null;
         this.recruiter = recruiter;
         this.estimator = null;
@@ -68,11 +60,9 @@ public class CustomUserDetails implements UserDetails {
         this.name = recruiter.getName();
         this.password = recruiter.getPassword();
         this.emailAuth = recruiter.getEmailAuth();
-        this.announcementList = recruiter.getAnnouncementList();
-        this.authorities = authorities;
     }
 
-    public CustomUserDetails(Estimator estimator, Set<SimpleGrantedAuthority> authorities) {
+    public CustomUserDetails(Estimator estimator) {
         this.seeker = null ;
         this.recruiter = null;
         this.estimator = estimator;
@@ -82,47 +72,18 @@ public class CustomUserDetails implements UserDetails {
         this.name = null;
         this.password = estimator.getPassword();
         this.emailAuth = estimator.getEmailAuth();
-        this.interviewParticipateList = estimator.getInterviewParticipateList();
-        this.authorities = authorities;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Set<GrantedAuthority> authorities = new HashSet<>();
-        authorities.add(new SimpleGrantedAuthority(role));
-
-        if (Objects.equals(this.role, "ROLE_SEEKER")) {
-            if (seeker != null && seeker.getInterviewParticipateList() != null) {
-                for (InterviewParticipate participate : seeker.getInterviewParticipateList()) {
-                    String authority =
-                            "ROLE_SEEKER|" + participate.getInterviewSchedule().getAnnouncement().getUuid()
-                                    + "|" + participate.getInterviewSchedule().getUuid()
-                                    + "|" + participate.getInterviewSchedule().getInterviewDate()
-                                    + "|" + participate.getInterviewSchedule().getInterviewStart()
-                                    + "|" + participate.getInterviewSchedule().getInterviewEnd();
-                    authorities.add(new SimpleGrantedAuthority(authority));
-                }
+        Collection<GrantedAuthority> collection = new ArrayList<>();
+        collection.add(new GrantedAuthority(){
+            @Override
+            public String getAuthority() {
+                return role;
             }
-        }
-        if (Objects.equals(this.role, "ROLE_ESTIMATOR")) {
-            if (estimator != null && estimator.getInterviewParticipateList() != null) {
-                for (InterviewParticipate participate : estimator.getInterviewParticipateList()) {
-                    String authority =
-                            "ROLE_ESTIMATOR|" + participate.getInterviewSchedule().getAnnouncement().getUuid()
-                                    + "|" + participate.getInterviewSchedule().getUuid();
-                    authorities.add(new SimpleGrantedAuthority(authority));
-                }
-            }
-        }
-        if (Objects.equals(this.role, "ROLE_RECRUITER")) {
-            if (recruiter != null && recruiter.getAnnouncementList() != null) {
-                for (Announcement announcement : recruiter.getAnnouncementList()) {
-                    String authority = "ROLE_RECRUITER|" + announcement.getUuid();
-                    authorities.add(new SimpleGrantedAuthority(authority));
-                }
-            }
-        }
-        return authorities;
+        });
+        return collection;
     }
 
     @Override
