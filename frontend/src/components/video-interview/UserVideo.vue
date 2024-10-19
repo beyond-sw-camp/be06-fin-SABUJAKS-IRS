@@ -17,7 +17,7 @@
   const props = defineProps({
     streamManager: Object, 
     isSubscriber: Boolean,
-    audioMuted: Boolean
+    audioMuted: {type: Boolean, default: true},
   });
   const emit = defineEmits(['handle-toggle-audio']);
 

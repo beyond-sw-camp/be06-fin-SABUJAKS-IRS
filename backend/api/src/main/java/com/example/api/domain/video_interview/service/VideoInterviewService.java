@@ -1,5 +1,11 @@
 package com.example.api.domain.video_interview.service;
 
+import com.example.common.domain.auth.model.entity.Estimator;
+import com.example.common.domain.auth.model.entity.Seeker;
+import com.example.common.domain.auth.repository.EstimatorRepository;
+import com.example.common.domain.auth.repository.RecruiterRepository;
+import com.example.common.domain.auth.repository.SeekerRepository;
+import com.example.common.domain.interview_schedule.model.entity.InterviewParticipate;
 import com.example.common.domain.interview_schedule.model.entity.InterviewSchedule;
 import com.example.common.domain.interview_schedule.repository.InterviewScheduleRepository;
 import com.example.common.domain.video_interview.model.entity.VideoInterview;
@@ -16,26 +22,33 @@ import com.example.api.global.common.responses.BaseResponseMessage;
 import com.example.api.global.security.CustomUserDetails;
 import io.openvidu.java.client.*;
 import org.springframework.scheduling.TaskScheduler;
+import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
+
 public class VideoInterviewService {
     private final OpenVidu openVidu;
     private final VideoInterviewRepository videoInterviewRepository;
     private final InterviewScheduleRepository interviewScheduleRepository;
     private final TaskScheduler taskScheduler;
+    private final SeekerRepository seekerRepository;
+    private final EstimatorRepository estimatorRepository;
 
-    public VideoInterviewService(OpenVidu openVidu, VideoInterviewRepository videoInterviewRepository, InterviewScheduleRepository interviewScheduleRepository, TaskScheduler taskScheduler) {
+    public VideoInterviewService(OpenVidu openVidu, VideoInterviewRepository videoInterviewRepository, InterviewScheduleRepository interviewScheduleRepository, TaskScheduler taskScheduler, SeekerRepository seekerRepository, EstimatorRepository estimatorRepository) {
         this.openVidu = openVidu;
         this.videoInterviewRepository = videoInterviewRepository;
         this.interviewScheduleRepository = interviewScheduleRepository;
         this.taskScheduler = taskScheduler;
+        this.seekerRepository = seekerRepository;
+        this.estimatorRepository = estimatorRepository;
     }
 
     public VideoInterviewCreateRes create(VideoInterviewCreateReq dto) throws OpenViduJavaClientException, OpenViduHttpException, BaseException {
@@ -135,14 +148,53 @@ public class VideoInterviewService {
     }
 
     public VideoInterviewTokenGetRes sessionToken(VideoInterviewTokenGetReq dto, CustomUserDetails userDetails) throws BaseException, OpenViduJavaClientException, OpenViduHttpException {
-//        boolean result = checkUserAuthorities(userDetails, dto);
-//        if(!result){
-//            throw new BaseException(BaseResponseMessage.VIDEO_INTERVIEW_JOIN_FAIL_NOT_TIME);
-//        }
+
+        String announcementUUID = dto.getAnnounceUUID();
+        String videoInterviewUUID = dto.getVideoInterviewUUID();
+        String seekerAuthority = "ROLE_SEEKER|" + announcementUUID + '|' + videoInterviewUUID;
+        String estimatorAuthority = "ROLE_SEEKER|" + announcementUUID + '|' + videoInterviewUUID;
+        Boolean validateTime = false;
+        if (Objects.equals(userDetails.getRole(), "ROLE_SEEKER")) {
+            Optional<Seeker> resultSeeker = seekerRepository.findBySeekerEmail(userDetails.getEmail());
+            if (resultSeeker.isPresent() && resultSeeker.get().getInterviewParticipateList() != null) {
+                Seeker seeker = resultSeeker.get();
+                for (InterviewParticipate participate : seeker.getInterviewParticipateList()) {
+                    String authority =
+                            "ROLE_SEEKER|" + participate.getInterviewSchedule().getAnnouncement().getUuid()
+                                    + "|" + participate.getInterviewSchedule().getUuid()
+                                    + "|" + participate.getInterviewSchedule().getInterviewDate()
+                                    + "|" + participate.getInterviewSchedule().getInterviewStart()
+                                    + "|" + participate.getInterviewSchedule().getInterviewEnd();
+                    if (authority.split("\\|")[1].equals(announcementUUID) || authority.contains(seekerAuthority)) {
+                            validateTime = checkTime(userDetails.getRole(), authority, announcementUUID, videoInterviewUUID);
+                            if(validateTime) break;
+                    }
+                }
+            }
+        }
+        if (Objects.equals(userDetails.getRole(), "ROLE_ESTIMATOR")) {
+            Optional<Estimator> resultEstimator = estimatorRepository.findByEstimatorEmail(userDetails.getEmail());
+            if (resultEstimator.isPresent() && resultEstimator.get().getInterviewParticipateList() != null) {
+                Estimator estimator = resultEstimator.get();
+                for (InterviewParticipate participate : estimator.getInterviewParticipateList()) {
+                    String authority =
+                            "ROLE_ESTIMATOR|" + participate.getInterviewSchedule().getAnnouncement().getUuid()
+                                    + "|" + participate.getInterviewSchedule().getUuid();
+                    if (authority.split("\\|")[1].equals(announcementUUID) || authority.contains(estimatorAuthority)) {
+                        if (authority.split("\\|")[1].equals(announcementUUID) || authority.contains(seekerAuthority)) {
+                            validateTime = checkTime(userDetails.getRole(), authority, announcementUUID, videoInterviewUUID);
+                            if(validateTime) break;
+                        }
+                    }
+                }
+            }
+        }
+        if(!validateTime){
+            throw new BaseException(BaseResponseMessage.VIDEO_INTERVIEW_JOIN_FAIL_NOT_TIME);
+        }
         Session session = openVidu.getActiveSession(dto.getVideoInterviewUUID());
         if (session == null) { throw new BaseException(BaseResponseMessage.VIDEO_INTERVIEW_JOIN_FAIL);}
         ConnectionProperties properties = ConnectionProperties.fromJson(dto.getParams()).build();
-
         try{
             Connection connection = session.createConnection(properties);
             return VideoInterviewTokenGetRes.builder()
@@ -165,37 +217,27 @@ public class VideoInterviewService {
         }
     }
 
-
-    public boolean checkUserAuthorities(CustomUserDetails userDetails, VideoInterviewTokenGetReq dto) {
-        // 현재 시스템 시간
+    public boolean checkTime(String role, String authority, String announcementUUID, String videoInterviewUUID){
         LocalDateTime currentTime = LocalDateTime.now();
-
         // 권한 스트링 형식: "ROLE_SEEKER|id1|id2|날짜|시작시간|종료시간"
-        Collection< ? extends GrantedAuthority> authorities = userDetails.getAuthorities();
-
-        for (GrantedAuthority authority : authorities) {
-            String authorityStr = authority.getAuthority();
-            if(!Objects.equals(authorityStr, "ROLE_SEEKER") && !Objects.equals(authorityStr, "ROLE_ESTIMATOR")){
-                String[] parts = authorityStr.split("\\|");
-                String role = parts[0];
-                String id1 = parts[1];
-                String id2 = parts[2];
-                if(parts.length == 6 && Objects.equals(role, "ROLE_SEEKER") && Objects.equals(id1, dto.getAnnounceUUID()) && Objects.equals(id2, dto.getVideoInterviewUUID())){
-                    String date = parts[3];
-                    String startTime = parts[4];
-                    String endTime = parts[5];
-                    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
-                    LocalDateTime startDateTime = LocalDateTime.parse(date + " " + startTime, dateFormatter);
-                    LocalDateTime endDateTime = LocalDateTime.parse(date + " " + endTime, dateFormatter);
-                    LocalDateTime startDateTimeWithBuffer = startDateTime.minusMinutes(3);
-                    if (currentTime.isAfter(startDateTimeWithBuffer) && currentTime.isBefore(endDateTime)) {
-                        System.out.println("권한이 유효합니다: " + role);
-                        return true;
-                    }
-                }
-                if(parts.length == 3 && Objects.equals(role, "ROLE_ESTIMATOR") && Objects.equals(id1, dto.getAnnounceUUID()) && Objects.equals(id2, dto.getVideoInterviewUUID())){
+        if(Objects.equals(role, "ROLE_SEEKER") || Objects.equals(role, "ROLE_ESTIMATOR")){
+            String[] parts = authority.split("\\|");
+            String id1 = parts[1];
+            String id2 = parts[2];
+            if(parts.length == 6 && Objects.equals(role, "ROLE_SEEKER") && Objects.equals(id1, announcementUUID) && Objects.equals(id2,videoInterviewUUID)){
+                String date = parts[3];
+                String startTime = parts[4];
+                String endTime = parts[5];
+                DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+                LocalDateTime startDateTime = LocalDateTime.parse(date + " " + startTime, dateFormatter);
+                LocalDateTime endDateTime = LocalDateTime.parse(date + " " + endTime, dateFormatter);
+                LocalDateTime startDateTimeWithBuffer = startDateTime.minusMinutes(3);
+                if (currentTime.isAfter(startDateTimeWithBuffer) && currentTime.isBefore(endDateTime)) {
                     return true;
                 }
+            }
+            if(parts.length == 3 && Objects.equals(role, "ROLE_ESTIMATOR") && Objects.equals(id1, announcementUUID) && Objects.equals(id2, videoInterviewUUID)){
+                return true;
             }
         }
         return false;

@@ -5,6 +5,7 @@ public enum BaseResponseMessage {
     REQUEST_FAIL(false, 300, "요청을 실패했습니다."),
     DATABASE_SERVER_ERROR(false, 301, "DATABASE 오류"),
     INVALID_TOKEN(false, 302, "유효하지 않은 토큰입니다."),
+    UNPARSE_JSON(false, 312, "json 형식을 매핑할 수 없습니다."),
     JWT_TOKEN_EXPIRED(false, 303, "JWT 토큰이 만료되었습니다."),
     JWT_TOKEN_UNSUPPORTED(false, 304, "JWT 토큰 형식이 아닙니다."),
     JWT_TOKEN_WRONG(false, 305, "JWT 토큰이 잘못됬습니다."),

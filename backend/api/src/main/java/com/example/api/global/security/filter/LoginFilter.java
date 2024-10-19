@@ -55,18 +55,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         Long idx = member.getIdx();
         String email = member.getEmail();
         String role = member.getRole();
-//        Collection<? extends GrantedAuthority> authorities = authResult.getAuthorities();
-//        for (GrantedAuthority authority : authorities){
-//            if(Objects.equals(authority.toString(), role)){
-//                continue;
-//            }
-//            Cookie viToken = new Cookie("VITOKEN"+ UUID.randomUUID(), jwtUtil.createToken(authority.getAuthority()));
-//            viToken.setHttpOnly(true);
-//            viToken.setSecure(true);
-//            viToken.setPath("/");
-//            viToken.setMaxAge(60 * 60);
-//            response.addCookie(viToken);
-//        }
 
         // 새로운 AT와 RT 발급
         String accessToken = jwtUtil.createToken(idx, email, role);

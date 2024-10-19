@@ -4,8 +4,8 @@
     <header class="header">
       <img class="header-logo" src="../../assets/img/irs_white.png" />
       <div>
+        <button @click="handleTogglePubsAudio" class="soundBtn">{{ audioMuted ? '음소거 해제' : '내 마이크 음소거' }}</button>
         <button @click="leaveSession" class="exitBtn" type="button" id="buttonLeaveSession" value="Leave session" >면접 나가기</button>
-        <button @click="handleTogglePubsAudio" class="soundBtn">{{ audioMuted ? '음소거 해제' : '음소거' }}</button>
       </div>
     </header>
     <!-- 지원자 화면 -->
@@ -259,7 +259,6 @@ const handleTogglePubsAudio = () => {
 };
 
 const handleSessionToken = async (announceUUID, videoInterviewUUID) => {
-  try {
     userName.value = authStore.userInfo.name;
     userType.value = authStore.userInfo.role;
     userEmail.value = authStore.userInfo.email;
@@ -271,9 +270,6 @@ const handleSessionToken = async (announceUUID, videoInterviewUUID) => {
     };
     const response = await videoInterviewStore.getSessionToken(requestBody);
     return response.result.sessionToken;
-  } catch (error) {
-    toast.error(error);
-  }
 };
 
 const updateMainVideoStreamManager = (stream) => {
@@ -298,7 +294,6 @@ const joinSession = async (announceUUID, videoInterviewUUID) => {
     session.value.on("exception", ({ exception }) => { console.warn(exception); 
     });
     const token = await handleSessionToken(announceUUID, videoInterviewUUID);
-    console.log("면접방 토큰 발급:", token);
     await session.value.connect(token, { clientData: userName.value },);
     publisher.value = OV.value.initPublisher(undefined, {
       audioSource: undefined,
@@ -314,9 +309,8 @@ const joinSession = async (announceUUID, videoInterviewUUID) => {
     await session.value.publish(publisher.value);
     toast.success("면접방에 오신 걸 환영합니다.\n지원자는 마이크를 끄고 대기해주시길 바랍니다.");
   } catch (error) {
-    console.log(error)
-    router.push(`/video-interview/${route.params.announcementUUID}`)
     toast.error("지원자는 정해진 시간에 정해진 면접방과 일정에 맞춰 참여 바랍니다.");
+    router.push(`/video-interview/${route.params.announcementUUID}`)
   }
   window.addEventListener("beforeunload", leaveSession);
 };
@@ -356,7 +350,8 @@ const leaveSession = () => {
   color: white;
   font-size: 24px;
   font-weight: bold;
-  width: 150px;
+  width: 100px;
+  
 }
 
 .exitBtn {
@@ -367,15 +362,18 @@ const leaveSession = () => {
   padding: 10px 20px;
   cursor: pointer;
   font-size: 16px;
-  margin-right: 10px
+  font-weight: bold;
+  
 }
 
 .soundBtn{
+  margin-right: 10px;
   background-color: white;
   color: black;
   border: none;
   border-radius: 5px;
   padding: 10px 20px;
+  font-weight: bold;
   cursor: pointer;
   font-size: 16px;
 }

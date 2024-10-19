@@ -18,12 +18,21 @@ import org.springframework.security.authentication.InternalAuthenticationService
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.io.IOException;
 import java.sql.SQLIntegrityConstraintViolationException;
 
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+//    @ExceptionHandler(IOException.class)
+//    public ResponseEntity<BaseResponse> handleIOException(IOException e) {
+//        BaseResponse<String> baseResponse = new BaseResponse<>(BaseResponseMessage.UNPARSE_JSON, e.getMessage());
+//        return ResponseEntity.badRequest().body(baseResponse);
+//    }
+
     @ExceptionHandler(MailException.class)
     public ResponseEntity<BaseResponse> handleMailException(MailException e){
         BaseResponse<String> baseResponse = new BaseResponse<>(BaseResponseMessage.EMAIL_SEND_FAIL, e.getMessage());

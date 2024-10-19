@@ -13,7 +13,7 @@
 .header {
   background-color: #f8f9fa; 
   color: #333; 
-  padding: 20px; 
+  padding: 0 20px; 
   text-align: center; 
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -32,6 +32,6 @@
     color: white;
     font-size: 24px;
     font-weight: bold;
-    width: 150px;
+    width: 100px;
 }
 </style>
