@@ -84,7 +84,7 @@ onMounted(async () => {
     readSeeker.value = response.data.result;
   }
   
-  if(response == null) {
+  if(response == null || response.status == 401 ) {
     toast.error("세션이 만료되어 로그인 페이지로 이동합니다.");
     router.push("/seeker/login");
   }
