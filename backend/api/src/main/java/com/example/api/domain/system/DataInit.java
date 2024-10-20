@@ -22,7 +22,7 @@
 //    // 그 후 주석처리 안하고 프로젝트 돌리면 중복으로 들어가니까 다시 주석처리!
 //    @PostConstruct //애플리케이션의 빈이 초기화될 때 실행
 //    public void dataInsert() {
-//        if(baseInfoRepository.findById(1L).isEmpty() && teamRepository.findById(1L).isEmpty()){
+////        if(baseInfoRepository.findById(1L).isEmpty() && teamRepository.findById(1L).isEmpty()){
 //            // 1. 지원서 폼 등록
 //            String groupName1 = "custom_form";
 //            String[] descriptions1 = {
@@ -245,5 +245,5 @@
 //                }
 //            }
 //        }
-//    }
+////    }
 //}
