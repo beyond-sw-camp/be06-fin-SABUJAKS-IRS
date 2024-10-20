@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 import {backend} from "@/const";
+import {useToast} from "vue-toastification";
 
 // 전역 저장소 생성
 export const UseInterviewScheduleStore = defineStore('reservation', {
@@ -8,7 +9,12 @@ export const UseInterviewScheduleStore = defineStore('reservation', {
             announcementIdx: null,
             announcementUuid: "",
             careerBase: "",
+            interviewNum: 0,
+            currentInterviewNum: 0,
             scheduleInfo: {},
+
+            interviewList: [],
+            interviewListPage: {},
         }
     ),
     actions: {
@@ -23,6 +29,9 @@ export const UseInterviewScheduleStore = defineStore('reservation', {
         },
         setScheduleInfo(scheduleInfo) {
             this.scheduleInfo = scheduleInfo;
+        },
+        setInterviewNum(interviewNum) {
+            this.interviewNum = interviewNum;
         },
 
         // 면접 일정 생성
@@ -95,45 +104,48 @@ export const UseInterviewScheduleStore = defineStore('reservation', {
         },
 
         // 면접 일정 전체 불러오기
-        async readAllInterviewSchedule(reqData, pageNum) {
-            pageNum = Number(pageNum)-1;
+        async readAllInterviewSchedule(router, reqData, pageNum) {
+            const toast = useToast();
             try{
                 const response = await axios.get(
                     // `api/interview-schedule/create`,
                     `${backend}/interview-schedule/read-all?` +
                     `careerBase=${reqData.careerBase}` +
                     `&announcementIdx=${reqData.announcementIdx}` +
+                    `&interviewNum=${reqData.currentInterviewNum}` +
                     `&pageNum=${pageNum}`,
                     // 쿠키 포함
                     { withCredentials: true }
                 );
 
-                return response.data.result;
-            } catch (error) {
-                console.error("Error: ", error);
-
-                return false;
-            }
-        },
-
-        async getTotalInterviewSchedule(reqData) {
-            try{
-                const response = await axios.get(
-                    // `api/interview-schedule/create`,
-                    `${backend}/interview-schedule/read-all/count?` +
-                    `careerBase=${reqData.careerBase}` +
-                    `&announcementIdx=${reqData.announcementIdx}`,
-                    // 쿠키 포함
-                    { withCredentials: true }
-                );
+                this.interviewList = response.data.result.content;
+                this.interviewListPage = response.data.result;
 
                 return response.data.result;
             } catch (error) {
-                console.error("Error: ", error);
-
-                return false;
+                toast.error("인터뷰 조회에 실패했습니다.");
             }
         },
+
+        // async getTotalInterviewSchedule(reqData) {
+        //     try{
+        //         const response = await axios.get(
+        //             // `api/interview-schedule/create`,
+        //             `${backend}/interview-schedule/read-all/count?` +
+        //             `careerBase=${reqData.careerBase}` +
+        //             `&announcementIdx=${reqData.announcementIdx}`,
+        //             // 쿠키 포함
+        //             { withCredentials: true }
+        //         );
+        //         this.totalPages = response.data.result.content;
+        //
+        //         return response.data.result;
+        //     } catch (error) {
+        //         console.error("Error: ", error);
+        //
+        //         return false;
+        //     }
+        // },
 
         async createVideoInterview(uuidData) {
             try{
@@ -273,12 +285,14 @@ export const UseInterviewScheduleStore = defineStore('reservation', {
             }
         },
 
-        async getSeeker(announcementIdx) {
+        async getSeeker(announcementIdx, currentInterviewNum) {
             try{
                 const response = await axios.get(
-                    `${backend}/interview-schedule/read-all/seeker?announcementIdx=${announcementIdx}`,
+                    `${backend}/interview-schedule/read-all/seeker?announcementIdx=${announcementIdx}&interviewNum=${currentInterviewNum}`,
                     {withCredentials: true}
                 );
+
+                console.log(response);
 
                 return response.data.result;
             } catch (error) {

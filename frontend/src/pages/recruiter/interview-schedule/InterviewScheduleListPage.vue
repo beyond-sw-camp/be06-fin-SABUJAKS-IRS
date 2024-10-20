@@ -3,7 +3,7 @@
 import MainHeaderComponent from "@/components/recruiter/MainHeaderComponent.vue";
 import InterviewScheduleList from "@/components/recruiter/InterviewScheduleList.vue";
 import MainSideBarComponent from "@/components/recruiter/MainSideBarComponent.vue";
-import {onMounted, ref, watch} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import {UseInterviewScheduleStore} from "@/stores/UseInterviewScheduleStore";
 import {useRouter} from "vue-router";
 import {useToast} from "vue-toastification";
@@ -33,37 +33,60 @@ const bookedTimes = ref([]);
 const showCalendar = ref(true); // 캘린더 기본으로 표시
 const showInterviewerList = ref(false); // 후보자 목록은 기본적으로 숨김
 
-const interviewSchedules = ref([]);
-const totalInterviewSchedules = ref(0);
 const announcementIdxInfo = ref(0);
 const announcementUuidInfo = ref("");
 const interviewType = ref(''); // 선택된 면접 유형 (대면 또는 온라인)
 const interviewNum = ref(0); // 인터뷰 차수
 const reqData = ref({});
 const uuidData = ref({});
-const careerBase = ref("");
+// const careerBase = ref("");
 const isInterviewScheduleList = ref(true);
-// const isInterviewScheduleMain = ref(true);
 
-const pageNum = ref(1);
+const currentPage = ref(1);
 const router = useRouter();
 const toast = useToast();
 
 const interviewScheduleStore = UseInterviewScheduleStore(); // Store 인스턴스
 
 onMounted(async () => {
-  announcementIdxInfo.value = interviewScheduleStore.announcementIdx;
-  announcementUuidInfo.value = interviewScheduleStore.announcementUuid;
-  careerBase.value = interviewScheduleStore.careerBase;
+  const announcementIdx = sessionStorage.getItem("announcementIdx");
+  const announcementUuid = sessionStorage.getItem("announcementUuid");
+  const careerBase = sessionStorage.getItem("careerBase");
+  const currentInterviewNum = parseInt(sessionStorage.getItem("currentInterviewNum"), 10);
+  const announcementInterviewNum = sessionStorage.getItem("announcementInterviewNum");
 
+  interviewScheduleStore.setAnnouncementIdx(announcementIdx);
+  interviewScheduleStore.setAnnouncementUuid(announcementUuid);
+  interviewScheduleStore.setCareerBase(careerBase);
+  interviewScheduleStore.currentInterviewNum = currentInterviewNum;
+  interviewScheduleStore.setInterviewNum(announcementInterviewNum);
+
+  announcementIdxInfo.value = announcementIdx;
+  announcementUuidInfo.value = announcementUuid;
+  // careerBase.value = careerBase;
+  interviewNum.value = announcementInterviewNum;
+
+  await fetchInterviews(interviewScheduleStore.careerBase, interviewScheduleStore.announcementIdx, currentPage.value, interviewScheduleStore.currentInterviewNum);
+})
+
+const fetchInterviews = async (careerBase, announcementIdx, page, currentInterviewNum) => {
   reqData.value = {
-    careerBase: careerBase.value,
-    announcementIdx: announcementIdxInfo.value,
+    careerBase: careerBase,
+    announcementIdx: announcementIdx,
+    currentInterviewNum: currentInterviewNum
   };
 
-  interviewSchedules.value = await interviewScheduleStore.readAllInterviewSchedule(reqData.value, pageNum.value);
-  totalInterviewSchedules.value = await interviewScheduleStore.getTotalInterviewSchedule(reqData.value);
-})
+  currentPage.value = page;
+  await interviewScheduleStore.readAllInterviewSchedule(router, reqData.value, page-1);
+}
+
+const interviewSchedules = computed(() => {
+  return interviewScheduleStore.interviewList;
+});
+
+const totalPages = computed(() => {
+  return interviewScheduleStore.interviewListPage.totalPages || 0;
+});
 
 const loadInterviewScheduleList = async (btnNumValue) => {
   const response = await interviewScheduleStore.readAllInterviewSchedule(reqData.value, btnNumValue);
@@ -96,7 +119,7 @@ const openModal = async () => {
   if (!isModalOpen.value) {  // 모달이 열려있지 않을 때만 실행
     isModalOpen.value = true;
 
-    const response = await interviewScheduleStore.getSeeker(announcementIdxInfo.value);
+    const response = await interviewScheduleStore.getSeeker(announcementIdxInfo.value, interviewScheduleStore.currentInterviewNum);
 
     // response가 배열일 경우
     if (response !== 0 && response !== undefined) {
@@ -121,6 +144,7 @@ const resetModal = () => {
   startTime.value = '';
   endTime.value = '';
   team.value = '';
+  interviewers.value = [];
   selectedInterviewers.value = [];
   showCalendar.value = true; // 모달을 닫을 때 캘린더가 다시 보이게 설정
   showInterviewerList.value = false; // 모달을 닫을 때 후보자 목록은 숨김
@@ -175,7 +199,7 @@ const submitForm = async () => {
     const selectedStartTime = startTime.value;
     const selectedEndTime = endTime.value;
     const selectedType = interviewType.value;
-    const selectedNum = interviewNum.value;
+    const selectedNum = interviewScheduleStore.currentInterviewNum;
     const selectedTeamIdx = team.value;
     const careerBase = interviewScheduleStore.careerBase;
 
@@ -195,12 +219,13 @@ const submitForm = async () => {
 
     // Store의 createInterviewSchedule 함수 호출
     await interviewScheduleStore.createInterviewSchedule(interviewData)
-        .then(() => {
+        .then(async () => {
           toast.success('면접 일정이 성공적으로 등록되었습니다.')
           // 면접 일정 리스트 업데이트
           closeModal();
           router.push(`/recruiter/interview-schedule/list`);
-          interviewScheduleLists(announcementIdxInfo, announcementUuidInfo);
+          // interviewScheduleLists(announcementIdxInfo, announcementUuidInfo);
+          await fetchInterviews(interviewScheduleStore.careerBase, interviewScheduleStore.announcementIdx, currentPage.value, interviewScheduleStore.currentInterviewNum);
         })
         .catch((error) => {
           toast.error('면접 일정 등록 중 오류가 발생했습니다.', error);
@@ -208,21 +233,6 @@ const submitForm = async () => {
 
   }
 };
-
-const interviewScheduleLists = async (announcementIdx, announcementUuid) => {
-  isInterviewScheduleList.value = true;
-
-  reqData.value = {
-    careerBase: careerBase.value,
-    announcementIdx: announcementIdx,
-  };
-
-  interviewSchedules.value = await interviewScheduleStore.readAllInterviewSchedule(reqData.value, pageNum.value);
-  totalInterviewSchedules.value = await interviewScheduleStore.getTotalInterviewSchedule(reqData.value);
-
-  announcementIdxInfo.value = announcementIdx;
-  announcementUuidInfo.value = announcementUuid;
-}
 
 // 화상면접방 생성 부분
 const createVideoInterview = async (interviewScheduleUuid, interviewScheduleInfo) => {
@@ -233,7 +243,7 @@ const createVideoInterview = async (interviewScheduleUuid, interviewScheduleInfo
   }
   const response = await interviewScheduleStore.createVideoInterview(uuidData.value);
   if (response !== 0 && response !== undefined) {
-    alert("면접방이 생성되었습니다.")
+    toast.success("면접방이 생성되었습니다.");
   }
 }
 
@@ -319,7 +329,7 @@ watch([interviewDate, team], async ([newDate, newTeam]) => {
         :title="'면접일정'"
         :titleModal="setModalTitle"
         :interviewSchedules="interviewSchedules"
-        :totalInterviewSchedules="totalInterviewSchedules"
+        :totalInterviewSchedules="totalPages"
         :announcementIdx="announcementIdxInfo"
         :announcementUuid="announcementUuidInfo">
     </InterviewScheduleList>
@@ -396,12 +406,14 @@ watch([interviewDate, team], async ([newDate, newTeam]) => {
                     <label for="interview-type" class="subtitle">면접 차수<span class="required">*</span></label>
                     <div class="row">
                       <label class="checkbox-label">
-                        <input type="checkbox" value="1" :checked="interviewNum === 1"
+                        <input type="checkbox" value="1" :checked="interviewScheduleStore.currentInterviewNum === 1"
+                               :disabled="interviewScheduleStore.currentInterviewNum === 2"
                                @change="handleInterviewNumCheckboxChange(1)"> 1차면접
                       </label>
 
                       <label class="checkbox-label ml-auto">
-                        <input type="checkbox" value="2" :checked="interviewNum === 2"
+                        <input type="checkbox" value="2" :checked="interviewScheduleStore.currentInterviewNum === 2"
+                               :disabled="interviewScheduleStore.currentInterviewNum === 1"
                                @change="handleInterviewNumCheckboxChange(2)"> 2차면접
                       </label>
                     </div>

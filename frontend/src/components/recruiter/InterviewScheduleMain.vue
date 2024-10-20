@@ -53,13 +53,21 @@ const handlePageClick = async (pageNumber) => {
 
 // const announceIdx = ref(0);
 const interviewScheduleStore = UseInterviewScheduleStore(); // Store 인스턴스
-const handleRowClick = (announcementIdx, announcementUuid) => {
+const handleRowClick = (announcementIdx, announcementUuid, currentInterviewNum, announcementInterviewNum) => {
   // Store에 데이터 저장
   interviewScheduleStore.setAnnouncementIdx(announcementIdx);
   interviewScheduleStore.setAnnouncementUuid(announcementUuid);
   interviewScheduleStore.setCareerBase(props.careerBase);
+  interviewScheduleStore.currentInterviewNum = currentInterviewNum;
+  interviewScheduleStore.setInterviewNum(announcementInterviewNum);
 
-  console.log(props.title);
+  // Session Storage에 데이터 저장
+  sessionStorage.setItem("announcementIdx", announcementIdx);
+  sessionStorage.setItem("announcementUuid", announcementUuid);
+  sessionStorage.setItem("careerBase", props.careerBase);
+  sessionStorage.setItem("currentInterviewNum", currentInterviewNum);
+  sessionStorage.setItem("announcementInterviewNum", announcementInterviewNum);
+
   if (props.title === "전체") {
     // emit('interviewScheduleList', props.announcementIdx, props.announcementUuid);
     router.push({
@@ -91,15 +99,28 @@ const formatDate = (datetime) => {
         <th>번호</th>
         <th>공고기간</th>
         <th>공고명</th>
-        <th>면접생성수</th>
+        <th>1차 면접</th>
+        <th>2차 면접</th>
       </tr>
       <!--      <tr @click="handleRowClick('경력')">-->
-      <tr v-for="(announcement, index) in props.announcements" :key="announcement.idx"
-          @click="handleRowClick(announcement.idx, announcement.uuid)">
+      <tr v-for="(announcement, index) in props.announcements" :key="announcement.idx">
         <td>{{ props.totalAnnouncements - index }}</td>
         <td>{{ formatDate(announcement.announcementStart) }} - {{ formatDate(announcement.announcementEnd) }}</td>
         <td>{{ announcement.title }}</td>
-        <td>{{ props.title === "전체" ? announcement.countReSchedule : announcement.countInterviewSchedule }}</td>
+        <!-- 1차 면접 버튼 -->
+        <td>
+          <button v-if="announcement.interviewNum === 1 || announcement.interviewNum === 2"
+                  class="search-btn"
+                  @click="handleRowClick(announcement.idx, announcement.uuid, 1, announcement.interviewNum)">생성</button>
+        </td>
+
+        <!-- 2차 면접 버튼 -->
+        <td>
+          <button v-if="announcement.interviewNum === 2"
+                  class="search-btn"
+                  @click="handleRowClick(announcement.idx, announcement.uuid, 2, announcement.interviewNum)">생성</button>
+        </td>
+<!--        <td>{{ props.title === "전체" ? announcement.countReSchedule : announcement.countInterviewSchedule }}</td>-->
       </tr>
       </tbody>
     </table>
@@ -149,7 +170,7 @@ table, th, td {
 
 th, td {
   padding: 25px;
-  text-align: left;
+  text-align: center;
 }
 
 th {
@@ -209,10 +230,14 @@ th {
 }
 
 .review-table th:nth-child(3) { /* 두 번째 열 (신입/경력) */
-  width: 40%; /* 비율 조정 */
+  width: 30%; /* 비율 조정 */
 }
 
 .review-table th:nth-child(4) { /* 두 번째 열 (신입/경력) */
+  width: 10%; /* 비율 조정 */
+}
+
+.review-table th:nth-child(5) { /* 두 번째 열 (신입/경력) */
   width: 10%; /* 비율 조정 */
 }
 
@@ -224,5 +249,25 @@ th {
 .pagination button.active {
   background-color: #212b36;
   color: white;
+}
+
+.search-btn {
+  width: fit-content;
+  background-color: #212b36;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  height: 100%;
+  transition: background-color 0.3s;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.search-btn:hover {
+  background-color: #90959a;
 }
 </style>
