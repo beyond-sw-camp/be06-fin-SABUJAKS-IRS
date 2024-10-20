@@ -21,6 +21,7 @@ import com.example.api.global.common.exception.BaseException;
 import com.example.api.global.common.responses.BaseResponseMessage;
 import com.example.api.global.security.CustomUserDetails;
 import io.openvidu.java.client.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,7 +34,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
-
+@RequiredArgsConstructor
 public class VideoInterviewService {
     private final OpenVidu openVidu;
     private final VideoInterviewRepository videoInterviewRepository;
@@ -41,15 +42,6 @@ public class VideoInterviewService {
     private final TaskScheduler taskScheduler;
     private final SeekerRepository seekerRepository;
     private final EstimatorRepository estimatorRepository;
-
-    public VideoInterviewService(OpenVidu openVidu, VideoInterviewRepository videoInterviewRepository, InterviewScheduleRepository interviewScheduleRepository, TaskScheduler taskScheduler, SeekerRepository seekerRepository, EstimatorRepository estimatorRepository) {
-        this.openVidu = openVidu;
-        this.videoInterviewRepository = videoInterviewRepository;
-        this.interviewScheduleRepository = interviewScheduleRepository;
-        this.taskScheduler = taskScheduler;
-        this.seekerRepository = seekerRepository;
-        this.estimatorRepository = estimatorRepository;
-    }
 
     public VideoInterviewCreateRes create(VideoInterviewCreateReq dto) throws OpenViduJavaClientException, OpenViduHttpException, BaseException {
         SessionProperties properties = SessionProperties.fromJson(dto.getParams()).build();

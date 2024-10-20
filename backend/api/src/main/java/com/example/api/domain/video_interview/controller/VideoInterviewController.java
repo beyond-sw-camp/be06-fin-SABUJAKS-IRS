@@ -36,6 +36,7 @@ public class VideoInterviewController {
     public ResponseEntity<BaseResponse<VideoInterviewCreateRes>> create(
         @RequestBody VideoInterviewCreateReq dto) throws OpenViduJavaClientException, OpenViduHttpException, BaseException {
         VideoInterviewCreateRes response = videoInterviewService.create(dto);
+        emailSenderSeeker.sendConfirmInterviewScheduleEmail(response);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.VIDEO_INTERVIEW_CREATE_SUCCESS, response));
     }
 

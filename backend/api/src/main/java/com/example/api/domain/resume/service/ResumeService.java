@@ -23,6 +23,7 @@ import com.example.common.domain.resume.repository.*;
 import com.example.common.domain.total_process.model.entity.TotalProcess;
 import com.example.common.domain.total_process.repository.TotalProcessRepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -34,6 +35,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ResumeService {
     private final SeekerRepository seekerRepository;
     private final ResumeInfoRepository resumeInfoRepository;
@@ -57,32 +59,6 @@ public class ResumeService {
     private final RecruiterRepository recruiterRepository;
     private final CompanyRepository companyRepository;
     private final TotalProcessRepository totalProcessRepository;
-
-    public ResumeService(SeekerRepository seekerRepository, ResumeInfoRepository resumeInfoRepository, PersonalInfoRepository personalInfoRepository, PreferentialEmpRepository preferentialEmpRepository, EducationRepository educationRepository, PersonalHistoryRepository personalHistoryRepository, InternActivitiesRepository internActivitiesRepository, StudyingAboardRepository studyingAboardRepository, LanguageRepository languageRepository, CertificationRepository certificationRepository, TrainingRepository trainingRepository, AwardRepository awardRepository, CustomLetterRepository customLetterRepository, PortfolioRepository portfolioRepository, CustomResumeInfoRepository customResumeInfoRepository, AnnouncementRepository announcementRepository, ResumeRepository resumeRepository, CustomLetterFormRepository customLetterFormRepository, CustomFormRepository customFormRepository, RecruiterRepository recruiterRepository, CompanyRepository companyRepository, TotalProcessRepository totalProcessRepository) {
-        this.seekerRepository = seekerRepository;
-        this.resumeInfoRepository = resumeInfoRepository;
-        this.personalInfoRepository = personalInfoRepository;
-        this.preferentialEmpRepository = preferentialEmpRepository;
-        this.educationRepository = educationRepository;
-        this.personalHistoryRepository = personalHistoryRepository;
-        this.internActivitiesRepository = internActivitiesRepository;
-        this.studyingAboardRepository = studyingAboardRepository;
-        this.languageRepository = languageRepository;
-        this.certificationRepository = certificationRepository;
-        this.trainingRepository = trainingRepository;
-        this.awardRepository = awardRepository;
-        this.customLetterRepository = customLetterRepository;
-        this.portfolioRepository = portfolioRepository;
-        this.customResumeInfoRepository = customResumeInfoRepository;
-        this.announcementRepository = announcementRepository;
-        this.resumeRepository = resumeRepository;
-        this.customLetterFormRepository = customLetterFormRepository;
-        this.customFormRepository = customFormRepository;
-        this.recruiterRepository = recruiterRepository;
-        this.companyRepository = companyRepository;
-        this.totalProcessRepository = totalProcessRepository;
-    }
-
 
     @Transactional
     public ResumeCreateRes create(CustomUserDetails customUserDetails, ResumeCreateReq dto, String fileUrl) throws BaseException {

@@ -14,6 +14,7 @@ import com.example.api.global.common.responses.BaseResponseMessage;
 import com.example.api.global.security.CustomUserDetails;
 import com.example.api.global.utils.email.service.EmailSenderSeeker;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -40,8 +41,9 @@ public class InterviewScheduleController {
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestParam String careerBase,
             @RequestParam Long announcementIdx,
+            @RequestParam Integer interviewNum,
             @RequestParam Integer pageNum) throws BaseException {
-        List<InterviewScheduleRes> response = interviewScheduleService.readAll(careerBase, announcementIdx, pageNum, customUserDetails);
+        Page<InterviewScheduleRes> response = interviewScheduleService.readAll(careerBase, announcementIdx, interviewNum, pageNum, customUserDetails);
 
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_SCHEDULE_READ_ALL_SUCCESS, response));
     }
@@ -100,8 +102,9 @@ public class InterviewScheduleController {
 
     @GetMapping("/read-all/seeker")
     public ResponseEntity<BaseResponse<?>> getSeekerList(
-            @RequestParam Long announcementIdx) throws BaseException {
-        List<SeekerInfoGetRes> response = interviewScheduleService.getSeekerList(announcementIdx);
+            @RequestParam Long announcementIdx,
+            @RequestParam Integer interviewNum) throws BaseException {
+        List<SeekerInfoGetRes> response = interviewScheduleService.getSeekerList(announcementIdx, interviewNum);
 
         return ResponseEntity.ok(new BaseResponse<>(BaseResponseMessage.AUTH_SEARCH_USER_INFO_SUCCESS, response));
     }
