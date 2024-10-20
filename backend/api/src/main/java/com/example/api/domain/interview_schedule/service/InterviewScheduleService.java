@@ -11,6 +11,7 @@ import com.example.api.domain.interview_schedule.model.response.TimeInfoRes;
 import com.example.api.global.common.exception.BaseException;
 import com.example.api.global.common.responses.BaseResponseMessage;
 import com.example.api.global.security.CustomUserDetails;
+import com.example.api.global.utils.email.service.EmailSendEstimator;
 import com.example.common.domain.announcement.model.entity.Announcement;
 import com.example.common.domain.announcement.repository.AnnouncementRepository;
 import com.example.common.domain.auth.model.entity.Estimator;
@@ -56,7 +57,7 @@ public class InterviewScheduleService {
     private final TotalProcessRepository totalProcessRepository;
     private final ReScheduleRepository reScheduleRepository;
     private final CompanyRepository companyRepository;
-
+    private final EmailSendEstimator emailSendEstimator;
     @Transactional
     public InterviewScheduleRes create(CustomUserDetails customUserDetails, InterviewScheduleReq dto) throws BaseException {
         String uuid = uuidCheck(dto);
@@ -87,7 +88,7 @@ public class InterviewScheduleService {
         List<String> estimatorPasswordList = new ArrayList<>();
         for(Long seekerIdx : dto.getSeekerList()) {
             for(String estimatorEmail : dto.getEstimatorList()) {
-//                String estimatorPassword = UUID.randomUUID().toString();
+                String estimatorPassword = UUID.randomUUID().toString();
                 String[] parts = estimatorEmail.split("-");
                 String name = parts[0].trim();
                 String email = parts[1].trim();
@@ -100,12 +101,12 @@ public class InterviewScheduleService {
                             .role("ROLE_ESTIMATOR")
                             .name(name)
                             .email(email)
-                            .password(passwordEncoder.encode("qwer1234"))
+                            .password(passwordEncoder.encode(estimatorPassword))
                             .emailAuth(true)
                             .build();
                     estimatorRepository.save(estimator);
+                    emailSendEstimator.sendEstimatorSchedule(estimatorPassword, estimator, interviewSchedule);
                 }
-                estimatorList.add(estimator);
                 InterviewParticipate interviewParticipate = interviewParticipateRepository.save(InterviewParticipate.builder()
                         .seeker(seekerRepository.findBySeekerIdx(seekerIdx).orElseThrow(() -> new BaseException(BaseResponseMessage.MEMBER_NOT_FOUND)))
                         .estimator(estimator)
