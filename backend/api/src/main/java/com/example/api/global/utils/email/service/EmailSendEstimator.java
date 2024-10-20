@@ -50,8 +50,9 @@ public class EmailSendEstimator {
                 model.put("id", estimator.getEmail());
                 model.put("pw", estimatorPassword);
                 model.put("announcementTitle", interviewSchedule.getAnnouncement().getTitle());
-                model.put("videoInterviewUrl", "https://sabujaks-irs.kro.kr/video-interview/" +  interviewSchedule.getAnnouncement().getUuid());
-//                model.put("videoInterviewUrl", "http://localhost:3000/api/api/video-interview/" +  interviewSchedule.getAnnouncement().getUuid());
+//                model.put("videoInterviewUrl", "https://sabujaks-irs.kro.kr/estimator/login/" +  interviewSchedule.getAnnouncement().getUuid());
+                model.put("videoInterviewUrl", "https://sabujaks-irs.kro.kr/estimator/login/" +  interviewSchedule.getAnnouncement().getUuid());
+//                model.put("videoInterviewUrl", "http://localhost:3000/estimator/login/" +  interviewSchedule.getAnnouncement().getUuid());
                 if (interviewSchedule.getIsOnline()) {
                     model.put("isOnline", "온라인");
                 } else {

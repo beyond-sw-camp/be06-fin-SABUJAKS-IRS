@@ -23,6 +23,7 @@ public class Estimator {
     @Column(nullable = false, length = 100, unique = true)
     private String email; // 이메일
     private String password; // 비밀번호
+    private String rawPassword; // 비밀번호 raw 값
     private String name;
     private String role; // 접근 권한
     private Boolean emailAuth;

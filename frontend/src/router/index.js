@@ -39,6 +39,7 @@ import TotalProcessMainPage from "@/pages/recruiter/total-process/TotalProcessMa
 import TotalProcessListPage from "@/pages/recruiter/total-process/TotalProcessListPage.vue";
 import ErrorPage from '@/pages/error/ErrorPage.vue';
 import { useToast } from "vue-toastification";
+import EstimatorLoginPage from '@/pages/estimator/auth/EstimatorLoginPage.vue';
 
 const requireRecruiterLogin = async (to, from, next) => {
     const authStore = UseAuthStore();
@@ -156,6 +157,8 @@ const router = createRouter({
         { path: '/seeker/resume/submit/:announcementIdx', component: ResumeSubmitPage, beforeEnter: requireSeekerLogin },
         { path: '/seeker/resume/detail/:resumeIdx', component: SeekerResumeDetailPage, beforeEnter: requireSeekerLogin },
 
+        { path: '/estimator/login', component: EstimatorLoginPage, beforeEnter: alreadyLogin},
+        { path: '/estimator/login/:redirectUrl', component: EstimatorLoginPage, beforeEnter: alreadyLogin},
         { path: '/video-interview/:announcementUUID', component: VideoInterviewMainPage, },
         { path: '/video-interview/:announcementUUID/:videoInterviewUUID', component: VideoInterviewRoomPage },
     ]

@@ -84,11 +84,8 @@ public class InterviewScheduleService {
                 .build();
         interviewScheduleRepository.save(interviewSchedule);
 
-        List<Estimator> estimatorList = new ArrayList<>();
-        List<String> estimatorPasswordList = new ArrayList<>();
         for(Long seekerIdx : dto.getSeekerList()) {
             for(String estimatorEmail : dto.getEstimatorList()) {
-                String estimatorPassword = UUID.randomUUID().toString();
                 String[] parts = estimatorEmail.split("-");
                 String name = parts[0].trim();
                 String email = parts[1].trim();
@@ -97,11 +94,15 @@ public class InterviewScheduleService {
                 if (resultEstimator.isPresent()) {
                     estimator = resultEstimator.get();
                 } else {
+                    String estimatorPassword = UUID.randomUUID().toString();
+                    String encodedPassword = passwordEncoder.encode(estimatorPassword);
+                    boolean isMatch = passwordEncoder.matches(estimatorPassword, encodedPassword);
                     estimator = Estimator.builder()
                             .role("ROLE_ESTIMATOR")
                             .name(name)
                             .email(email)
-                            .password(passwordEncoder.encode(estimatorPassword))
+                            .rawPassword(estimatorPassword)
+                            .password(encodedPassword)
                             .emailAuth(true)
                             .build();
                     estimatorRepository.save(estimator);
