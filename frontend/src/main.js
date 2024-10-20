@@ -44,7 +44,7 @@ axios.interceptors.response.use(
                     await authStore.logout();
                     console.log("세션이 유효하지 않습니다.");
                     console.log(error.response);
-                    router.push("/");
+                    // router.push("/");
                     break;
 
                 case 404:
