@@ -23,6 +23,12 @@ public interface TotalProcessRepository extends JpaRepository<TotalProcess, Long
             "AND tp.resumeResult = :resumeResult")
     List<TotalProcess> findByAnnouncementIdxAndResumeResult(Long announcementIdx, Boolean resumeResult);
 
+    @Query("SELECT tp FROM TotalProcess tp " +
+            "WHERE tp.announcement.idx = :announcementIdx " +
+            "AND tp.resumeResult = :resumeResult " +
+            "AND tp.interviewOneResult = :interviewOneResult")
+    List<TotalProcess> findByAnnouncementIdxAndResumeResultAndInterviewOneResult(Long announcementIdx, Boolean resumeResult, Boolean interviewOneResult);
+
     @Query("SELECT tp FROM TotalProcess tp WHERE tp.announcement.idx = :announcementIdx ORDER BY tp.idx DESC")
     Page<TotalProcess> findAllByAnnouncementIdx(Long announcementIdx, Pageable pageable);
 

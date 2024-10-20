@@ -33,10 +33,8 @@ import com.example.common.domain.interview_schedule.repository.querydsl.Intervie
 import com.example.common.domain.resume.repository.ResumeRepository;
 import com.example.common.domain.total_process.model.entity.TotalProcess;
 import com.example.common.domain.total_process.repository.TotalProcessRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class InterviewScheduleService {
     private final PasswordEncoder passwordEncoder;
     private final InterviewScheduleRepository interviewScheduleRepository;
@@ -56,24 +55,7 @@ public class InterviewScheduleService {
     private final RecruiterRepository recruiterRepository;
     private final TotalProcessRepository totalProcessRepository;
     private final ReScheduleRepository reScheduleRepository;
-    private final ResumeRepository resumeRepository;
     private final CompanyRepository companyRepository;
-
-    public InterviewScheduleService(PasswordEncoder passwordEncoder, InterviewScheduleRepository interviewScheduleRepository, InterviewScheduleDslRepository interviewScheduleDslRepository, SeekerRepository seekerRepository, InterviewParticipateRepository interviewParticipateRepository, EstimatorRepository estimatorRepository, AnnouncementRepository announcementRepository, TeamRepository teamRepository, RecruiterRepository recruiterRepository, TotalProcessRepository totalProcessRepository, ReScheduleRepository reScheduleRepository, ResumeRepository resumeRepository, CompanyRepository companyRepository) {
-        this.passwordEncoder = passwordEncoder;
-        this.interviewScheduleRepository = interviewScheduleRepository;
-        this.interviewScheduleDslRepository = interviewScheduleDslRepository;
-        this.seekerRepository = seekerRepository;
-        this.interviewParticipateRepository = interviewParticipateRepository;
-        this.estimatorRepository = estimatorRepository;
-        this.announcementRepository = announcementRepository;
-        this.teamRepository = teamRepository;
-        this.recruiterRepository = recruiterRepository;
-        this.totalProcessRepository = totalProcessRepository;
-        this.reScheduleRepository = reScheduleRepository;
-        this.resumeRepository = resumeRepository;
-        this.companyRepository = companyRepository;
-    }
 
     @Transactional
     public InterviewScheduleRes create(CustomUserDetails customUserDetails, InterviewScheduleReq dto) throws BaseException {
@@ -187,14 +169,15 @@ public class InterviewScheduleService {
         return uuid;
     }
 
-    public List<InterviewScheduleRes> readAll(String careerBase, Long idx, Integer page, CustomUserDetails customUserDetails) throws BaseException {
+    @Transactional
+    public Page<InterviewScheduleRes> readAll(String careerBase, Long idx, Integer interviewNum, Integer page, CustomUserDetails customUserDetails) throws BaseException {
         Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "idx"));
         Page<InterviewSchedule> result;
 
         if (careerBase.equals("전체")) {
             result = interviewScheduleDslRepository.findByAnnouncementIdx(idx, pageable);
         } else {
-            result = interviewScheduleDslRepository.findByCareerBaseAndAnnouncementIdx(careerBase, idx, pageable);
+            result = interviewScheduleDslRepository.findByCareerBaseAndAnnouncementIdxAndInterviewNum(careerBase, idx, interviewNum, pageable);
         }
 
         List<InterviewScheduleRes> interviewScheduleList = new ArrayList<>();
@@ -242,8 +225,7 @@ public class InterviewScheduleService {
                         .build());
             }
         }
-
-        return interviewScheduleList;
+        return new PageImpl<>(interviewScheduleList, pageable, result.getTotalElements());
     }
 
     public InterviewScheduleRes read(Long interviewScheduleIdx) throws BaseException {
@@ -422,12 +404,22 @@ public class InterviewScheduleService {
         return reScheduleResList.size();
     }
 
-    public List<SeekerInfoGetRes> getSeekerList(Long announcementIdx) throws BaseException {
+    public List<SeekerInfoGetRes> getSeekerList(Long announcementIdx, Integer interviewNum) throws BaseException {
         // 서류 합격자 resume(seeker info 포함)
-        List<TotalProcess> getResumeResult = totalProcessRepository.findByAnnouncementIdxAndResumeResult(announcementIdx, true);
+        System.out.println("@@@@@@@@@@@@@@"+ interviewNum);
+        List<TotalProcess> getResumeResult;
+        if(interviewNum == 1) {
+            getResumeResult = totalProcessRepository.findByAnnouncementIdxAndResumeResult(announcementIdx, true);
+        } else {
+            getResumeResult = totalProcessRepository.findByAnnouncementIdxAndResumeResultAndInterviewOneResult(announcementIdx, true, true);
+        }
+
+        for(TotalProcess totalProcess : getResumeResult) {
+            System.out.println("????????????"+totalProcess.getSeeker().getName());
+        }
 
         // interview_participate(면접일정이 잡힌 seeker list) 조회
-        Optional<List<InterviewSchedule>> interviewScheduleResult = interviewScheduleRepository.findByAnnouncementIdx(announcementIdx);
+        Optional<List<InterviewSchedule>> interviewScheduleResult = interviewScheduleRepository.findByAnnouncementIdxAndInterviewNum(announcementIdx, interviewNum);
         List<Long> interviewParticipateSeeker = new ArrayList<>();
 
         for(InterviewSchedule interviewSchedule : interviewScheduleResult.get()) {
