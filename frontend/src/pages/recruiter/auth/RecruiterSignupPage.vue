@@ -27,13 +27,13 @@
                     <input v-model="password" type="password" maxlength="30" placeholder="비밀번호 (8~16자의 영문, 숫자, 특수기호)">
                     <input v-model="name" type="text" maxlength="30" placeholder="이름">
                     <input v-model="phoneNumber" type="text" maxlength="30" placeholder="휴대폰번호 ex) 01012341234">
-                    <label for="file">
+                    <!-- <label for="file">
                         <div class="file-uploadbtn">프로필 파일 업로드</div>
                     </label>
                     <input @change="handleFileUpload" type="file" name="file" id="file">
                     <div class="file-preview" v-if="fileUrl">
                         <img :src="fileUrl" />
-                    </div>
+                    </div> -->
                 </div>
                 <div class="submit-section">
                     <p class="signup-notice">기업인증을 완료해야 가입을 할 수 있습니다.</p>
@@ -52,8 +52,10 @@ import SeekerFooterComponent from "@/components/seeker/SeekerFooterComponent.vue
 import { UseAuthStore } from "@/stores/UseAuthStore"
 import { ref } from "vue";
 import { useToast } from "vue-toastification";
+import { useRouter } from "vue-router";
 
 const toast = useToast();
+const router = useRouter();
 
 const authStore = UseAuthStore();
 
@@ -62,17 +64,17 @@ const password = ref("")
 const name = ref("")
 const phoneNumber = ref(null)
 const file = ref(null);
-const fileUrl = ref(null);
+// const fileUrl = ref(null);
 const showSignupBtn = ref(false);
 const crn = ref("")
 const opened_at = ref("")
 const ceo_name = ref("")
 const recruiter_email = ref("")
 
-const handleFileUpload = (event) => {
-    file.value = event.target.files[0];
-    if (file.value) { fileUrl.value = URL.createObjectURL(file.value); }
-};
+// const handleFileUpload = (event) => {
+//     file.value = event.target.files[0];
+//     if (file.value) { fileUrl.value = URL.createObjectURL(file.value); }
+// };
 
 const handleCompanyVerify = async () => {
     const requestBody = {
@@ -104,6 +106,7 @@ const handleSignup = async () => {
     if (file.value) { formData.append('file', file.value); }
     const response = await authStore.signup(formData);
     if(response.success) {
+        router.push("/recruiter/login");
         toast.success("가입 후 이메일 인증까지 완료하여야 계정이 활성화됩니다.");
     } else {
         toast.error("회원가입에 실패했습니다.");

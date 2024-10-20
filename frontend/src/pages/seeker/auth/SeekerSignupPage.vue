@@ -13,7 +13,7 @@
                     <h3 class="t1">소셜로 간편하게 로그인하세요</h3>
                     <div class="social-list">
                         <a class="social-kakao-logo" @click.prevent="handleSocialLogin('kakao')"></a>
-                        <a class="social-naver-logo" @click.prevent="handleSocialLogin('naver')"></a>
+                        <!-- <a class="social-naver-logo" @click.prevent="handleSocialLogin('naver')"></a> -->
                         <a class="social-google-logo" @click.prevent="handleSocialLogin('google')"></a>
                     </div>
                 </div>
@@ -33,6 +33,10 @@
                         </div>
                     </div>
                     <input v-model="phoneNumber" type="text" maxlength="16" placeholder="휴대폰번호 ex) 01012341234">
+                    <div class="is-col" style="gap: 10px;">
+                        <input v-model="address" type="text" placeholder="주소" @click="openAddressSearch">
+                        <input v-model="addressDetail" type="text" placeholder="상세 주소">
+                    </div>
                     <label for="file">
                         <div class="file-uploadbtn">프로필 파일 업로드</div>
                     </label>
@@ -55,7 +59,7 @@
 import SeekerHeaderComponent from "@/components/seeker/SeekerHeaderComponent.vue";
 import SeekerFooterComponent from "@/components/seeker/SeekerFooterComponent.vue"
 import { UseAuthStore } from "@/stores/UseAuthStore"
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 
@@ -71,8 +75,25 @@ const nickname = ref("")
 const gender = ref(null)
 const birth = ref("")
 const phoneNumber = ref(null)
+const address = ref("")
+const addressDetail = ref("")
 const file = ref(null);
 const fileUrl = ref(null);
+
+onMounted(() => {
+  const script = document.createElement('script');
+  script.src = 'https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
+  document.head.appendChild(script);
+});
+
+const openAddressSearch = () => {
+  // eslint-disable-next-line no-undef
+  new daum.Postcode({
+    oncomplete: function (data) {
+      address.value = data.address;
+    }
+  }).open();
+};
 
 const handleFileUpload = (event) => {
     file.value = event.target.files[0];
@@ -90,12 +111,14 @@ const handleSignup = async () => {
         gender: gender.value,
         birth: birth.value,
         socialType: "normal",
-        phone_number: phoneNumber.value
+        phone_number: phoneNumber.value,
+        address: address.value + ',' + addressDetail.value
     }
     formData.append('dto', new Blob([JSON.stringify(requestBody)], { type: 'application/json' }));
     if (file.value) { formData.append('file', file.value); }
     const response = await authStore.signup(formData);
     if(response.success) {
+        router.push("/seeker/login");
         toast.success("가입 후 이메일 인증까지 완료하여야 계정이 활성화됩니다.");
     } else {
         toast.error("회원가입에 실패했습니다.");
