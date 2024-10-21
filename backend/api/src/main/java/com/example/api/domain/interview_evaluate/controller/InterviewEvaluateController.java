@@ -27,13 +27,7 @@ public class InterviewEvaluateController {
         InterviewEvaluateFormCreateRes response = interviewEvaluateService.createForm(customUserDetails, dto);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.INTERVIEW_EVALUATE_CREATE_FORM_SUCCESS, response));
     }
-
-//    @GetMapping("/read-all/form")
-//    public ResponseEntity<BaseResponse>readAllForm(
-//            @AuthenticationPrincipal CustomUserDetails customUserDetails) throws  BaseException {
-//        InterviewEvaluateFormReadAllRes response = interviewEvaluateService.readAllForm(customUserDetails);
-//    }
-
+    
     @GetMapping("/search-form")
     public ResponseEntity<BaseResponse> searchForm(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
