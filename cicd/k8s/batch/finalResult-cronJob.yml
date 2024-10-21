@@ -59,5 +59,20 @@ spec:
                     configMapKeyRef:
                       name: batch-cm
                       key: OPENVIDU_SECRET
+                - name: REDIS_HOST
+                  valueFrom:
+                    configMapKeyRef:
+                      name: batch-cm
+                      key: REDIS_HOST
+                - name: REDIS_PW
+                  valueFrom:
+                    configMapKeyRef:
+                      name: batch-cm
+                      key: REDIS_PW
+                - name: REDIS_PORT
+                  valueFrom:
+                    configMapKeyRef:
+                      name: batch-cm
+                      key: REDIS_PORT
           restartPolicy: OnFailure
       ttlSecondsAfterFinished: 60
