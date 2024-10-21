@@ -85,6 +85,7 @@ const interviewSchedules = computed(() => {
 });
 
 const totalPages = computed(() => {
+  console.log(interviewScheduleStore.interviewListPage.totalPages);
   return interviewScheduleStore.interviewListPage.totalPages || 0;
 });
 

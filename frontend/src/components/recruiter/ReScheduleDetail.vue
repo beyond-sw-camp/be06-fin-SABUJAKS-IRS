@@ -78,7 +78,7 @@ const updateData = () => {
     }
 
     if (props.interviewScheduleDetail.estimatorList) {
-      selectedEmails.value = props.interviewScheduleDetail.estimatorList.map(estimator => estimator.email);
+      selectedEmails.value = props.interviewScheduleDetail.estimatorList.map(estimator => `${estimator.name}-${estimator.email}`);
     }
 
     interviewDate.value = props.interviewScheduleDetail.interviewDate || '';

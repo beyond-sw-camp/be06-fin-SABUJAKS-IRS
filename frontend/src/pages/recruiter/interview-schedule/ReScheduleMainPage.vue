@@ -38,6 +38,7 @@ const loadAnnouncementList = async (btnNum) => {
         @interviewScheduleList="interviewScheduleLists"
         @loadAnnouncementList="loadAnnouncementList"
         :title="careerBase"
+        :careerBase="careerBase"
         :announcements="announcements"
         :totalAnnouncements="totalAnnouncements">
     </InterviewScheduleMain>

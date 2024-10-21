@@ -31,6 +31,7 @@ const emit = defineEmits([
 ]);
 
 const postsPerPage = 10; // 페이지당 게시글 수
+
 const totalPages = computed(() => {
   return props.totalInterviewSchedules ? Math.ceil(props.totalInterviewSchedules / postsPerPage) : 0;
 });
@@ -48,9 +49,9 @@ const handlePageClick = async (pageNumber) => {
 };
 
 // 각 페이지의 시작 번호 계산
-const startNumberForPage = computed(() => {
-  return isLoading.value ? '-' : props.totalInterviewSchedules - (currentPage.value - 1) * postsPerPage;
-});
+// const startNumberForPage = computed(() => {
+//   return isLoading.value ? '-' : props.totalInterviewSchedules - (currentPage.value - 1) * postsPerPage;
+// });
 
 const handleRowClick = (type) => {
   emit('openModal', type);
@@ -102,7 +103,7 @@ const handleScheduleClick = (schedule) => {
       </tr>
       <tr v-for="(schedule, index) in props.interviewSchedules" :key="schedule.uuid"
           @click="handleScheduleClick(schedule)">
-        <td>{{ startNumberForPage - index }}</td>
+        <td>{{ props.totalInterviewSchedules - ((currentPage - 1) * postsPerPage + index) }}</td>
         <td>{{ formatDate(schedule.interviewDate) }}</td>
         <td>{{ schedule.interviewStart }} - {{ schedule.interviewEnd }}</td>
         <td>{{ schedule.teamIdx }} 팀</td>
