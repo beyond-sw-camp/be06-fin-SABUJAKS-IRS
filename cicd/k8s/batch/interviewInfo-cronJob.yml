@@ -12,6 +12,8 @@ spec:
             - name: interviewinfo-batch
               image: sabujaks/batch:latest
               env:
+                - name: TZ
+                  value: "Asia/Seoul"
                 - name: BATCH_JOB_NAME
                   value: "interviewScheduleInfoJob"
                 - name: DB_URL
