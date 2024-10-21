@@ -354,35 +354,41 @@ public class InterviewScheduleService {
         List<ReScheduleRes> reScheduleResList = new ArrayList<>();
 
         for(InterviewSchedule interviewSchedule : result) {
-            ReSchedule reSchedule = reScheduleRepository.findByInterviewScheduleIdx(interviewSchedule.getIdx());
-            if(reSchedule == null) {
+            List<ReSchedule> reScheduleList = reScheduleRepository.findAllByInterviewScheduleIdx(interviewSchedule.getIdx());
+            if(reScheduleList == null) {
                 continue;
             }
-            Seeker seeker = seekerRepository.findBySeekerIdx(reSchedule.getSeeker().getIdx()).get();
 
-            if(reSchedule != null) {
-                reScheduleResList.add(ReScheduleRes.builder()
-                        .idx(reSchedule.getIdx())
-                        .interviewStart(reSchedule.getInterviewStart())
-                        .interviewEnd(reSchedule.getInterviewEnd())
-                        .interviewScheduleRes(InterviewScheduleRes.builder()
-                                .idx(interviewSchedule.getIdx())
-                                .isOnline(interviewSchedule.getIsOnline())
-                                .interviewDate(interviewSchedule.getInterviewDate())
-                                .interviewStart(interviewSchedule.getInterviewStart())
-                                .interviewEnd(interviewSchedule.getInterviewEnd())
-                                .interviewNum(interviewSchedule.getInterviewNum())
-                                .teamIdx(interviewSchedule.getTeam().getIdx())
-                                .uuid(interviewSchedule.getUuid())
-                                .build())
-                        .seekerInfoGetRes(SeekerInfoGetRes.builder()
-                                .idx(seeker.getIdx())
-                                .email(seeker.getEmail())
-                                .name(seeker.getName())
-                                .build())
-                        .status(reSchedule.getStatus())
-                        .build());
+            for(ReSchedule reSchedule : reScheduleList) {
+                Seeker seeker = seekerRepository.findBySeekerIdx(reSchedule.getSeeker().getIdx()).get();
+
+                if(reSchedule != null) {
+                    reScheduleResList.add(ReScheduleRes.builder()
+                            .idx(reSchedule.getIdx())
+                            .interviewStart(reSchedule.getInterviewStart())
+                            .interviewEnd(reSchedule.getInterviewEnd())
+                            .interviewScheduleRes(InterviewScheduleRes.builder()
+                                    .idx(interviewSchedule.getIdx())
+                                    .isOnline(interviewSchedule.getIsOnline())
+                                    .interviewDate(interviewSchedule.getInterviewDate())
+                                    .interviewStart(interviewSchedule.getInterviewStart())
+                                    .interviewEnd(interviewSchedule.getInterviewEnd())
+                                    .interviewNum(interviewSchedule.getInterviewNum())
+                                    .teamIdx(interviewSchedule.getTeam().getIdx())
+                                    .uuid(interviewSchedule.getUuid())
+                                    .build())
+                            .seekerInfoGetRes(SeekerInfoGetRes.builder()
+                                    .idx(seeker.getIdx())
+                                    .email(seeker.getEmail())
+                                    .name(seeker.getName())
+                                    .build())
+                            .status(reSchedule.getStatus())
+                            .build());
+                }
             }
+
+
+
         }
 
         return reScheduleResList;
@@ -393,14 +399,16 @@ public class InterviewScheduleService {
         List<ReScheduleRes> reScheduleResList = new ArrayList<>();
 
         for(InterviewSchedule interviewSchedule : result) {
-            ReSchedule reSchedule = reScheduleRepository.findByInterviewScheduleIdx(interviewSchedule.getIdx());
-            if(reSchedule == null) {
+            List<ReSchedule> reScheduleList = reScheduleRepository.findAllByInterviewScheduleIdx(interviewSchedule.getIdx());
+            if(reScheduleList == null) {
                 continue;
             }
 
-            reScheduleResList.add(ReScheduleRes.builder()
-                    .idx(reSchedule.getIdx())
-                    .build());
+            for(ReSchedule reSchedule : reScheduleList) {
+                reScheduleResList.add(ReScheduleRes.builder()
+                        .idx(reSchedule.getIdx())
+                        .build());
+            }
         }
 
         return reScheduleResList.size();
