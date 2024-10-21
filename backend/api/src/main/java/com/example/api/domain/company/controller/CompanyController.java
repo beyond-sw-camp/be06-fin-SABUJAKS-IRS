@@ -53,7 +53,7 @@ public class CompanyController {
     // 기업 정보 조회
     @GetMapping("/read")
     public ResponseEntity<BaseResponse<CompanyReadRes>> read(
-            @AuthenticationPrincipal CustomUserDetails customUserDetail) throws BaseException {
+        @AuthenticationPrincipal CustomUserDetails customUserDetail) throws BaseException {
 
         CompanyReadRes response = companyService.readCompany(customUserDetail);
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.COMPANY_INFO_SUCCESS_REGISTER, response));
