@@ -104,23 +104,29 @@ const formatDate = (datetime) => {
       </tr>
       <!--      <tr @click="handleRowClick('경력')">-->
       <tr v-for="(announcement, index) in props.announcements" :key="announcement.idx">
-        <td>{{ props.totalAnnouncements - index }}</td>
+        <td>{{ props.totalAnnouncements - ((currentPage - 1) * postsPerPage + index) }}</td>
         <td>{{ formatDate(announcement.announcementStart) }} - {{ formatDate(announcement.announcementEnd) }}</td>
         <td>{{ announcement.title }}</td>
+
         <!-- 1차 면접 버튼 -->
         <td>
-          <button v-if="announcement.interviewNum === 1 || announcement.interviewNum === 2"
+          <button v-if="props.careerBase === '전체' && (announcement.interviewNum === 1 || announcement.interviewNum === 2)"
+                  class="search-btn"
+                  @click="handleRowClick(announcement.idx, announcement.uuid, 1, announcement.interviewNum)">조회</button>
+          <button v-else-if="announcement.interviewNum === 1 || announcement.interviewNum === 2"
                   class="search-btn"
                   @click="handleRowClick(announcement.idx, announcement.uuid, 1, announcement.interviewNum)">생성</button>
         </td>
 
         <!-- 2차 면접 버튼 -->
         <td>
-          <button v-if="announcement.interviewNum === 2"
+          <button v-if="props.careerBase === '전체' && announcement.interviewNum === 2"
+                  class="search-btn"
+                  @click="handleRowClick(announcement.idx, announcement.uuid, 2, announcement.interviewNum)">조회</button>
+          <button v-else-if="announcement.interviewNum === 2"
                   class="search-btn"
                   @click="handleRowClick(announcement.idx, announcement.uuid, 2, announcement.interviewNum)">생성</button>
         </td>
-<!--        <td>{{ props.title === "전체" ? announcement.countReSchedule : announcement.countInterviewSchedule }}</td>-->
       </tr>
       </tbody>
     </table>

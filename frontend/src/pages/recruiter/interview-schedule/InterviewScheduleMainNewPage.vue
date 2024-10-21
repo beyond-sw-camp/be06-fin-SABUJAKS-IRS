@@ -23,7 +23,6 @@ onMounted(async () => {
 
 const loadAnnouncementList = async (btnNum) => {
   announcements.value = await interviewScheduleStore.readAllAnnouncement(careerBase.value, btnNum);
-  console.log(announcements.value);
 }
 
 </script>
