@@ -25,7 +25,7 @@
                   <div class="margin-v-auto">
                     {{ alarm.type }}
                   </div>
-                  <div class="ml-auto">
+                  <div class="ml-auto" v-if="alarm.type === '인터뷰 일정 안내'">
                     <button class="schedule-btn" @click.stop="openScheduleModal(alarm)">면접 일정 조율</button>
                   </div>
                 </div>
