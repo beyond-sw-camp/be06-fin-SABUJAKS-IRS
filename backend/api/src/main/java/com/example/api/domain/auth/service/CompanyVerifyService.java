@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class CompanyVerifyService {
@@ -43,18 +44,26 @@ public class CompanyVerifyService {
         CrnApiRes crnApiRes = crnApiFeignClient.getCrnInfo(crnKey, crnApiReq);
         System.out.println(crnApiRes.getData().get(0).getValid());
         if (Objects.equals(crnApiRes.getData().get(0).getValid(), "02") || Objects.equals(crnApiRes.getData().get(0).getValid(), "01")){
-            CompanyVerify companyVerify = CompanyVerify.builder()
-                    .crn(dto.getCrn())
-                    .openedAt(dto.getOpened_at())
-                    .ceoName(dto.getCeo_name())
-                    .recruiterEmail(dto.getRecruiter_email())
-                    .companySecretCode(dto.getCompany_secret_code()) // 이부분은 admin이 관리해야함
-                    .build();
-            companyVerifyRepository.save(companyVerify);
-            return CompanyVerifyRes.builder()
-                    .recruiter_email(companyVerify.getRecruiterEmail())
-                    .auth_success(true)
-                    .build();
+            Optional<CompanyVerify> resultCompanyVerify = companyVerifyRepository.findByRecruiterEmail(dto.getRecruiter_email());
+            if(resultCompanyVerify.isPresent()){
+                return CompanyVerifyRes.builder()
+                        .recruiter_email(resultCompanyVerify.get().getRecruiterEmail())
+                        .auth_success(true)
+                        .build();
+            }else{
+                CompanyVerify companyVerify = CompanyVerify.builder()
+                        .crn(dto.getCrn())
+                        .openedAt(dto.getOpened_at())
+                        .ceoName(dto.getCeo_name())
+                        .recruiterEmail(dto.getRecruiter_email())
+                        .companySecretCode(dto.getCompany_secret_code()) // 이부분은 admin이 관리해야함
+                        .build();
+                companyVerifyRepository.save(companyVerify);
+                return CompanyVerifyRes.builder()
+                        .recruiter_email(companyVerify.getRecruiterEmail())
+                        .auth_success(true)
+                        .build();
+            }
         } else {
             throw new BaseException(BaseResponseMessage.AUTH_COMPANY_VERIFY_FAIL);
         }

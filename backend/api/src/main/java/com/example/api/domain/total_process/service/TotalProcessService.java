@@ -94,9 +94,7 @@ public class TotalProcessService {
             totalProcess.setAnnouncement(announcement);
             totalProcess.setSeeker(seeker);
             totalProcessRepository.save(totalProcess);
-            return TotalProcessCreateRes.builder()
-                    .idx(totalProcess.getIdx())
-                    .build();
+            return TotalProcessCreateRes.builder().idx(totalProcess.getIdx()).build();
         }else {
             // 전체 지원 과정이 없을때, 대부분 지원서 단계에서 걸림 -> 지원서 결과가 없다면 1차, 2차, 최종 결과는 DB 임의 조작의 경우만 있음
             TotalProcess totalProcess = null;
@@ -119,7 +117,7 @@ public class TotalProcessService {
                         .finalResult(isPassFlag)
                         .announcement(announcement)
                         .seeker(seeker)
-                        .build();
+                           .build();
             } else if (dto.getInterviewNum() == 3) {
                 totalProcess = TotalProcess.builder()
                         .finalResult(isPassFlag)
@@ -130,9 +128,7 @@ public class TotalProcessService {
                 throw new BaseException(BaseResponseMessage.TOTAL_PROCESS_CREATE_FAIL);
             }
             totalProcessRepository.save(totalProcess);
-            return TotalProcessCreateRes.builder()
-                    .idx(totalProcess.getIdx())
-                    .build();
+            return TotalProcessCreateRes.builder().idx(totalProcess.getIdx()).build();
         }
     }
 
