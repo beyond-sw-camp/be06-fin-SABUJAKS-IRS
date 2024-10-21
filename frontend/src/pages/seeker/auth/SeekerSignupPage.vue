@@ -125,21 +125,21 @@ const handleSignup = async () => {
     }
 }
 
-const handleSocialLogin = async (provider) => {
-    try {
-        window.location.href = `/api/oauth2/authorization/${provider}`;
-        const response = await authStore.getUserInfo();
-        if (response.success) {
-            authStore.isLoggedIn = true;
-            router.push("/");
-            toast.success("로그인에 성공했습니다.")
-        } else {
-            toast.error("로그인에 실패했습니다.");
-        }
-    } catch (error) {
-        toast.error("소셜 로그인 처리 중 문제가 발생했습니다.");
-    }
-};
+// const handleSocialLogin = async (provider) => {
+//     try {
+//         window.location.href = `/api/oauth2/authorization/${provider}`;
+//         const response = await authStore.getUserInfo();
+//         if (response.success) {
+//             authStore.isLoggedIn = true;
+//             router.push("/");
+//             toast.success("로그인에 성공했습니다.")
+//         } else {
+//             toast.error("로그인에 실패했습니다.");
+//         }
+//     } catch (error) {
+//         toast.error("소셜 로그인 처리 중 문제가 발생했습니다.");
+//     }
+// };
 </script>
 
 <style scoped>
