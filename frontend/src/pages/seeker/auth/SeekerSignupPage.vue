@@ -9,14 +9,14 @@
                     <a href="/recruiter/signup">채용담당자 가입</a></div>
                 </div>
             <form class="signup-form" @submit.prevent="handleSignup">
-                <div class="social-section">
+                <!-- <div class="social-section">
                     <h3 class="t1">소셜로 간편하게 로그인하세요</h3>
                     <div class="social-list">
                         <a class="social-kakao-logo" @click.prevent="handleSocialLogin('kakao')"></a>
-                        <!-- <a class="social-naver-logo" @click.prevent="handleSocialLogin('naver')"></a> -->
+                        <a class="social-naver-logo" @click.prevent="handleSocialLogin('naver')"></a>
                         <a class="social-google-logo" @click.prevent="handleSocialLogin('google')"></a>
                     </div>
-                </div>
+                </div> -->
                 <div class="input-section">
                     <h3 class="t1">지원자 정보</h3>
                     <input v-model="email" type="email" maxlength="30" placeholder="이메일">
