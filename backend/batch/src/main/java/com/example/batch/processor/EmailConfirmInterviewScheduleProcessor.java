@@ -40,8 +40,18 @@ public class EmailConfirmInterviewScheduleProcessor implements ItemProcessor<Int
     public List<Alarm> process(InterviewSchedule interviewSchedule) throws Exception {
         Optional<List<InterviewParticipate>> interviewParticipateList = interviewParticipateRepository.findAllByInterviewScheduleIdx(interviewSchedule.getIdx());
         List<Alarm> alarmList = new ArrayList<>();
+
+        Set<String> processedEmails = new HashSet<>();
+
         if(interviewParticipateList.isPresent()) {
             for(InterviewParticipate participate : interviewParticipateList.get()) {
+                String email = participate.getSeeker().getEmail();
+                if (processedEmails.contains(email)) {
+                    continue;
+                }
+
+                processedEmails.add(email);
+
                 Optional<Alarm> optionalAlarm = alarmRepository.findByInterviewScheduleIdx(participate.getInterviewSchedule().getIdx());
 
                 if (optionalAlarm.isPresent()) {
@@ -49,7 +59,7 @@ public class EmailConfirmInterviewScheduleProcessor implements ItemProcessor<Int
                 } else {
                     MimeMessage message = mailSender.createMimeMessage();
                     MimeMessageHelper helper = new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
-                    helper.setTo(participate.getSeeker().getEmail());
+                    helper.setTo(email);
                     helper.setSubject("[IRS] 인터뷰 일정 상세 안내");
 
                     // 템플릿 내부에서 처리한 변수값 매핑
