@@ -128,7 +128,7 @@ public class EmailSenderSeeker {
                 model.put("interviewEnd", dto.getInterviewScheduleRes().getInterviewEnd());
                 model.put("companyName", dto.getInterviewScheduleRes().getCompanyName());
                 model.put("announcementTitle", dto.getInterviewScheduleRes().getAnnouncementTitle());
-                model.put("videoInterviewUrl", "http://localhost:3000/api/api/video-interview/" + dto.getAnnouncementUuid());
+                model.put("videoInterviewUrl", "https://www.sabujaks-irs.kro.kr/api/api/video-interview/" + dto.getAnnouncementUuid());
 
                 if (dto.getInterviewScheduleRes().getIsOnline()) {
                     model.put("isOnline", "온라인");
@@ -141,7 +141,7 @@ public class EmailSenderSeeker {
                 if (dto.getInterviewScheduleRes().getCareerBase().equals("경력")) {
                     template = freemarkerConfigurer.getConfiguration().getTemplate("InterviewConfirmOnlineEmail.html");
                 } else {
-                    template = freemarkerConfigurer.getConfiguration().getTemplate("InterviewNewEmail.html");
+                    template = freemarkerConfigurer.getConfiguration().getTemplate("InterviewConfirmOnlineEmail.html");
                 }
 
                 String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
