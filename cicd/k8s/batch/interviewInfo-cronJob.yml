@@ -60,3 +60,4 @@ spec:
                       name: batch-cm
                       key: OPENVIDU_SECRET
           restartPolicy: OnFailure
+      ttlSecondsAfterFinished: 60
