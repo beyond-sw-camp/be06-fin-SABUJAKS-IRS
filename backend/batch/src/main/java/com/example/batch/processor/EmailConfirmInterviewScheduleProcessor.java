@@ -84,9 +84,9 @@ public class EmailConfirmInterviewScheduleProcessor implements ItemProcessor<Int
                     // 디렉토리 지정한 configure파일에서 객체 얻어와서 해당 객체로 템플릿 찾아서 얻어온다.
                     Template template = null;
                     if(participate.getInterviewSchedule().getCareerBase().equals("경력")) {
-                        template = freeMarkerConfigurer.getConfiguration().getTemplate("InterviewExpEmail.html");
+                        template = freeMarkerConfigurer.getConfiguration().getTemplate("InterviewConfirmOnlineEmail.html");
                     } else {
-                        template = freeMarkerConfigurer.getConfiguration().getTemplate("InterviewNewEmail.html");
+                        template = freeMarkerConfigurer.getConfiguration().getTemplate("InterviewConfirmOnlineEmail.html");
                     }
 
                     String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
