@@ -17,10 +17,46 @@
 
 
 ## 👨‍💻 팀원
-<h4>🐹구은주 <a href="https://github.com/eunjooNine"> @eunjooNine</a></h4>
-<h4>🐱박종성 <a href="https://github.com/mpqm"> @mpqm</a></h4>
-<h4>🐸서시현 <a href="https://github.com/SihyunSeo"> @SihyunSeo</a></h4>
-<h4>🐻서재은 <a href="https://github.com/seo-jae-eun"> @seo-jae-eun</a></h4>
+<div align=center>
+<table>
+  <tr>
+    <td>
+      <a href="https://github.com/eunjooNine">
+        <img src="https://avatars.githubusercontent.com/u/167549513?v=4" width="100" style="max-width: 100%;">
+      </a>
+    </td>
+    <td>
+      <a href="https://github.com/mpqm">
+        <img src="https://avatars.githubusercontent.com/u/79093184?v=4" width="100" style="max-width: 100%;">
+      </a>
+    </td>
+    <td>
+      <a href="https://github.com/SihyunSeo">
+        <img src="https://avatars.githubusercontent.com/u/63051137?v=4" width="100" style="max-width: 100%;">
+      </a>
+    </td>
+    <td>
+      <a href="https://github.com/seo-jae-eun">
+        <img src="https://avatars.githubusercontent.com/u/82444759?v=4" width="100" style="max-width: 100%;">
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/eunjooNine">구은주</a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/mpqm">박종성</a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/SihyunSeo">서시현</a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/seo-jae-eun">서재은</a>
+    </td>
+  </tr>
+</table>
+</div>
 <br><br><br><br>
 
 
