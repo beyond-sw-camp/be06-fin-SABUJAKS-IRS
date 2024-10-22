@@ -82,7 +82,7 @@
 <br><br><br><br>
 
 
-## 📖 기술 스택 📖
+## 📖 기술 스택
 
 #### Frontend
 ![HTML](https://img.shields.io/badge/HTML-E34F26?style=flat&logo=html5&logoColor=white)
@@ -140,9 +140,9 @@
 
 
 ## 💻 개발 폴더 바로가기
-#### ➡ [FRONTEND](https://github.com/beyond-sw-camp/be06-fin-SABUJAKS-IRS/tree/main/frontend)
-#### ➡ [BACKEND](https://github.com/beyond-sw-camp/be06-fin-SABUJAKS-IRS/tree/main/backend)
-#### ➡ [CI/CD](https://github.com/beyond-sw-camp/be06-fin-SABUJAKS-IRS/tree/main/backend)
+#### ➡ [FRONTEND](https://github.com/beyond-sw-camp/be06-fin-SABUJAKS-IRS/tree/dev-batch/frontend)
+#### ➡ [BACKEND](https://github.com/beyond-sw-camp/be06-fin-SABUJAKS-IRS/tree/dev-batch/backend)
+#### ➡ [CI/CD](https://github.com/beyond-sw-camp/be06-fin-SABUJAKS-IRS/tree/dev-batch/backend)
 <br><br><br><br>
 
 
