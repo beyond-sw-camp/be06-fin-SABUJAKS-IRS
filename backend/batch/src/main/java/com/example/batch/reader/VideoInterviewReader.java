@@ -21,13 +21,15 @@ public class VideoInterviewReader {
 
     @Bean
     public JpaPagingItemReader<InterviewSchedule> reader() {
-        String tomorrow = LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String tomorrow = LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
 
         return new JpaPagingItemReaderBuilder<InterviewSchedule>()
                 .name("interviewScheduleReader")
                 .entityManagerFactory(entityManagerFactory)
                 .queryString("SELECT is FROM InterviewSchedule is WHERE is.interviewDate = :tomorrow")
-                .parameterValues(Map.of("tomorrow", tomorrow))
+//                .parameterValues(Map.of("tomorrow", tomorrow))
+                .parameterValues(Map.of("tomorrow", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))))
                 .pageSize(10)
                 .build();
     }

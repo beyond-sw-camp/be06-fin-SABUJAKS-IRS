@@ -47,7 +47,7 @@ public class EmailInterviewScheduleInfoProcessor implements ItemProcessor<Interv
 
                 processedEmails.add(email);
 
-                Optional<Alarm> optionalAlarm = alarmRepository.findByInterviewScheduleIdx(participate.getInterviewSchedule().getIdx());
+                Optional<List<Alarm>> optionalAlarm = alarmRepository.findAllByInterviewScheduleIdx(participate.getInterviewSchedule().getIdx());
 
                 if (optionalAlarm.isPresent()) {
                     continue;  // 이미 알람이 존재하면 건너뜀

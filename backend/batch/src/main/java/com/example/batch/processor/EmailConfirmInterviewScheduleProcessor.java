@@ -52,7 +52,7 @@ public class EmailConfirmInterviewScheduleProcessor implements ItemProcessor<Int
 
                 processedEmails.add(email);
 
-                Optional<Alarm> optionalAlarm = alarmRepository.findByInterviewScheduleIdx(participate.getInterviewSchedule().getIdx());
+                Optional<List<Alarm>> optionalAlarm = alarmRepository.findAllByInterviewScheduleIdx(participate.getInterviewSchedule().getIdx());
 
                 if (optionalAlarm.isPresent()) {
                     continue;
@@ -93,6 +93,7 @@ public class EmailConfirmInterviewScheduleProcessor implements ItemProcessor<Int
                     helper.setText(html, true); // Set HTML content
 
                     mailSender.send(message);
+                    System.out.println("전송됌!");
 
                     alarmList.add(Alarm.builder()
                             .type("인터뷰 일정 상세 안내")

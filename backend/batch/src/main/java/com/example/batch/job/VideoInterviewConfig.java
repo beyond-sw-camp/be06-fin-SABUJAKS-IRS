@@ -61,7 +61,7 @@ public class VideoInterviewConfig {
     public Step emailSendStep() {
         return new StepBuilder("emailSendStep", jobRepository)
                 .<InterviewSchedule, List<Alarm>>chunk(10, transactionManager)
-                .reader(videoInterviewReader.reader()) // 이 부분은 아래에서 설명할게요.
+                .reader(videoInterviewReader.reader())
                 .processor(emailConfirmInterviewScheduleProcessor)
                 .writer(emailWriter)
                 .transactionManager(transactionManager)
