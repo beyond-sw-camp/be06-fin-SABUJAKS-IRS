@@ -1,9 +1,27 @@
-<h1 align="center">통합 채용 시스템 🌰🐿 IRS (Integration Recruite System) </h1>
+<h1 align="center">통합 채용 시스템 🌰🐿 <br>
+	IRS (Integration Recruite System) </h1>
 <div align="center">
-  <img src="">사진추가필요
+  <img src="https://github.com/user-attachments/assets/b9fce377-f4b6-4172-a824-d1ac66363bca">
+</div>
+<br>
+
+<div align=center>
+	<h3>
+	    🍂 IRS 사이트
+	    <a href="https://www.sabujaks-irs.kro.kr/">https://www.sabujaks-irs.kro.kr</a>
+	</h3>
 </div>
 <br><br><br><br>
 
+
+
+
+## 👨‍💻 팀원
+<h4>🐹구은주 <a href="https://github.com/eunjooNine"> @eunjooNine</a></h4>
+<h4>🐱박종성 <a href="https://github.com/mpqm"> @mpqm</a></h4>
+<h4>🐸서시현 <a href="https://github.com/SihyunSeo"> @SihyunSeo</a></h4>
+<h4>🐻서재은 <a href="https://github.com/seo-jae-eun"> @seo-jae-eun</a></h4>
+<br><br><br><br>
 
 
 
@@ -13,31 +31,17 @@
 - 기업 별로 각기 다른 채용 절차와 복잡한 지원 방식으로 인해 구직자들은 적합한 공고를 찾고 지원하는 데에 많은 시간과 노력을 투자해야 한다.
 - 각 기업의 인사담당자들도 여러 채용 구인구직 사이트에 구인을 등록한 후의 과정은, 각 회사에서 관리를 해야하는 번거로움이 있다.
 #### 프로젝트 목표
-- 지원부터 채용 일정 조율, 화상면접까지 하나의 시스템을 통해 진행
-- 공고 등록부터 서류, 면접 결과 발표까지 하나의 시스템을 통해 관리
+- 구직자는 지원부터 채용 일정 조율, 화상 면접까지 하나의 서비스를 통해 진행할 수 있다.
+- 인사 담당자는 공고 등록부터 서류/면접 결과 발표까지 하나의 서비스를 통해 관리할 수 있다.
+<br><br>
 
+#### 화면 설계서
+➡ [바로가기](https://www.figma.com/design/7hhJk8GBwXHjP18kA4C3jb/sabujaks-project?node-id=0-1&node-type=canvas&t=dWLv1NizvLMFMug6-0)
+#### API 명세서
+➡ [바로가기](https://instinctive-dry-e2c.notion.site/SABUJAKS-API-30a8ddd3514a40839da7cd858b11c261?pvs=4)
+#### ERD
+![IRS ERD](https://github.com/user-attachments/assets/45d21f65-49e1-40c7-a25e-a4bdb5973cae)
 
-#### ➡ [화면설계]() ->링크추가필요
-#### ➡ [API명세서]() ->링크추가필요
-#### ➡ [ERD]() ->링크추가필요
-<br><br><br><br>
-
-
-<div align=center>
-	<h3>
-    🍂 IRS 사이트
-    <a href="https://www.sabujaks-irs.kro.kr/">https://www.sabujaks-irs.kro.kr</a>
-	</h3>
-</div>
-<br><br><br><br>
-
-
-
-## 👨‍💻 팀원
-<h4>🐹구은주 <a href="https://github.com/eunjooNine"> @eunjooNine</a></h4>
-<h4>🐱박종성 <a href="https://github.com/mpqm"> @mpqm</a></h4>
-<h4>🐸서시현 <a href="https://github.com/SihyunSeo"> @SihyunSeo</a></h4>
-<h4>🐻서재은 <a href="https://github.com/seo-jae-eun"> @seo-jae-eun</a></h4>
 <br><br><br><br>
 
 
@@ -86,9 +90,9 @@
 
 
 ## 💻 개발 폴더 바로가기
-#### ➡ [FRONTEND](https://github.com/beyond-sw-camp/be06-fin-SABUJAKS-IRS)
-#### ➡ [BACKEND](https://github.com/beyond-sw-camp/be06-fin-SABUJAKS-IRS)
-#### ➡ [CI/CD](https://github.com/beyond-sw-camp/be06-fin-SABUJAKS-IRS)
+#### ➡ [FRONTEND](https://github.com/beyond-sw-camp/be06-fin-SABUJAKS-IRS/tree/main/frontend)
+#### ➡ [BACKEND](https://github.com/beyond-sw-camp/be06-fin-SABUJAKS-IRS/tree/main/backend)
+#### ➡ [CI/CD](https://github.com/beyond-sw-camp/be06-fin-SABUJAKS-IRS/tree/main/backend)
 <br><br><br><br>
 
 
