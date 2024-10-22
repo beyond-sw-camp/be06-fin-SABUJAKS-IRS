@@ -18,7 +18,6 @@ public class EmailWriter implements ItemWriter<List<Alarm>> {
 
     @Override
     public void write(Chunk<? extends List<Alarm>> chunk) throws Exception {
-        // Chunk에서 받은 List<Alarm>을 하나의 리스트로 병합
         List<Alarm> alarmsToSave = new ArrayList<>();
         for (List<Alarm> alarmList : chunk) {
             alarmsToSave.addAll(alarmList);

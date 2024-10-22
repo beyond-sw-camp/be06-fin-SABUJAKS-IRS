@@ -28,8 +28,8 @@ public class VideoInterviewReader {
                 .name("interviewScheduleReader")
                 .entityManagerFactory(entityManagerFactory)
                 .queryString("SELECT is FROM InterviewSchedule is WHERE is.interviewDate = :tomorrow")
-//                .parameterValues(Map.of("tomorrow", tomorrow))
-                .parameterValues(Map.of("tomorrow", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))))
+                .parameterValues(Map.of("tomorrow", tomorrow))
+//                .parameterValues(Map.of("tomorrow", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))))
                 .pageSize(10)
                 .build();
     }

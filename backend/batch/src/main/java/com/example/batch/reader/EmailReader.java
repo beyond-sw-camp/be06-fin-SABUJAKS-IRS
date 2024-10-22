@@ -24,9 +24,9 @@ public class EmailReader {
         return LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
-//    private String getDateAfter7DaysString() {
-//        return LocalDate.now().plusDays(7).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-//    }
+    private String getDateAfter7DaysString() {
+        return LocalDate.now().plusDays(7).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    }
 
     private String DeadlineDateString() {
         return LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -55,8 +55,8 @@ public class EmailReader {
                 .name("interviewScheduleReader")
                 .entityManagerFactory(entityManagerFactory)
                 .queryString("SELECT is FROM InterviewSchedule is WHERE is.interviewDate = :currentDate")
-//                .parameterValues(Map.of("currentDate", getDateAfter7DaysString()))
-                .parameterValues(Map.of("currentDate", localTestDaysString()))
+                .parameterValues(Map.of("currentDate", getDateAfter7DaysString()))
+//                .parameterValues(Map.of("currentDate", localTestDaysString()))
                 .pageSize(10)
                 .build();
     }
