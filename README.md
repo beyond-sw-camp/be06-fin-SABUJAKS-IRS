@@ -1,7 +1,7 @@
 <h1 align="center">통합 채용 시스템 🌰🐿 <br>
 	IRS (Integration Recruite System) </h1>
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/b9fce377-f4b6-4172-a824-d1ac66363bca">
+  <img src="https://github.com/user-attachments/assets/a2d10980-8f3c-4d47-b015-37429120b350" style="width: 50%">
 </div>
 <br>
 
