@@ -32,6 +32,7 @@ public class EmailReader {
         return LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
+    // 지원서 결과 전송
     @Bean
     @StepScope
     public JpaPagingItemReader<Announcement> resumeDeadlineReader() {
@@ -45,6 +46,7 @@ public class EmailReader {
                 .build();
     }
 
+    // 인터뷰 일정 및 화상면접방 생성
     @Bean
     @StepScope
     public JpaPagingItemReader<InterviewSchedule> interviewScheduleReader() {
@@ -59,6 +61,7 @@ public class EmailReader {
                 .build();
     }
 
+    // 최종 결과 이메일
     @Bean
     @StepScope
     public JpaPagingItemReader<Announcement> finalResultReader() {

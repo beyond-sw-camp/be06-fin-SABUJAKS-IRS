@@ -43,6 +43,9 @@ public class EmailFinalResultProcessor implements ItemProcessor<Announcement, Li
                 if (optionalAlarm.isPresent()) {
                     continue;
                 } else {
+                    if(totalProcess.getSeeker() == null) {
+                        continue;
+                    }
                     MimeMessage message = mailSender.createMimeMessage();
                     MimeMessageHelper helper = new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
                     helper.setTo(totalProcess.getSeeker().getEmail());
@@ -61,11 +64,16 @@ public class EmailFinalResultProcessor implements ItemProcessor<Announcement, Li
                     // 메일로 전송할 템플릿 렌더링
                     // 디렉토리 지정한 configure파일에서 객체 얻어와서 해당 객체로 템플릿 찾아서 얻어온다.
                     Template template = null;
-                    if(totalProcess.getFinalResult()) {
-                        template = freeMarkerConfigurer.getConfiguration().getTemplate("FinalResultAcceptEmail.html");
+                    if(totalProcess.getFinalResult() == null) {
+                        continue;
                     } else {
-                        template = freeMarkerConfigurer.getConfiguration().getTemplate("FinalResultRejectEmail.html");
+                        if(totalProcess.getFinalResult()) {
+                            template = freeMarkerConfigurer.getConfiguration().getTemplate("FinalResultAcceptEmail.html");
+                        } else {
+                            template = freeMarkerConfigurer.getConfiguration().getTemplate("FinalResultRejectEmail.html");
+                        }
                     }
+
 
                     String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
                     helper.setText(html, true); // Set HTML content
