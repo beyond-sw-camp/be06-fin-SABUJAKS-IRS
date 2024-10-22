@@ -1,4 +1,4 @@
-<h1 align="center">통합 채용 시스템 🌰🐿 <br>
+<h1 align="center">통합 채용 시스템 <br>
 	IRS (Integration Recruite System) </h1>
 <div align="center">
   <img src="https://github.com/user-attachments/assets/a2d10980-8f3c-4d47-b015-37429120b350" style="width: 50%">
@@ -7,7 +7,7 @@
 
 <div align=center>
 	<h3>
-	    🍂 IRS 사이트
+	    🌐 IRS 사이트
 	    <a href="https://www.sabujaks-irs.kro.kr/">https://www.sabujaks-irs.kro.kr</a>
 	</h3>
 </div>
