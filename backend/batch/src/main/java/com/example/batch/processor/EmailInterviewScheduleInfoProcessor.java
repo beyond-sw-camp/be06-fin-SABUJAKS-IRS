@@ -44,12 +44,11 @@ public class EmailInterviewScheduleInfoProcessor implements ItemProcessor<Interv
                 if (processedEmails.contains(email)) {
                     continue;
                 }
-
                 processedEmails.add(email);
 
-                Optional<List<Alarm>> optionalAlarm = alarmRepository.findAllByInterviewScheduleIdx(participate.getInterviewSchedule().getIdx());
+                Optional<List<Alarm>> optionalAlarm = alarmRepository.findAllByInterviewScheduleIdxAndType(participate.getInterviewSchedule().getIdx(), "인터뷰 일정 안내");
 
-                if (optionalAlarm.isPresent()) {
+                if (optionalAlarm.isPresent() && !optionalAlarm.get().isEmpty()) {
                     continue;  // 이미 알람이 존재하면 건너뜀
                 } else {
                     MimeMessage message = mailSender.createMimeMessage();

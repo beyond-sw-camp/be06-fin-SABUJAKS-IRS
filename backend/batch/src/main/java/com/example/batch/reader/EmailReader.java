@@ -46,7 +46,7 @@ public class EmailReader {
                 .build();
     }
 
-    // 인터뷰 일정 및 화상면접방 생성
+    // 인터뷰 일정
     @Bean
     @StepScope
     public JpaPagingItemReader<InterviewSchedule> interviewScheduleReader() {

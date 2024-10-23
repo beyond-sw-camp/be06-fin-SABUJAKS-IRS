@@ -19,10 +19,10 @@ public class VideoInterviewReader {
 
     private final EntityManagerFactory entityManagerFactory;
 
+    private final String tomorrow = LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
     @Bean
     public JpaPagingItemReader<InterviewSchedule> reader() {
-        String tomorrow = LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-
 
         return new JpaPagingItemReaderBuilder<InterviewSchedule>()
                 .name("interviewScheduleReader")
