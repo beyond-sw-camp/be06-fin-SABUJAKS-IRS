@@ -2,6 +2,7 @@ package com.example.common.domain.alarm.repository;
 
 import com.example.common.domain.alarm.model.entity.Alarm;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,6 +17,9 @@ public interface AlarmRepository extends JpaRepository<Alarm, Long> {
     Optional<Alarm> findByResumeIdx(Long resumeIdx);
 
     Optional<List<Alarm>> findAllByInterviewScheduleIdx(Long interviewScheduleIdx);
+
+    @Query("SELECT a FROM Alarm a WHERE a.interviewSchedule.idx = :interviewScheduleIdx AND a.type = :type")
+    Optional<List<Alarm>> findAllByInterviewScheduleIdxAndType(Long interviewScheduleIdx, String type);
 
     Optional<Alarm> findByTotalProcessIdx(Long totalProcessIdx);
 }
