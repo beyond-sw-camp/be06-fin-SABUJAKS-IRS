@@ -112,7 +112,7 @@
 ![Vue.js](https://img.shields.io/badge/Vue.js-%2335495e.svg?style=flat&logo=vuedotjs&logoColor=%234FC08D)
 ![Pinia](https://img.shields.io/badge/Pinia-FF6F20?style=flat&logo=vue.js&logoColor=white)
 ![Nginx](https://img.shields.io/badge/Nginx-009639?style=flat&logo=nginx&logoColor=white)
-![OpenVidu](https://img.shields.io/badge/OpenVidu-FF3D00?style=flat&logo=openvidu&logoColor=white)
+![OpenVidu](https://img.shields.io/badge/OpenVidu-FF3D00?style=flat&logo=webrtc&logoColor=white)
 
 #### Backend
 ![SpringBoot](https://img.shields.io/badge/SpringBoot-6DB33F?style=flat&logo=SpringBoot&logoColor=white)
