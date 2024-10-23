@@ -54,7 +54,7 @@ public class EmailConfirmInterviewScheduleProcessor implements ItemProcessor<Int
 
                 Optional<List<Alarm>> optionalAlarm = alarmRepository.findAllByInterviewScheduleIdx(participate.getInterviewSchedule().getIdx());
 
-                if (optionalAlarm.isPresent()) {
+                if (optionalAlarm.isPresent() && !optionalAlarm.get().isEmpty()) {
                     continue;
                 } else {
                     MimeMessage message = mailSender.createMimeMessage();
