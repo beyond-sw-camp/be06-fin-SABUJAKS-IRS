@@ -98,10 +98,12 @@
 <br>
 
 ## 🖥️ 모니터링 시스템
+<p align="center">
+<img width="80%" src="img/prometheus-grafana.png"></p>
 
 - Prometheus와 Grafana를 이용한 모니터링 시스템 구축
-- Prometheus는 k8s 클러스터 내부에서 동작하며, istio-proxy 통해 metric 데이터를 수집
-- Grafana는 Prometheus의 NodePort 주소로 연동하여 metric 데이터를 시각화
+- Prometheus는 k8s 클러스터 내부에서 동작하며, Istio-Proxy 통해 metric 데이터를 수집
+- Grafana는 Prometheus를 연동하여 metric 데이터를 시각화
 - Grafana 대시보드를 통해 클러스터의 상태를 실시간으로 확인 가능
 
 
