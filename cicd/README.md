@@ -87,6 +87,7 @@
 ## 🖥️ IRS 운영 환경
 <p align="center">
 <img width="80%" src="img/prometheus-grafana.png"></p>
+
 - Linux 기반의 리눅스 가상 머신 5대로 구성된 k8s 클러스터를 구축
 - Master Node :1대
 - Worker Node :3대
