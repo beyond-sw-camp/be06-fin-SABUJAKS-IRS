@@ -18,7 +18,7 @@
 ![Tomcat](https://img.shields.io/badge/Tomcat-F8DC75?style=flat&logo=apachetomcat&logoColor=black)
 ![AmazonS3](https://img.shields.io/badge/AmazonS3-569A31?style=flat&logo=amazons3&logoColor=white)
 ![JWT](https://img.shields.io/badge/JWT-black?style=flat&logo=jsonwebtokens&logoColor=white)
-
+![OpenVidu](https://img.shields.io/badge/OpenVidu-FF3D00?style=flat&logo=openvidu&logoColor=white)
 </div>
 <br><br><br>
 
@@ -67,8 +67,31 @@
 4. 악의적인 재발급 방지 및 침투를 인지하여 탈취 시 대응 가능<br>
 
 <br><br><br><br>
+### 접근제어
+### Spring Security + Time Check Method
+> 지원자는 공고에 지원하고 채용담당자는 면접 일정을 잡습니다. 이때, 공고의 UUID와 면접일정 UUID가 생성됩니다.<br>
+> 아래와 같이 화상 면접 대기방, 화상 면접 방에 링크로 접속할 수 있었습니다.<br>
+> 화상 면접 대기방: ~/video-interview/{공고UUID} | 화상 면접 방: ~/video-interview/{공고UUID}/{면접일정UUID}<br>
+> 공고에 지원하지 않은 사용자가 공고 UUID와 화상 면접방 UUID를 탈취해 Url을 통해 접근 가능한 문제를 해결하기 위해 도입했습니다.<br>
+<br>
+#### 도입 전
+<details>
+<summary><b>화상 면접 접근 시나리오</b></summary>
+- 화상 면접 대기방에 접근: 공고의 UUID만 있으면 공고에 지원하지 않은 지원자도 ~/video-interview/{공고UUID}를 입력해 들어올 수 있음<br>
+- 화상 면접 방에 접근: 공고 UUID와 면접 일정 UUID만 있으면 면접이 잡히지 않은 지원자도 면접방에 ~/video-interview/{공고UUID}/{면접일정UUID}를 입력해 접근 가능<br>
+</details>
+👍 문제점<br>
+- 공고 지원자나 면접 일정에 속하지 않은 제3자가 접근 가능<br>
+- 면접관인척 지원자들의 지원서를 열람하거나 평가 가능<br>
+- 지원자가 아닌데도 면접방에 접속할 수 있는 문제 존재<br>
+<br>
+#### 도입 후
+➡
 
 
+➡
+
+<br>
 
 ## 검색
 ### QueryDSL + 페이징 처리
