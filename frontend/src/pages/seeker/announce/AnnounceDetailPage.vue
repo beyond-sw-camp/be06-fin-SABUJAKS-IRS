@@ -41,7 +41,7 @@
                                 <!-- companyStore.imgUrlList에 이미지가 있을 때만 img 태그를 렌더링 -->
                                 <img v-if="companyStore.imgUrlList && companyStore.imgUrlList.length > 0"
                                     :src="companyStore.imgUrlList[0]" alt="기업 로고" class="center-cropped-image"
-                                    style="width: 90px; height: 90px; object-fit: cover; border-radius: 5px;">
+                                    style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px;">
                             </a>
                         </div>
                         <div class="ad-list">
