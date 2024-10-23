@@ -18,7 +18,7 @@
 ![Tomcat](https://img.shields.io/badge/Tomcat-F8DC75?style=flat&logo=apachetomcat&logoColor=black)
 ![AmazonS3](https://img.shields.io/badge/AmazonS3-569A31?style=flat&logo=amazons3&logoColor=white)
 ![JWT](https://img.shields.io/badge/JWT-black?style=flat&logo=jsonwebtokens&logoColor=white)
-![OpenVidu](https://img.shields.io/badge/WebRTC-FF3D00?style=flat&logo=webrtc&logoColor=white)
+![OpenVidu](https://img.shields.io/badge/openVidu-FF3D00?style=flat&logo=webrtc&logoColor=white)
 </div>
 <br><br><br>
 
