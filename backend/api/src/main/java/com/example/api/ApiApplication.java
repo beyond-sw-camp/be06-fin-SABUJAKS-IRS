@@ -8,6 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableJpaAuditing
@@ -26,6 +27,8 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
         "com.example.common",
         "com.example.api"
 })
+
+@EnableScheduling
 @EnableRedisRepositories(basePackages = "com.example.common.domain.auth.repository")
 public class ApiApplication {
 

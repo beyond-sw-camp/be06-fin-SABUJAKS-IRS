@@ -32,4 +32,7 @@ public interface AnnouncementRepository extends JpaRepository<Announcement, Long
 
     @Query("SELECT a FROM Announcement a WHERE a.recruiter.idx = :recruiterIdx AND a.careerBase = :careerBase")
     Page<Announcement> findAllByRecruiterIdxAndCareerBase(Long recruiterIdx, String careerBase, Pageable pageable);
+
+    @Query("SELECT a FROM Announcement a WHERE a.deadlineDocument = :deadlineDocument")
+    List<Announcement> findAllByDeadlineDocument(String deadlineDocument);
 }

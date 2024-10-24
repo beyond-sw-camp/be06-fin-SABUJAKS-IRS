@@ -9,6 +9,9 @@ import com.example.api.global.common.responses.BaseResponse;
 import com.example.api.global.common.responses.BaseResponseMessage;
 import com.example.api.global.security.CustomUserDetails;
 import com.example.api.global.utils.CloudFileUpload;
+import com.example.api.global.utils.email.response.ResumeResultRes;
+import com.example.api.global.utils.email.service.EmailSenderSeeker;
+import com.example.api.global.utils.email.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +27,8 @@ import java.util.List;
 public class ResumeController {
     private final ResumeService resumeService;
     private final CloudFileUpload cloudFileUpload;
+    private final EmailSenderSeeker emailSenderSeeker;
+    private final EmailService emailService;
 
     // (지원자) 마이페이지 -> 지원서 등록
     @PostMapping("/create")
@@ -141,5 +146,16 @@ public class ResumeController {
                 customUserDetails, announcementIdx, page, size
         );
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.RESUME_READ_SUCCESS_RESUMED, response));
+    }
+
+    // (채용담당자) 공고에 지원한 지원자 서류 결과 일괄전송
+    @PostMapping("/recruiter/send-result")
+    public ResponseEntity<BaseResponse<?>> sendResult(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestBody List<ResumeReadAllRecruiterRes> resumeList) throws BaseException {
+
+        List<ResumeResultRes> resultInfo = emailService.getInfo(customUserDetails, resumeList);
+        emailSenderSeeker.sendResumeResultEmail(resultInfo);
+        return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.RESUME_READ_SUCCESS_RESUMED));
     }
 }
