@@ -148,7 +148,7 @@ public class ResumeController {
         return ResponseEntity.ok(new BaseResponse(BaseResponseMessage.RESUME_READ_SUCCESS_RESUMED, response));
     }
 
-    // (채용담당자) 공고에 지원한 지원자 서류 결과 일괄전송
+    // (채용담당자) 공고에 지원한 지원자 서류결과 일괄전송
     @PostMapping("/recruiter/send-result")
     public ResponseEntity<BaseResponse<?>> sendResult(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
