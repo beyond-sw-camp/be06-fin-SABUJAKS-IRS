@@ -40,7 +40,7 @@ public class ResultSendingScheduler {
     private final AlarmRepository alarmRepository;
 
     @Transactional
-    @Scheduled(cron = "0 */1 * * * ?")  // 2분마다 실행
+    @Scheduled(cron = "0 */5 * * * ?")
     public void sendResultPeriodically() {
         try {
             System.out.println("@@@@@@@@@@@@@@@@@@");
