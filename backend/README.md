@@ -211,23 +211,27 @@
     </ul>
 </details>
 
-
 <br>
 
 ## 화상 면접
+### OpenVidu
+> 화상 면접 기능을 구현하기 위해 SFU 방식인 WebRTC 라이브러리인 OpenVidu를 도입했습니다.
+<br>
 <details>
-	<summary><b>도입 전</b></summary>
+	<summary><b>WebRtc + OpenVidu</b></summary>
 	<br>
-	➡ 
+	➡ OpenVidu 구성 요소
 	<ul>
-		<li></li>
-
+		<li>OpenVidu Server: WebRTC를 제어하고 세션을 관리하는 서버</li>
+		<li>Kurento Media Server(KMS): 미디어 스트림을 처리하고 필요한 경우 변환(transcoding)을 수행</li>
+		<li>OpenVidu Browser Client: 사용자의 브라우저에서 OpenVidu API를 이용하여 비디오 및 오디오를 송수신</li>
 	</ul>
-	<br>
-	👎 문제점
+	➡ OpenVidu 통신 방식
 	<ul>
-		<li></li>
-		<li></li>
-		<li></li>
+		<img src="https://github.com/user-attachments/assets/a5d0ea1b-1b87-444c-af03-de357e5a4892">
+	</ul>
+	➡ OpenVidu 화면
+	<ul>
+		<img src="https://github.com/user-attachments/assets/81a29f11-c1e6-4f85-a8c7-6aaf1e07999c">
 	</ul>
 </details>
