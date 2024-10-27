@@ -119,6 +119,8 @@ Vue의 컴포넌트 시스템을 사용해 UI 요소를 모듈화하고 재사�
     <summary>
 <span style="font-size:100%"> 면접 일정 관리 ❓</span></summary>
 <p>1. 각 공고의 서류합격 지원자들을 대상으로, 면접관 정보와 날짜를 설정한 후 면접일정을 생성합니다.</p>
+
+ ![ 채용담당자-면접일정생성(신입)](https://github.com/user-attachments/assets/0db6dcd7-3930-48a9-a1e5-1ca4cfc470d3)
 <p>2. 신입은 일괄처리로 날짜를 지정하여 생성하고, 경력은 채용담당자와 지원자 간 일정을 조율 할 수 있습니다.</p>
 <p>3. 면접관 메일로 면접용 임시 비밀번호와 입장 주소를 전송합니다.</p>
 </details>
@@ -132,10 +134,16 @@ Vue의 컴포넌트 시스템을 사용해 UI 요소를 모듈화하고 재사�
 
 <details>
     <summary>
-<span style="font-size:100%"> 면접 평가 관리 ❓</span></summary>
+<span style="font-size:100%"> 면접 평가 관리</span></summary>
 <p>1. 화상 면접 시에 면접관이 평가할 면접 평가서를 생성합니다.</p>
+
+ ![채용담당자-화상면접평가표생성](https://github.com/user-attachments/assets/24e8b19a-6056-48ee-86d8-4f35e1e385ee)
 <p>2. 채용담당자는 각 면접방마다 진행되고 있는 채용 프로세스 결과를 확인 할 수 있습니다.</p>
+
+![채용담당자 - 화상면접평가조회 및 합불](https://github.com/user-attachments/assets/44b613d9-f889-4c71-8fd7-0cfa78259713)
 <p>3. 모든 채용 프로세스가 끝나면 최종 결과를 이메일과 사이트 알람으로 전송합니다.</p>
+
+![지원자 - 최종면접결과알림](https://github.com/user-attachments/assets/75f09baa-e56d-40e6-aaa0-5c3055625b52)
 </details>
 
 <br>
@@ -144,9 +152,14 @@ Vue의 컴포넌트 시스템을 사용해 UI 요소를 모듈화하고 재사�
 
 <details>
     <summary>
-<span style="font-size:100%"> 면접 참여 & 평가 ❓</span></summary>
+<span style="font-size:100%"> 면접 참여 & 평가</span></summary>
 <p>1. 이메일에 있는 IRS 사이트 주소로 입장 후 로그인을 하여 면접방에 참여 할 수 있습니다.</p>
+	
+![면접관-화상면접방참여](https://github.com/user-attachments/assets/e9174284-83f0-4259-ba3c-fd5fa53d8dfd)
 <p>2. 화상 면접을 하면서 각 지원자를 평가합니다.</p>
+
+![면접관-화상면접방 참여 및 평가](./docs/기능%20시연%20영상/면접방%20-%20화상면접방%20참여%20및%20평가.gif)
+![면접관-화상면접방 참여 및 평가](https://github.com/beyond-sw-camp/be06-fin-SABUJAKS-IRS/blob/572e88c7612e65d433bacefdc8f9eae45c9021b6/docs/%EA%B8%B0%EB%8A%A5%20%EC%8B%9C%EC%97%B0%20%EC%98%81%EC%83%81/%EB%A9%B4%EC%A0%91%EB%B0%A9%20-%20%ED%99%94%EC%83%81%EB%A9%B4%EC%A0%91%EB%B0%A9%20%EC%B0%B8%EC%97%AC%20%EB%B0%8F%20%ED%8F%89%EA%B0%80.gif)
 </details>
 
 <br>
@@ -200,8 +213,11 @@ Vue의 컴포넌트 시스템을 사용해 UI 요소를 모듈화하고 재사�
 
 <details>
     <summary>
-<span style="font-size:100%"> 화상 면접 참가 ❓</span></summary>
+<span style="font-size:100%"> 화상 면접 참가</span></summary>
 <p>1. 면접 날짜와 시간에 맞춰 면접방에 입장할 수 있습니다.</p>
+	
+![지원자-화상면접방 참여](./docs/기능%20시연%20영상/지원자-면접방입장.gif)
+![지원자-화상면접방 참여](https://github.com/beyond-sw-camp/be06-fin-SABUJAKS-IRS/blob/572e88c7612e65d433bacefdc8f9eae45c9021b6/docs/%EA%B8%B0%EB%8A%A5%20%EC%8B%9C%EC%97%B0%20%EC%98%81%EC%83%81/%EC%A7%80%EC%9B%90%EC%9E%90-%EB%A9%B4%EC%A0%91%EB%B0%A9%EC%9E%85%EC%9E%A5.gif)
 </details>
 
 <br><br><br>
