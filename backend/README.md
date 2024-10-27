@@ -172,16 +172,18 @@
     <ul>
         <li>배치 서버를 적용하면서 리소스 경쟁 최소화, 스케일링 용이성, 유지보수 및 확장성 향상을 고려하여 모듈화를 진행하였다.</li>
     </ul>
-    <table>
-        <tr>
-            <td>➡ 기존 패키지 구조</td>
-            <td>➡ 모듈화 패키지 구조</td>
-        </tr>
-        <tr>
-            <td><img width="250" alt="package" src="https://github.com/user-attachments/assets/008f7412-472e-4f49-bbb3-38c56dd37b54"></td>
-            <td><img width="200" alt="module-package" src="https://github.com/user-attachments/assets/8860e926-a8f3-4c2b-8a61-d090fa78c382"></td>
-        </tr>
-    </table>
+    <div align="center">
+        <table>
+	  <tr>
+	      <td>➡ 기존 패키지 구조</td>
+	      <td>➡ 모듈화 패키지 구조</td>
+	  </tr>
+	  <tr>
+	      <td><img width="250" alt="package" src="https://github.com/user-attachments/assets/008f7412-472e-4f49-bbb3-38c56dd37b54"></td>
+	      <td><img width="200" alt="module-package" src="https://github.com/user-attachments/assets/8860e926-a8f3-4c2b-8a61-d090fa78c382"></td>
+	  </tr>
+        </table>	
+    </div>
 </details>
 <br>
 <details>
