@@ -164,22 +164,53 @@
 <br>
 
 ## 알림
+### Spring Batch 도입
+> 기존 @Scheduled 어노테이션을 사용한 스케줄링 방식으로 서버의 부하가 발생하여 Spring Batch를 통해 알람 기능을 구현하였습니다.
 <details>
-	<summary><b>도입 전</b></summary>
-	<br>
-	➡ 
-	<ul>
-		<li></li>
-
-	</ul>
-	<br>
-	👎 문제점
-	<ul>
-		<li></li>
-		<li></li>
-		<li></li>
-	</ul>
+    <summary><b>패키지 구조 변경</b></summary>
+    <br>
+    <ul>
+        <li>배치 서버를 적용하면서 리소스 경쟁 최소화, 스케일링 용이성, 유지보수 및 확장성 향상을 고려하여 모듈화를 진행하였다.</li>
+    </ul>
+    <table>
+        <tr>
+            <td>➡ 기존 패키지 구조</td>
+            <td>➡ 모듈화 패키지 구조</td>
+        </tr>
+        <tr>
+            <td><img width="250" alt="package" src="https://github.com/user-attachments/assets/008f7412-472e-4f49-bbb3-38c56dd37b54"></td>
+            <td><img width="200" alt="module-package" src="https://github.com/user-attachments/assets/8860e926-a8f3-4c2b-8a61-d090fa78c382"></td>
+        </tr>
+    </table>
 </details>
+<br>
+<details>
+    <summary><b>Spring Batch</b></summary>
+    <ul>
+        <li>기존의 서비스 코드로는 서버의 부하로 인해 안정적인 서비스 제공이 어렵다고 판단하였다.</li>
+    </ul>
+    <div align="center">
+        <img width="500" alt="스크린샷 2024-10-28 오전 12 30 22" src="https://github.com/user-attachments/assets/d4d5984e-d633-402c-812d-0fbc37745b14">
+    </div>
+    <ul>
+        <p>1. 역할 분리</p>
+        <p>- 각 Step마다 Reader, Processor, Writer의 구성을 통해 기능을 나눴다.</p>
+        <p>- Chunk-Oriented Processing(청크 기반 처리)을 사용해 각 Step이 서로 다른 비즈니스 로직을 수행하도록 구성하였다.</p>
+        <br>
+        <p>2. 부하 분산</p>
+        <p>- 백엔드 서버 내에서 모든 알람(도메인내 알람, 이메일 알람)을 처리하던 방식에서, 독립적인 배치 서버를 구축하여 알람을 처리하게 하여, 부하를 분산시켰다.</p>
+        <p>- 부하 분산을 통해 기존 메인 서버의 부하를 줄이고, 알람 일괄 전송 과정중 오류가 발생하더라도 메인 서버에 영향을 최소화하여 안정적인 서비스를 제공할 수 있다.</p>
+        <p>- Kubernetes에서 배치 서버를 주기적으로 실행시키기 위해 CronJob을 설정하여 주기적인 작업을 자동화 하였다.</p>
+    </ul>
+    <br>
+    <ul>
+        <p>➡ 배치 적용 후</p>
+        <div align="center">
+            <img width="500" alt="스크린샷 2024-10-28 오전 12 28 05" src="https://github.com/user-attachments/assets/296b194d-7239-4eed-9089-5c42dfdf4002">
+        </div>
+    </ul>
+</details>
+
 
 <br>
 
