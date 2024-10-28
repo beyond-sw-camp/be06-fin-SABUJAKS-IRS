@@ -37,7 +37,7 @@
               v-model="password"
           />
           <br>
-          <h5>TEST ID : recruiter@test.com, PW : qwer1234</h5>
+          <h5>TEST ID : recruiter7@test.com, PW : qwer1234</h5>
         </div>
         <div class="jenkins-checkbox">
           <input type="checkbox" id="remember_me" name="remember_me" />

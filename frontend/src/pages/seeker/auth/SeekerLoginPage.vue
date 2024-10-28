@@ -5,7 +5,7 @@
             <div class="login-section">
                 <img class="logo" src="../../../assets/img/irs_black.png">
                 <p>
-                  TEST ID : seeker@test.com, PW : qwer1234
+                  TEST ID : gueunju10@gmail.com, PW : qwer1234
                 </p>
                 <form class="login-form" @submit.prevent="handleLogin">
                     <section class="input-section">
