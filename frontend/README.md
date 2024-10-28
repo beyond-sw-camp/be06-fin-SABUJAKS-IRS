@@ -117,18 +117,23 @@ Vue의 컴포넌트 시스템을 사용해 UI 요소를 모듈화하고 재사�
 
 <details>
     <summary>
-<span style="font-size:100%"> 면접 일정 관리 ❓</span></summary>
+<span style="font-size:100%"> 면접 일정 관리 </span></summary>
 <p>1. 각 공고의 서류합격 지원자들을 대상으로, 면접관 정보와 날짜를 설정한 후 면접일정을 생성합니다.</p>
 
  ![ 채용담당자-면접일정생성(신입)](https://github.com/user-attachments/assets/0db6dcd7-3930-48a9-a1e5-1ca4cfc470d3)
 <p>2. 신입은 일괄처리로 날짜를 지정하여 생성하고, 경력은 채용담당자와 지원자 간 일정을 조율 할 수 있습니다.</p>
+
+![면접 일정 조율 채용담당자](https://github.com/user-attachments/assets/c7b52034-b00f-451f-b647-71985e3085fc)
 <p>3. 면접관 메일로 면접용 임시 비밀번호와 입장 주소를 전송합니다.</p>
 </details>
 
 <details>
     <summary>
-<span style="font-size:100%"> 화상 면접방 생성 ❓</span></summary>
+<span style="font-size:100%"> 화상 면접방 생성 </span></summary>
 <p>1. 정해진 면접 일정에 따라 화상 면접방을 생성합니다.</p>
+	
+![채용담당자 - 면접방 생성](https://github.com/user-attachments/assets/f682e5a6-00d1-4868-9ce3-456569d04479)
+
 <p>2. 면접방은 지정한 면접일 하루 전날에 일괄 생성됩니다.</p>
 </details>
 
@@ -168,8 +173,11 @@ Vue의 컴포넌트 시스템을 사용해 UI 요소를 모듈화하고 재사�
 
 <details>
     <summary>
-<span style="font-size:100%"> 공고 검색 ❓</span></summary>
+<span style="font-size:100%"> 공고 검색 </span></summary>
 <p>1. 기업, 모집직무, 지역, 키워드로 공고를 검색할 수 있습니다.</p>
+	
+![채용담당자 - 검색기능](https://github.com/user-attachments/assets/b46c4791-9d2e-4d58-b81b-095a8a8d5916)
+
 <p>2. 마감임박순, </p>
 </details>
 
@@ -193,8 +201,11 @@ Vue의 컴포넌트 시스템을 사용해 UI 요소를 모듈화하고 재사�
 
 <details>
     <summary>
-<span style="font-size:100%"> 공고 별 지원한 지원서 관리 ❓</span></summary>
+<span style="font-size:100%"> 공고 별 지원한 지원서 관리 </span></summary>
 <p>1. 마이페이지에서 공고 별 지원한 지원서와 각 프로세스 결과를 확인할 수 있습니다.</p>
+
+![지원자 - 프로세스 조회](https://github.com/user-attachments/assets/12a4c6cc-ae13-4db1-8edd-82174b23217e)
+
 </details>
 
 <details>
@@ -207,8 +218,11 @@ Vue의 컴포넌트 시스템을 사용해 UI 요소를 모듈화하고 재사�
 
 <details>
     <summary>
-<span style="font-size:100%"> 면접 일정 조율 ❓</span></summary>
+<span style="font-size:100%"> 면접 일정 조율 </span></summary>
 <p>1. 경력 지원일 때, 채용담당자가 면접일정 알람을 보내면, 가능한 날짜를 선택하여 조율을 요청할 수 있습니다.</p>
+
+![면접 일정 조율 지원자](https://github.com/user-attachments/assets/bc509b89-bc81-4e31-a145-7cdf9d0069f0)
+	
 </details>
 
 <details>
