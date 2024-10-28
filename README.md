@@ -1,4 +1,4 @@
-<h1 align="center">통합 채용 시스템 <br>
+<h1 align="center">통합 채용 시스템 <br> 
 	IRS (Integration Recruite System) </h1>
 <div align="center">
   <img src="https://github.com/user-attachments/assets/a2d10980-8f3c-4d47-b015-37429120b350" style="width: 50%">
