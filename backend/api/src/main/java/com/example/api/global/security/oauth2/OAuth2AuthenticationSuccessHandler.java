@@ -1,0 +1,63 @@
+package com.example.api.global.security.oauth2;
+
+import com.example.api.global.utils.JwtUtil;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Objects;
+import java.util.UUID;
+
+@Slf4j
+@Component
+@RequiredArgsConstructor
+public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+
+    private final JwtUtil jwtUtil;
+
+    @Override
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+        CustomOAuth2UserDetails oAuth2Member = (CustomOAuth2UserDetails) authentication.getPrincipal();
+        Long idx = oAuth2Member.getIdx();
+        String username = oAuth2Member.getUsername();
+        String role = oAuth2Member.getSeeker().getRole();
+        String accessToken = jwtUtil.createToken(idx, username, role);
+        String refreshToken = jwtUtil.createRefreshToken(username);
+//        Collection<? extends GrantedAuthority> authorities = oAuth2Member.getAuthorities();
+//        for (GrantedAuthority authority : authorities){
+//            if(Objects.equals(authority.toString(), role)){
+//                continue;
+//            }
+//            Cookie viToken = new Cookie("VITOKEN"+ UUID.randomUUID(), jwtUtil.createToken(authority.getAuthority()));
+//            viToken.setHttpOnly(true);
+//            viToken.setSecure(true);
+//            viToken.setPath("/");
+//            viToken.setMaxAge(60 * 60);
+//            response.addCookie(viToken);
+//        }
+        Cookie aToken = new Cookie("ATOKEN", accessToken);
+        aToken.setHttpOnly(true);
+        aToken.setSecure(true);
+        aToken.setPath("/");
+//        aToken.setMaxAge(60 * 60); // 만료 시간을 1시간으로 설정, accessToken과 동일
+        response.addCookie(aToken);
+
+        Cookie rToken = new Cookie("RTOKEN", refreshToken);
+        rToken.setHttpOnly(true);
+        rToken.setSecure(true);
+        rToken.setPath("/");
+//        rToken.setMaxAge(60 * 60 * 24 * 5); // 만료 시간을 5일로 설정, refreshToken과 동일
+        response.addCookie(rToken);
+
+        getRedirectStrategy().sendRedirect(request, response, "https://www.sabujaks-irs.kro.kr/");
+    }
+}

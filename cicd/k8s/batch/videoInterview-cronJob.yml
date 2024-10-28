@@ -1,0 +1,79 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: videointerview-batch-job
+spec:
+  schedule: "0 16 * * *"  # 매일 오후 4시에 실행!
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: videointerview-batch
+              image: sabujaks/batch:latest
+              env:
+                - name: TZ
+                  value: "Asia/Seoul"
+                - name: BATCH_JOB_NAME
+                  value: "videoInterviewJob"
+                - name: DB_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: batch-cm
+                      key: DB_URL
+                - name: DB_USERNAME
+                  valueFrom:
+                    configMapKeyRef:
+                      name: batch-cm
+                      key: DB_USERNAME
+                - name: DB_PASSWORD
+                  valueFrom:
+                    configMapKeyRef:
+                      name: batch-cm
+                      key: DB_PASSWORD
+                - name: MAIL_HOST
+                  valueFrom:
+                    configMapKeyRef:
+                      name: batch-cm
+                      key: MAIL_HOST
+                - name: MAIL_PORT
+                  valueFrom:
+                    configMapKeyRef:
+                      name: batch-cm
+                      key: MAIL_PORT
+                - name: MAIL_USERNAME
+                  valueFrom:
+                    configMapKeyRef:
+                      name: batch-cm
+                      key: MAIL_USERNAME
+                - name: MAIL_PASSWORD
+                  valueFrom:
+                    configMapKeyRef:
+                      name: batch-cm
+                      key: MAIL_PASSWORD
+                - name: OPENVIDU_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: batch-cm
+                      key: OPENVIDU_URL
+                - name: OPENVIDU_SECRET
+                  valueFrom:
+                    configMapKeyRef:
+                      name: batch-cm
+                      key: OPENVIDU_SECRET
+                - name: REDIS_HOST
+                  valueFrom:
+                    configMapKeyRef:
+                      name: batch-cm
+                      key: REDIS_HOST
+                - name: REDIS_PW
+                  valueFrom:
+                    configMapKeyRef:
+                      name: batch-cm
+                      key: REDIS_PW
+                - name: REDIS_PORT
+                  valueFrom:
+                    configMapKeyRef:
+                      name: batch-cm
+                      key: REDIS_PORT
+          restartPolicy: OnFailure

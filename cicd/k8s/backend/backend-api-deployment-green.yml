@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-api-deployment-green
+spec:
+  selector:
+    matchLabels:
+      type: backend-api
+      deployment: green
+  replicas: 2
+  revisionHistoryLimit: 5
+  strategy:
+    type: RollingUpdate
+  minReadySeconds: 10
+  template:
+    metadata:
+      labels:
+        type: backend-api
+        deployment: green
+    spec:
+      containers:
+        - name: backend-api-green
+          image: sabujaks/backend-api:latest
+          env:
+            - name: TZ
+              value: "Asia/Seoul"
+          envFrom:
+            - configMapRef:
+                name: backend-cm
+          readinessProbe:
+            httpGet:
+              path: /api/system-health
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            successThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /api/system-health
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 10
+      terminationGracePeriodSeconds: 0
