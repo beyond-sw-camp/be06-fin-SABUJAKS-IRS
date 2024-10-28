@@ -155,7 +155,8 @@
 
 
 ## 🎡 아키텍처
-![시스템 아키텍처 -  최종](https://github.com/user-attachments/assets/b753959c-2bc1-4094-9c5c-017a8432848f)
+![시스템 아키텍처 -  최종](https://github.com/user-attachments/assets/d6b2d2e1-3421-4224-bf09-56d24d634b77)
+
 
 <br><br><br><br>
 
