@@ -164,7 +164,7 @@
 
 
 ## 💻 개발 폴더 바로가기
-#### ➡ [FRONTEND](https://github.com/beyond-sw-camp/be06-fin-SABUJAKS-IRS/tree/dev-batch/frontend)
-#### ➡ [BACKEND](https://github.com/beyond-sw-camp/be06-fin-SABUJAKS-IRS/tree/dev-batch/backend)
-#### ➡ [CI/CD](https://github.com/beyond-sw-camp/be06-fin-SABUJAKS-IRS/tree/dev-batch/cicd)
+#### ➡ [FRONTEND](https://github.com/beyond-sw-camp/be06-fin-SABUJAKS-IRS/tree/main/frontend)
+#### ➡ [BACKEND](https://github.com/beyond-sw-camp/be06-fin-SABUJAKS-IRS/tree/main/backend)
+#### ➡ [CI/CD](https://github.com/beyond-sw-camp/be06-fin-SABUJAKS-IRS/tree/main/cicd)
 <br><br><br><br>
