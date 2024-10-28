@@ -59,12 +59,16 @@
 		<li>Refresh Token은 Redis에 저장되어 관리되며, Refresh Token Rotation(RTR)을 통해 Access Token 만료 시 Access Token과 Refresh Token 모두 재발급한다.</li>
 		<li>Redis에 유저 email을 Key로 설정하여 하나의 사용자에 대해 하나의 Refresh Token만 존재하도록 한다.</li>
 		<li>Refresh Token의 저장 구조: "key: value = userEmail: refresh token"</li>
+		<img src="https://github.com/user-attachments/assets/538284bb-b22a-48d1-bc62-8dca47efa8fb" style="width: 50%"><br>
+		<img src="https://github.com/user-attachments/assets/99af6be9-2359-4189-85d4-c685fc451c09">
 	</ul>
 	<br>
 	➡ Refresh Token 시나리오
 	<ul>
-		<li>정상 유저의 경우, Refresh Token을 사용하여 Redis에서 사용자 정보를 조회하고, 해당 정보와 클라이언트의 쿠키의 Token을 비교해서 정당한 사용자인지를 확인한다.</li>
+		<li>정상 유저의 경우, Refresh Token을 사용하여 Redis에서 사용자 정보를 조회하고, 해당 정보와 클라이언트의 쿠키의 Token을 비교해서 정당한 사용자인지를 확인한다. 정상 로그인 후에는 토큰이 갱신되어 서비스를 이어서 사용할 수 있다.</li>
+		<img src="https://github.com/user-attachments/assets/b5a17352-17ae-4a1b-95ca-b1e16653d48f" style="width: 80%"><br>
 		<li>만약 탈취범이 먼저 Access Token을 탈취하여 aToken과 rToken을 재발급 받아 redis의 rToken도 변경됐다면, 정상 사용자가 api요청 시에 쿠키의 rToken과 Redis에 저장된 rToken이 불일치하여 탈취로 간주하고 로그아웃 처리하게 된다.</li>
+		<img src="https://github.com/user-attachments/assets/a634d842-023f-4bd5-b155-af7e89f717e5" style="width: 80%"><br>
 		<li>이메일을 키로 사용했기 때문에 탈취한 Refresh Token으로 정상 유저보다 먼저 Access Token을 재발급 받는 경우와 (토큰 탈취된 경우) 한 명의 사용자에 여러 refresh token 값이 저장되는 경우도 해결할 수 있다.</li>
 	</ul>
 	<br>
@@ -72,7 +76,7 @@
 	<ul>
 		<li>사용자 경험 개선(로그인 빈도 감소)</li>
 		<li>보안 강화(Refresh Token Rotation)</li>
-		<li>Redis를 통한 Token 관리)</li>
+		<li>Redis를 통한 Token 관리</li>
 		<li>악의적인 재발급 방지 및 침투를 인지하여 탈취 시 대응 가능</li>
 	</ul>
 </details>
