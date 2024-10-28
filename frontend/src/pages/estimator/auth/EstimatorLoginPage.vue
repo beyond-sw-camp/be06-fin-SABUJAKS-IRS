@@ -5,8 +5,7 @@
             <div class="login-section">
                 <img class="logo" src="../../../assets/img/irs_black.png">
                 <p>
-                  TEST ID : estimator1@test.com, PW : qwer1234<br/>
-                  TEST ID : estimator2@test.com, PW : qwer1234
+                  TEST ID : adordopamines@gmail.com, PW : (이메일의 PW부분 참고)<br/>
                 </p>
                 <form class="login-form" @submit.prevent="handleLogin">
                     <section class="input-section">
